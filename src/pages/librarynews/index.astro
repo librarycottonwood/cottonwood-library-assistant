@@ -2,22 +2,20 @@
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
-import ContentImage from '../../components/ContentImage.astro';
 import EventList from '../../components/EventList.astro';
+import EventCalendar from '../../components/EventCalendar.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { contentRepository } from '../../content/repository';
-const [{ library, programs }, events, posts, { initiatives }] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts(), contentRepository.getSupport()]);
-const bookSale = initiatives.find(item => item.id === 'book-sale')!;
+const [{ library, programs }, events, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
 ---
 <SiteLayout title="Upcoming events & news | Cottonwood Community Library">
   <PageIntro title="Upcoming events" />
   <section class="container pb-10" aria-labelledby="events-heading">
     <h2 id="events-heading" class="sr-only">Upcoming dated events</h2>
-    <EventList events={events} />
-    <a href="/fundraising-events/book-sale/" class="grid overflow-hidden rounded-[4px] bg-meadow sm:grid-cols-[180px_1fr]">
-      <div class="max-sm:hidden"><ContentImage image={bookSale.image} /></div>
-      <div class="flex flex-col justify-center p-6"><h3 class="card-heading">Next big book sale</h3><p class="mt-2 text-base text-muted">Roughly quarterly · Date to be announced</p></div>
-    </a>
+    <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.15fr]">
+      <EventCalendar events={events} />
+      <EventList events={events} />
+    </div>
   </section>
   <section class="container pb-12" aria-labelledby="regular-heading">
     <h2 id="regular-heading" class="section-heading mb-6">Regular programs</h2>

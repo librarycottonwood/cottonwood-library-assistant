@@ -28,12 +28,15 @@ if (!executablePath) { try { await access('/usr/bin/chromium'); executablePath =
 let browser;
 const errors = [], evidence = [];
 try {
-  browser = await chromium.launch({ executablePath, headless: true });
+  browser = await chromium.launch({ executablePath, headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
   for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]]) {
     const page = await browser.newPage({ viewport });
     page.on('pageerror', error => errors.push(`${name}: ${error.message}`));
     page.on('console', message => { if (message.type() === 'error') errors.push(`${name}: ${message.text()}`); });
-    await page.route('**/*', route => new URL(route.request().url()).origin === base ? route.continue() : route.abort());
+    await page.route('**/*', route => {
+      const url = new URL(route.request().url());
+      return url.origin === base || url.hostname === 'tiles.openfreemap.org' ? route.continue() : route.abort();
+    });
     for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {
       const route = '/' + file.path.replace(/index\.html$/, '');
       const response = await page.goto(base + route, { waitUntil: 'networkidle' });
@@ -56,7 +59,7 @@ try {
   if (errors.length) throw new Error(errors.join('\n'));
   const pictures = {};
   for (const name of ['desktop', 'phone']) pictures[name] = createHash('sha256').update(await readFile(path.join(output, `${name}.png`))).digest('hex');
-  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'isolated prototype; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
+  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'isolated prototype; OpenFreeMap tiles allowed; other external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
   console.log(`Screenshots and checks: ${output}`);
 } finally {
   await browser?.close();

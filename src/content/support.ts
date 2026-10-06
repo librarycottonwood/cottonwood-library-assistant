@@ -41,7 +41,7 @@ export const supportContent: SupportContent = {
       summary: support.bookSale,
       image: { key: 'bookSale', alt: 'The actual ongoing book-sale shelves in the library’s back hall.' },
       gallery: [{ key: 'childrensBookSale', alt: 'Children’s and young-adult books in the library’s ongoing book sale.', caption: 'Children’s and young-adult books in the ongoing sale.' }],
-      paragraphs: [support.bookSale, 'The next larger sale date will be announced on the upcoming-events page once confirmed. These sales are an important source of library income.'],
+      paragraphs: [support.bookSale, 'The next quarterly sale is October 16–17, 2026, from 10 a.m. to 2 p.m. Enter through the back door; cash sales only. These sales are an important source of library income.'],
       steps: ['Visit during library hours.', 'Browse the lobby carts and back-hall bookshelf.', 'Ask library personnel about purchasing your finds.'],
       action: { label: 'Plan your visit', href: '/#visit' },
     },

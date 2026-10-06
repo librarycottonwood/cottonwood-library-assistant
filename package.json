@@ -23,13 +23,14 @@
     "@lucide/astro": "1.47.0",
     "@tailwindcss/vite": "4.3.3",
     "astro": "7.3.3",
+    "maplibre-gl": "6.6.0",
     "sharp": "0.35.4",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "typescript": "5.9.3",
     "playwright": "1.63.0",
+    "typescript": "5.9.3",
     "wrangler": "4.147.0"
   }
 }

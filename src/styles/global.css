@@ -52,18 +52,29 @@
   .section-heading { @apply font-display text-[2.25rem] leading-[1.2] tracking-[-0.035em] sm:text-[2.9rem]; }
   .button { @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-[3px] px-6 py-3 text-[0.9375rem] font-semibold transition-colors; }
   .button-primary { @apply bg-forest text-white hover:bg-forest-dark; }
-  .action-tile { @apply flex min-h-24 items-center gap-3 rounded-[4px] p-4 text-forest transition-colors hover:brightness-95 sm:min-h-28 sm:gap-4 sm:p-6; }
+  .action-tile { @apply flex min-h-36 items-center justify-between gap-3 rounded-[4px] px-6 py-4 text-forest transition-colors hover:brightness-95; }
+  .action-label { @apply max-w-36 text-xl font-bold leading-[1.4]; overflow-wrap: normal; }
+  .action-art { width: 45%; max-width: 145px; height: 125px; object-fit: contain; }
+  .action-sun { background: #f5ca4b; }
   .action-tile:focus-visible { outline-width: 3px; outline-offset: 5px; }
   .action-meadow { @apply bg-meadow; }
   .action-paper { @apply border border-line bg-paper; }
   .action-gold { @apply bg-gold text-forest-dark; }
   .action-forest { @apply bg-forest text-paper; }
   .notice-card { @apply block rounded-[4px] border border-line bg-white p-6 hover:border-forest sm:p-7; }
-  .resource-link { @apply flex min-h-24 items-center gap-3 rounded-[4px] border border-line bg-paper p-4 transition-colors hover:bg-meadow sm:gap-4 sm:p-5; }
-  .resource-icon { @apply flex size-8 shrink-0 items-center justify-center text-forest; }
-  .feature-card { @apply grid h-full grid-cols-[108px_1fr] overflow-hidden rounded-[4px] border border-line bg-white transition-colors hover:border-forest sm:block; }
-  .feature-card-image { @apply overflow-hidden bg-meadow; }
-  .feature-card-image img { @apply h-full min-h-28 sm:h-auto; }
+  .resource-link { @apply flex min-h-28 items-center gap-4 rounded-[4px] bg-meadow p-6 transition-colors hover:bg-gold; }
+  .resource-link:nth-child(even) { @apply bg-forest text-paper hover:bg-forest-dark; }
+  .resource-link:nth-child(even) .resource-icon { @apply text-paper; }
+  .resource-icon { @apply flex size-10 shrink-0 items-center justify-center text-forest; }
+  .feature-card { @apply block h-full overflow-hidden rounded-[4px] bg-transparent; }
+  .feature-card-image { @apply overflow-hidden rounded-[4px] bg-meadow; }
+  .feature-card-image img { @apply aspect-[1.2] h-auto; }
+  .feature-card > div:last-child { padding-left: 0; padding-right: 0; }
+  .feature-card .card-heading { @apply text-[1.35rem]; }
+  .feature-card:hover .feature-card-image { filter: brightness(.97); }
+  .support-home { @apply grid overflow-hidden rounded-[4px] bg-gold/50 md:grid-cols-2; }
+  .support-home-copy { @apply flex flex-col items-start justify-center p-7 sm:p-10; }
+  .support-home-image { @apply min-h-56 p-6 md:min-h-80; }
   .button-outline { @apply border border-forest bg-transparent text-forest hover:bg-meadow; }
   .text-link { @apply inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold underline decoration-1 hover:decoration-2; }
   .footer-link { @apply flex min-h-11 items-center gap-2 py-2 text-[0.9375rem] text-muted hover:text-forest hover:underline; }
