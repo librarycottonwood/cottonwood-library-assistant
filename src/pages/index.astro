@@ -20,9 +20,9 @@ const actions = [
   { label: 'Donate', href: '/fundraising-events/', art: donateArt, tone: 'action-forest', event: 'donate_quick' },
 ];
 const resources = [
-  { label: 'Find your next read', note: 'Browse the library catalog', href: library.catalogUrl, icon: 'book' as const },
-  { label: 'Computers & Wi-Fi', note: 'Get connected at the library', href: '/visit/#computers', icon: 'computer' as const },
-  { label: 'Printing & copying', note: 'Ask for help at the front desk', href: '/visit/#printing', icon: 'printer' as const },
+  { label: 'Library catalog', note: 'Browse our collection', href: library.catalogUrl, icon: 'book' as const },
+  { label: 'Computers & Wi-Fi', note: 'Public computers and Wi-Fi', href: '/visit/#computers', icon: 'computer' as const },
+  { label: 'Printing & copying', note: 'Black-and-white prints: 20¢ per page', href: '/visit/#printing', icon: 'printer' as const },
 ];
 ---
 <SiteLayout>
@@ -47,7 +47,7 @@ const resources = [
     </nav>
   </div>
 
-  <section id="programs" tabindex="-1" class="container py-5 sm:pt-6 sm:pb-12" aria-labelledby="happening-heading">
+  <section id="programs" tabindex="-1" class="container-editorial py-5 sm:pt-8 sm:pb-14" aria-labelledby="happening-heading">
     <div class="mb-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
       <h2 id="happening-heading" class="section-heading">Coming up</h2>
       <a href="/librarynews/" class="text-link">See the calendar<Icon name="arrow" class="size-4" /></a>
@@ -55,11 +55,11 @@ const resources = [
     <div class="coming-up">
       <a href="/fundraising-events/book-sale/" class="coming-feature group">
         <div class="feature-shape">
-          <Image src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 55vw" class="aspect-[1.9] w-full object-cover" />
+          <Image src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 530px" class="aspect-[1.9] w-full object-cover" />
         </div>
         <p class="eyebrow mt-5">{bookSaleDateLabel}</p>
-        <h3 class="mt-2 font-display text-3xl leading-tight tracking-tight group-hover:underline sm:text-4xl">The next chapter starts<br />at the book sale.</h3>
-        <p class="mt-3 text-base text-muted">Find your next read and help keep the library open.</p>
+        <h3 class="mt-2 font-display text-3xl leading-tight tracking-tight group-hover:underline sm:text-4xl">Quarterly book sale</h3>
+        <p class="mt-3 text-base text-muted">Back-door entry · Cash only.</p>
         <span class="text-link mt-2">Explore the sale<Icon name="arrow" class="size-4" /></span>
       </a>
       <div class="program-agenda">
@@ -79,9 +79,9 @@ const resources = [
   <section class="container py-7 sm:py-10" aria-labelledby="independent-heading">
     <div class="giving-banner">
       <div class="giving-copy">
-        <p class="eyebrow text-gold">Community funded. Community loved.</p>
+        <p class="eyebrow text-gold">Community-funded library</p>
         <h2 id="independent-heading" class="section-heading mt-4">Keep your<br /><em class="font-normal">library open.</em></h2>
-        <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding.<br />Your generosity keeps us here.</p>
+        <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding.<br />Donations help cover day-to-day operations.</p>
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
           <a href="/fundraising-events/library-fund/" class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />Make a donation</a>
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
@@ -91,12 +91,11 @@ const resources = [
     </div>
   </section>
 
-  <section id="services" tabindex="-1" class="container pt-8 pb-4 sm:pt-12 sm:pb-6" aria-labelledby="services-heading">
-    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
-      <Image src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 50vw" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
+  <section id="services" tabindex="-1" class="container-narrow pt-8 pb-4 sm:pt-14 sm:pb-8" aria-labelledby="services-heading">
+    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+      <Image src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
       <div>
-        <h2 id="services-heading" class="section-heading">More than books.</h2>
-        <p class="mt-3 text-lg text-muted">A place to read, connect and get things done.</p>
+        <h2 id="services-heading" class="section-heading">Library services</h2>
         <nav aria-label="Library services" class="mt-5 divide-y divide-line">
           {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
             <Icon name={resource.icon} class="size-6 shrink-0" />

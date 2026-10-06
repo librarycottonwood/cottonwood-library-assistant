@@ -42,6 +42,7 @@
 
 @layer components {
   .container { @apply mx-auto w-full max-w-[1312px] px-6 sm:px-10 lg:px-14; }
+  .container-editorial { @apply mx-auto w-full max-w-[1168px] px-6 sm:px-10 lg:px-14; }
   .container-narrow { @apply mx-auto w-full max-w-[1024px] px-6 sm:px-10 lg:px-14; }
   .eyebrow { @apply text-[0.75rem] font-bold uppercase tracking-[0.16em]; }
   .feature-shape { @apply overflow-hidden rounded-[4px] rounded-tr-[80px] sm:rounded-tr-[115px]; }

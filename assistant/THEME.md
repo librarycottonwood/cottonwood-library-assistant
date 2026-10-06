@@ -15,3 +15,5 @@ Provider: https://openfreemap.org/ · library building: https://www.openstreetma
 The production domain, Givebutter, Facebook Insights and automatic assistant analytics reports remain unconnected. The custom demo does not silently replace the board's platform decision.
 
 Latest design research: inspected Sacramento and Santa Barbara homepages in a browser. Sacramento uses prominent image-led editorial features and a Find Events feature; Santa Barbara separates its news, calendar and direct actions. Adapted that hierarchy to the library’s small program list rather than copying a four-wide card grid. Sources: https://www.saclibrary.org/ and https://library.santabarbaraca.gov/.
+
+Reading-width refinement: wide visual hero/actions/donation panel keep a 1312px outer container; Coming up and visit use 1168px; services use the existing 1024px narrow container. Phone gutters stay consistent. Restores varied section widths and shorter copy measures while keeping approved images, actions and map. Services and featured-sale copy now state the service/event directly.
