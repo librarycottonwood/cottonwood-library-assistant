@@ -16,7 +16,8 @@ export const libraryEvents: LibraryEvent[] = ['16', '17'].map(day => ({
 export const libraryPosts: LibraryPost[] = [
   {
     id: 'october-book-sale', title: 'Our next book sale: October 16–17',
-    publishedAt: '2026-10-01', category: 'Library news',
+    // Date this draft notice was prepared, not the old site's publication date.
+    publishedAt: '2026-10-05', category: 'Library news',
     summary: 'Friday and Saturday, 10 a.m.–2 p.m. Back-door entry; cash sales only.',
     href: '/librarynews/october-book-sale/',
     paragraphs: ['Our next quarterly book sale is Friday and Saturday, October 16–17, from 10 a.m. to 2 p.m. at Cottonwood Community Library.', 'Please enter through the back door. Sales are cash only. Your purchases support our independent community library.'],
