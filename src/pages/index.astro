@@ -27,14 +27,14 @@ const resources = [
 ---
 <SiteLayout>
   <section class="container py-8 sm:py-10" aria-labelledby="welcome-heading">
-    <div class="grid items-center gap-6 lg:grid-cols-[.85fr_1.15fr] lg:gap-10">
+    <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
         <p class="mt-4 text-lg text-muted">Come read, play and connect.</p>
         <p class="mt-4 text-base text-muted">{library.address} · Cottonwood</p>
         <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 58vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+      <div class="feature-shape"><Image src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
     </div>
   </section>
 
