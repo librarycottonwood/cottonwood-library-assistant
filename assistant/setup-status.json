@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-05 America/Los_Angeles",
+  "repository": "https://github.com/oobagi/cottonwood-library-assistant",
+  "previewProject": "cottonwood-library-preview",
+  "demoHomepage": "https://cottonwood-library-preview.pages.dev",
+  "original": {
+    "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3",
+    "preview": "https://56d28a2c.cottonwood-library-preview.pages.dev"
+  },
+  "headingDemo": {
+    "digest": "3c4ccd023488d27775440324fb807c97579a07497fcc7a2177c08eacf7afdc4a",
+    "preview": "https://92e3845d.cottonwood-library-preview.pages.dev"
+  },
+  "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37408686067",
+  "cloudEnvironment": "Published and verified; connected fresh cloud task rehearsal running",
+  "production": "library domain and human approval service not connected",
+  "chatgptProject": "https://chatgpt.com/g/g-p-6ac46c0ab9ec819181724152baedd7dd/project",
+  "cloudSetupChat": "https://chatgpt.com/local/01a10f3d-3c2e-7589-81b8-f03cc8134001?hostId=local",
+  "demoChat": "https://chatgpt.com/local/01a10f4c-7839-7498-ab08-c6597282c03f",
+  "cloudTaskEntry": "https://chatgpt.com/codex/cloud",
+  "ordinaryProjectLimit": "An ordinary project chat does not automatically attach this cloud environment. Use the cloud task entry and select the published library environment."
+}

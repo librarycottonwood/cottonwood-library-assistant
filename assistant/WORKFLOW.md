@@ -12,4 +12,8 @@
 
 Connect this private repository in ChatGPT Work → Cloud. Use `bash scripts/cloud-setup.sh` as the install script. Use `assistant/START.md` as the start instructions. Publish the prepared environment after setup and checks succeed. Test a new task, rather than relying only on the environment setup conversation.
 
+Verified entry point on Jaden's account: `https://chatgpt.com/codex/cloud`. It opens the Cloud composer. Select the published `cottonwood-library-assistant` environment before sending a website request. An ordinary ChatGPT project chat does **not** automatically connect to this environment merely because its instructions mention the name. The separate Cottonwood Library Assistant project contains the friendly persona instructions, but is not itself the coding workspace.
+
+The published install/start configuration additionally puts pnpm and caches under `/workspace`, because the default home directories in this cloud runtime were unwritable. Keep that tested wrapper when updating the environment.
+
 Allow package/download hosts during installation. Browser installation may require system dependencies. Do not put secrets in the repository. Add only preview project credentials to the environment's secret store after testing the dedicated preview project. Account linking and publishing the cloud environment require the signed-in account UI.
