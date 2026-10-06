@@ -72,9 +72,16 @@
   .feature-card > div:last-child { padding-left: 0; padding-right: 0; }
   .feature-card .card-heading { @apply text-[1.35rem]; }
   .feature-card:hover .feature-card-image { filter: brightness(.97); }
-  .support-home { @apply grid overflow-hidden rounded-[4px] bg-gold/50 md:grid-cols-2; }
-  .support-home-copy { @apply flex flex-col items-start justify-center p-7 sm:p-10; }
-  .support-home-image { @apply min-h-56 p-6 md:min-h-80; }
+  .coming-up { @apply grid items-start gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-14; }
+  .coming-feature { @apply block; }
+  .program-agenda { @apply pt-2; }
+  .program-row { @apply flex items-center gap-4 border-b border-line py-5 sm:gap-5; }
+  .program-row:last-child { border-bottom: 0; }
+  .program-thumb { @apply size-22 shrink-0 rounded-[3px] bg-[#eee8d8] sm:size-28; }
+  .giving-banner { @apply grid overflow-hidden rounded-[4px] rounded-tr-[80px] bg-forest text-paper md:grid-cols-[1.05fr_1fr] sm:rounded-tr-[115px]; }
+  .giving-copy { @apply flex flex-col items-start justify-center p-7 sm:p-10 lg:p-12; }
+  .giving-photo { @apply h-full min-h-56 w-full object-cover md:min-h-96; }
+  .giving-banner :focus-visible { outline-color: var(--color-gold); }
   .button-outline { @apply border border-forest bg-transparent text-forest hover:bg-meadow; }
   .text-link { @apply inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold underline decoration-1 hover:decoration-2; }
   .footer-link { @apply flex min-h-11 items-center gap-2 py-2 text-[0.9375rem] text-muted hover:text-forest hover:underline; }
