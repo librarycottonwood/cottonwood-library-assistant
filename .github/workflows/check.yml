@@ -16,6 +16,7 @@ jobs:
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
       - run: node --test scripts/release.test.mjs
+      - run: node scripts/analytics.test.mjs
       - name: Save and inspect a version
         run: |
           version=$(node scripts/release.mjs prepare)

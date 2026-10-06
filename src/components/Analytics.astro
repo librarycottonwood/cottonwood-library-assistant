@@ -1,8 +1,7 @@
 ---
 import analytics from '../../assistant/analytics.json';
-const testHost = import.meta.env.PUBLIC_ANALYTICS_TEST_HOST ?? '';
 ---
-<div id="library-analytics" data-measurement={analytics.measurementId} data-host={analytics.websiteHost} data-test-host={testHost}>
+<div id="library-analytics" data-measurement={analytics.measurementId} data-host={analytics.websiteHost}>
   <div class="container flex gap-5 pb-6 text-sm">
     <a href="/privacy/" class="underline">Privacy</a>
     <button id="privacy-choices" type="button" class="underline" hidden>Privacy choices</button>
@@ -26,7 +25,7 @@ const testHost = import.meta.env.PUBLIC_ANALYTICS_TEST_HOST ?? '';
   const root = document.querySelector<HTMLElement>('#library-analytics');
   const measurement = root?.dataset.measurement ?? '';
   const host = root?.dataset.host ?? '';
-  const allowed = location.hostname === host || location.hostname.endsWith('.' + host) || (root?.dataset.testHost && location.hostname === root.dataset.testHost);
+  const allowed = location.hostname === host || location.hostname.endsWith('.' + host);
   const panel = document.querySelector<HTMLElement>('#statistics-choice');
   const choices = document.querySelector<HTMLButtonElement>('#privacy-choices');
   const key = 'cottonwood-statistics-choice-v1';
