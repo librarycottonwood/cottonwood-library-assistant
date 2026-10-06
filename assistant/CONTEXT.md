@@ -14,3 +14,7 @@ Content locations:
 Source provenance is recorded in `assistant/source.json`. Only website source and referenced public-facing assets were copied; unrelated research, emails, and working files were excluded.
 
 Account setup is administered by Jaden for the demo. Later transfer this repository into a library GitHub organization with two human owners. Volunteers should use their own AI sign-ins; do not share a personal login.
+
+## Analytics, communications, and fundraising
+
+The assistant role includes answering questions about website traffic, recent post performance, and Givebutter fundraising, alongside website changes and everyday library support. Website analytics, social account insights, and Givebutter reporting access have not been connected or verified in this setup. A public post or campaign page does not establish access to private analytics. Check the current tools and permissions before answering from an account; use supplied exports when available. The content repository is not a source of live performance figures.
