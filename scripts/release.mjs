@@ -28,7 +28,7 @@ export async function verify(digest) {
   return { dir, manifest };
 }
 async function main() {
-  const [action, digest] = process.argv.slice(2);
+  const [action, digest] = process.argv.slice(2).filter(arg => arg !== '--');
   if (action === 'prepare') {
     const files = await inventory(path.join(root, 'dist'));
     if (!files.some(file => file.path === 'index.html')) throw new Error('Build the site first.');

@@ -1,0 +1,28 @@
+name: Verify library website
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@11.15.1
+      - run: bash scripts/cloud-setup.sh
+      - run: node --test scripts/release.test.mjs
+      - name: Save and inspect a version
+        run: |
+          version=$(node scripts/release.mjs prepare)
+          node scripts/capture.mjs "$version"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-preview-and-screenshots
+          path: output/
+          retention-days: 14

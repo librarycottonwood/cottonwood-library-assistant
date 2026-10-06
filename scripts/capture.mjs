@@ -4,7 +4,7 @@ import { readFile, mkdir, writeFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import { verify } from './release.mjs';
 
-const digest = process.argv[2];
+const digest = process.argv.slice(2).filter(arg => arg !== '--')[0];
 const { dir, manifest } = await verify(digest);
 const site = path.join(dir, 'site');
 const output = path.resolve('output/playwright', digest);
