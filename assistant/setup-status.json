@@ -2,7 +2,7 @@
   "checkedAt": "2026-10-05 America/Los_Angeles",
   "repository": "https://github.com/oobagi/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
-  "demoHomepage": "https://29695462.cottonwood-library-preview.pages.dev",
+  "demoHomepage": "https://38d0406e.cottonwood-library-preview.pages.dev",
   "original": {
     "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3",
     "preview": "https://56d28a2c.cottonwood-library-preview.pages.dev"
@@ -35,14 +35,14 @@
     "accountId": "410873133",
     "propertyId": "557596091",
     "measurementId": "G-HKCKJ8R4D1",
-    "preview": "https://29695462.cottonwood-library-preview.pages.dev",
+    "preview": "https://38d0406e.cottonwood-library-preview.pages.dev",
     "dashboard": "https://analytics.google.com/analytics/web/#/a410873133p557596091/realtime/overview",
     "tracking": "Consent-gated tracking verified on hosted demo: homepage page_view, donate_quick, and privacy page_view delivered to G-HKCKJ8R4D1 with HTTP 204; query strings excluded. Automated refusal/withdrawal/cookie-removal tests passed.",
     "assistantReporting": "Not connected",
     "history": "New demo test traffic only; no existing library history",
     "handover": "Library administrator identities needed",
     "dashboardVerification": "Realtime dashboard has not yet shown the test events; processing may be delayed.",
-    "pictures": "https://29695462.cottonwood-library-preview.pages.dev/_review/",
+    "pictures": "https://38d0406e.cottonwood-library-preview.pages.dev/_review/",
     "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37419680481"
   },
   "libraryAccounts": {
@@ -89,5 +89,11 @@
     "preview": "https://29695462.cottonwood-library-preview.pages.dev",
     "sourceCommit": "0224d6c",
     "checks": "Full narrative visible without disclosure; photo caption removed; land donation credit retained; desktop/phone and all 36 page checks passed"
+  },
+  "heroAlignment": {
+    "digest": "123e92fe4e0722705c5a118b087a02ecb70b8d9e56071de1beb2a0fbe507c1c3",
+    "preview": "https://38d0406e.cottonwood-library-preview.pages.dev",
+    "sourceCommit": "4ffe9cd",
+    "checks": "Hero photo and action tile left edges match at 1024, 1280 and 1440px; all desktop/phone page checks passed"
   }
 }
