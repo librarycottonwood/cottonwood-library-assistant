@@ -54,7 +54,13 @@ try {
         const check = await page.request.get(target.href);
         if (!check.ok()) throw new Error(`Broken internal link on ${route}: ${link}`);
       }
-      if (route === '/') await page.screenshot({ path: path.join(output, `${name}.png`), fullPage: false });
+      if (route === '/') {
+        // Lazy illustrations can enter view after fonts settle. Wait for visible images.
+        await page.evaluate(() => Promise.all(Array.from(document.images)
+          .filter(img => { const box = img.getBoundingClientRect(); return box.top < innerHeight && box.bottom > 0; })
+          .map(img => img.decode())));
+        await page.screenshot({ path: path.join(output, `${name}.png`), fullPage: false });
+      }
       evidence.push({ name, viewport, route, heading });
     }
     await page.close();
