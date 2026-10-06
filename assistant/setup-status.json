@@ -2,7 +2,7 @@
   "checkedAt": "2026-10-05 America/Los_Angeles",
   "repository": "https://github.com/oobagi/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
-  "demoHomepage": "https://cottonwood-library-preview.pages.dev",
+  "demoHomepage": "https://273d2e2c.cottonwood-library-preview.pages.dev",
   "original": {
     "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3",
     "preview": "https://56d28a2c.cottonwood-library-preview.pages.dev"
@@ -35,14 +35,14 @@
     "accountId": "410873133",
     "propertyId": "557596091",
     "measurementId": "G-HKCKJ8R4D1",
-    "preview": "https://c8e616dc.cottonwood-library-preview.pages.dev",
+    "preview": "https://273d2e2c.cottonwood-library-preview.pages.dev",
     "dashboard": "https://analytics.google.com/analytics/web/#/a410873133p557596091/realtime/overview",
     "tracking": "Consent-gated tracking verified on hosted demo: homepage page_view, donate_quick, and privacy page_view delivered to G-HKCKJ8R4D1 with HTTP 204; query strings excluded. Automated refusal/withdrawal/cookie-removal tests passed.",
     "assistantReporting": "Not connected",
     "history": "New demo test traffic only; no existing library history",
     "handover": "Library administrator identities needed",
     "dashboardVerification": "Realtime dashboard has not yet shown the test events; processing may be delayed.",
-    "pictures": "https://c8e616dc.cottonwood-library-preview.pages.dev/_review/",
+    "pictures": "https://273d2e2c.cottonwood-library-preview.pages.dev/_review/",
     "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37419680481"
   },
   "libraryAccounts": {
@@ -50,5 +50,30 @@
     "facebook": "Library access missing; not connected",
     "domain": "Registrar identified; authorized account access missing",
     "checklist": "assistant/ACCESS.md"
+  },
+  "themeRefresh": {
+    "digest": "3b78fb9825fa51ad20c1545809e8ec73abfdab98c1b0ffca4498fea3a6718f48",
+    "preview": "https://273d2e2c.cottonwood-library-preview.pages.dev",
+    "pictures": "https://273d2e2c.cottonwood-library-preview.pages.dev/_review/",
+    "contentPages": 18,
+    "desktopPhoneChecks": 36,
+    "responsiveWidths": [
+      320,
+      390,
+      600,
+      767,
+      768,
+      790,
+      1023,
+      1024,
+      1279,
+      1280,
+      1440,
+      1728
+    ],
+    "map": "Live desktop/phone OpenFreeMap map and offline directions fallback verified",
+    "sourceCommit": "5a5c2ea616456d6673dbdaa3be507a689c8adf27",
+    "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37423134410",
+    "guidance": "Read Squarespace agent thread and saved handoff; paused editor unchanged"
   }
 }
