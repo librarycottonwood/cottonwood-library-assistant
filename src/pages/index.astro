@@ -22,21 +22,20 @@ const actions = [
   { label: 'Donate', href: '/fundraising-events/', art: donateArt, tone: 'action-forest', event: 'donate_quick' },
 ];
 const resources = [
-  { label: 'Library catalog', href: library.catalogUrl, icon: 'book' as const },
-  { label: 'Computers & Wi-Fi', href: '/visit/#computers', icon: 'computer' as const },
-  { label: 'Printing & copying', href: '/visit/#printing', icon: 'printer' as const },
-  { label: 'Hours & directions', href: '/visit/', icon: 'pin' as const },
+  { label: 'Find your next read', note: 'Browse the library catalog', href: library.catalogUrl, icon: 'book' as const },
+  { label: 'Computers & Wi-Fi', note: 'Get connected at the library', href: '/visit/#computers', icon: 'computer' as const },
+  { label: 'Printing & copying', note: 'Ask for help at the front desk', href: '/visit/#printing', icon: 'printer' as const },
 ];
 ---
 <SiteLayout>
   <section class="container py-8 sm:py-10" aria-labelledby="welcome-heading">
-    <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
+    <div class="grid items-center gap-6 lg:grid-cols-[.85fr_1.15fr] lg:gap-10">
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
         <p class="mt-4 text-lg text-muted">Come read, play and connect.</p>
-        <a href="#visit" class="text-link mt-4"><Icon name="pin" class="size-5" />Get directions</a>
+        <a href="#visit" class="button button-primary mt-6"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.8] w-full object-cover object-left" /></div>
+      <div class="feature-shape"><Image src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 58vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
     </div>
   </section>
 
@@ -72,10 +71,20 @@ const resources = [
   </section>
 
   <section id="services" tabindex="-1" class="container pt-8 pb-4 sm:pt-12 sm:pb-6" aria-labelledby="services-heading">
-    <h2 id="services-heading" class="section-heading">Services and resources</h2>
-    <nav aria-label="Services and resources" class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {resources.map(resource => <a href={resource.href} class="resource-link group"><span class="resource-icon"><Icon name={resource.icon} class="size-7" /></span><span class="text-sm font-semibold leading-snug group-hover:underline sm:text-base">{resource.label}</span></a>)}
-    </nav>
+    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
+      <Image src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 50vw" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
+      <div>
+        <h2 id="services-heading" class="section-heading">More than books.</h2>
+        <p class="mt-3 text-lg text-muted">A place to read, connect and get things done.</p>
+        <nav aria-label="Library services" class="mt-5 divide-y divide-line">
+          {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
+            <Icon name={resource.icon} class="size-6 shrink-0" />
+            <span class="flex-1"><span class="block text-lg font-semibold group-hover:underline">{resource.label}</span><span class="block text-sm text-muted">{resource.note}</span></span>
+            <Icon name="arrow" class="size-5 shrink-0" />
+          </a>)}
+        </nav>
+      </div>
+    </div>
   </section>
 
   <VisitPanel />
