@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import { verify } from './release.mjs';
+import { createHash } from 'node:crypto';
 
 const digest = process.argv.slice(2).filter(arg => arg !== '--')[0];
 const { dir, manifest } = await verify(digest);
@@ -53,7 +54,9 @@ try {
     await page.close();
   }
   if (errors.length) throw new Error(errors.join('\n'));
-  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'isolated prototype; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
+  const pictures = {};
+  for (const name of ['desktop', 'phone']) pictures[name] = createHash('sha256').update(await readFile(path.join(output, `${name}.png`))).digest('hex');
+  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'isolated prototype; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
   console.log(`Screenshots and checks: ${output}`);
 } finally {
   await browser?.close();
