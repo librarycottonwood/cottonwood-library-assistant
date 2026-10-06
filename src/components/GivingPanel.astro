@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import type { HomeContent, FundraisingCampaign } from '../content/types';
+interface Props { library: HomeContent['library']; campaigns: FundraisingCampaign[]; }
+const { library, campaigns } = Astro.props;
+---
+<aside class="flex flex-col justify-center rounded-[4px] bg-meadow p-7 sm:p-9" aria-labelledby="giving-feed-heading">
+  <Icon name="heart" class="mb-5 size-7" />
+  <h2 id="giving-feed-heading" class="card-heading">Make a financial gift</h2>
+  {campaigns.length ? <ul class="mt-6 space-y-6 p-0 list-none">{campaigns.map(campaign => <li>
+    <a href={campaign.url} class="text-link">{campaign.title}<Icon name="external" class="size-4" /></a>
+    <p class="mt-2 text-base text-muted">{campaign.description}</p>
+    <p class="mt-4 text-sm"><strong>{new Intl.NumberFormat('en-US', { style: 'currency', currency: campaign.currency, maximumFractionDigits: 0 }).format(campaign.raised)}</strong> of {new Intl.NumberFormat('en-US', { style: 'currency', currency: campaign.currency, maximumFractionDigits: 0 }).format(campaign.goal)}</p>
+    <progress class="mt-2 h-2 w-full accent-forest" value={campaign.raised} max={campaign.goal} aria-label={`${campaign.title} fundraising progress`} />
+    <p class="mt-2 text-xs text-muted">Updated <time datetime={campaign.updatedAt}>{campaign.updatedAt}</time></p>
+  </li>)}</ul> : <>
+    <p class="mt-3 text-base text-muted">Help keep books, programs and doors open.</p>
+    <a href={library.donationUrl ?? `mailto:${library.email}?subject=Supporting%20the%20library`} class="button button-primary mt-5 self-start">{library.donationUrl ? 'Give to the library' : 'Email us to give'}</a>
+    <a href={library.phoneHref} class="text-link mt-3 self-start">Call {library.phone}</a>
+  </>}
+</aside>

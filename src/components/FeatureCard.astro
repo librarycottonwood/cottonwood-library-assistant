@@ -1,0 +1,15 @@
+---
+import ContentImage from './ContentImage.astro';
+import type { LibraryImage } from '../content/types';
+interface Props { title: string; href: string; image: LibraryImage; note?: string; }
+const { title, href, image, note } = Astro.props;
+---
+<article>
+  <a href={href} class="feature-card group">
+    <div class="feature-card-image"><ContentImage image={image} /></div>
+    <div class="min-w-0 px-4 py-4 sm:px-5 sm:py-5">
+      <h3 class="card-heading group-hover:underline">{title}</h3>
+      {note && <p class="mt-2 text-sm font-medium text-muted">{note}</p>}
+    </div>
+  </a>
+</article>

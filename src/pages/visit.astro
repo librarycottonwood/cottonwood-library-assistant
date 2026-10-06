@@ -1,0 +1,31 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ContentImage from '../components/ContentImage.astro';
+import Icon from '../components/Icon.astro';
+import Disclosure from '../components/Disclosure.astro';
+import { contentRepository } from '../content/repository';
+const { library, borrowing } = await contentRepository.getHome();
+const services = [
+  { id: 'borrowing', title: 'Books & DVDs', note: 'Browse our catalog', icon: 'book' as const, href: library.catalogUrl },
+  { id: 'computers', title: 'Computers & Wi-Fi', note: 'Ask at the front desk', icon: 'computer' as const },
+  { id: 'printing', title: 'Print & copy', note: 'Black & white: 20¢ · Color copies: $1', icon: 'printer' as const },
+];
+---
+<SiteLayout title="Visit & services | Cottonwood Community Library">
+  <PageIntro title="Visit & services" />
+  <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container grid items-start gap-8 pb-10 lg:grid-cols-2">
+    <ContentImage image={{ key: 'computerLab', alt: 'Public computer workstations inside Cottonwood Community Library.' }} variant="feature" eager />
+    <div class="rounded-[4px] bg-meadow p-6 sm:p-8">
+      <h2 id="visit-heading" class="card-heading">{library.address}</h2>
+      <p class="mt-1 text-base text-muted">{library.locality}</p>
+      <dl class="mt-5">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-sm"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
+      <a href={library.directionsUrl} class="button button-primary mt-4"><Icon name="pin" class="size-4" />Get directions</a>
+    </div>
+  </section>
+  <section id="services" tabindex="-1" aria-labelledby="services-heading" class="container pb-12">
+    <h2 id="services-heading" class="section-heading mb-6">Services and resources</h2>
+    <div class="grid gap-4 sm:grid-cols-3">{services.map(service => <div id={service.id} tabindex="-1" class="rounded-[4px] border border-line p-5"><Icon name={service.icon} class="mb-4 size-7" /><h3 class="text-lg font-semibold">{service.title}</h3>{service.href ? <a href={service.href} class="text-link mt-1">{service.note}</a> : <p class="mt-2 text-sm text-muted">{service.note}</p>}</div>)}</div>
+    <div class="mt-7">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p></Disclosure>)}</div>
+  </section>
+</SiteLayout>

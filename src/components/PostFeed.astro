@@ -1,0 +1,12 @@
+---
+import type { LibraryPost } from '../content/types';
+import { newestPosts, postDate } from '../content/feeds';
+interface Props { posts: LibraryPost[]; }
+const { posts } = Astro.props;
+---
+<ul class="m-0 list-none divide-y divide-line p-0">
+  {newestPosts(posts).map(post => <li class="py-5 first:pt-0">
+    <p class="mb-2 text-sm text-muted">{post.publishedAt ? <time datetime={post.publishedAt}>{postDate(post)}</time> : postDate(post)}{post.externalUrl && <> · {post.sourceLabel ?? 'External article'}</>}</p>
+    <h3 class="card-heading"><a href={post.externalUrl ?? post.href} class="underline decoration-1 hover:decoration-2">{post.title}</a></h3>
+  </li>)}
+</ul>

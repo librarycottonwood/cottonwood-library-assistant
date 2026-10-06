@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import { resolveImage } from '../content/images';
+import type { LibraryImage } from '../content/types';
+interface Props { image: LibraryImage; variant?: 'card' | 'feature'; badge?: boolean; eager?: boolean; }
+const { image, variant = 'card', badge = false, eager = false } = Astro.props;
+const contained = image.fit === 'contain';
+---
+<Image
+  src={resolveImage(image.key)} alt={image.alt}
+  widths={variant === 'card' ? [360, 600, 800] : [500, 800, 1100]}
+  sizes={variant === 'card' ? '(max-width: 767px) 100vw, 33vw' : '(max-width: 1023px) 100vw, 60vw'}
+  loading={eager ? 'eager' : 'lazy'}
+  class:list={[
+    'w-full',
+    variant === 'card' ? 'aspect-[1.52]' : contained ? 'aspect-square max-h-[540px] rounded-[4px]' : 'rounded-[4px] aspect-[1.5]',
+    contained ? 'object-contain bg-[#eee8d8] p-4' : 'object-cover',
+    contained && badge && 'pb-10',
+  ]}
+/>

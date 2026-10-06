@@ -1,0 +1,45 @@
+---
+import ContentImage from '../../components/ContentImage.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import Icon from '../../components/Icon.astro';
+import Disclosure from '../../components/Disclosure.astro';
+import ProgramCard from '../../components/ProgramCard.astro';
+import { postDate } from '../../content/feeds';
+import { contentRepository } from '../../content/repository';
+import type { Program, LibraryPost } from '../../content/types';
+export async function getStaticPaths() {
+  const [{ programs }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getPosts()]);
+  return [
+    ...programs.map(program => ({ params: { slug: program.id }, props: { program, post: undefined } })),
+    ...posts.filter(post => post.id !== 'summer-2026').map(post => ({ params: { slug: post.id }, props: { post, program: undefined } })),
+  ];
+}
+interface Props { program?: Program; post?: LibraryPost; }
+const { program, post } = Astro.props;
+const { library, programs } = await contentRepository.getHome();
+---
+{program && <SiteLayout title={`${program.title} | Cottonwood Community Library`} description={program.description}>
+  <PageIntro title={program.title} back={{ href: '/librarynews/', label: 'Events & news' }} />
+  <section class="container grid items-start gap-9 pb-16 lg:grid-cols-[1.35fr_1fr] lg:gap-14" aria-label={`${program.title} details`}>
+    <ContentImage image={program.image} variant="feature" eager />
+    <div>
+      <dl class="space-y-6 rounded-[4px] bg-meadow p-7">
+        <div><dt class="mb-2 flex items-center gap-2 text-sm font-semibold"><Icon name="calendar" class="size-5" />When</dt><dd class="m-0 text-lg">{program.schedule}</dd></div>
+        <div><dt class="mb-2 flex items-center gap-2 text-sm font-semibold"><Icon name="pin" class="size-5" />Where</dt><dd class="m-0 text-base">{library.address}<br />{library.locality}</dd></div>
+      </dl>
+      <p class="mt-5 text-base text-muted">{program.details}</p>
+      <a href={library.directionsUrl} class="button button-primary mt-4">Get directions</a>
+      <div class="mt-5"><Disclosure title="Before you come"><p>Call {library.phone} to check for holiday changes or cancellations.</p><a href={library.phoneHref} class="text-link mt-3">Call the library<Icon name="phone" class="size-4" /></a></Disclosure></div>
+    </div>
+  </section>
+  <section class="container border-t border-line py-10 sm:py-12" aria-labelledby="more-programs"><h2 id="more-programs" class="section-heading mb-6">More at the library</h2><div class="grid gap-5 sm:grid-cols-3">{programs.filter(other => other.id !== program.id).map(other => <ProgramCard program={other} />)}</div></section>
+</SiteLayout>}
+
+{post && <SiteLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
+  <PageIntro title={post.title} eyebrow={postDate(post)} back={{ href: '/librarynews/#news', label: 'Library news & stories' }} />
+  <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2"><ContentImage image={{ key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager /><div>{post.paragraphs.map(paragraph => <p class="mb-5 text-lg text-muted">{paragraph}</p>)}
+    {post.externalUrl && <a href={post.externalUrl} class="text-link mt-5">Read at {post.sourceLabel ?? 'the source'}<Icon name="external" class="size-4" /></a>}
+    <a href="/fundraising-events/" class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
+  </div></article>
+</SiteLayout>}

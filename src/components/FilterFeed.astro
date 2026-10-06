@@ -1,0 +1,38 @@
+---
+interface Props { id: string; label: string; filters: { value: string; label: string }[]; }
+const { id, label, filters } = Astro.props;
+---
+<filter-feed class="block" id={id}>
+  <div data-controls hidden class="mb-8 flex flex-wrap items-center gap-2" role="group" aria-label={label}>
+    <button type="button" class="filter-button" data-filter="all" aria-pressed="true">All</button>
+    {filters.map(filter => <button type="button" class="filter-button" data-filter={filter.value} aria-pressed="false">{filter.label}</button>)}
+  </div>
+  <p class="sr-only" data-result-status role="status" aria-live="polite"></p>
+  <div class="grid gap-x-7 gap-y-12 md:grid-cols-2 lg:grid-cols-3"><slot /></div>
+  <p data-empty hidden class="py-10 text-muted">There are no items in this category yet.</p>
+</filter-feed>
+<script>
+  class FilterFeed extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const controls = this.querySelector<HTMLElement>('[data-controls]');
+      const buttons = this.querySelectorAll<HTMLButtonElement>('[data-filter]');
+      const items = this.querySelectorAll<HTMLElement>('[data-category]');
+      const status = this.querySelector<HTMLElement>('[data-result-status]');
+      const empty = this.querySelector<HTMLElement>('[data-empty]');
+      if (controls) controls.hidden = false;
+      buttons.forEach(button => button.addEventListener('click', () => {
+        let count = 0;
+        items.forEach(item => {
+          item.hidden = button.dataset.filter !== 'all' && item.dataset.category !== button.dataset.filter;
+          if (!item.hidden) count++;
+        });
+        buttons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+        if (status) status.textContent = `${count} ${count === 1 ? 'item' : 'items'} shown`;
+        if (empty) empty.hidden = count > 0;
+      }));
+    }
+  }
+  if (!customElements.get('filter-feed')) customElements.define('filter-feed', FilterFeed);
+</script>

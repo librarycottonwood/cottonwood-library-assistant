@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+---
+<button id="back-to-top" type="button" hidden class="fixed right-5 bottom-5 z-20 inline-flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-full border border-line bg-paper px-3 text-sm font-semibold text-forest shadow-md transition-colors hover:bg-meadow sm:right-7 sm:bottom-7 sm:px-4">
+  <span class="sr-only sm:not-sr-only">Back to top</span><Icon name="arrow" class="size-5 -rotate-90" />
+</button>
+<script>
+  const backToTop = document.querySelector<HTMLButtonElement>('#back-to-top');
+  if (backToTop) {
+    const updateVisibility = () => { backToTop.hidden = window.scrollY < window.innerHeight; };
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    window.addEventListener('resize', updateVisibility);
+    updateVisibility();
+    backToTop.addEventListener('click', () => {
+      document.querySelector<HTMLAnchorElement>('header a')?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    });
+  }
+</script>

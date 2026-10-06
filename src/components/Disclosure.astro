@@ -1,0 +1,17 @@
+---
+import Icon from './Icon.astro';
+interface Props { title: string; compact?: boolean; }
+const { title, compact = false } = Astro.props;
+---
+<details class="disclosure border-b border-line">
+  <summary class:list={['flex list-none items-center justify-between gap-6 font-medium', compact ? 'min-h-12 py-3 text-sm' : 'min-h-16 py-4 text-base']}>
+    {title}
+    <span class="size-5 shrink-0" aria-hidden="true"><span class="disclosure-plus"><Icon name="plus" class="size-5" /></span><span class="disclosure-close"><Icon name="close" class="size-5" /></span></span>
+  </summary>
+  <div class="pt-1 pb-6 text-base text-muted"><slot /></div>
+</details>
+<style>
+  .disclosure > summary .disclosure-close { display: none; }
+  .disclosure[open] > summary .disclosure-plus { display: none; }
+  .disclosure[open] > summary .disclosure-close { display: block; }
+</style>

@@ -1,0 +1,15 @@
+---
+import PageLayout from './PageLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop.astro';
+import { contentRepository } from '../content/repository';
+interface Props { title?: string; description?: string; }
+const content = await contentRepository.getHome();
+---
+<PageLayout {...Astro.props}>
+  <Header library={content.library} navigation={content.navigation} />
+  <main id="main" tabindex="-1"><slot /></main>
+  <Footer library={content.library} navigation={content.navigation} />
+  <BackToTop />
+</PageLayout>

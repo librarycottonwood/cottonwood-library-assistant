@@ -1,0 +1,50 @@
+---
+import logo from '../../library-files/logos/cottonwood-community-library-logo.jpg';
+import Icon from './Icon.astro';
+import InstagramIcon from './InstagramIcon.astro';
+import FacebookIcon from './FacebookIcon.astro';
+import type { HomeContent } from '../content/types';
+interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
+const { library, navigation } = Astro.props;
+---
+<footer class="border-t border-line bg-paper pt-12 pb-7 sm:pt-16">
+  <div class="container">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.15fr_.7fr_1fr] lg:gap-16">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <a href="/" class="inline-flex max-w-full items-center gap-4" aria-label="Cottonwood Community Library home">
+          <img src={logo.src} alt="" width="225" height="200" loading="lazy" class="w-20 shrink-0 mix-blend-multiply" />
+          <span class="font-display text-[1.35rem] leading-snug">Cottonwood<br />Community Library</span>
+        </a>
+        <p class="mt-4 text-sm text-muted">Community-supported since 1996.</p>
+        <div class="mt-3 flex flex-wrap items-start gap-x-6 lg:flex-col">
+          <a href={library.instagramUrl} class="inline-flex min-h-11 items-center gap-3 text-sm font-medium hover:underline" aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="size-5" />Instagram</a>
+          <button type="button" disabled class="inline-flex min-h-11 cursor-default items-center gap-3 text-sm font-medium"><FacebookIcon class="size-5" />Facebook</button>
+        </div>
+      </div>
+      <nav aria-label="Footer sitemap">
+        <h2 class="mb-3 text-base font-semibold">Explore</h2>
+        <ul class="m-0 grid list-none grid-cols-2 gap-x-4 p-0 lg:block">
+          <li><a href="/" class="footer-link">Home</a></li>
+          {navigation.map(item => <li><a href={item.href} class="footer-link">{item.label}</a></li>)}
+          <li><a href={library.catalogUrl} class="footer-link">Library catalog<Icon name="external" class="size-3.5" /></a></li>
+        </ul>
+      </nav>
+      <div class="grid grid-cols-2 gap-4 sm:block">
+        <div>
+          <h2 class="mb-3 text-base font-semibold">Get in touch</h2>
+          <a href={library.phoneHref} class="footer-link">{library.phone}</a>
+          <a href={`mailto:${library.email}`} class="footer-link">{library.email}</a>
+        </div>
+        <div>
+          <h3 class="mb-3 text-base font-semibold sm:mt-6">Visit us</h3>
+          <address class="text-[0.9375rem] not-italic text-muted">{library.address}<br />{library.locality}</address>
+          <a href={library.directionsUrl} class="footer-link">Get directions<Icon name="external" class="size-3.5" /></a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 flex flex-wrap items-start justify-between gap-x-6 gap-y-3 border-t border-line pt-5 pb-14 text-[0.8125rem] text-muted">
+      <p>© {new Date().getFullYear()} {library.name}</p>
+      <p><span class="font-medium">Mailing address:</span> {library.mailingAddress}</p>
+    </div>
+  </div>
+</footer>

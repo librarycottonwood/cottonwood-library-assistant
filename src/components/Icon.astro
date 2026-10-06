@@ -1,0 +1,34 @@
+---
+import {
+  ArrowRight, ArrowUpRight, BookOpen, MapPin, Clock, Heart, CalendarDays,
+  Monitor, Printer, Download, Plus, Menu, X, Phone, Mail, BookCopy, ShoppingBasket,
+} from '@lucide/astro';
+
+const icons = {
+  arrow: ArrowRight,
+  external: ArrowUpRight,
+  book: BookOpen,
+  pin: MapPin,
+  clock: Clock,
+  heart: Heart,
+  calendar: CalendarDays,
+  computer: Monitor,
+  printer: Printer,
+  download: Download,
+  plus: Plus,
+  menu: Menu,
+  close: X,
+  phone: Phone,
+  mail: Mail,
+  'book-sale': BookCopy,
+  basket: ShoppingBasket,
+};
+
+interface Props {
+  name: keyof typeof icons;
+  class?: string;
+}
+const { name, class: className = '' } = Astro.props;
+const LucideIcon = icons[name];
+---
+<LucideIcon class={className} aria-hidden="true" focusable="false" />

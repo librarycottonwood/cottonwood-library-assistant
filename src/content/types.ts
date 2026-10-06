@@ -1,0 +1,122 @@
+/** Provider-neutral content: a future CMS adapter returns this same shape. */
+export interface LibraryImage {
+  key: string;
+  alt: string;
+  caption?: string;
+  /** Preserve the full artwork/logo instead of cropping it like a photograph. */
+  fit?: 'cover' | 'contain';
+}
+
+export interface Program {
+  audience: 'children' | 'adults';
+  id: string;
+  title: string;
+  schedule: string;
+  description: string;
+  details: string;
+  image: LibraryImage;
+}
+
+export interface HomeContent {
+  library: {
+    name: string;
+    phone: string;
+    phoneHref: string;
+    email: string;
+    address: string;
+    locality: string;
+    mailingAddress: string;
+    timezone: 'America/Los_Angeles';
+    hoursSummary: string;
+    hours: { days: string; hours: string }[];
+    catalogUrl: string;
+    directionsUrl: string;
+    instagramUrl: string;
+    /** Null until the library supplies an approved campaign. Never a placeholder URL. */
+    donationUrl: string | null;
+  };
+  navigation: { label: string; href: string }[];
+  hero: {
+    eyebrow: string;
+    heading: [string, string];
+    introduction: string;
+    image: LibraryImage;
+  };
+  programs: Program[];
+  services: { id: string; title: string; description: string; icon: 'book' | 'computer' | 'printer' }[];
+  borrowing: { question: string; answer: string }[];
+  newsletter: {
+    issue: string;
+    title: string;
+    summary: string;
+    fileUrl: string;
+    cover: LibraryImage;
+  };
+  story: { heading: string; paragraphs: string[]; image: LibraryImage };
+  support: { title: string; introduction: string; image: LibraryImage; volunteerFileUrl: string; materials: string; bookSale: string; wowPoints: string };
+}
+
+export interface SupportInitiative {
+  gallery?: LibraryImage[];
+  id: string;
+  title: string;
+  category: 'giving' | 'volunteering' | 'community';
+  label: string;
+  summary: string;
+  image: LibraryImage;
+  paragraphs: string[];
+  steps: string[];
+  action: { label: string; href: string; download?: boolean };
+}
+
+export interface SupportContent {
+  updates: SupportUpdate[];
+  initiatives: SupportInitiative[];
+  /** Only published, approved campaigns belong here. No synthetic totals. */
+  campaigns: FundraisingCampaign[];
+}
+
+export interface FundraisingCampaign {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  raised: number;
+  goal: number;
+  currency: 'USD';
+  updatedAt: string;
+}
+
+export interface SupportUpdate {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  image: LibraryImage;
+  href: string;
+  linkLabel: string;
+}
+
+/** Confirmed occurrences only. Recurrence descriptions do not create dates. */
+export interface LibraryEvent {
+  id: string;
+  title: string;
+  startsAt: string;
+  endsAt?: string;
+  summary: string;
+  href: string;
+}
+
+/** Library-written updates or attributed links to articles. Undated items stay last. */
+export interface LibraryPost {
+  id: string;
+  title: string;
+  publishedAt: string | null;
+  dateLabel?: string;
+  category: string;
+  summary: string;
+  href: string;
+  paragraphs: string[];
+  externalUrl?: string;
+  sourceLabel?: string;
+}

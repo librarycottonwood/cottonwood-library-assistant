@@ -1,0 +1,15 @@
+---
+import ContentImage from './ContentImage.astro';
+import type { LibraryImage } from '../content/types';
+interface Props { title: string; description: string; image: LibraryImage; href?: string; id?: string; }
+const { title, description, image, href, id } = Astro.props;
+---
+<article class="flex h-full flex-col" id={id}>
+  <div class="relative overflow-hidden rounded-[4px] bg-meadow">
+    <ContentImage image={image} badge={Astro.slots.has('badge')} />
+    {Astro.slots.has('badge') && <span class="absolute bottom-0 left-0 flex max-w-full items-center gap-2 bg-paper px-4 pt-2.5 pb-1 text-xs font-semibold"><slot name="badge" /></span>}
+  </div>
+  <h3 class="card-heading mt-5">{href ? <a href={href} class="hover:underline">{title}</a> : title}</h3>
+  <p class="mt-3 text-base leading-relaxed text-muted">{description}</p>
+  <div class="mt-3"><slot /></div>
+</article>

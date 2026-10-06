@@ -1,0 +1,10 @@
+---
+import { Image } from 'astro:assets';
+import { resolveImage } from '../content/images';
+import type { LibraryImage } from '../content/types';
+interface Props { images: LibraryImage[]; }
+const { images } = Astro.props;
+---
+<div class="mt-9 grid gap-7 sm:grid-cols-2">
+  {images.map(image => <figure class="m-0"><Image src={resolveImage(image.key)} alt={image.alt} widths={[360, 600]} sizes="(max-width: 639px) 100vw, 30vw" class="h-auto w-full rounded-[4px]" loading="lazy" />{image.caption && <figcaption class="mt-3 text-sm text-muted">{image.caption}</figcaption>}</figure>)}
+</div>
