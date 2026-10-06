@@ -35,7 +35,10 @@ try {
     page.on('console', message => { if (message.type() === 'error') errors.push(`${name}: ${message.text()}`); });
     await page.route('**/*', route => {
       const url = new URL(route.request().url());
-      return url.origin === base || url.hostname === 'tiles.openfreemap.org' ? route.continue() : route.abort();
+      // Exercise the real address/directions fallback in offline cloud captures.
+      // Live map rendering is checked separately with the provider available.
+      if (url.hostname === 'tiles.openfreemap.org') return route.fulfill({ contentType: 'application/json', body: '{}' });
+      return url.origin === base ? route.continue() : route.abort();
     });
     for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {
       const route = '/' + file.path.replace(/index\.html$/, '');
@@ -59,7 +62,7 @@ try {
   if (errors.length) throw new Error(errors.join('\n'));
   const pictures = {};
   for (const name of ['desktop', 'phone']) pictures[name] = createHash('sha256').update(await readFile(path.join(output, `${name}.png`))).digest('hex');
-  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'isolated prototype; OpenFreeMap tiles allowed; other external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
+  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'offline prototype; map address/directions fallback exercised; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
   console.log(`Screenshots and checks: ${output}`);
 } finally {
   await browser?.close();

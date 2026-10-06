@@ -31,6 +31,7 @@ for (const section of sections) {
       const response=await fetch('https://tiles.openfreemap.org/styles/positron');
       if (!response.ok) return;
       const style=await response.json();
+      if (style?.version !== 8 || !style.sources || !Array.isArray(style.layers)) return;
       const map = new Map({container:host,style,center:[-122.2805738,40.3873866],zoom:14.5,scrollZoom:false,cooperativeGestures:true,attributionControl:{compact:false}});
       new Marker({color:'#253e32'}).setLngLat([-122.2805738,40.3873866]).addTo(map);
       map.addControl(new NavigationControl({showCompass:false}),'top-right');
