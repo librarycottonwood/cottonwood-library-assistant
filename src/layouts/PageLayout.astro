@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '../components/Analytics.astro';
 interface Props { title?: string; description?: string; }
 const {
   title = 'Cottonwood Community Library | Your community, your library',
@@ -20,5 +21,6 @@ const {
   <body>
     <a href="#main" class="fixed top-3 left-3 z-50 -translate-y-24 rounded bg-white px-5 py-3 font-semibold focus:translate-y-0">Skip to content</a>
     <slot />
+    <Analytics />
   </body>
 </html>

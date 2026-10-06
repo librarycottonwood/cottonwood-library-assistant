@@ -12,8 +12,8 @@ const bookSale = initiatives.find(item => item.id === 'book-sale')!;
 const actions = [
   { label: 'Upcoming events', href: '/librarynews/', icon: 'calendar' as const, tone: 'action-meadow' },
   { label: 'Kids & families', href: '/kids/', icon: 'book' as const, tone: 'action-gold' },
-  { label: 'Find a book', href: library.catalogUrl, icon: 'book-sale' as const, tone: 'action-paper' },
-  { label: 'Donate', href: '/fundraising-events/', icon: 'heart' as const, tone: 'action-forest' },
+  { label: 'Find a book', href: library.catalogUrl, icon: 'book-sale' as const, tone: 'action-paper', event: 'catalog_quick' },
+  { label: 'Donate', href: '/fundraising-events/', icon: 'heart' as const, tone: 'action-forest', event: 'donate_quick' },
 ];
 const resources = [
   { label: 'Library catalog', href: library.catalogUrl, icon: 'book' as const },
@@ -35,7 +35,7 @@ const resources = [
 
   <div class="container pb-10">
     <nav aria-label="Library quick links" class="grid grid-cols-2 gap-3 lg:grid-cols-4 sm:gap-4">
-      {actions.map(action => <a href={action.href} class:list={['action-tile', action.tone]}>
+      {actions.map(action => <a href={action.href} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
         <Icon name={action.icon} class="size-7 shrink-0 sm:size-8" />
         <span class="text-base font-bold leading-tight sm:text-xl">{action.label}</span>
       </a>)}

@@ -8,7 +8,7 @@ A private website repository, published ChatGPT cloud environment, separate Clou
 
 ## What is not built or connected
 
-Facebook/Instagram insights, Givebutter reporting, website analytics collection or reporting, production publishing with enforced human approval, persistent monitoring, or a custom interface hiding all technical activity. Sources in an ordinary ChatGPT Project do not automatically attach to the coding environment.
+Facebook/Instagram insights, Givebutter reporting, automatic website analytics reporting, production publishing with enforced human approval, persistent monitoring, or a custom interface hiding all technical activity. Sources in an ordinary ChatGPT Project do not automatically attach to the coding environment.
 
 ## Plain-language role
 
@@ -25,7 +25,7 @@ You are Cottonwood Library Assistant, a warm, cheerful helper for library volunt
 
 Earlier research proposed Cloudflare hosting, Sanity content editing and Umami Hobby analytics. Sanity is not connected in this assistant demo; conversational file editing is the demonstrated editing route. Preserve the older plan as history.
 
-Umami Hobby is still $0 for one website, up to 100,000 events/month and six-month retention, but its hosted API/MCP access is a Pro feature ($20/month). Do not promise automatic assistant access on Hobby. Free alternatives to investigate are standard Google Analytics with its reporting API, or self-hosted Umami with separately verified hosting/database costs. A free dashboard plus supplied exports is another option. No analytics service has been selected or installed here.
+Umami Hobby is still $0 for one website, up to 100,000 events/month and six-month retention, but its hosted API/MCP access is a Pro feature ($20/month). Do not promise automatic assistant access on Hobby. Free alternatives to investigate are standard Google Analytics with its reporting API, or self-hosted Umami with separately verified hosting/database costs. A free dashboard plus supplied exports is another option. Standard Google Analytics has now been selected for the separate demo property. Consent-gated tracking is implemented and tested; see analytics.json. Automatic assistant reporting remains unconnected.
 
 Sources checked October 5:
 - https://umami.is/pricing
@@ -48,4 +48,4 @@ Official guide: https://help.givebutter.com/en/articles/16301438-how-to-connect-
 
 For Facebook, obtain access to the actual library Page and its Insights first. Use a real supplied Insights report for tomorrow if a live reporting connection cannot be prepared and verified. Do not treat a public Page URL as private analytics access.
 
-For zero-subscription-cost hosted website analytics with an automatic reporting route, investigate standard Google Analytics and the Data API. The user needs an authorized Google sign-in and a library-owned analytics property (or access to an existing one). The maintainer installs and checks tracking, adds the relevant click events, and connects read-only reporting. No tracking or reporting connection has been configured yet; new tracking does not produce historical data.
+For zero-subscription-cost hosted website analytics with an automatic reporting route, investigate standard Google Analytics and the Data API. The user needs an authorized Google sign-in and a library-owned analytics property (or access to an existing one). The maintainer installs and checks tracking, adds the relevant click events, and connects read-only reporting. A separate demo account/property is created and consent-gated tracking is implemented. Read-only assistant reporting remains unconnected; new tracking does not produce historical data.

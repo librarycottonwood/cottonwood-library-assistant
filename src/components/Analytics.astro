@@ -1,0 +1,91 @@
+---
+import analytics from '../../assistant/analytics.json';
+const testHost = import.meta.env.PUBLIC_ANALYTICS_TEST_HOST ?? '';
+---
+<div id="library-analytics" data-measurement={analytics.measurementId} data-host={analytics.websiteHost} data-test-host={testHost}>
+  <div class="container flex gap-5 pb-6 text-sm">
+    <a href="/privacy/" class="underline">Privacy</a>
+    <button id="privacy-choices" type="button" class="underline" hidden>Privacy choices</button>
+  </div>
+  <section id="statistics-choice" aria-labelledby="statistics-title" class="fixed right-4 bottom-4 left-4 z-[60] rounded-xl border border-line bg-paper p-5 shadow-lg sm:right-6 sm:left-auto sm:max-w-md" hidden>
+    <h2 id="statistics-title" class="font-semibold">Help us improve this website?</h2>
+    <p class="mt-2 text-sm">Allow Google Analytics cookies to measure visits and selected button clicks. You can change your choice anytime. <a href="/privacy/" class="underline">About privacy</a></p>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <button id="statistics-allow" type="button" class="button button-outline">Allow statistics</button>
+      <button id="statistics-deny" type="button" class="button button-outline">No thanks</button>
+    </div>
+  </section>
+</div>
+<script>
+  declare global {
+    interface Window {
+      dataLayer?: unknown[];
+      gtag?: (...args: unknown[]) => void;
+    }
+  }
+  const root = document.querySelector<HTMLElement>('#library-analytics');
+  const measurement = root?.dataset.measurement ?? '';
+  const host = root?.dataset.host ?? '';
+  const allowed = location.hostname === host || location.hostname.endsWith('.' + host) || (root?.dataset.testHost && location.hostname === root.dataset.testHost);
+  const panel = document.querySelector<HTMLElement>('#statistics-choice');
+  const choices = document.querySelector<HTMLButtonElement>('#privacy-choices');
+  const key = 'cottonwood-statistics-choice-v1';
+  let active = false;
+  let initialized = false;
+  const blockedKey = 'ga-disable-' + measurement;
+  const setBlocked = (blocked: boolean) => { (window as unknown as Record<string, unknown>)[blockedKey] = blocked; };
+  const readChoice = () => { try { return localStorage.getItem(key); } catch { return null; } };
+  const cleanReferrer = () => { try { const url = new URL(document.referrer); return url.origin + url.pathname; } catch { return ''; } };
+  const start = () => {
+    active = true;
+    setBlocked(false);
+    if (initialized) return;
+    initialized = true;
+    window.dataLayer = window.dataLayer || [];
+    // Google expects an Arguments object, rather than an array, in the queue.
+    window.gtag = function () { window.dataLayer!.push(arguments); };
+    window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    window.gtag('consent', 'update', { analytics_storage: 'granted' });
+    window.gtag('js', new Date());
+    window.gtag('config', measurement, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_flags: 'SameSite=Lax;Secure', page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), debug_mode: true });
+    window.gtag('event', 'page_view', { page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), page_title: document.title });
+    const script = document.createElement('script');
+    script.async = true;
+    script.id = 'library-google-tag';
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurement;
+    document.head.append(script);
+  };
+  const choose = (allow: boolean) => {
+    try { localStorage.setItem(key, allow ? 'allow' : 'deny'); } catch { /* This visit still honors the choice. */ }
+    if (panel) panel.hidden = true;
+    if (allow) start();
+    else {
+      active = false;
+      setBlocked(true);
+      for (const cookie of document.cookie.split(';')) {
+        const name = cookie.split('=')[0].trim();
+        if (name === '_ga' || name.startsWith('_ga_')) document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax; Secure`;
+      }
+      // Reload with the denied choice so previously loaded code cannot keep sending.
+      if (initialized) location.reload();
+    }
+    choices?.focus({ preventScroll: true });
+  };
+  if (allowed && /^G-[A-Z0-9]+$/.test(measurement)) {
+    if (choices) choices.hidden = false;
+    if (readChoice() === 'allow') start();
+    else if (readChoice() !== 'deny' && panel) panel.hidden = false;
+    choices?.addEventListener('click', () => {
+      if (panel) panel.hidden = false;
+      document.querySelector<HTMLButtonElement>('#statistics-allow')?.focus();
+    });
+    document.querySelector('#statistics-allow')?.addEventListener('click', () => choose(true));
+    document.querySelector('#statistics-deny')?.addEventListener('click', () => choose(false));
+    const events = new Set(['catalog_header', 'catalog_mobile', 'catalog_footer', 'donate_header', 'catalog_quick', 'donate_quick']);
+    document.addEventListener('click', event => {
+      if (!active || !(event.target instanceof Element)) return;
+      const name = event.target.closest<HTMLElement>('[data-analytics-event]')?.dataset.analyticsEvent;
+      if (name && events.has(name)) window.gtag?.('event', name, {});
+    });
+  }
+</script>
