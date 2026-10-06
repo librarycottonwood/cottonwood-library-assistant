@@ -39,3 +39,13 @@ Sources checked October 5:
 Run a new website edit live and show its actual checked preview. For Facebook or fundraising analysis, supply a real report before the meeting and ask an unrehearsed question about it. Describe it as analysis of a supplied report, not a live account connection. If real data is unavailable, any sample must say "sample data" visibly and must not be described as library results. Do not claim Facebook, Givebutter, historical analytics, production publishing or continuous monitoring works before connecting and testing it.
 
 Earlier planning documents are research/platform-and-pricing.md and research/analytics-and-privacy.md in the original cottonwood workspace. This file is the current assistant-specific status.
+
+## Connection requirements checked October 5
+
+Givebutter now documents an official ready-made ChatGPT plugin. Prefer that authenticated, hosted connection for fundraising questions rather than building a custom API reader. The user connects through ChatGPT's plugin directory and signs in to their existing authorized Givebutter account; each teammate authorizes their own connection. No Givebutter password or API key should be pasted into a chat. This has not been installed or tested on the library account yet.
+
+Official guide: https://help.givebutter.com/en/articles/16301438-how-to-connect-chatgpt-to-your-givebutter-account
+
+For Facebook, obtain access to the actual library Page and its Insights first. Use a real supplied Insights report for tomorrow if a live reporting connection cannot be prepared and verified. Do not treat a public Page URL as private analytics access.
+
+For zero-subscription-cost hosted website analytics with an automatic reporting route, investigate standard Google Analytics and the Data API. The user needs an authorized Google sign-in and a library-owned analytics property (or access to an existing one). The maintainer installs and checks tracking, adds the relevant click events, and connects read-only reporting. No tracking or reporting connection has been configured yet; new tracking does not produce historical data.
