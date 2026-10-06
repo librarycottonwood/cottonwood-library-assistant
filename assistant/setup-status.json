@@ -2,7 +2,7 @@
   "checkedAt": "2026-10-05 America/Los_Angeles",
   "repository": "https://github.com/oobagi/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
-  "demoHomepage": "https://bae70b30.cottonwood-library-preview.pages.dev",
+  "demoHomepage": "https://29695462.cottonwood-library-preview.pages.dev",
   "original": {
     "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3",
     "preview": "https://56d28a2c.cottonwood-library-preview.pages.dev"
@@ -35,14 +35,14 @@
     "accountId": "410873133",
     "propertyId": "557596091",
     "measurementId": "G-HKCKJ8R4D1",
-    "preview": "https://bae70b30.cottonwood-library-preview.pages.dev",
+    "preview": "https://29695462.cottonwood-library-preview.pages.dev",
     "dashboard": "https://analytics.google.com/analytics/web/#/a410873133p557596091/realtime/overview",
     "tracking": "Consent-gated tracking verified on hosted demo: homepage page_view, donate_quick, and privacy page_view delivered to G-HKCKJ8R4D1 with HTTP 204; query strings excluded. Automated refusal/withdrawal/cookie-removal tests passed.",
     "assistantReporting": "Not connected",
     "history": "New demo test traffic only; no existing library history",
     "handover": "Library administrator identities needed",
     "dashboardVerification": "Realtime dashboard has not yet shown the test events; processing may be delayed.",
-    "pictures": "https://bae70b30.cottonwood-library-preview.pages.dev/_review/",
+    "pictures": "https://29695462.cottonwood-library-preview.pages.dev/_review/",
     "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37419680481"
   },
   "libraryAccounts": {
@@ -83,5 +83,11 @@
     "sourceCommit": "b83ae5d",
     "changes": "Featured Coming up layout, photo donation banner with Make a donation, selective top-right curves, hero address, factual service copy and varied section widths",
     "checks": "36 content-page desktop/phone checks; five responsive widths; illustrations loaded before capture; live hosted map and donation destination verified"
+  },
+  "storyRefinement": {
+    "digest": "2beb484ea603fcd743bee3398c11ec440f0f8ffeefa41d18ba5265ab60ce31e0",
+    "preview": "https://29695462.cottonwood-library-preview.pages.dev",
+    "sourceCommit": "0224d6c",
+    "checks": "Full narrative visible without disclosure; photo caption removed; land donation credit retained; desktop/phone and all 36 page checks passed"
   }
 }
