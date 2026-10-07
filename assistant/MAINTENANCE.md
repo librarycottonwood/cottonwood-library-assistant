@@ -33,6 +33,24 @@ check of current source. If it is missing, inspect available workflow evidence
 or wait briefly for an in-progress check. If verification is unavailable, report
 that plainly and make no changes based on an assumed pass.
 
+Also read assistant/ANALYTICS-CONNECTOR.md and the latest
+.library-analytics-checks/latest.json and .library-analytics-deployments/latest.json
+from maintenance-reports. Compare their sourceSha and hostedSourceSha with main
+and the actual hosted /health source before saying a connector fix is deployed.
+A saved branch or checked main commit is not proof of a deployed report connection.
+Use the check's status, age, runUrl and humanAction. Missing or stale evidence
+means verification is unavailable. A credential lock or revoked access requires
+the plain human step and its real account link; never repeatedly resend MFA,
+change account permissions, or claim the account problem was repaired. GitHub
+identity confirmation is separate from Google phone approval. Review failures
+and repairs from the past seven days; report whether a fix was saved, deployed
+and verified, rolled back, or needs human action. Inspect open Library visitor
+reports need attention issues. Keep human requests in this existing pinned
+Weekly Maintenance Check chat, also accessible through Scheduled. Do not claim
+instant, phone or email alerts. Keep the existing cadence and task. A brief
+healthy weekly response is accepted. Actual scheduled connector tool use must
+be tested separately from reading its saved check status.
+
 Review failed checks and relevant security advisories for the pinned dependencies.
 Research only when a finding warrants it. Do not upgrade packages merely because
 newer releases exist. Keep this focused: at most one necessary, small maintenance
@@ -224,3 +242,19 @@ report main bot repairs from the past seven days. Monday 14:00 Pacific flexible,
 cloud and enabled settings preserved. One native manual run was requested after
 this update; completed weekly result delivery has not yet been observed.
 The temporary bot validation workflow was removed; website content unchanged.
+
+The Analytics prompt addition above was saved and exactly read back in the
+library's existing native cloud task `6ac5a460da40819092fe6b5e6403c3cd`.
+The original prompt/title, active state and Monday weekly afternoon cadence
+were preserved. The actual saved addition also tells the task to inspect
+`feat/library-analytics-mcp` during initial setup, because connector reports
+and instructions are not on main yet.
+
+One native Run now completed in the pinned Weekly Maintenance Check chat
+`6ac5a482-f5d8-83e8-a4f8-38fa554ba79f`: the website was healthy, Analytics
+setup was correctly identified as unfinished, and Google phone approval was
+distinguished from GitHub account confirmation. It made no repair or repeated
+verification request. This proves source/setup inspection and completion of
+the existing weekly cloud prompt. It does not prove future daily/deployment
+record access or use of an installed Analytics MCP; those still need testing
+after credentials, installation and workflow activation.

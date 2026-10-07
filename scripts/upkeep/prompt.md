@@ -10,7 +10,15 @@ change website code to conceal it. Make the smallest necessary technical fix.
 Do not change public wording, hours, events, donation settings, imagery choices,
 account settings, billing, domain settings, credentials, GitHub workflows, tests,
 or safety checks. Allowed automatic repair files are src/components/**,
-src/layouts/**, src/styles/**, package.json and pnpm-lock.yaml. Preserve the site's
+src/layouts/**, src/styles/**, package.json, pnpm-lock.yaml,
+connector/package.json, connector/package-lock.json, connector/src/mcp.mjs
+and connector/src/format.mjs. Package changes may only update existing exact
+dependency versions, never scripts, package metadata, or new dependencies.
+For the Analytics connector,
+fix only protocol handling or report presentation; never change authentication,
+property selection, report request permissions, secrets, hosting configuration,
+or logging. Account/permission failures need human attention, not code repair.
+Preserve the site's
 appearance and visitor behavior. Do not upgrade packages merely because a newer
 version exists. If the necessary fix falls outside this scope, explain the issue
 briefly instead of editing it. Never inspect or print authentication files.

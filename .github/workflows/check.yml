@@ -23,6 +23,12 @@ jobs:
       - run: bash scripts/cloud-setup.sh
       - run: node --test scripts/release.test.mjs
       - run: node scripts/analytics.test.mjs
+      - name: Verify private Analytics connector without credentials
+        run: |
+          npm ci --prefix connector --ignore-scripts
+          npm test --prefix connector
+          node --test scripts/analytics-recovery-browser.test.mjs
+          npm run build --prefix connector
       - name: Save and inspect a version
         run: |
           version=$(node scripts/release.mjs prepare)
