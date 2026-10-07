@@ -17,7 +17,9 @@ const previous=current.versions?.length===1 && current.versions[0].percentage===
 if(!previous)throw Error('An existing complete deployment is required for safe rollback.');
 let deployed=false;
 try {
-  invoke('deploy','--strict','--message','Checked library source '+sha,'--var','BUILD_SOURCE_SHA:'+sha);
+  // Not --strict: dashboard secret changes would block every later update. Source is the
+  // source of truth; secrets are kept, and failed verification rolls back below.
+  invoke('deploy','--message','Checked library source '+sha,'--var','BUILD_SOURCE_SHA:'+sha);
   deployed=true;
   await verifyHostedSource(origin+'/health',sha);
   execFileSync(process.execPath,['check-live.mjs'],{stdio:'pipe'});
