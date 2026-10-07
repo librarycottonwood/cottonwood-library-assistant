@@ -158,7 +158,7 @@ OpenAI API credits. Do not create another weekly task.
   were verified after restoration. This is infrastructure rollback evidence,
   not a live reporting/ChatGPT or automatic CI rollback test.
 
-- Connector: **17 tests passed**, including real Workers runtime OAuth discovery,
+- Connector: **18 tests passed**, including real Workers runtime OAuth discovery,
   PKCE, consent-cookie binding, CSRF denial, script escaping, read-only protocol
   behavior, removal of OAuth tokens and arbitrary headers before the repairable
   protocol module, fixed aggregate request/property policy, date comparisons, missing
@@ -252,7 +252,7 @@ next step/link and succeeds only after a real report. It cannot repair a missing
 client by ordinary login. The daily/weekly status path
 records classified causes and reconnect readiness, never counts or credentials.
 
-Fixtures: **17 tests passed**, including temporary-token expiry/renewal, revoked
+Fixtures: **18 tests passed**, including temporary-token expiry/renewal, revoked
 Google grant, canonical daily/live recovery instructions, invalid client, CSRF/PKCE/state expiry, wrong account, denied consent,
 failed report before replacement, access removal/restoration and error privacy.
 Existing 11 repair-boundary tests still pass. These are isolated synthetic tests;
@@ -320,3 +320,13 @@ instead of maintaining a second instruction map. The private monitor independent
 checks the hosted reader because it must work even when ChatGPT sign-in is broken.
 The unused service account remains in the account inventory as historical unused
 setup; this code cleanup does not change account roles or permissions.
+
+Repository maintenance credentials are now saved through the verified library
+GitHub account UI as `LIBRARY_ANALYTICS_DEPLOY_TOKEN` and
+`LIBRARY_ANALYTICS_MONITOR_TOKEN`; both names were read back. No email verification
+was triggered. GitHub identity-app client-secret generation is separate and still
+unfinished. The publisher checks readiness first and records
+`publisher_setup_pending`, `account_setup_pending` or `connection_attention`,
+retaining the current Worker without a known-failing update/rollback. Only a
+working live reader advances to checked publishing. This is a setup/recovery gate,
+not evidence of a completed automatic repair deployment.
