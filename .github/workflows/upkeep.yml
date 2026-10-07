@@ -76,7 +76,7 @@ jobs:
             -v "$RUNNER_TEMP/agent-auth:/auth" \
             -v "$RUNNER_TEMP/review:/review" \
             -e CODEX_HOME=/auth library-upkeep \
-            bash -c 'codex exec --disable apps --ignore-user-config --ephemeral --dangerously-bypass-approvals-and-sandbox -m gpt-6.1-sol -c model_reasoning_effort="low" -o /review/result.txt - < /review/prompt.md >/dev/null 2>&1'
+            bash -c 'codex exec --disable apps --ignore-user-config --ephemeral --dangerously-bypass-approvals-and-sandbox -m gpt-6-luna -c model_reasoning_effort="low" -o /review/result.txt - < /review/prompt.md >/dev/null 2>&1'
       - name: Maintain sign-in on idle weeks
         if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair != 'true'
         timeout-minutes: 2
@@ -84,13 +84,17 @@ jobs:
           docker run --rm --name library-codex-worker \
             -v "$RUNNER_TEMP/agent-auth:/auth" -e CODEX_HOME=/auth library-upkeep \
             codex exec --disable apps --ignore-user-config --ephemeral --skip-git-repo-check -s read-only \
-            -m gpt-6.1-sol -c model_reasoning_effort="low" 'Reply with the single word OK.' >"$RUNNER_TEMP/login-test.log" 2>&1 || {
+            -m gpt-6-luna -c model_reasoning_effort="low" 'Reply with the single word OK.' >"$RUNNER_TEMP/login-test.log" 2>&1 || {
             python3 -c 'import os,re; from pathlib import Path; s=Path(os.environ["RUNNER_TEMP"]+"/login-test.log").read_text(); print(re.sub(r"[A-Za-z0-9_./+-]{80,}","[redacted]",s[-6000:]))'
             exit 1
           }
       - name: Stop worker before handling credentials
         if: always()
-        run: docker rm -f library-codex-worker >/dev/null 2>&1 || true
+        run: |
+          docker rm -f library-codex-worker >/dev/null 2>&1 || true
+          if [ -d "$RUNNER_TEMP/agent-auth" ]; then
+            sudo chown -R "$(id -u):$(id -g)" "$RUNNER_TEMP/agent-auth"
+          fi
       - name: Preserve refreshed login in encrypted storage
         if: always() && steps.auth.outcome == 'success'
         env:
