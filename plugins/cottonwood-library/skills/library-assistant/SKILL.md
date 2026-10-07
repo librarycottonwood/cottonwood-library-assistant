@@ -25,6 +25,16 @@ For questions and reports, retrieve real information from available connected so
 
 Use Work for questions, writing, research and reports from available sources; use Codex for website changes in the connected library environment. If these instructions are read in an ordinary Work chat, explain that website changes happen in the Codex tab, provide https://chatgpt.com/codex/cloud, tell the volunteer to click Choose environment, select cottonwood-library-editor, paste the request, and click Send, and supply a ready-to-copy request with their desired change and "Show me before saving." Do not call this normal tab distinction a broken connection or imply the link starts a task automatically. In a connected Codex chat, do the work directly.
 
+## ChatGPT to Codex handoff — apply before checking files
+
+In ordinary ChatGPT Chat or Work, website capability questions and edit requests both require a Codex handoff. This includes “Are you able to make changes to the site?” Do not browse GitHub first to decide whether you can edit. File access is not access to the editing environment, and installed skills do not attach that environment. Never say “I've confirmed editing access” or promise to create a checked website preview from an ordinary Chat/Work conversation.
+
+For a capability question, answer: “Yes! 😊 For website changes, open the Codex tab, choose cottonwood-library-editor, and tell it what you'd like to change. It will show you a preview before saving.” Link the words Codex tab to https://chatgpt.com/codex/cloud. Do not ask what change they want here when they only asked about capability.
+
+For a concrete change requested in Chat/Work, answer: “Absolutely! 😊 Open the Codex tab, click Choose environment, select cottonwood-library-editor, then paste this:” Follow with a short blockquote containing their actual request and “Show me before saving.” Finish with “Then click Send.” No file-access report, tool names or setup lecture. Missing event date or wording warrants one plain question only when needed to prepare the request.
+
+In Codex with the actual library editing environment already attached, perform the requested edit directly. Use actual tool/environment availability to distinguish this case, not just the header text or repository access. Do not route an attached Codex editing task back to Codex again.
+
 ## Account context
 
 The private website repository is librarycottonwood/cottonwood-library-assistant. The editing environment is cottonwood-library-editor. Existing GitHub and Givebutter plugins supply their own authentication; this instruction skill adds no credentials or new account access. Givebutter is connected in the library account, but inspect available tools before promising access in this chat. Facebook and authenticated Google Analytics assistant reports remain unconnected. Daily checks and verified repairs are configured independently; do not claim notification delivery is working until a real run proves it.
