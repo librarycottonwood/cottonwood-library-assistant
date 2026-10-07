@@ -113,8 +113,10 @@ Prepared workflows are not on main and are not enabled yet:
   the previous version if post-deployment verification fails. Deployment outcomes
   (verified, rolled back, not deployed, superseded or needs attention) are saved
   under `.library-analytics-deployments/` on `maintenance-reports`.
-  The manual Worker rollback/restoration path passed; automatic failure
-  rollback and credentialed publishing still require a cloud CI rehearsal.
+  The trusted publisher was also run against the real Worker: it deployed
+  checked source, rejected the absent Google credential, automatically rolled
+  back, and exact prior-version restoration was verified. A successful live
+  report deployment and execution through GitHub CI still require rehearsal.
 - Newer main source supersedes an earlier check. No automated workflow changes
   permissions, accounts, billing, Analytics settings, public website content,
   domains or DNS.
@@ -140,6 +142,13 @@ OpenAI API credits. Do not create another weekly task.
 - Website check/build, release safeguards, consent/privacy checks and 36 page
   checks passed. Desktop and phone captures were inspected; website source
   remained unchanged.
+- Trusted `publish.mjs` automatic-failure rehearsal passed on the real Worker:
+  checked `7b096d63cfe49f76afbba4ff4dc41afdab7d7bb6` source was deployed, its
+  live probe correctly rejected the missing Google credential, `rolled_back`
+  was recorded, and exact previous 100% version
+  `669a3b71-f5e1-4704-b81c-47b5208e410a` was restored and verified.
+  This is the real trusted publisher, but not execution through GitHub CI or
+  a successful live Analytics report.
 - Actual Worker rollback to initial version and restoration of version
   `0038c945-db6d-4a07-abf7-6d2cab418b6b` passed; hosted health and source SHA
   were verified after restoration. This is infrastructure rollback evidence,
