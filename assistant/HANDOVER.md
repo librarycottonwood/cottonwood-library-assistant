@@ -8,6 +8,7 @@ The library owns its ChatGPT Plus, GitHub repository and Cloudflare account. Cha
 - Website changes: Codex → Choose environment → **cottonwood-library-editor**. Show a checked draft before saving.
 - Saved trial: https://trial.cottonwood-library-trial-preview.pages.dev/ ; its computer/phone pictures are at `/_review/`.
 - Weekly summary: one Monday-afternoon cloud task. Its current binding and validation are recorded in setup-status.json.
+- Printable plain-language guide for board volunteers: [VOLUNTEER-GUIDE.md](VOLUNTEER-GUIDE.md).
 
 The obsolete cottonwood-library-assistant saved environment was deleted on October 7. The platform's confirmation states existing tasks/running environments remain available. There is one published volunteer editor. Daily GitHub repair workers do not depend on that editor.
 
