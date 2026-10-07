@@ -130,9 +130,17 @@
     },
     "cloudSetup": {
       "chat": "https://chatgpt.com/local/01a113bb-14a6-72cd-90de-62ac1d38002e",
-      "status": "Install/start configuration and preview credential saved; publication and fresh-task preview verification in progress",
+      "status": "Published; fresh library-account task edited homepage, checked desktop and phone, and uploaded an immutable draft. Hosted homepage and pictures page independently fetched successfully. Task network blocks reading preview host; save/restore not yet tested.",
       "githubConnection": "Library ChatGPT connected as librarycottonwood; owned repository selected",
-      "credential": "Cottonwood library account previews: account Cloudflare Pages Edit on existing demo hosting account; api.cloudflare.com binding. No production domain attached."
+      "credential": "Cottonwood library account previews: account Cloudflare Pages Edit on existing demo hosting account; api.cloudflare.com binding. No production domain attached.",
+      "freshTask": {
+        "chat": "https://chatgpt.com/local/01a113c3-d7d7-711c-a596-ad2e7382e020",
+        "preview": "https://975882e8.cottonwood-library-preview.pages.dev/",
+        "pictures": "https://975882e8.cottonwood-library-preview.pages.dev/_review/",
+        "digest": "7fb29f628c6d09b08e8a2408c49ab2d3a2bfa108589296a79ac50e1289a18c7e",
+        "saved": false
+      },
+      "hostingOwnership": "Jaden existing Cloudflare account. Library-owned hosting account not created; migrate before final handover. Jaden requests no ongoing management responsibility."
     }
   }
 }

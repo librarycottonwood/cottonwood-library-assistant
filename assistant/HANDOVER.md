@@ -14,7 +14,7 @@ Jaden reports the board accepted the custom-site pivot and wants six weeks to tr
 
 1. Library GitHub account **librarycottonwood** is created and verified. The private repository has been transferred to it; Jaden retains write access. Local origin is updated.
 2. Library ownership is in place. Later arrange a library organization with two human owners. Review pending demo changes; do not silently substitute an older preview for the demonstrated version.
-3. Library ChatGPT is connected to GitHub as librarycottonwood. Its cloud environment has passed setup checks; preview credentials and startup configuration are saved. Publication and fresh-task upload verification are in progress.
+3. Library ChatGPT is connected to GitHub as librarycottonwood. Its cloud environment has passed setup checks; preview credentials and startup configuration are saved. The environment is published. A fresh library-account task changed the homepage heading, checked desktop/phone screenshots and uploaded a draft; its hosted homepage and pictures page were independently fetched successfully. The task could not fetch the preview host because of its network policy; save/restore remains untested.
 4. Test a fresh library-account request: edit → computer/phone pictures → working preview → correction → save/restore the intended demo change. Verify the volunteer actually sees pictures and that a new task retains saved changes. Do not claim public publishing is configured.
 5. Give the board a stable trial link and a short start guide. Gather their feedback on wording, edits and reports during the six-week trial. Launch comes after that review and a tested publishing/rollback mechanism.
 
@@ -35,3 +35,11 @@ Use a library-owned Spaceship account. First record DNS, nameservers, forwarding
 Then unlock the domain, request the transfer code to the registrant contact, enter it at Spaceship, review the exact charge/settings, and complete the approved transfer. Squarespace says transfer can take up to 15 days and DNS edits are unavailable while pending. No transfer code requested, domain unlocked, purchase made, or DNS changed yet. Editing trials do not depend on moving the registrar.
 
 Sources: [Squarespace transfer guide](https://support.squarespace.com/hc/en-us/articles/205812338-Transferring-a-domain-away-from-Squarespace), [Spaceship transfer/pricing](https://www.spaceship.com/domains/transfer/), [Givebutter ChatGPT guide](https://help.givebutter.com/en/articles/16301438-how-to-connect-chatgpt-to-your-givebutter-account), [Codex cloud environment guide](https://learn.chatgpt.com/docs/environments/cloud-environments).
+
+## Hosting ownership and credential handover
+
+Jaden wants no ongoing account management. Current preview hosting is still in his Cloudflare account, using the new account-scoped Pages Edit token stored as a domain-bound network secret in the library ChatGPT cloud environment. It is not a library-owned Cloudflare account yet.
+
+Create a library-owned Cloudflare account, recreate preview hosting there, replace the environment secret and account/project settings, test a fresh preview and saved-change flow, then retire this handover token from Jaden’s account. Keep API keys and passwords out of the repository. Store agent API credentials as network secrets; a library-controlled password manager holds human recovery access and recovery codes. Record account locations, workflows and recovery steps without secrets in the repository.
+
+Routine website changes should happen through ChatGPT with plain-language previews and approvals. A board member retains responsibility for identity verification, account recovery and billing exceptions. Continuous monitoring is a separate capability and is not configured by the Plus subscription or this environment.
