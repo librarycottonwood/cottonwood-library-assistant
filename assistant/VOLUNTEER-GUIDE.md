@@ -33,7 +33,7 @@ The assistant is connected to the library's **Givebutter** account. In a regular
 
 ## The Monday weekly summary
 
-Every **Monday afternoon** the assistant sends the board a short, friendly summary of how the website is doing. Look for it in the pinned **Weekly Maintenance Check** chat in ChatGPT.
+Every **Monday afternoon** the assistant sends the board a short, friendly summary of how the website is doing. It shows up in the library's ChatGPT, in the chat list on the left.
 
 The library's computer also checks the website every day. When it finds a small problem, it tries to fix it by itself. The Monday summary tells you what it fixed. If it needs a person's help, the summary will say so and give you one simple next step.
 
