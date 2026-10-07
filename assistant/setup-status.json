@@ -140,7 +140,14 @@
         "digest": "7fb29f628c6d09b08e8a2408c49ab2d3a2bfa108589296a79ac50e1289a18c7e",
         "saved": false
       },
-      "hostingOwnership": "Jaden existing Cloudflare account. Library-owned hosting account not created; migrate before final handover. Jaden requests no ongoing management responsibility."
+      "hostingOwnership": "Jaden existing Cloudflare account. Library-owned hosting account not created; migrate before final handover. Jaden requests no ongoing management responsibility.",
+      "imageDelivery": "Unresolved: Safari ChatGPT renderer rejects valid hosted PNG URLs (markdown-safe-url false). Absolute cloud file attachments fail with Load failed; file API redirects while frontend uses redirect:error. Following redirect also fails. Both PNGs load on the hosted review page. Browser comparison pending; no workaround described as a fix.",
+      "hostingMigration": {
+        "accountId": "e05729fd6b6fad329e31896d8b1c2da9",
+        "owner": "librarycottonwood@gmail.com",
+        "status": "Library account verified in Safari. Account API token Pages Write form prepared, not created. ChatGPT environment Edit returned Couldn\u2019t start editing environment. No hosting resources migrated yet."
+      },
+      "maintenanceSchedules": "No schedules created yet. Daily website checks and weekly maintenance requested; must test account connections and task capabilities before enabling."
     }
   }
 }
