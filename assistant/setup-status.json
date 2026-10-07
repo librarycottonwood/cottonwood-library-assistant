@@ -195,7 +195,8 @@
           "stopAtBudget": true,
           "includedUsageAlerts": true,
           "screenshotArchivesRetained": 7,
-          "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved"
+          "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved",
+          "actualScreenshotBytes": 65509401
         }
       },
       "trialSaving": {
@@ -209,7 +210,12 @@
         "status": "Fresh Codex chat handoff remains unready. Weekly scheduled prompt carries explicit library instructions and baseline report access passed.",
         "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
-        "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved."
+        "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved.",
+        "shortPromptTest": {
+          "setting": "Codex custom instructions shortened to 1453 characters, saved and reopened in library account",
+          "chat": "https://chatgpt.com/local/01a11490-5ac2-738e-b624-56c65f44f02f",
+          "result": "Fresh editor task failed to start: Browser app server websocket closed; reload yielded no reply. Instruction delivery and tone remain unverified."
+        }
       },
       "stableSavedTrial": {
         "url": "https://trial.cottonwood-library-trial-preview.pages.dev/",
@@ -218,7 +224,8 @@
         "validationRun": "37569962832",
         "checkedSource": "ea8d61dd8325e827143df93d2f83d15c65dfe3e3",
         "status": "Actual cloud publishing and hosted exact-source/status/pictures fetch passed; public domain unchanged",
-        "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container"
+        "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container",
+        "latestPublishRun": "37570642969"
       }
     }
   }

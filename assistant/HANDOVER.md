@@ -110,4 +110,4 @@ GitHub billing verified Actions $0 budget with Stop usage enabled. Free quota is
 finite; it stops at the limit. Recent checks suggest ample room for daily work,
 but edit/repair activity also counts. Screenshot archives are capped at seven.
 Codex custom instructions were shortened to 1,453 characters, saved and reopened
-in the library account; fresh-chat verification is being checked separately.
+in the library account; fresh-chat test 01a11490-5ac2-738e-b624-56c65f44f02f failed to start with a browser-app websocket error and no assistant response. Friendly startup remains unverified.

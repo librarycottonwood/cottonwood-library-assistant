@@ -179,3 +179,16 @@ Actions budget $0, Stop usage Yes, included-usage alerts On, billed amount $0.
 Checks stop if allowance is exhausted; there is no paid overage authorization.
 Screenshot archives are capped at the seven latest (about 65 MB), retained at
 most seven days. Hosted snapshots are independent of these disposable archives.
+
+The one-time weekly-message rehearsal was requested through run_now, but no
+run-specific URL, completion response or recorded last-run time was returned.
+The regular weekly prompt was restored and read back, with stable-trial
+publication recognized. Recurrence remains enabled Monday around 14:00 Pacific;
+message delivery is not verified by that test. No extra task or second run was
+created. Immediate event notification remains unverified as well.
+
+A current-source cloud publishing run 37570642969 passed. A repeat run
+37570758793 verified that already-current publishing skips tool install,
+artifact download and upload. Actual screenshot retention cleanup left seven
+archives totaling 65,509,401 bytes. Temporary local Cloudflare setup credentials
+were removed after cloud publishing passed.
