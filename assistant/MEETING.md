@@ -1,6 +1,6 @@
 # Tomorrow
 
-For website changes, open https://chatgpt.com/codex/cloud, click Choose environment, choose cottonwood-library-assistant, enter your request, and press Send. Prior prepared chats may have been deleted; a new chat can use the saved environment.
+For website changes, open https://chatgpt.com/codex/cloud, click Choose environment, choose cottonwood-library-editor, enter your request, and press Send. Prior prepared chats may have been deleted; a new chat can use the saved environment.
 
 Ask naturally: "Change the heading to Welcome, neighbors! Show me first." The helper should do the work, offer computer and phone pictures, and wait for your decision.
 
