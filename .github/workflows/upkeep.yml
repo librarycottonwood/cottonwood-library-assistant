@@ -50,8 +50,10 @@ jobs:
       - name: Prepare exact source without credentials
         if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
         env:
+          GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ steps.prepare.outputs.source }}
         run: |
+          gh auth setup-git
           git fetch origin "$SOURCE_SHA"
           git checkout --detach "$SOURCE_SHA"
           docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep bash scripts/cloud-setup.sh > "$RUNNER_TEMP/review/setup.log" 2>&1 || true
@@ -92,6 +94,7 @@ jobs:
         if: always()
         run: |
           docker rm -f library-codex-worker >/dev/null 2>&1 || true
+          sudo chown -R "$(id -u):$(id -g)" "$GITHUB_WORKSPACE"
           if [ -d "$RUNNER_TEMP/agent-auth" ]; then
             sudo chown -R "$(id -u):$(id -g)" "$RUNNER_TEMP/agent-auth"
           fi
