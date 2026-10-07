@@ -1,0 +1,189 @@
+name: Library automatic upkeep
+on:
+  workflow_run:
+    workflows: ['Verify library website']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      test_ref:
+        description: 'Optional isolated codex/upkeep-test-* branch for a repair rehearsal'
+        default: ''
+        type: string
+  schedule:
+    - cron: '17 18 * * 4'
+# Serialize all uses of this one library sign-in, including token refresh.
+concurrency:
+  group: library-codex-managed-signin
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  repair:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'failure')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      patch: ${{ steps.patch.outputs.patch }}
+      source: ${{ steps.prepare.outputs.source }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Prepare trusted helpers and inspect failure
+        id: prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-cryptography
+          mkdir -p "$RUNNER_TEMP/upkeep" "$RUNNER_TEMP/review" "$RUNNER_TEMP/agent-auth" "$RUNNER_TEMP/image"
+          cp scripts/upkeep/*.py "$RUNNER_TEMP/upkeep/"
+          cp scripts/upkeep/prompt.md "$RUNNER_TEMP/review/prompt.md"
+          cp scripts/upkeep/Dockerfile "$RUNNER_TEMP/image/"
+          python3 "$RUNNER_TEMP/upkeep/github.py" prepare
+      - name: Build isolated repair worker
+        if: steps.prepare.outputs.ready == 'true'
+        run: docker build -t library-upkeep "$RUNNER_TEMP/image"
+      - name: Prepare exact source without credentials
+        if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
+        env:
+          SOURCE_SHA: ${{ steps.prepare.outputs.source }}
+        run: |
+          git fetch origin "$SOURCE_SHA"
+          git checkout --detach "$SOURCE_SHA"
+          docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep bash scripts/cloud-setup.sh > "$RUNNER_TEMP/review/setup.log" 2>&1 || true
+          # A manual rehearsal gets actual failure evidence, never invented logs.
+          if [ ! -f "$RUNNER_TEMP/review/failure.log" ]; then
+            docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep pnpm check > "$RUNNER_TEMP/review/failure.log" 2>&1 || true
+          fi
+      - name: Restore library sign-in
+        id: auth
+        if: steps.prepare.outputs.ready == 'true'
+        env:
+          LIBRARY_AUTH_VAULT_KEY: ${{ secrets.LIBRARY_AUTH_VAULT_KEY }}
+          LIBRARY_CODEX_AUTH_SEED: ${{ secrets.LIBRARY_CODEX_AUTH_SEED }}
+        run: |
+          python3 "$RUNNER_TEMP/upkeep/vault.py" restore "$RUNNER_TEMP/auth.enc" "$RUNNER_TEMP/agent-auth/auth.json"
+      - name: Investigate one failure using Plus
+        if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
+        timeout-minutes: 6
+        run: |
+          docker run --rm --name library-codex-worker \
+            -v "$GITHUB_WORKSPACE:/repo" \
+            -v "$RUNNER_TEMP/agent-auth:/auth" \
+            -v "$RUNNER_TEMP/review:/review" \
+            -e CODEX_HOME=/auth library-upkeep \
+            bash -c 'codex exec --ignore-user-config --ephemeral --dangerously-bypass-approvals-and-sandbox -m gpt-6.1-sol -c model_reasoning_effort="low" -o /review/result.txt - < /review/prompt.md >/dev/null 2>&1'
+      - name: Maintain sign-in on idle weeks
+        if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair != 'true'
+        timeout-minutes: 2
+        run: |
+          docker run --rm --name library-codex-worker \
+            -v "$RUNNER_TEMP/agent-auth:/auth" -e CODEX_HOME=/auth library-upkeep \
+            codex exec --ignore-user-config --ephemeral --skip-git-repo-check -s read-only \
+            -m gpt-6.1-sol -c model_reasoning_effort="low" 'Reply with the single word OK.' >/dev/null 2>&1
+      - name: Stop worker before handling credentials
+        if: always()
+        run: docker rm -f library-codex-worker >/dev/null 2>&1 || true
+      - name: Preserve refreshed login in encrypted storage
+        if: always() && steps.auth.outcome == 'success'
+        env:
+          LIBRARY_AUTH_VAULT_KEY: ${{ secrets.LIBRARY_AUTH_VAULT_KEY }}
+        run: |
+          python3 "$RUNNER_TEMP/upkeep/vault.py" seal "$RUNNER_TEMP/agent-auth/auth.json" "$RUNNER_TEMP/sealed/auth.enc"
+          rm -rf "$RUNNER_TEMP/agent-auth"
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.auth.outcome == 'success'
+        with:
+          name: library-codex-auth
+          path: ${{ runner.temp }}/sealed/auth.enc
+          retention-days: 90
+          if-no-files-found: error
+      - name: Reject unsafe or out-of-scope patches
+        id: patch
+        if: success() && steps.prepare.outputs.repair == 'true'
+        env:
+          SOURCE_SHA: ${{ steps.prepare.outputs.source }}
+        run: python3 "$RUNNER_TEMP/upkeep/github.py" patch "$SOURCE_SHA"
+      - name: Test repair without the library login
+        if: steps.patch.outputs.patch == 'true'
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep bash -c \
+            'bash scripts/cloud-setup.sh && node --test scripts/release.test.mjs && node scripts/analytics.test.mjs && version=$(node scripts/release.mjs prepare) && node scripts/capture.mjs "$version"'
+      - uses: actions/upload-artifact@v4
+        if: success() && steps.patch.outputs.patch == 'true'
+        with:
+          name: verified-library-repair
+          path: ${{ runner.temp }}/repair.patch
+          retention-days: 14
+      - name: Record attempt to prevent repeated repairs
+        if: always() && steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
+        env:
+          SOURCE_SHA: ${{ steps.prepare.outputs.source }}
+        run: |
+          printf '%s\n' "$SOURCE_SHA" > "$RUNNER_TEMP/attempt.txt"
+          printf 'The library assistant investigated a website check. See the run result for whether verification succeeded.\n' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
+        with:
+          name: library-repair-attempt-${{ steps.prepare.outputs.source }}
+          path: ${{ runner.temp }}/attempt.txt
+          retention-days: 90
+  save:
+    needs: repair
+    if: needs.repair.result == 'success' && needs.repair.outputs.patch == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Preserve trusted saving helper
+        run: cp scripts/upkeep/github.py "$RUNNER_TEMP/upkeep-save.py"
+      - uses: actions/download-artifact@v4
+        with:
+          name: verified-library-repair
+          path: ${{ runner.temp }}/verified
+      - name: Save verified repair and check the exact saved version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ needs.repair.outputs.source }}
+          TEST_REF: ${{ inputs.test_ref }}
+        run: |
+          gh auth setup-git
+          git fetch origin "$SOURCE_SHA"
+          git checkout --detach "$SOURCE_SHA"
+          git apply --index "$RUNNER_TEMP/verified/repair.patch"
+          git config user.name 'Cottonwood Library Assistant'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch="codex/library-repair-${SOURCE_SHA:0:12}"
+          git switch -c "$branch"
+          git commit -m 'Library automatic repair: verified website upkeep'
+          head=$(git rev-parse HEAD)
+          git push origin "$branch"
+          printf 'A routine technical repair prepared by the library assistant. The complete website checks must pass before it can be saved.\n' > "$RUNNER_TEMP/pr-body.md"
+          base=main
+          if [ -n "$TEST_REF" ]; then base="$TEST_REF"; fi
+          gh pr create --base "$base" --head "$branch" --title 'Library website upkeep' --body-file "$RUNNER_TEMP/pr-body.md"
+          gh workflow run check.yml --ref "$branch"
+          for attempt in $(seq 1 40); do
+            conclusion=$(gh run list --workflow check.yml --commit "$head" --json conclusion,status --jq 'map(select(.status=="completed"))[0].conclusion // ""')
+            if [ "$conclusion" = success ]; then break; fi
+            if [ -n "$conclusion" ]; then echo 'The saved repair failed verification.'; exit 1; fi
+            sleep 15
+          done
+          if [ "$conclusion" != success ]; then echo 'Verification did not finish; repair left unsaved.'; exit 1; fi
+          if [ -z "$TEST_REF" ]; then
+            python3 "$RUNNER_TEMP/upkeep-save.py" finish "$SOURCE_SHA" "$head"
+            printf 'A website problem was fixed and checked. 😊\n' >> "$GITHUB_STEP_SUMMARY"
+          else
+            printf 'The isolated repair rehearsal passed. The real website was not changed.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
