@@ -14,8 +14,8 @@ Jaden reports the board accepted the custom-site pivot and wants six weeks to tr
 
 1. Library GitHub account **librarycottonwood** is created and verified. The private repository has been transferred to it; Jaden retains write access. Local origin is updated.
 2. Library ownership is in place. Later arrange a library organization with two human owners. Review pending demo changes; do not silently substitute an older preview for the demonstrated version.
-3. Library ChatGPT is connected to GitHub as librarycottonwood. Its cloud environment has passed setup checks; preview credentials and startup configuration are saved. The environment is published. A fresh library-account task changed the homepage heading, checked desktop/phone screenshots and uploaded a draft; its hosted homepage and pictures page were independently fetched successfully. The task could not fetch the preview host because of its network policy; save/restore remains untested.
-4. Test a fresh library-account request: edit → computer/phone pictures → working preview → correction → save/restore the intended demo change. Verify the volunteer actually sees pictures and that a new task retains saved changes. Do not claim public publishing is configured.
+3. Library ChatGPT is connected to GitHub as librarycottonwood. Its cloud environment has passed setup checks; preview credentials and startup configuration are saved. The environment is published. A fresh library-account task changed the homepage heading, checked desktop/phone screenshots and uploaded a draft; its hosted homepage and pictures page were independently fetched successfully. That first task could not fetch its old preview host; the replacement editor and save/undo tests below now pass.
+4. Use cottonwood-library-editor for fresh requests. Hosted preview/capture and repository save/undo are tested. Inline image embeds remain paused; approval uses the working website and hosted pictures page. Public-domain publishing is not configured.
 5. Give the board a stable trial link and a short start guide. Gather their feedback on wording, edits and reports during the six-week trial. Launch comes after that review and a tested publishing/rollback mechanism.
 
 ## Facebook: what to request
@@ -38,12 +38,20 @@ Sources: [Squarespace transfer guide](https://support.squarespace.com/hc/en-us/a
 
 ## Hosting ownership and credential handover
 
-Jaden wants no ongoing account management. Current preview hosting is still in his Cloudflare account, using the new account-scoped Pages Edit token stored as a domain-bound network secret in the library ChatGPT cloud environment. It is not a library-owned Cloudflare account yet.
+Library Cloudflare account **e05729fd6b6fad329e31896d8b1c2da9** is owned by librarycottonwood@gmail.com. The dedicated **cottonwood-library-trial-preview** Pages project has production branch `production` and no library domain attached. Its unchanged baseline draft, review page and both PNGs were independently verified HTTP 200: [preview](https://862c6539.cottonwood-library-trial-preview.pages.dev/), [pictures](https://862c6539.cottonwood-library-trial-preview.pages.dev/_review/).
 
-Create a library-owned Cloudflare account, recreate preview hosting there, replace the environment secret and account/project settings, test a fresh preview and saved-change flow, then retire this handover token from Jaden’s account. Keep API keys and passwords out of the repository. Store agent API credentials as network secrets; a library-controlled password manager holds human recovery access and recovery codes. Record account locations, workflows and recovery steps without secrets in the repository.
+A library-owned Pages Write API token is saved as a network secret restricted to api.cloudflare.com. Keys and passwords stay out of this repository. The old environment's Edit action failed, so replacement **cottonwood-library-editor** is published from [setup chat](https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038), with tested install/start instructions, library account/project values and allowed preview domains. A fresh task passed 36 desktop/phone checks, uploaded using the library credential, and fetched the hosted site and pictures. [Start with this checked editing chat](https://chatgpt.com/local/01a113e6-7d73-7234-8dec-b99078fb703a), or open a new Codex chat and choose cottonwood-library-editor. [Fresh checked preview](https://413d8621.cottonwood-library-trial-preview.pages.dev/). The old environment and Jaden token still exist for prior task references; they are not the pilot entry point.
 
-Routine website changes should happen through ChatGPT with plain-language previews and approvals. A board member retains responsibility for identity verification, account recovery and billing exceptions. Continuous monitoring is a separate capability and is not configured by the Plus subscription or this environment.
+Humans retain account recovery, identity verification and billing responsibility. A library-controlled password manager should hold recovery access; none has been configured here. No recurring maintenance schedules are enabled yet.
 
-## Current delivery issue
+## Trial saving verified
 
-October 6 Safari tests reproduced broken inline screenshots in the library ChatGPT account. The hosted PNG files themselves return HTTP 200 and load in Safari. ChatGPT’s hosted-image safety check returns false; its absolute cloud-file attachment path fails with Load failed and an observed redirect. Root reason for the rejection/redirect failure is not yet established. Environment Edit also returned “Couldn’t start editing environment.” A Chrome comparison is pending. Do not claim screenshot delivery, independent library hosting, or maintenance schedules are ready. The new library Cloudflare account is verified, but migration is unfinished.
+The library-account GitHub connector has write permission, despite the cloud shell lacking a git credential helper. A reversible test saved only the reviewed heading in commit **49f9d90841e4784052879622519847dac2c6f722**, then restored it in **4ee665d0b761674de35a311c60cb8c92c7a60b80**. Remote commits were independently fetched and verified; source is restored and newer instructions preserved.
+
+AGENTS.md, START.md and WORKFLOW.md now explicitly define approved trial saving to main, conflict checks, remote verification and undo, separately from public launch. Missing GitHub permissions did not cause the earlier refusal; the exact earlier chat reasoning is not established.
+
+## Screenshot delivery
+
+Inline screenshot embeds are paused in the instructions. Capture and inspection remain enabled; use the verified website preview and hosted pictures page for approval. Re-enable inline delivery only after a test proves rendering in the library account.
+
+Valid hosted PNGs are rejected by ChatGPT before loading; its absolute cloud-file route also fails. The tested session has no supported native Library upload tool. This remains unresolved. Jaden declined a support report; none was sent. Chrome sign-in is not required or requested.

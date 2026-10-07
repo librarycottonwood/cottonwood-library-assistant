@@ -129,10 +129,10 @@
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
-      "chat": "https://chatgpt.com/local/01a113bb-14a6-72cd-90de-62ac1d38002e",
-      "status": "Published; fresh library-account task edited homepage, checked desktop and phone, and uploaded an immutable draft. Hosted homepage and pictures page independently fetched successfully. Task network blocks reading preview host; save/restore not yet tested.",
+      "chat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
+      "status": "Replacement cottonwood-library-editor published. Fresh library-account task uploaded to library-owned Pages and fetched website/pictures successfully; 36 desktop/phone page checks passed. Saving and undo separately verified through library-owned GitHub connector.",
       "githubConnection": "Library ChatGPT connected as librarycottonwood; owned repository selected",
-      "credential": "Cottonwood library account previews: account Cloudflare Pages Edit on existing demo hosting account; api.cloudflare.com binding. No production domain attached.",
+      "credential": "Library-owned Cloudflare Pages Write token; api.cloudflare.com-bound network secret.",
       "freshTask": {
         "chat": "https://chatgpt.com/local/01a113c3-d7d7-711c-a596-ad2e7382e020",
         "preview": "https://975882e8.cottonwood-library-preview.pages.dev/",
@@ -140,14 +140,32 @@
         "digest": "7fb29f628c6d09b08e8a2408c49ab2d3a2bfa108589296a79ac50e1289a18c7e",
         "saved": false
       },
-      "hostingOwnership": "Jaden existing Cloudflare account. Library-owned hosting account not created; migrate before final handover. Jaden requests no ongoing management responsibility.",
-      "imageDelivery": "Unresolved: Safari ChatGPT renderer rejects valid hosted PNG URLs (markdown-safe-url false). Absolute cloud file attachments fail with Load failed; file API redirects while frontend uses redirect:error. Following redirect also fails. Both PNGs load on the hosted review page. Browser comparison pending; no workaround described as a fix.",
+      "hostingOwnership": "Library-owned Cloudflare account e05729fd6b6fad329e31896d8b1c2da9; project cottonwood-library-trial-preview. New editor does not depend on Jaden preview hosting. Old environment/token still exist and are not the pilot entry point.",
+      "imageDelivery": "Inline delivery paused in AGENTS/START/WORKFLOW; screenshot capture and hosted review page retained. Valid hosted HTTPS images rejected by ChatGPT; raw cloud file loading also fails. Native Library upload tool absent in tested cloud session. No support report requested or sent.",
       "hostingMigration": {
         "accountId": "e05729fd6b6fad329e31896d8b1c2da9",
         "owner": "librarycottonwood@gmail.com",
-        "status": "Library account verified in Safari. Account API token Pages Write form prepared, not created. ChatGPT environment Edit returned Couldn\u2019t start editing environment. No hosting resources migrated yet."
+        "status": "Published replacement editor with library token/account/project and preview domains; fresh-task upload and hosted fetch passed.",
+        "project": "cottonwood-library-trial-preview",
+        "baselinePreview": "https://862c6539.cottonwood-library-trial-preview.pages.dev/",
+        "setupChat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
+        "environment": "cottonwood-library-editor",
+        "freshTask": {
+          "chat": "https://chatgpt.com/local/01a113e6-7d73-7234-8dec-b99078fb703a",
+          "preview": "https://413d8621.cottonwood-library-trial-preview.pages.dev/",
+          "pictures": "https://413d8621.cottonwood-library-trial-preview.pages.dev/_review/",
+          "digest": "5bee5d2d2a4c3f028e416d3d4a2105d0ca5561f23fa198e1cc3eeb5e2a91a7d2",
+          "checks": "36 desktop/phone page checks, inspected screenshots, actual draft upload, hosted site/pictures/PNG fetches. Source unchanged. Restricted shell could not reach proxy; permitted tool execution succeeded."
+        }
       },
-      "maintenanceSchedules": "No schedules created yet. Daily website checks and weekly maintenance requested; must test account connections and task capabilities before enabling."
+      "maintenanceSchedules": "No schedules created yet. Daily website checks and weekly maintenance requested; must test account connections and task capabilities before enabling.",
+      "trialSaving": {
+        "status": "Verified through library-account GitHub connector, independent remote commit verification. No shell credential helper required. Website content restored after test.",
+        "savedCommit": "49f9d90841e4784052879622519847dac2c6f722",
+        "undoCommit": "4ee665d0b761674de35a311c60cb8c92c7a60b80",
+        "scope": "Only homepage heading field; no real-domain publishing.",
+        "instructions": "AGENTS.md, assistant/START.md and assistant/WORKFLOW.md distinguish approved trial save from public launch."
+      }
     }
   }
 }
