@@ -35,7 +35,7 @@ export const homeContent = {
   ],
   hero: {
     eyebrow: 'Rooted in Cottonwood · Open to you',
-    heading: ['Your community.', 'Your library.'],
+    heading: ['Welcome,', 'neighbors!'],
     introduction: 'A good book. A familiar face. A place to belong. Discover a little of everything at your community-supported library on Main Street.',
     image: { key: 'exterior', alt: 'Cottonwood Community Library on Main Street, decorated with flags and red, white, and blue bunting.', caption: 'A little library with a big heart, right here on Main Street.' },
   },
