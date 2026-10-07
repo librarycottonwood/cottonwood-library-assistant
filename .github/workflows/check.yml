@@ -6,8 +6,8 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    # Monday, 08:37 Pacific standard time / 09:37 Pacific daylight time.
-    - cron: '37 16 * * 1'
+    # Daily, 08:37 Pacific standard time / 09:37 Pacific daylight time.
+    - cron: '37 16 * * *'
 permissions:
   contents: read
 jobs:
@@ -32,7 +32,7 @@ jobs:
         with:
           name: library-preview-and-screenshots
           path: output/
-          retention-days: 14
+          retention-days: 7
   record-result:
     needs: verify
     if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
