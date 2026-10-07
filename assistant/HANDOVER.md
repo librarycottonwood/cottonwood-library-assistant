@@ -111,3 +111,31 @@ finite; it stops at the limit. Recent checks suggest ample room for daily work,
 but edit/repair activity also counts. Screenshot archives are capped at seven.
 Codex custom instructions were shortened to 1,453 characters, saved and reopened
 in the library account; fresh-chat test 01a11490-5ac2-738e-b624-56c65f44f02f failed to start with a browser-app websocket error and no assistant response. Friendly startup remains unverified.
+
+## Library plugin delivery — October 6 evening
+
+Private Cottonwood Library plugin created and installed through Safari in the
+library account, not Jaden's connected account. Backend plugin ID:
+Plugin_6618ebfc678081919990dac0bae0f0c6, version 0.1.0.
+URL: https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6
+Source: plugins/cottonwood-library. This is instructions only and adds no
+credentials or editing permissions. Existing GitHub/Givebutter tools and the
+cottonwood-library-editor environment remain required for their respective work.
+
+Actual unseeded fresh Codex chat 01a114a8-fbef-7501-92c7-bf9c63faa00f, ordinary
+request “Hi! Can I see our latest saved website?”, automatically selected the
+library-assistant skill and returned the correct stable trial/pictures links
+in a friendly final reply. Initial progress unnecessarily named the skill.
+Actual unseeded fresh Work chat 6ac5cdf2-47c0-83e8-86d1-8cb34b5ea411, ordinary
+“Hi!”, replied “Hi! 😊 What can I help with at the library today?”
+Neither test selected a plugin, pasted instructions, nor used a dedicated chat.
+These prove greeting/read-only context delivery; post-install edit/save still
+needs testing. Global preference injection remains unexplained; do not describe
+that separate setting as fixed.
+
+Native Scheduled Run now on repair updates now records last_run_time
+2026-10-07T04:41:24.348368+00:00 (October 6, 9:41 PM Pacific). It does not expose
+a result/status or run-specific link. Existing notification prompt ignores
+non-main merges and duplicate/irrelevant events. The earlier isolated test is
+therefore not proof of current main-trigger failure. Event delivery and a real
+volunteer-facing message remain unverified.

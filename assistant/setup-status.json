@@ -207,7 +207,7 @@
         "instructions": "AGENTS.md, assistant/START.md and assistant/WORKFLOW.md distinguish approved trial save from public launch."
       },
       "volunteerExperience": {
-        "status": "Fresh Codex chat handoff remains unready. Weekly scheduled prompt carries explicit library instructions and baseline report access passed.",
+        "status": "Library-account instruction plugin installed; fresh Codex website lookup and fresh Work greeting automatically recognized library context. Post-install editing/save and notification delivery remain to verify.",
         "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
         "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved.",
@@ -215,6 +215,16 @@
           "setting": "Codex custom instructions shortened to 1453 characters, saved and reopened in library account",
           "chat": "https://chatgpt.com/local/01a11490-5ac2-738e-b624-56c65f44f02f",
           "result": "Fresh editor task failed to start: Browser app server websocket closed; reload yielded no reply. Instruction delivery and tone remain unverified."
+        },
+        "plugin": {
+          "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
+          "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
+          "version": "0.1.0",
+          "installed": true,
+          "source": "plugins/cottonwood-library",
+          "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
+          "workGreetingTest": "https://chatgpt.com/c/6ac5cdf2-47c0-83e8-86d1-8cb34b5ea411",
+          "explicitInvocationRequiredInTests": false
         }
       },
       "stableSavedTrial": {
