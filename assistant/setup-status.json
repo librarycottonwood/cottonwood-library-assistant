@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-10-06 America/Los_Angeles",
-  "repository": "https://github.com/oobagi/cottonwood-library-assistant",
+  "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
   "demoHomepage": "https://38d0406e.cottonwood-library-preview.pages.dev",
   "original": {
@@ -110,7 +110,7 @@
       "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
-    "github": "Library-owned GitHub username requested; Safari was signed into Jaden personal oobagi. No repository transfer or new-account environment yet.",
+    "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
     "domain": {
       "access": "Signed-in Squarespace domain dashboard verified",
       "registrant": "Mary Ann Hasbrook",
@@ -127,6 +127,12 @@
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
       "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
+    },
+    "cloudSetup": {
+      "chat": "https://chatgpt.com/local/01a113bb-14a6-72cd-90de-62ac1d38002e",
+      "status": "Install/start configuration and preview credential saved; publication and fresh-task preview verification in progress",
+      "githubConnection": "Library ChatGPT connected as librarycottonwood; owned repository selected",
+      "credential": "Cottonwood library account previews: account Cloudflare Pages Edit on existing demo hosting account; api.cloudflare.com binding. No production domain attached."
     }
   }
 }

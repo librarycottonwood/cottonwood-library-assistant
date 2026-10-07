@@ -12,9 +12,9 @@ Jaden reports the board accepted the custom-site pivot and wants six weeks to tr
 
 ## Next: website editing access
 
-1. Jaden is arranging the library's free GitHub account. Google sign-up currently needs a verification code; the new username is pending. Preserve his existing personal Safari GitHub session.
-2. Once the account works, arrange library ownership of the repository (prefer a library organization with two human owners). Review pending demo changes and keep Jaden's access before moving the existing private repository. Do not silently substitute an older preview for the demonstrated version.
-3. Connect that GitHub identity to the library ChatGPT account. Create and publish its cloud environment using the existing tested setup, preview credentials and instructions. The library account currently shows no saved environments.
+1. Library GitHub account **librarycottonwood** is created and verified. The private repository has been transferred to it; Jaden retains write access. Local origin is updated.
+2. Library ownership is in place. Later arrange a library organization with two human owners. Review pending demo changes; do not silently substitute an older preview for the demonstrated version.
+3. Library ChatGPT is connected to GitHub as librarycottonwood. Its cloud environment has passed setup checks; preview credentials and startup configuration are saved. Publication and fresh-task upload verification are in progress.
 4. Test a fresh library-account request: edit → computer/phone pictures → working preview → correction → save/restore the intended demo change. Verify the volunteer actually sees pictures and that a new task retains saved changes. Do not claim public publishing is configured.
 5. Give the board a stable trial link and a short start guide. Gather their feedback on wording, edits and reports during the six-week trial. Launch comes after that review and a tested publishing/rollback mechanism.
 
