@@ -43,6 +43,7 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: write
+      actions: write
     steps:
       - name: Record checked source for the library assistant
         env:
@@ -81,4 +82,18 @@ jobs:
               if error.code != 404:
                   raise
           api(path, 'PUT', body)
+          PY
+      - name: Keep screenshot storage within the trial budget
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          repo = os.environ['GITHUB_REPOSITORY']
+          pages = json.loads(subprocess.check_output(['gh','api','--paginate','--slurp',f'repos/{repo}/actions/artifacts?per_page=100']))
+          artifacts = [a for p in pages for a in p['artifacts'] if a['name']=='library-preview-and-screenshots' and not a['expired']]
+          artifacts.sort(key=lambda a: (a['created_at'],a['id']), reverse=True)
+          for artifact in artifacts[7:]:
+              subprocess.run(['gh','api',f"repos/{repo}/actions/artifacts/{artifact['id']}",'-X','DELETE'],check=True)
+          print('Retained the seven most recent website screenshot archives. Hosted previews remain available.')
           PY

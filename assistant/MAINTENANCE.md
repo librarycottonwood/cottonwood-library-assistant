@@ -3,7 +3,7 @@
 The website checker runs on library-owned GitHub infrastructure daily at
 16:37 UTC (08:37 PST / 09:37 PDT), and after source changes. It does not use the
 library's ChatGPT allowance. It runs the existing build, release-integrity,
-privacy-consent, and desktop/phone checks. It does not test public uptime,
+privacy-consent, and desktop/phone checks. It does not test continuous public uptime,
 publish the library domain, or automatically update dependencies merely because newer versions exist.
 
 Each main-branch run writes its result to the `maintenance-reports` branch at
@@ -53,8 +53,10 @@ subject to the appropriate human decision. If the required verification tools
 are unavailable, stop the update and explain the practical limitation briefly.
 Never hand volunteers an implementation plan or ask them technical questions.
 
-No live-domain publishing is connected. Saving maintenance source is not public
-publication, and does not regenerate an already-hosted immutable preview.
+No live-domain publishing is connected. Saving maintenance source automatically
+updates the stable saved trial after successful exact-version cloud checks and
+verified hosting. Existing draft links remain immutable. Check the actual hosted
+source/status before saying the trial website is updated.
 
 Stay quiet when there is no new actionable finding. Notify only for a completed
 necessary repair, a meaningful failure, or required human action. Use one or two
@@ -147,3 +149,33 @@ The weekly cloud task remains the verified report-access path; unresolved main
 failures are also recorded as library-assigned GitHub issues. GitHub email and
 quiet healthy-run suppression remain untested. The temporary notification test
 workflow was removed after the rehearsal.
+
+## Stable saved trial publishing — verified October 6
+
+https://trial.cottonwood-library-trial-preview.pages.dev/ is the stable saved
+trial website; /_review/ contains its checked computer and phone pictures.
+Update saved trial website retrieves the successful current-main check artifact,
+verifies source, asset and picture provenance, uploads to branch trial, and
+fetches hosted status plus website/pictures before reporting success. It skips
+versions superseded by newer main source, and does not upload an already-current
+healthy daily version. Public-domain launch and existing immutable drafts remain
+separate. Failed uploads retain the previous deployment and require attention.
+
+The library account's Pages Write token is in repository secret
+CLOUDFLARE_TRIAL_API_TOKEN, never the repair agent container or source. It is
+account-scoped, not cryptographically project-scoped; the trusted publisher fixes
+the library account/project and permits only trial or repair-test branches.
+Run 37569962832 passed in GitHub's cloud and independently fetched the hosted
+source ea8d61dd8325e827143df93d2f83d15c65dfe3e3. The actual repaired test artifact
+b91938ee36f6206eada82e87e568f7124d221561 is separately hosted at
+https://repair-test.cottonwood-library-trial-preview.pages.dev/ .
+
+GitHub Free includes 2,000 standard-runner minutes/month and 500 MB artifact
+storage. A recent check used 89 seconds of verification plus a brief report job
+(three billed runner minutes after per-job rounding). Daily checks and skipped
+publishing normally use roughly 100–200 minutes/month; source changes and repairs
+add usage. This is an estimate, not a guarantee. Library billing UI verified
+Actions budget $0, Stop usage Yes, included-usage alerts On, billed amount $0.
+Checks stop if allowance is exhausted; there is no paid overage authorization.
+Screenshot archives are capped at the seven latest (about 65 MB), retained at
+most seven days. Hosted snapshots are independent of these disposable archives.

@@ -31,7 +31,7 @@ try {
   await writeFile(path.join(stage, '_review/status.json'), JSON.stringify(status, null, 2) + '\n');
   execFileSync('pnpm', ['exec', 'wrangler', 'pages', 'deploy', stage,
     '--project-name', project, '--branch', branch, '--commit-hash', source,
-    '--commit-dirty=true'], { stdio: 'inherit', cwd: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..') });
+    '--commit-dirty=true', '--commit-message', 'Checked library trial website'], { stdio: 'inherit', cwd: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..') });
   const base = `https://${branch}.${project}.pages.dev`;
   let matched = false;
   for (let attempt = 0; attempt < 12; attempt++) {

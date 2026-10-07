@@ -187,6 +187,15 @@
           "trigger": "Merged Library website upkeep PRs in library repository",
           "validation": "Actual bot-created/merged isolated PR 3; first automation readback last_run null. Event delivery unverified.",
           "testRun": "37567788142"
+        },
+        "billing": {
+          "minutesPerMonth": 2000,
+          "artifactMegabytes": 500,
+          "actionsBudgetDollars": 0,
+          "stopAtBudget": true,
+          "includedUsageAlerts": true,
+          "screenshotArchivesRetained": 7,
+          "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved"
         }
       },
       "trialSaving": {
@@ -201,6 +210,15 @@
         "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
         "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved."
+      },
+      "stableSavedTrial": {
+        "url": "https://trial.cottonwood-library-trial-preview.pages.dev/",
+        "pictures": "https://trial.cottonwood-library-trial-preview.pages.dev/_review/",
+        "workflow": "trial.yml",
+        "validationRun": "37569962832",
+        "checkedSource": "ea8d61dd8325e827143df93d2f83d15c65dfe3e3",
+        "status": "Actual cloud publishing and hosted exact-source/status/pictures fetch passed; public domain unchanged",
+        "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container"
       }
     }
   }

@@ -95,3 +95,19 @@ Native cloud repair-update task is enabled, but its bot-event delivery test has
 not yet produced a recorded ChatGPT run. Do not promise immediate ChatGPT
 notifications. Weekly task report access remains verified; unresolved failures
 are recorded as library-assigned GitHub issues.
+
+## Saved trial now updates automatically
+
+The stable board trial is https://trial.cottonwood-library-trial-preview.pages.dev/ .
+Approved saves and successful maintenance repairs publish there automatically
+from the exact passed check artifact. GitHub-hosted publishing run 37569962832
+passed and fetched the actual hosted source and pictures. Existing draft URLs
+remain snapshots; the public library domain remains unchanged for the pilot.
+The repaired rehearsal and its screenshots are visible at
+https://repair-test.cottonwood-library-trial-preview.pages.dev/ .
+
+GitHub billing verified Actions $0 budget with Stop usage enabled. Free quota is
+finite; it stops at the limit. Recent checks suggest ample room for daily work,
+but edit/repair activity also counts. Screenshot archives are capped at seven.
+Codex custom instructions were shortened to 1,453 characters, saved and reopened
+in the library account; fresh-chat verification is being checked separately.
