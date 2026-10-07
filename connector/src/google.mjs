@@ -16,6 +16,7 @@ export async function retryFetch(url, init, fetcher = fetch, sleep = ms => new P
   throw new ReportError('temporarily_unavailable','The visitor reports are temporarily unavailable. Please try again shortly.');
 }
 async function token(env, fetcher) {
+  if (!env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) throw new ReportError('account_attention','The library administrator needs to reconnect the Google service-account credential for visitor reports.');
   if (tokenState?.email === env.GOOGLE_SERVICE_ACCOUNT_EMAIL && tokenState.expires > Date.now()+60000) return tokenState.value;
   if (pending) return pending;
   pending = (async () => {
@@ -23,7 +24,9 @@ async function token(env, fetcher) {
     const head = b64(enc.encode(JSON.stringify({alg:'RS256',typ:'JWT'})));
     const body = b64(enc.encode(JSON.stringify({iss:env.GOOGLE_SERVICE_ACCOUNT_EMAIL,scope:'https://www.googleapis.com/auth/analytics.readonly',aud:'https://oauth2.googleapis.com/token',iat:now,exp:now+3600})));
     const pem = env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/-----[^-]+-----|\s/g,'');
-    const key = await crypto.subtle.importKey('pkcs8', Uint8Array.from(atob(pem),c=>c.charCodeAt(0)),{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);
+    let key;
+    try { key = await crypto.subtle.importKey('pkcs8', Uint8Array.from(atob(pem),c=>c.charCodeAt(0)),{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']); }
+    catch { throw new ReportError('account_attention','The library administrator needs to reconnect the Google service-account credential for visitor reports.'); }
     const signature = b64(await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,enc.encode(`${head}.${body}`)));
     const response = await retryFetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:`${head}.${body}.${signature}`})},fetcher);
     if (!response.ok) throw new ReportError('account_attention','The visitor report connection needs the library administrator to check its Google service account.');

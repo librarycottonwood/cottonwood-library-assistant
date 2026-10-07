@@ -5,6 +5,12 @@ import { normalizeReport } from '../src/format.mjs';
 import { handleMcp } from '../src/mcp.mjs';
 import { retryFetch, runReport, clearTokenCache } from '../src/google.mjs';
 const dates={start_date:'2026-09-29',end_date:'2026-10-05'};
+test('missing or invalid Google credentials report account attention, never zero',async()=>{
+  clearTokenCache();
+  for(const env of [{},{GOOGLE_SERVICE_ACCOUNT_EMAIL:'fixture@example.test',GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:'invalid-key'}]){
+    await assert.rejects(()=>runReport(dates,env,async()=>{throw Error('Network should not be reached');}),e=>e.code==='account_attention');
+  }
+});
 test('only aggregate reports and fixed property inputs are accepted',()=>{
   assert.deepEqual(reportRequest({...dates,report:'visitors'}).body.metrics.map(m=>m.name),['activeUsers','totalUsers','sessions','screenPageViews']);
   for(const bad of [{property:'123'},{report:'users'},{start_date:'2026-02-30'},{end_date:'2026-01-01'},{limit:999},{compare_start_date:'2026-09-01'}]) assert.throws(()=>reportRequest({...dates,...bad}));

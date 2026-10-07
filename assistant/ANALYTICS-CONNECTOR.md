@@ -107,8 +107,8 @@ Prepared workflows are not on main and are not enabled yet:
 - `analytics-deploy.yml` publishes only after current-main website/connector
   checks succeed. The trusted publisher retains the previous Worker version,
   verifies the hosted source SHA and live read-only connection, and restores
-  the previous version if post-deployment verification fails. This path is
-  implemented but not yet exercised in cloud CI.
+  the previous version if post-deployment verification fails. The manual Worker rollback/restoration path passed; automatic failure
+  rollback and credentialed publishing still require a cloud CI rehearsal.
 - Newer main source supersedes an earlier check. No automated workflow changes
   permissions, accounts, billing, Analytics settings, public website content,
   domains or DNS.
@@ -126,7 +126,20 @@ OpenAI API credits. Do not create another weekly task.
 
 ## Evidence already obtained
 
-- Connector: **7 tests passed**, including real Workers runtime OAuth discovery,
+- Actual library ChatGPT Plus Plugins → Add menu offers **Add custom MCP server**.
+  This verifies plan/UI availability, not successful installation or tool use.
+- Full GitHub cloud website/connector verification passed for branch commit
+  `853e7bb112d6120fc56b2156cc6ca8d5d0cca53c`,
+  [run 37581732357](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37581732357).
+- Website check/build, release safeguards, consent/privacy checks and 36 page
+  checks passed. Desktop and phone captures were inspected; website source
+  remained unchanged.
+- Actual Worker rollback to initial version and restoration of version
+  `0038c945-db6d-4a07-abf7-6d2cab418b6b` passed; hosted health and source SHA
+  were verified after restoration. This is infrastructure rollback evidence,
+  not a live reporting/ChatGPT or automatic CI rollback test.
+
+- Connector: **8 tests passed**, including real Workers runtime OAuth discovery,
   PKCE, consent-cookie binding, CSRF denial, script escaping, read-only protocol
   behavior, fixed aggregate request/property policy, date comparisons, missing
   data, bounded transient retries, permission errors and Google token renewal.
