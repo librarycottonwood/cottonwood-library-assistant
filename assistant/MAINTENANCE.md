@@ -243,6 +243,18 @@ cloud and enabled settings preserved. One native manual run was requested after
 this update; completed weekly result delivery has not yet been observed.
 The temporary bot validation workflow was removed; website content unchanged.
 
-The Analytics prompt addition above is prepared in source on the connector
-branch. It has not yet been saved/read back in the library's existing native
-weekly task, and scheduled reading of its check/deployment records is untested.
+The Analytics prompt addition above was saved and exactly read back in the
+library's existing native cloud task `6ac5a460da40819092fe6b5e6403c3cd`.
+The original prompt/title, active state and Monday weekly afternoon cadence
+were preserved. The actual saved addition also tells the task to inspect
+`feat/library-analytics-mcp` during initial setup, because connector reports
+and instructions are not on main yet.
+
+One native Run now completed in the pinned Weekly Maintenance Check chat
+`6ac5a482-f5d8-83e8-a4f8-38fa554ba79f`: the website was healthy, Analytics
+setup was correctly identified as unfinished, and Google phone approval was
+distinguished from GitHub account confirmation. It made no repair or repeated
+verification request. This proves source/setup inspection and completion of
+the existing weekly cloud prompt. It does not prove future daily/deployment
+record access or use of an installed Analytics MCP; those still need testing
+after credentials, installation and workflow activation.

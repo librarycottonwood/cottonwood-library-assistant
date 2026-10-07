@@ -134,6 +134,13 @@ OpenAI API credits. Do not create another weekly task.
 
 ## Evidence already obtained
 
+- Existing weekly cloud task Analytics prompt saved and exactly read back;
+  title, original instructions, active state and Monday weekly afternoon cadence
+  preserved. One native Run now completed in pinned Weekly Maintenance Check.
+  It correctly reported healthy website plus unfinished Analytics setup,
+  distinguishing Google phone approval from GitHub confirmation. It did not
+  attempt a repair or repeat verification. This verifies setup/source reading,
+  not installed MCP access or future activated daily/deployment record access.
 - Actual library ChatGPT Plus Plugins → Add menu offers **Add custom MCP server**.
   This verifies plan/UI availability, not successful installation or tool use.
 - Full GitHub cloud website/connector verification passed for branch commit
@@ -200,15 +207,11 @@ OpenAI API credits. Do not create another weekly task.
   in the hosted runtime; inspect free-plan CPU outcomes without logging secrets.
 - Run and verify the real daily GitHub probe, safe code-repair publishing path,
   hosted exact-source check and rollback rehearsal.
-- Test whether the existing Monday cloud task can use the connector. Record the
-  actual result; if it cannot, the verified daily probe report is a useful
-  health source but does not prove scheduled live report access.
-- Update the existing weekly task's saved prompt to inspect Analytics status,
-  avoiding duplicate tasks. Keep the user's accepted brief healthy weekly
-  update. The addition in `assistant/MAINTENANCE.md` is prepared, but the native task
-  prompt has not been changed in this implementation yet. Requests belong in
-  the existing pinned Weekly Maintenance Check chat and Scheduled; no immediate
-  phone/email alert delivery is promised.
+- Test whether the existing Monday cloud task can use the installed connector
+  and read activated daily/deployment records. The source/setup inspection
+  rehearsal passed, but does not prove scheduled live report access. Requests
+  belong in the existing pinned Weekly Maintenance Check chat and Scheduled;
+  no immediate phone/email alert delivery is promised.
 
 Official references:
 [Google service-account authentication](https://developers.google.com/identity/protocols/oauth2/service-account),
