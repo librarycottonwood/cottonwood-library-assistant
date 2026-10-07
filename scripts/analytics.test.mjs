@@ -1,9 +1,12 @@
-import { chromium } from 'playwright';
+import { launchBrowser } from './browser.mjs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-const host = 'https://cottonwood-library-preview.pages.dev';
-const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || '/usr/bin/chromium', headless: true });
+const analytics = JSON.parse(await readFile('assistant/analytics.json', 'utf8'));
+assert.equal(analytics.websiteHost, 'cottonwood-library-trial-preview.pages.dev', 'Tracking must cover the library-owned trial');
+const host = 'https://trial.' + analytics.websiteHost;
+const untrustedHost = 'https://unrelated-preview.example';
+const browser = await launchBrowser();
 try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   let googleRequests = 0;
@@ -14,7 +17,7 @@ try {
       await route.fulfill({ contentType: 'text/javascript', body: '' });
       return;
     }
-    if (url.origin !== host) { await route.abort(); return; }
+    if (![host, untrustedHost].includes(url.origin)) { await route.abort(); return; }
     let file = url.pathname;
     if (!path.extname(file)) file += 'index.html';
     const types = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.woff2':'font/woff2', '.webp':'image/webp' };
@@ -51,6 +54,11 @@ try {
   assert.equal(googleRequests, 1, 'Withdrawal does not reload Google');
   assert.equal((await context.cookies()).filter(cookie=>cookie.name.startsWith('_ga')).length, 0);
   assert.equal(await page.locator('#library-google-tag').count(), 0);
+  await page.goto(untrustedHost + '/');
+  assert.equal(await page.locator('#statistics-choice').isVisible(), false, 'Unrelated hosting must not activate library tracking');
+  assert.equal(await page.locator('#privacy-choices').isVisible(), false);
+  assert.equal(googleRequests, 1, 'Unrelated hosting must not contact Google');
+  await page.goto(host + '/');
   await page.screenshot({path:'output/analytics-consent-phone.png'});
   console.log('Passed: no tracking before consent; persisted refusal; opt-in; clean URLs; catalog event; withdrawal and cookie removal; mobile width.');
 } finally { await browser.close(); }

@@ -24,7 +24,9 @@ def output(name, value):
         f.write(f'{name}={value}\n')
 
 def allowed(path):
-    return path in ('package.json', 'pnpm-lock.yaml') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
+    # Connector authorization, credentials, request policy and publishing remain
+    # outside the repair scope. Its protocol handler receives no secret bindings.
+    return path in ('package.json', 'pnpm-lock.yaml', 'connector/package.json', 'connector/package-lock.json', 'connector/src/mcp.mjs', 'connector/src/format.mjs') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
 
 mode = sys.argv[1] if __name__ == '__main__' else None
 if mode == 'prepare':
@@ -81,9 +83,11 @@ elif mode == 'patch':
     else:
         if any(Path(p).is_symlink() for p in paths):
             raise RuntimeError('Automatic repairs cannot introduce symbolic links')
-        if 'package.json' in paths:
-            original = json.loads(subprocess.check_output(['git', 'show', 'HEAD:package.json']))
-            edited = json.loads(Path('package.json').read_text())
+        for package_path in ('package.json', 'connector/package.json'):
+            if package_path not in paths:
+                continue
+            original = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + package_path]))
+            edited = json.loads(Path(package_path).read_text())
             for key in set(original) | set(edited):
                 if key not in ('dependencies', 'devDependencies') and original.get(key) != edited.get(key):
                     raise RuntimeError('Automatic dependency repairs cannot change scripts or package metadata')

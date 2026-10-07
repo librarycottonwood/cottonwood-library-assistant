@@ -48,8 +48,6 @@
   .feature-shape { @apply overflow-hidden rounded-[4px] rounded-tr-[80px] sm:rounded-tr-[115px]; }
   .page-heading { @apply font-display text-[clamp(2.65rem,5.1vw,4.65rem)] leading-[1.14] tracking-[-.05em]; }
   .card-heading { @apply font-display text-2xl leading-[1.3] tracking-[-.025em]; }
-  .filter-button { @apply min-h-11 rounded-full border border-line px-5 py-2 text-sm font-medium hover:bg-meadow; }
-  .filter-button[aria-pressed="true"] { @apply border-forest bg-forest text-paper; }
   .section-heading { @apply font-display text-[2.25rem] leading-[1.2] tracking-[-0.035em] sm:text-[2.9rem]; }
   .button { @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-[3px] px-6 py-3 text-[0.9375rem] font-semibold transition-colors; }
   .button-primary { @apply bg-forest text-white hover:bg-forest-dark; }
@@ -59,14 +57,8 @@
   .action-sun { background: #f5ca4b; }
   .action-tile:focus-visible { outline-width: 3px; outline-offset: 5px; }
   .action-meadow { @apply bg-meadow; }
-  .action-paper { @apply border border-line bg-paper; }
   .action-gold { @apply bg-gold text-forest-dark; }
   .action-forest { @apply bg-forest text-paper; }
-  .notice-card { @apply block rounded-[4px] border border-line bg-white p-6 hover:border-forest sm:p-7; }
-  .resource-link { @apply flex min-h-28 items-center gap-4 rounded-[4px] bg-meadow p-6 transition-colors hover:bg-gold; }
-  .resource-link:nth-child(even) { @apply bg-forest text-paper hover:bg-forest-dark; }
-  .resource-link:nth-child(even) .resource-icon { @apply text-paper; }
-  .resource-icon { @apply flex size-10 shrink-0 items-center justify-center text-forest; }
   .feature-card { @apply block h-full overflow-hidden rounded-[4px] bg-transparent; }
   .feature-card-image { @apply overflow-hidden rounded-[4px] bg-meadow; }
   .feature-card-image img { @apply aspect-[1.2] h-auto; }
@@ -86,13 +78,5 @@
   .button-outline { @apply border border-forest bg-transparent text-forest hover:bg-meadow; }
   .text-link { @apply inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold underline decoration-1 hover:decoration-2; }
   .footer-link { @apply flex min-h-11 items-center gap-2 py-2 text-[0.9375rem] text-muted hover:text-forest hover:underline; }
-  .quick-link { @apply flex min-h-28 items-center gap-4 px-4 py-6 transition-colors hover:bg-meadow sm:px-5; }
-  .quick-link:nth-child(even) { @apply border-l border-line; }
-  .quick-link:nth-child(n + 3) { @apply border-t border-line; }
-  @media (min-width: 768px) {
-    .quick-link + .quick-link { @apply border-l border-line; }
-    .quick-link:nth-child(n + 3) { border-top: 0; }
-  }
   nav a[aria-current="page"] { @apply underline decoration-2; }
-  .support-panel :focus-visible { outline-color: var(--color-paper); }
 }

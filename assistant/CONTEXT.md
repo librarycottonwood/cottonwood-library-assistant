@@ -13,7 +13,7 @@ Content locations:
 
 Source provenance is recorded in `assistant/source.json`. Only website source and referenced public-facing assets were copied; unrelated research, emails, and working files were excluded.
 
-Account setup is administered by Jaden for the demo. Later transfer this repository into a library GitHub organization with two human owners. Volunteers should use their own AI sign-ins; do not share a personal login.
+The library owns the GitHub repository, Cloudflare account and ChatGPT Plus account. ChatGPT display handle is @cottonwoodlibrary; GitHub remains librarycottonwood. Keep recovery access with the board. Current account/setup evidence is in assistant/setup-status.json.
 
 ## Analytics, communications, and fundraising
 

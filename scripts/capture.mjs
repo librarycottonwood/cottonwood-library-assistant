@@ -1,6 +1,6 @@
-import { chromium } from 'playwright';
+import { launchBrowser } from './browser.mjs';
 import { createServer } from 'node:http';
-import { readFile, mkdir, writeFile, access } from 'node:fs/promises';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { verify } from './release.mjs';
 import { createHash } from 'node:crypto';
@@ -23,12 +23,10 @@ const server = createServer(async (req, res) => {
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}`;
-let executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
-if (!executablePath) { try { await access('/usr/bin/chromium'); executablePath = '/usr/bin/chromium'; } catch {} }
 let browser;
 const errors = [], evidence = [];
 try {
-  browser = await chromium.launch({ executablePath, headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+  browser = await launchBrowser({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
   for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]]) {
     const page = await browser.newPage({ viewport });
     page.on('pageerror', error => errors.push(`${name}: ${error.message}`));

@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets';
 import { resolveImage } from '../content/images';
 import type { LibraryImage } from '../content/types';
-interface Props { image: LibraryImage; variant?: 'card' | 'feature'; badge?: boolean; eager?: boolean; }
-const { image, variant = 'card', badge = false, eager = false } = Astro.props;
+interface Props { image: LibraryImage; variant?: 'card' | 'feature'; eager?: boolean; }
+const { image, variant = 'card', eager = false } = Astro.props;
 const contained = image.fit === 'contain';
 ---
 <Image
@@ -15,6 +15,5 @@ const contained = image.fit === 'contain';
     'w-full',
     variant === 'card' ? 'aspect-[1.52]' : contained ? 'aspect-square max-h-[540px] rounded-[4px]' : 'rounded-[4px] aspect-[1.5]',
     contained ? 'object-contain bg-[#eee8d8] p-4' : 'object-cover',
-    contained && badge && 'pb-10',
   ]}
 />
