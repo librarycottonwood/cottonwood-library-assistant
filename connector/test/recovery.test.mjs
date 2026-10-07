@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { recoveryDetail, connectionStatus } from '../src/recovery.mjs';
+import { recoveryDetail, connectionStatus, maintenanceAction } from '../src/recovery.mjs';
 import { userAccessToken, saveGrant, readGrant, clearUserTokenCache, recoveryError } from '../src/google-user.mjs';
 import { handleReconnect } from '../src/reconnect.mjs';
 import { runReport,clearTokenCache } from '../src/google.mjs';
@@ -25,10 +25,9 @@ async function flow(env) {
   assert.equal(target.searchParams.get('scope'),'openid email https://www.googleapis.com/auth/analytics.readonly');
   return {cookie,state,callback:new Request(origin+'/google/callback?code=fixture-code&state='+state,{headers:{Cookie:cookie}})};
 }
-test('recovery distinguishes identity, key, grant, client and permissions; never invents readiness',()=>{
-  assert.equal(recoveryDetail('reader_key_rejected').nextStep.kind,'administrator_setup');
-  assert.match(recoveryDetail('reader_key_rejected').nextStep.instruction,/Signing in alone cannot/);
-  assert.equal(recoveryDetail('reader_key_rejected',true).nextStep.kind,'google_reconnect');
+test('recovery distinguishes identity, grant, client and permissions; never invents readiness',()=>{
+  assert.equal(recoveryDetail('reader_missing').nextStep.kind,'administrator_setup');
+  assert.equal(recoveryDetail('reader_missing',true).nextStep.kind,'google_reconnect');
   assert.equal(recoveryDetail('google_client_rejected',true).nextStep.kind,'administrator_setup');
   assert.equal(recoveryDetail('reader_access_removed').nextStep.kind,'property_access');
   assert.equal(recoveryDetail('chatgpt_signin_expired').nextStep.url,'https://chatgpt.com/plugins');
@@ -104,16 +103,12 @@ test('connection diagnostic MCP tool accepts no mutation arguments or secret-bea
   const result=await (await handleMcp(rpc({}),{},ctx,undefined,checker)).json();assert.equal(result.result.structuredContent.recovery.nextStep.kind,'google_reconnect');
   assert.equal((await (await handleMcp(rpc({replace_key:'secret'}),{},ctx,undefined,checker)).json()).error.code,-32602);
 });
-test('revoked service-account key is diagnosed separately; restored key must pass an actual report',async()=>{
-  clearTokenCache();
-  const key=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
-  const privateKey=Buffer.from(await crypto.subtle.exportKey('pkcs8',key.privateKey)).toString('base64');
-  const env={GOOGLE_SERVICE_ACCOUNT_EMAIL:'fixture@example.test',GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:privateKey};
-  let restored=false,reportCalls=0;
-  const probe=()=>runReport({report:'visitors',start_date:'2026-10-01',end_date:'2026-10-02'},env,async url=>{
-    if(url==='https://oauth2.googleapis.com/token')return restored?Response.json({access_token:'fixture',expires_in:3600}):Response.json({error:'invalid_grant',error_description:privateKey},{status:400});
-    reportCalls++;return Response.json({});
-  });
-  const failed=await connectionStatus(probe);assert.equal(failed.recovery.reason,'reader_key_rejected');assert.equal(reportCalls,0);assert.ok(!JSON.stringify(failed).includes(privateKey));
-  restored=true;clearTokenCache();const success=await connectionStatus(probe);assert.equal(success.realReportVerified,true);assert.equal(reportCalls,1);
+
+test('daily human steps match canonical live recovery; healthy status has no action',()=>{
+  assert.equal(maintenanceAction('ok','google_grant_revoked',true),null);
+  for(const reason of ['reader_missing','google_grant_revoked','google_client_rejected','reader_access_removed','temporary']) {
+    const expected=recoveryDetail(reason,true).nextStep;
+    assert.deepEqual(maintenanceAction('account_attention',reason,true),{step:expected.instruction,url:expected.url});
+  }
+  assert.match(maintenanceAction('monitor_not_configured','',false).url,/settings\/secrets\/actions$/);
 });

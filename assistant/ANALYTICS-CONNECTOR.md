@@ -1,6 +1,6 @@
 # Library Analytics connector — implementation and verification
 
-Status on October 6, 2026: **incomplete; infrastructure deployed, live reporting
+Status on October 7, 2026: **incomplete; infrastructure deployed, live reporting
 and ChatGPT installation are not verified.** Do not give this to volunteers as
 a working connection yet.
 
@@ -11,7 +11,7 @@ a working connection yet.
   library; library is currently `authuser=7`. Inspect identity before use.
 - Unbilled Cloud project: `cottonwood-library-analytics`. Analytics Data API
   enabled; no free trial, billing account, card, or paid API enabled.
-- Dedicated reader:
+- Historical unused service-account reader:
   `library-analytics-reader@cottonwood-library-analytics.iam.gserviceaccount.com`.
   It has no Cloud project IAM roles. Analytics property **557596091** grants
   **Viewer, No Cost Metrics, No Revenue Metrics**. No account-level Analytics
@@ -40,8 +40,8 @@ Do not resend or try alternate verification while Donna is unavailable. When
 she is ready, start one fresh library sign-in if needed and report the number
 actually displayed. The pending CLI process was stopped and its isolated
 configuration, login log and code FIFO removed on the Mac; cleanup was verified.
-Create a fresh isolated setup only when Donna is ready. No Google approval has
-succeeded, and no valid Google credential is currently installed in the Worker.
+Create a fresh isolated setup only when Donna is ready. No Google report grant has succeeded. The production browser client is configured
+in the Worker; a real report is still unverified. The old CLI setup is obsolete.
 
 GitHub requires **Confirm access**, signed in as **@librarycottonwood**, before
 generating the identity-app client secret. It offers **Verify via email**. The
@@ -66,28 +66,23 @@ value, then remove this local copy. No token values are in source or this note.
    read-only Google connection when ready. If Google needs Donna, request phone
    approval once and wait. Do not use the obsolete CLI/key-download setup as a
    volunteer workflow. A successful fixed-property read must precede success.
-2. The existing service-account reader remains a fallback, not a credential to
-   hand volunteers. No live reader key has been installed. Its future setup or
-   replacement requires a secure operator capability; do not pretend ordinary
-   ChatGPT GitHub tools can transfer it. The keyless path requires no keyfile.
-3. Complete GitHub email confirmation and generate the identity-app secret.
+2. Complete GitHub email confirmation and generate the identity-app secret.
    Transfer it privately into Worker secret `GITHUB_CLIENT_SECRET`, without
    printing it, copying it into a chat, or taking screenshots of its display.
-4. The random 256-bit `MONITOR_TOKEN` is installed in the Worker. Its private
+3. The random 256-bit `MONITOR_TOKEN` is installed in the Worker. Its private
    bootstrap copy is `/tmp/cottonwood-analytics-setup/monitor-token` (0600).
    Save that value directly as GitHub repository secret
    `LIBRARY_ANALYTICS_MONITOR_TOKEN`, then delete the bootstrap copy.
-5. Store the dedicated deployment credential in the **library repository**
+4. Store the dedicated deployment credential in the **library repository**
    secret `LIBRARY_ANALYTICS_DEPLOY_TOKEN`. Read back secret names only, never
    values. Credentials are never committed.
-6. Install the remote server through the library's actual ChatGPT Plugins flow
+5. Install the remote server through the library's actual ChatGPT Plugins flow
    using OAuth. Verify identity and plan in that account. Use the library's
    Safari flow; root connector/plugin tools authenticate Jaden and cannot
    configure this account.
-7. Prepare/publish library plugin version 0.1.2 from this branch only after the
-   live reporting connection is verified. Preserve existing plugin ID, scope,
-   release conflict checks, website handoff and default prompt. The source edit
-   is prepared but **not published**.
+6. The recovery-only library instruction update is already installed as 0.1.2.
+   Publish the additional source report-tool guidance only after actual live
+   reporting is verified; preserve the existing plugin ID and website handoff.
 8. Remove the temporary CLI sign-in and plaintext bootstrap material on both
    hosts after cloud secrets are verified. The final service does not depend
    on either computer staying on.
@@ -184,7 +179,7 @@ OpenAI API credits. Do not create another weekly task.
   client and short-lived consent/upstream records were created in OAuth KV;
   abandoned clients automatically expire.
 - Actual private hosted monitor probe returns `account_attention` for the absent
-  Google reader key. This correctly requires account setup; it does not return
+  Google report grant. This correctly requires browser approval; it does not return
   invented zero visitors or establish a successful live report. The actual
   `check-live.mjs` runner also verified its account-attention output and recorded
   the currently deployed `6d3e0602518359188358fef7765edd974f8f653c` source SHA.
@@ -205,7 +200,7 @@ OpenAI API credits. Do not create another weekly task.
 - Finish actual library-account OAuth installation and validate a new ordinary
   Work chat asking Donna-style questions without manual plugin selection or a
   persistent special chat. Preserve the website-editing Codex handoff.
-- Verify automatic connector token refresh and the service-account renewal path
+- Verify automatic connector token refresh and the Google grant renewal path
   in the hosted runtime; inspect free-plan CPU outcomes without logging secrets.
 - Run and verify the real daily GitHub probe, safe code-repair publishing path,
   hosted exact-source check and rollback rehearsal.
@@ -216,7 +211,7 @@ OpenAI API credits. Do not create another weekly task.
   no immediate phone/email alert delivery is promised.
 
 Official references:
-[Google service-account authentication](https://developers.google.com/identity/protocols/oauth2/service-account),
+[Google browser OAuth](https://developers.google.com/identity/protocols/oauth2/web-server),
 [Google Data API quickstart](https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart),
 [Cloudflare free-plan pricing](https://developers.cloudflare.com/workers/platform/pricing/),
 [Cloudflare OAuth provider](https://github.com/cloudflare/workers-oauth-provider),
@@ -234,8 +229,10 @@ separate GitHub confirmation, and refuses key pasting without claiming the secur
 connection screen is ready. It does not prove installed live report tools.
 
 New trusted recovery modules are `recovery.mjs`, `google-user.mjs` and
-`reconnect.mjs`. Existing GitHub identity/MCP authorization and service-account
-reader remain in place. An optional keyless Google grant can be renewed server-side
+`reconnect.mjs`. GitHub identity/MCP authorization is separate from the single
+Google browser-grant reader. The unused service-account fallback and key-specific
+diagnostics/tests were removed; no live permissions were changed. The encrypted
+Google grant can be renewed server-side
 and replaced through a human-started browser reconnect. It is disabled until a
 library Google client, client secret, 256-bit grant encryption key and verified
 production flag are configured. External Testing grants are deliberately
@@ -252,11 +249,11 @@ replacing the encrypted old grant. Wrong accounts, cancellation, expired state,
 invalid client, revoked grant and denied report access preserve the prior grant.
 No permissions API is called. A read-only connection-status MCP tool returns one
 next step/link and succeeds only after a real report. It cannot repair a missing
-client or rejected reader key by ordinary login. The daily/weekly status path
+client by ordinary login. The daily/weekly status path
 records classified causes and reconnect readiness, never counts or credentials.
 
 Fixtures: **17 tests passed**, including temporary-token expiry/renewal, revoked
-Google grant, rejected service-account key, invalid client, CSRF/PKCE/state expiry, wrong account, denied consent,
+Google grant, canonical daily/live recovery instructions, invalid client, CSRF/PKCE/state expiry, wrong account, denied consent,
 failed report before replacement, access removal/restoration and error privacy.
 Existing 11 repair-boundary tests still pass. These are isolated synthetic tests;
 no live reader key, account access or permission was revoked.
@@ -309,3 +306,17 @@ identity when the administrator/Donna are ready. No phone approval was requested
 by this implementation. GitHub identity-app confirmation/secret, actual library
 ChatGPT report-plugin installation, real report/dashboard verification and
 scheduled live MCP access remain separate unfinished gates.
+
+## Canonical-path cleanup (October 7)
+
+Reports use only the encrypted library Google browser grant; no JWT/key reader
+fallback remains in runtime or configuration. GitHub identifies the permitted MCP
+caller; Google authorizes read-only Analytics. These are separate security
+boundaries. Browser reconnect intentionally validates its newly approved token
+before saving it; normal reports refresh the saved grant. Both are trusted paths,
+not interchangeable repair code. Daily human steps now come from `recovery.mjs`,
+the same policy used by the live diagnostic tool; the workflow stores that output
+instead of maintaining a second instruction map. The private monitor independently
+checks the hosted reader because it must work even when ChatGPT sign-in is broken.
+The unused service account remains in the account inventory as historical unused
+setup; this code cleanup does not change account roles or permissions.

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { reportRequest, credentialFreeMcpCall } from '../src/reports.mjs';
 import { normalizeReport } from '../src/format.mjs';
 import { handleMcp } from '../src/mcp.mjs';
+import { saveGrant } from '../src/google-user.mjs';
 import { retryFetch, runReport, clearTokenCache } from '../src/google.mjs';
 const dates={start_date:'2026-09-29',end_date:'2026-10-05'};
 test('repairable protocol receives no credentials in headers or context',async()=>{
@@ -11,11 +12,9 @@ test('repairable protocol receives no credentials in headers or context',async()
   assert.equal(safe.request.headers.get('authorization'),null);assert.equal(safe.request.headers.get('cookie'),null);assert.equal(safe.request.headers.get('x-other-credential'),null);
   assert.equal(safe.context.auth.token,undefined);assert.equal(safe.context.props.extraSecret,undefined);assert.equal(await safe.request.text(),'{}');
 });
-test('missing or invalid Google credentials report account attention, never zero',async()=>{
+test('missing Google grant reports account attention, never zero',async()=>{
   clearTokenCache();
-  for(const env of [{},{GOOGLE_SERVICE_ACCOUNT_EMAIL:'fixture@example.test',GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:'invalid-key'}]){
-    await assert.rejects(()=>runReport(dates,env,async()=>{throw Error('Network should not be reached');}),e=>e.code==='account_attention');
-  }
+  await assert.rejects(()=>runReport(dates,{},async()=>{throw Error('Network should not be reached');}),e=>e.code==='account_attention'&&e.recovery.reason==='reader_missing');
 });
 test('only aggregate reports and fixed property inputs are accepted',()=>{
   assert.deepEqual(reportRequest({...dates,report:'visitors'}).body.metrics.map(m=>m.name),['activeUsers','totalUsers','sessions','screenPageViews']);
@@ -57,9 +56,9 @@ test('MCP initialization, safe metadata, report errors and unavailable methods',
 });
 test('Google auth renews on 401 and permits only the library report endpoint',async()=>{
   clearTokenCache();
-  const key=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
-  const raw=await crypto.subtle.exportKey('pkcs8',key.privateKey);
-  const env={GOOGLE_SERVICE_ACCOUNT_EMAIL:'reader@example.test',GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:'-----BEGIN PRIVATE KEY-----\n'+Buffer.from(raw).toString('base64')+'\n-----END PRIVATE KEY-----'};
+  const data=new Map();
+  const env={GOOGLE_OAUTH_CLIENT_ID:'fixture-client',GOOGLE_OAUTH_CLIENT_SECRET:'fixture-secret',GOOGLE_OAUTH_PUBLISHING_STATUS:'production',GOOGLE_OAUTH_TOKEN_KEY:Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64'),OAUTH_KV:{get:async key=>data.get(key)||null,put:async(key,value)=>data.set(key,value)}};
+  await saveGrant({email:'librarycottonwood@gmail.com',refreshToken:'fixture-refresh'},env);
   let tokens=0,reports=0;
   const fetcher=async(url,init)=>{
     if(url==='https://oauth2.googleapis.com/token'){tokens++;return Response.json({access_token:'fixture-token',expires_in:3600});}

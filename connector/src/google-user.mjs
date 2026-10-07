@@ -1,4 +1,4 @@
-// Optional keyless recovery backend. Disabled unless the library-owned Google
+// Canonical Google report credential. Disabled unless the library-owned Google
 // OAuth client is explicitly configured for production (Testing expires in 7d).
 import { ReportError } from './reports.mjs';
 import { recoveryDetail } from './recovery.mjs';

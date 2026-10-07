@@ -1,12 +1,13 @@
 // Trusted daily probe: status only; never store visitor figures or credentials.
 import { appendFileSync } from 'node:fs';
+import { recoveryDetail, maintenanceAction } from './src/recovery.mjs';
 const origin='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 let hostedSourceSha='';
 let recoveryReason='';
 let reconnectReady='false';
 function output(status) {
   if(process.env.GITHUB_OUTPUT)appendFileSync(process.env.GITHUB_OUTPUT,
-    `status=${status}\nhostedSourceSha=${hostedSourceSha}\nrecoveryReason=${recoveryReason}\nreconnectReady=${reconnectReady}\n`);
+    `status=${status}\nhostedSourceSha=${hostedSourceSha}\nrecoveryReason=${recoveryReason}\nreconnectReady=${reconnectReady}\nhumanAction=${JSON.stringify(maintenanceAction(status,recoveryReason,reconnectReady==='true'))}\n`);
 }
 async function main() {
   const health=await fetch(origin+'/health',{signal:AbortSignal.timeout(20000)});
@@ -18,8 +19,7 @@ async function main() {
   if(!process.env.LIBRARY_ANALYTICS_MONITOR_TOKEN)throw Error('monitor_not_configured');
   const live=await fetch(origin+'/monitor',{method:'POST',headers:{Authorization:'Bearer '+process.env.LIBRARY_ANALYTICS_MONITOR_TOKEN},signal:AbortSignal.timeout(55000)});
   const result=await live.json();
-  const reasons=['reader_missing','reader_key_rejected','google_grant_revoked','google_client_rejected','reader_access_removed','chatgpt_signin_expired','temporary'];
-  if(reasons.includes(result.recovery?.reason))recoveryReason=result.recovery.reason;
+  if(result.recovery?.reason && recoveryDetail(result.recovery.reason).reason===result.recovery.reason)recoveryReason=result.recovery.reason;
   reconnectReady=result.keylessReconnectReady===true?'true':'false';
   if(!live.ok || result.status!=='ok')throw Error(result.status==='account_attention'?'account_attention':'connection_unavailable');
   output('ok');
