@@ -1,0 +1,12 @@
+{
+  "name": "cottonwood-library-analytics",
+  "account_id": "e05729fd6b6fad329e31896d8b1c2da9",
+  "main": "src/index.mjs",
+  "tsconfig": "tsconfig.json",
+  "compatibility_date": "2026-10-06",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "workers_dev": true,
+  "observability": {"enabled": false},
+  "vars": {"GITHUB_CLIENT_ID":"Ov23lif1ZStX5NHKSRrk","GOOGLE_SERVICE_ACCOUNT_EMAIL": "library-analytics-reader@cottonwood-library-analytics.iam.gserviceaccount.com"},
+  "kv_namespaces": [{"binding": "OAUTH_KV", "id": "9041250d025b468aa265c1a81296ff2e"}]
+}

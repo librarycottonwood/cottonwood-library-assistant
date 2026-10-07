@@ -1,0 +1,47 @@
+name: Update library Analytics connector
+on:
+  workflow_run:
+    workflows: ['Verify library website']
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: library-analytics-publishing
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --prefix connector --ignore-scripts
+      - run: npm test --prefix connector
+      - run: npm run build --prefix connector
+      - name: Skip a version superseded by newer main source
+        id: current
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          current=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [ "$current" = "$CHECKED_SHA" ]; then echo 'publish=true' >> "$GITHUB_OUTPUT"; fi
+      - name: Deploy checked code with library-owned secrets retained
+        if: steps.current.outputs.publish == 'true'
+        working-directory: connector
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.LIBRARY_ANALYTICS_DEPLOY_TOKEN }}
+          LIBRARY_ANALYTICS_MONITOR_TOKEN: ${{ secrets.LIBRARY_ANALYTICS_MONITOR_TOKEN }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: node publish.mjs
+      - name: Keep rollback available if deployment needs attention
+        if: failure()
+        run: echo 'The connector update needs attention. Previous Cloudflare Worker versions remain available for rollback; accounts, permissions and Analytics settings were not changed by this workflow.' >> "$GITHUB_STEP_SUMMARY"

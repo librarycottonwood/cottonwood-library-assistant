@@ -1,0 +1,74 @@
+name: Library Analytics daily connection check
+on:
+  schedule:
+    - cron: '47 16 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check cloud connection without report data
+        env:
+          LIBRARY_ANALYTICS_MONITOR_TOKEN: ${{ secrets.LIBRARY_ANALYTICS_MONITOR_TOKEN }}
+        run: node connector/check-live.mjs
+      - name: Explain a connection failure for the library
+        if: failure()
+        run: |
+          echo 'The library visitor reports need attention. Open the library assistant and say: Please check the visitor report connection. The daily check does not change accounts or permissions.' >> "$GITHUB_STEP_SUMMARY"
+  record:
+    needs: connection
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    concurrency:
+      group: library-check-records
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - name: Save the status without private visitor data
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONNECTION_RESULT: ${{ needs.connection.result }}
+        run: |
+          python3 - <<'PY'
+          import base64, datetime, json, os, urllib.error, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          root='https://api.github.com/repos/'+repo
+          def api(path, method='GET', body=None):
+              request=urllib.request.Request(root+path, method=method,
+                  data=None if body is None else json.dumps(body).encode(),
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                      'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(request) as response:
+                  return json.load(response)
+          source=os.environ['GITHUB_SHA']
+          report={'sourceSha':source, 'result':os.environ['CONNECTION_RESULT'],
+              'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'runUrl':f"https://github.com/{repo}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+              'scope':'Hosted connection, OAuth challenge, and live read-only library report access; no visitor figures stored.'}
+          for suffix in ('latest', source):
+              path='/contents/.library-analytics-checks/'+suffix+'.json'
+              body={'branch':'maintenance-reports','message':'Record library Analytics connection status',
+                  'content':base64.b64encode((json.dumps(report,indent=2)+'\n').encode()).decode()}
+              try:
+                  body['sha']=api(path+'?ref=maintenance-reports')['sha']
+              except urllib.error.HTTPError as error:
+                  if error.code!=404: raise
+              api(path,'PUT',body)
+          if report['result']!='success':
+              marker='<!-- library-analytics-connection -->'
+              issues=api('/issues?state=open&per_page=100')
+              if not any(marker in (i.get('body') or '') for i in issues):
+                  api('/issues','POST',{'title':'Library visitor reports need attention',
+                      'body':"The visitor report connection needs a little attention. Open your library assistant and say: Please check the visitor report connection. The assistant should inspect the failed check and explain the exact account step if one is required.\n\n[Details for the assistant]("+report['runUrl']+")\n\n"+marker,
+                      'assignees':['librarycottonwood']})
+          PY

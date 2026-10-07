@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cottonwood-library",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Cottonwood Community Library assistant for website previews, approved edits, fundraising reports and everyday library help.",
   "author": {
     "name": "Cottonwood Community Library"

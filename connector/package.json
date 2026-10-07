@@ -1,0 +1,23 @@
+{
+  "name": "cottonwood-library-analytics",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "build": "wrangler deploy --dry-run --outdir dist"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "1.2.3"
+  },
+  "devDependencies": {
+    "wrangler": "4.148.0",
+    "miniflare": "5.20261006.0-alpha"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}
