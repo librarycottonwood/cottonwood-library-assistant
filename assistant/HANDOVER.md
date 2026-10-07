@@ -42,7 +42,7 @@ Library Cloudflare account **e05729fd6b6fad329e31896d8b1c2da9** is owned by libr
 
 A library-owned Pages Write API token is saved as a network secret restricted to api.cloudflare.com. Keys and passwords stay out of this repository. The old environment's Edit action failed, so replacement **cottonwood-library-editor** is published from [setup chat](https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038), with tested install/start instructions, library account/project values and allowed preview domains. A fresh task passed 36 desktop/phone checks, uploaded using the library credential, and fetched the hosted site and pictures. [Start with this checked editing chat](https://chatgpt.com/local/01a113e6-7d73-7234-8dec-b99078fb703a), or open a new Codex chat and choose cottonwood-library-editor. [Fresh checked preview](https://413d8621.cottonwood-library-trial-preview.pages.dev/). The old environment and Jaden token still exist for prior task references; they are not the pilot entry point.
 
-Humans retain account recovery, identity verification and billing responsibility. A library-controlled password manager should hold recovery access; none has been configured here. Weekly cloud checks and a Monday-afternoon assistant review are enabled; see the maintenance section below.
+Humans retain account recovery, identity verification and billing responsibility. A library-controlled password manager should hold recovery access; none has been configured here. Daily cloud checks, failure-triggered Plus repair worker, and a Monday-afternoon assistant review are configured; see the maintenance section below.
 
 ## Trial saving verified
 
@@ -66,8 +66,32 @@ The diagnostic environment is not the volunteer editor and has no hosting creden
 
 ## Weekly cloud upkeep enabled
 
-The library-owned GitHub check workflow now runs after source changes and every Monday at 16:37 UTC. A manually dispatched run and normal push runs passed in GitHub's cloud, including build, release safeguards, privacy tests, and 36 desktop/phone page checks. This does not use ChatGPT allowance. Results are recorded on the maintenance-reports branch for the exact checked source version. This is source verification, not hosted uptime or public-domain publishing.
+The library-owned GitHub check workflow now runs after source changes and daily at 16:37 UTC. A manually dispatched run and normal push runs passed in GitHub's cloud, including build, release safeguards, privacy tests, and 36 desktop/phone page checks. This does not use ChatGPT allowance. Results are recorded on the maintenance-reports branch for the exact checked source version. This is source verification, not hosted uptime or public-domain publishing.
 
 The library's native Scheduled task **Weekly website upkeep** is enabled for Monday afternoons, around 2 PM Pacific. Its baseline run retrieved current main **4799a60bca8f904a583cfd22ad4c9e5bcb6093d1** and the matching successful report, linking [the actual cloud run](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206). It executes without an online personal computer, using GitHub tools and GitHub cloud checks. It cannot inherit/select the published interactive editor.
 
-Instructions in [MAINTENANCE.md](MAINTENANCE.md) assign technical investigation and verification to the assistant, allow only focused necessary repairs after passing checks, preserve human decisions about public content/accounts/billing, and request silence when healthy. Full automatic repair/merge and healthy-run notification suppression remain untested. No daily AI task is enabled. Scheduled agent work consumes the shared plan allowance; the library usage page showed 96% weekly remaining during setup. No credits or automatic reload were configured.
+Instructions in [MAINTENANCE.md](MAINTENANCE.md) assign technical investigation and verification to the assistant, allow only focused necessary repairs after passing checks, preserve human decisions about public content/accounts/billing, and request silence when healthy. Automatic repair, complete verification and saving passed an isolated test; healthy-run notification suppression remains untested. No daily AI task is enabled. Scheduled agent work consumes the shared plan allowance; usage varies with each run. No credits or automatic reload were configured.
+
+
+## Failure-triggered maintenance worker
+
+GitHub now provides the cloud repair computer, using the library's managed
+ChatGPT sign-in rather than API credits. A real GitHub-hosted sign-in test passed
+in run 37565472835. Daily check failures on current main trigger a bounded repair
+attempt, followed by full credential-free verification and exact-version cloud
+checks. Source is saved only when checks pass and concurrent main work is
+preserved. A separate test branch with a broken image import passed the complete repair
+and saving rehearsal in runs 37566234371 and 37566797654; details are recorded
+in MAINTENANCE.md. The library main component stayed unchanged.
+Routine unresolved failures create a library-assigned alert. No public-domain
+publishing or existing immutable-preview replacement is performed.
+
+The account belongs to the library; runner operation requires neither Jaden's
+Mac nor Pi. Managed sign-in refresh is encrypted in private GitHub storage with
+a library repository secret; no credential is committed. A small weekly worker
+run maintains idle sign-in, and account revocation can still need human recovery.
+
+Native cloud repair-update task is enabled, but its bot-event delivery test has
+not yet produced a recorded ChatGPT run. Do not promise immediate ChatGPT
+notifications. Weekly task report access remains verified; unresolved failures
+are recorded as library-assigned GitHub issues.

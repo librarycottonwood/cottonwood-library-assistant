@@ -159,8 +159,8 @@
         }
       },
       "maintenanceSchedules": {
-        "status": "Weekly GitHub cloud checks and native library-account weekly assistant task enabled",
-        "githubSchedule": "Monday 16:37 UTC; source changes also trigger checks",
+        "status": "Daily GitHub checks, failure-triggered managed-Plus repair worker and weekly cloud assistant review configured",
+        "githubSchedule": "Daily 16:37 UTC; source changes also trigger checks",
         "assistantSchedule": "Monday afternoon around 14:00 America/Los_Angeles; cloud executor",
         "automationId": "6ac5a460da40819092fe6b5e6403c3cd",
         "firstScheduledRun": "2026-10-12",
@@ -170,8 +170,24 @@
           "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206",
           "scheduledTask": "Library-account scheduled cloud baseline retrieved matching exact-source report"
         },
-        "limits": "Scheduled runner does not inherit interactive editor. Auto repair/merge and quiet-notification behavior untested. Source checks do not test hosted uptime or publish real domain.",
-        "usage": "GitHub checks use no ChatGPT allowance; scheduled assistant uses shared allowance. Weekly remaining was 96% when inspected. No daily agent task."
+        "limits": "Full isolated repair/verification/save passed. Fresh interactive Codex startup instructions and quiet-notification behavior remain unresolved. Source checks do not monitor hosted uptime or publish the public domain.",
+        "usage": "Daily checks use GitHub allowance, not ChatGPT. Repairs, weekly assistant review, weekly sign-in maintenance and event notifications use shared Plus allowance. No API key, API credits or automatic reload configured.",
+        "repairValidation": {
+          "managedSignInRun": "37565472835",
+          "fullRepairRun": "37566234371",
+          "verifiedSaveRun": "37566797654",
+          "pullRequest": "https://github.com/librarycottonwood/cottonwood-library-assistant/pull/2",
+          "scope": "Isolated codex/upkeep-test-20261006 branch; main website component unchanged",
+          "model": "gpt-6-luna",
+          "credentials": "Library GitHub secrets plus AES-GCM encrypted private refreshed-auth artifacts. Local bootstrap removed."
+        },
+        "repairNotification": {
+          "id": "6ac5beb375d88191a71e366504a60408",
+          "enabled": true,
+          "trigger": "Merged Library website upkeep PRs in library repository",
+          "validation": "Actual bot-created/merged isolated PR 3; first automation readback last_run null. Event delivery unverified.",
+          "testRun": "37567788142"
+        }
       },
       "trialSaving": {
         "status": "Verified through library-account GitHub connector, independent remote commit verification. No shell credential helper required. Website content restored after test.",
