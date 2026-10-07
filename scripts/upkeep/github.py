@@ -102,15 +102,18 @@ elif mode == 'patch':
         output('patch','true')
 elif mode == 'finish':
     # CI evidence must refer to the exact repair head; stale base cannot be saved.
-    source, head = sys.argv[2:]
+    source, head, target = sys.argv[2:]
+    if target != "main" and not target.startswith("codex/upkeep-test-"):
+        raise RuntimeError("Saving is restricted to main or an isolated rehearsal branch")
     runs = api('/actions/workflows/check.yml/runs?head_sha='+head)['workflow_runs']
-    if not any(r['head_sha']==head and r['conclusion']=='success' for r in runs):
+    if not any(r['head_sha']==head and r['event']=='workflow_dispatch' and r['conclusion']=='success' for r in runs):
         raise RuntimeError('The repaired version has not passed the cloud checks')
-    if api('/git/ref/heads/main')['object']['sha']!=source:
+    if api('/git/ref/heads/'+target)['object']['sha']!=source:
         raise RuntimeError('Another change was saved; leave this repair for a fresh review')
     # A non-forced fast-forward fails if concurrent main commits are not ancestors.
-    api('/git/refs/heads/main','PATCH',{'sha':head,'force':False})
-    api('/actions/workflows/check.yml/dispatches','POST',{'ref':'main'})
+    api('/git/refs/heads/'+target,'PATCH',{'sha':head,'force':False})
+    if target == 'main':
+        api('/actions/workflows/check.yml/dispatches','POST',{'ref':'main'})
 
 elif mode == 'alert':
     source = sys.argv[2]
