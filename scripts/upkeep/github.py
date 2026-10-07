@@ -39,11 +39,13 @@ if mode == 'prepare':
             raise RuntimeError('Manual repair tests require an isolated upkeep-test branch')
         main = api('/git/ref/heads/'+test_ref)['object']['sha']
     ready = True
+    followup_failure = False
     if failure:
         ready = (failure['conclusion']=='failure' and failure['head_branch']=='main'
                  and failure['head_sha']==main and failure['head_repository']['full_name']==REPO)
         commit = api('/commits/'+main)
-        if commit['commit']['message'].startswith('Library automatic repair:'):
+        if ready and commit['commit']['message'].startswith('Library automatic repair:'):
+            followup_failure = True
             ready = False  # Never repair the worker's own repair in a loop.
     artifacts = sorted(api('/actions/artifacts?per_page=100')['artifacts'], key=lambda a: a['created_at'], reverse=True)
     if failure and any(a['name']=='library-repair-attempt-'+main and not a['expired'] for a in artifacts):
@@ -51,6 +53,9 @@ if mode == 'prepare':
     output('ready', str(ready).lower())
     output('source', main)
     output('repair', str(bool(failure or test_ref)).lower())
+    output('followup_failure', str(followup_failure).lower())
+    if not ready:
+        sys.exit(0)
     # Restore only a vault produced by this exact worker on the trusted branch.
     for a in artifacts:
         if a['name']!='library-codex-auth' or a['expired']:
@@ -106,3 +111,15 @@ elif mode == 'finish':
     # A non-forced fast-forward fails if concurrent main commits are not ancestors.
     api('/git/refs/heads/main','PATCH',{'sha':head,'force':False})
     api('/actions/workflows/check.yml/dispatches','POST',{'ref':'main'})
+
+elif mode == 'alert':
+    source = sys.argv[2]
+    marker = '<!-- library-upkeep:' + source + ' -->'
+    issues = api('/issues?state=open&per_page=100')
+    if not any(marker in (i.get('body') or '') for i in issues):
+        url = 'https://github.com/' + REPO + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
+        issue = api('/issues', 'POST', {
+            'title': 'Website check needs attention',
+            'body': "The website check found a problem I couldn't safely repair. Please ask your library assistant to review this alert.\n\n[Details for the assistant](" + url + ")\n\n" + marker,
+            'assignees': ['librarycottonwood']})
+        print(issue['html_url'])
