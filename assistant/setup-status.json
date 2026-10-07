@@ -158,7 +158,21 @@
           "checks": "36 desktop/phone page checks, inspected screenshots, actual draft upload, hosted site/pictures/PNG fetches. Source unchanged. Restricted shell could not reach proxy; permitted tool execution succeeded."
         }
       },
-      "maintenanceSchedules": "No schedules created yet. Daily website checks and weekly maintenance requested; must test account connections and task capabilities before enabling.",
+      "maintenanceSchedules": {
+        "status": "Weekly GitHub cloud checks and native library-account weekly assistant task enabled",
+        "githubSchedule": "Monday 16:37 UTC; source changes also trigger checks",
+        "assistantSchedule": "Monday afternoon around 14:00 America/Los_Angeles; cloud executor",
+        "automationId": "6ac5a460da40819092fe6b5e6403c3cd",
+        "firstScheduledRun": "2026-10-12",
+        "validation": {
+          "sourceSha": "4799a60bca8f904a583cfd22ad4c9e5bcb6093d1",
+          "result": "success",
+          "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206",
+          "scheduledTask": "Library-account scheduled cloud baseline retrieved matching exact-source report"
+        },
+        "limits": "Scheduled runner does not inherit interactive editor. Auto repair/merge and quiet-notification behavior untested. Source checks do not test hosted uptime or publish real domain.",
+        "usage": "GitHub checks use no ChatGPT allowance; scheduled assistant uses shared allowance. Weekly remaining was 96% when inspected. No daily agent task."
+      },
       "trialSaving": {
         "status": "Verified through library-account GitHub connector, independent remote commit verification. No shell credential helper required. Website content restored after test.",
         "savedCommit": "49f9d90841e4784052879622519847dac2c6f722",
@@ -167,10 +181,10 @@
         "instructions": "AGENTS.md, assistant/START.md and assistant/WORKFLOW.md distinguish approved trial save from public launch."
       },
       "volunteerExperience": {
-        "status": "Not ready for volunteer handoff. Stronger repository response instructions and separate global Codex instructions saved, but a fresh ordinary-request test did not receive either at startup. No replacement ready link offered.",
+        "status": "Fresh Codex chat handoff remains unready. Weekly scheduled prompt carries explicit library instructions and baseline report access passed.",
         "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
-        "diagnosis": "Fresh task starts at /workspace, repository is nested at /workspace/cottonwood-library-assistant, and no /workspace/AGENTS.md exists. Task reported no library instructions in initial context, including missing account-wide Codex instructions despite saved UI readback. It incorrectly queried Sites for a website before inspecting its cloud environment."
+        "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved."
       }
     }
   }

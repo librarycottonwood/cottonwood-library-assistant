@@ -42,7 +42,7 @@ Library Cloudflare account **e05729fd6b6fad329e31896d8b1c2da9** is owned by libr
 
 A library-owned Pages Write API token is saved as a network secret restricted to api.cloudflare.com. Keys and passwords stay out of this repository. The old environment's Edit action failed, so replacement **cottonwood-library-editor** is published from [setup chat](https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038), with tested install/start instructions, library account/project values and allowed preview domains. A fresh task passed 36 desktop/phone checks, uploaded using the library credential, and fetched the hosted site and pictures. [Start with this checked editing chat](https://chatgpt.com/local/01a113e6-7d73-7234-8dec-b99078fb703a), or open a new Codex chat and choose cottonwood-library-editor. [Fresh checked preview](https://413d8621.cottonwood-library-trial-preview.pages.dev/). The old environment and Jaden token still exist for prior task references; they are not the pilot entry point.
 
-Humans retain account recovery, identity verification and billing responsibility. A library-controlled password manager should hold recovery access; none has been configured here. No recurring maintenance schedules are enabled yet.
+Humans retain account recovery, identity verification and billing responsibility. A library-controlled password manager should hold recovery access; none has been configured here. Weekly cloud checks and a Monday-afternoon assistant review are enabled; see the maintenance section below.
 
 ## Trial saving verified
 
@@ -58,4 +58,16 @@ Valid hosted PNGs are rejected by ChatGPT before loading; its absolute cloud-fil
 
 ## Volunteer handoff is not ready
 
-The infrastructure and save/undo tests above passed, but a plain fresh-chat request to see the website failed to recognize the library. Its initial directory is /workspace, while the library AGENTS.md is nested in the repository; no workspace-root AGENTS.md exists. The account-wide Codex instruction field was empty; it has now been saved and reopened to verify (source in assistant/CODEX.md). A subsequent fresh task still reported those instructions were absent from its initial context. Repository response rules have been strengthened, but that is not proof of automatic first-message loading. Finish startup context delivery and validate normal friendly requests before handing the board a new editing chat. Technical setup/test chats have been archived to clean the sidebar.
+The infrastructure and save/undo tests passed, but fresh Codex chats still do not reliably receive the library identity and response instructions. The saved global Codex field was reopened and verified; a fresh task nevertheless reported that it was absent from initial instructions.
+
+A separate diagnostic environment published `/workspace/AGENTS.md`, a tested install wrapper, and a start skill. A fresh “Hi!” task confirmed that the root file survived publication, but was not supplied initially. The conversation's orchestration directory was `/codex/browser/projectless/0007-hi`; shell commands later started in `/workspace`. Merely moving guidance into the environment root does not solve startup discovery. The precise backend reason for missing global preferences remains unresolved. Original editor Edit also fails with “Couldn't start editing environment.” No support report has been sent.
+
+The diagnostic environment is not the volunteer editor and has no hosting credential. Do not describe fresh-chat onboarding as fixed or send volunteers a replacement ready link until a normal first-message test passes. Scheduled upkeep carries its identity and instructions directly in its saved prompt, independently of this problem.
+
+## Weekly cloud upkeep enabled
+
+The library-owned GitHub check workflow now runs after source changes and every Monday at 16:37 UTC. A manually dispatched run and normal push runs passed in GitHub's cloud, including build, release safeguards, privacy tests, and 36 desktop/phone page checks. This does not use ChatGPT allowance. Results are recorded on the maintenance-reports branch for the exact checked source version. This is source verification, not hosted uptime or public-domain publishing.
+
+The library's native Scheduled task **Weekly website upkeep** is enabled for Monday afternoons, around 2 PM Pacific. Its baseline run retrieved current main **4799a60bca8f904a583cfd22ad4c9e5bcb6093d1** and the matching successful report, linking [the actual cloud run](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206). It executes without an online personal computer, using GitHub tools and GitHub cloud checks. It cannot inherit/select the published interactive editor.
+
+Instructions in [MAINTENANCE.md](MAINTENANCE.md) assign technical investigation and verification to the assistant, allow only focused necessary repairs after passing checks, preserve human decisions about public content/accounts/billing, and request silence when healthy. Full automatic repair/merge and healthy-run notification suppression remain untested. No daily AI task is enabled. Scheduled agent work consumes the shared plan allowance; the library usage page showed 96% weekly remaining during setup. No credits or automatic reload were configured.

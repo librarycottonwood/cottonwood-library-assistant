@@ -11,7 +11,7 @@ Each main-branch run writes its result to the `maintenance-reports` branch at
 source, outcome, time, and workflow run. The report branch is excluded from
 push-triggered checks to avoid generating another run for each report.
 
-The assistant's separate weekly task should run after the checker, at 10 AM
+The assistant's separate weekly task should run after the checker, around 2 PM
 Pacific on Monday. Scheduled web tasks were tested: they have generic cloud
 execution and GitHub access, but do not inherit `cottonwood-library-editor`.
 They must use GitHub tools and the repository's cloud checks for upkeep, with
@@ -26,7 +26,7 @@ its cloud checks. Handle technical investigation yourself. Do not ask volunteers
 technical questions or send implementation plans. This scheduled task does not
 inherit the interactive website editor; do not claim that it does.
 
-Read the repository's current AGENTS.md and this file. Find the current main
+Read the repository's current AGENTS.md and assistant/MAINTENANCE.md. Find the current main
 commit, then read .library-checks/<that exact SHA>.json from maintenance-reports.
 Use its actual result and run URL; do not treat a report for older source as a
 check of current source. If it is missing, inspect available workflow evidence
@@ -56,3 +56,19 @@ necessary repair, a meaningful failure, or required human action. Use one or two
 friendly sentences explaining the practical effect, not test counts, repositories,
 commands, or implementation plans. Keep detailed evidence in the maintenance
 work, available if the administrator asks. Do not send email or Facebook posts.
+
+## Validation on October 6, 2026
+
+The library-account scheduled cloud task read current main commit
+`4799a60bca8f904a583cfd22ad4c9e5bcb6093d1` and its actual successful report
+from `maintenance-reports`, linking workflow run `37559880206`. The temporary
+read-only validation override was removed before enabling recurrence. Native
+schedule readback confirmed cloud execution, enabled status, Monday afternoon
+(14:00 America/Los_Angeles), with the first run October 12.
+
+The baseline proves scheduled repository/report access and cloud checks. An
+automatic repair, pull-request verification, and merge have not been rehearsed.
+The prompt requires successful exact-version checks before saving a repair;
+if those tools are unavailable, it must stop the repair rather than assume a pass.
+Quiet healthy operation is requested in the prompt; notification suppression
+has not been demonstrated. No daily agent task is enabled.
