@@ -12,14 +12,15 @@ test('real browser preserves recovery cookie and follows only the allowed Google
   if(!executablePath){try{await access('/usr/bin/chromium');executablePath='/usr/bin/chromium';}catch{}}
   // DNS cannot resolve external hosts, even if an interception regresses.
   const browser=await chromium.launch({executablePath,headless:true,args:['--host-resolver-rules=MAP * ~NOTFOUND']});
-  let googleAuthorization=0,postStatus;
+  let googleAuthorization=0,postStatus,cdp,interceptFailure;
+  const pending=new Set();
   try {
     const context=await browser.newContext();const page=await context.newPage();
-    const cdp=await context.newCDPSession(page);
+    cdp=await context.newCDPSession(page);
     // CDP intercepts each redirect hop; Playwright route() handles only the
     // initial request in a redirect chain. No real Google requests are possible.
     await cdp.send('Fetch.enable',{patterns:[{urlPattern:'*',requestStage:'Request'}]});
-    cdp.on('Fetch.requestPaused',async event=>{
+    const fulfill=async event=>{
       const r=event.request;const url=new URL(r.url);
       let status=404,body='Blocked fixture request',headers={'content-type':'text/plain'};
       if(url.origin==='https://accounts.google.com' && url.pathname==='/o/oauth2/v2/auth'){
@@ -33,9 +34,22 @@ test('real browser preserves recovery cookie and follows only the allowed Google
         status=response.status;headers=Object.fromEntries(response.headers);body=await response.text();
       }
       await cdp.send('Fetch.fulfillRequest',{requestId:event.requestId,responseCode:status,responseHeaders:Object.entries(headers).map(([name,value])=>({name,value})),body:Buffer.from(body).toString('base64')});
+    };
+    cdp.on('Fetch.requestPaused',event=>{
+      const task=fulfill(event).catch(error=>{interceptFailure ||= error;}).finally(()=>pending.delete(task));
+      pending.add(task);
     });
     await page.goto(origin+'/reconnect');
     await Promise.all([page.waitForURL('https://accounts.google.com/**',{timeout:10000}),page.getByRole('button',{name:'Reconnect with Google'}).click()]);
+    // URL changes at navigation start; wait for the intercepted response to
+    // render before asserting success and shutting the browser down.
+    await page.getByText('Intercepted Google fixture.').waitFor();
+    await Promise.all([...pending]);
+    if(interceptFailure)throw interceptFailure;
     assert.equal(postStatus,302);assert.equal(googleAuthorization,1);
-  }finally{await browser.close();}
+  }finally{
+    cdp?.removeAllListeners('Fetch.requestPaused');
+    await Promise.all([...pending]);
+    await browser.close();
+  }
 });
