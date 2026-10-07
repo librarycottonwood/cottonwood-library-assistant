@@ -1,10 +1,11 @@
 import { PROPERTY, ReportError, reportRequest } from './reports.mjs';
 import { normalizeReport } from './format.mjs';
+import { userAccessToken, clearUserTokenCache, recoveryError, readGrant } from './google-user.mjs';
 const enc = new TextEncoder();
 const b64 = value => btoa(String.fromCharCode(...new Uint8Array(value))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 let tokenState;
 let pending;
-export function clearTokenCache() { tokenState = undefined; pending = undefined; }
+export function clearTokenCache() { tokenState = undefined; pending = undefined; clearUserTokenCache(); }
 export async function retryFetch(url, init, fetcher = fetch, sleep = ms => new Promise(r => setTimeout(r, ms))) {
   for (let attempt = 0; attempt < 3; attempt++) {
     let response;
@@ -16,7 +17,9 @@ export async function retryFetch(url, init, fetcher = fetch, sleep = ms => new P
   throw new ReportError('temporarily_unavailable','The visitor reports are temporarily unavailable. Please try again shortly.');
 }
 async function token(env, fetcher) {
-  if (!env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) throw new ReportError('account_attention','The library administrator needs to reconnect the Google service-account credential for visitor reports.');
+  const userToken=await userAccessToken(env,(url,init)=>retryFetch(url,init,fetcher));
+  if(userToken)return userToken;
+  if (!env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) throw recoveryError('reader_missing');
   if (tokenState?.email === env.GOOGLE_SERVICE_ACCOUNT_EMAIL && tokenState.expires > Date.now()+60000) return tokenState.value;
   if (pending) return pending;
   pending = (async () => {
@@ -26,12 +29,12 @@ async function token(env, fetcher) {
     const pem = env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/-----[^-]+-----|\s/g,'');
     let key;
     try { key = await crypto.subtle.importKey('pkcs8', Uint8Array.from(atob(pem),c=>c.charCodeAt(0)),{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']); }
-    catch { throw new ReportError('account_attention','The library administrator needs to reconnect the Google service-account credential for visitor reports.'); }
+    catch { throw recoveryError('reader_key_rejected'); }
     const signature = b64(await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,enc.encode(`${head}.${body}`)));
     const response = await retryFetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:`${head}.${body}.${signature}`})},fetcher);
-    if (!response.ok) throw new ReportError('account_attention','The visitor report connection needs the library administrator to check its Google service account.');
+    if (!response.ok) throw recoveryError('reader_key_rejected');
     const data = await response.json();
-    if (!data.access_token) throw new ReportError('account_attention','The visitor report connection needs the library administrator to check its Google service account.');
+    if (!data.access_token) throw recoveryError('reader_key_rejected');
     tokenState={email:env.GOOGLE_SERVICE_ACCOUNT_EMAIL,value:data.access_token,expires:Date.now()+Number(data.expires_in || 3600)*1000};
     return tokenState.value;
   })();
@@ -43,7 +46,8 @@ export async function runReport(args, env, fetcher=fetch) {
     const access=await token(env,fetcher);
     const response=await retryFetch(`https://analyticsdata.googleapis.com/v1beta/properties/${PROPERTY}:runReport`,{method:'POST',headers:{Authorization:`Bearer ${access}`,'Content-Type':'application/json'},body:JSON.stringify(request.body)},fetcher);
     if (response.status===401 && attempt===0) { clearTokenCache();continue; }
-    if ([401,403].includes(response.status)) throw new ReportError('account_attention','The visitor report connection needs the library administrator to restore read-only access to the library Analytics property.');
+    if (response.status===401) throw recoveryError(await readGrant(env)?'google_grant_revoked':'reader_key_rejected');
+    if ([403,404].includes(response.status)) throw recoveryError('reader_access_removed');
     if (!response.ok) throw new ReportError('report_unavailable','Google could not return that report. Please try a shorter date range.');
     return normalizeReport(await response.json(),request);
   }

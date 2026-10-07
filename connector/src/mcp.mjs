@@ -10,7 +10,8 @@ const tool = {
     limit:{type:'integer',minimum:1,maximum:25,default:10,description:'Maximum popular pages returned.'},
   } },
 };
-export async function handleMcp(request,env,ctx,reporter=runReport) {
+const statusTool={name:'library_report_connection_status',description:'Check whether a real read-only library report succeeds. Use after reconnecting or on a failed visitor report. Returns the exact connection problem and one next step, never visitor counts or credentials. Does not change accounts, keys or permissions.',annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false},inputSchema:{type:'object',properties:{},additionalProperties:false}};
+export async function handleMcp(request,env,ctx,reporter=runReport,checker) {
   if (!ctx.auth?.scope?.includes('analytics:read') || ctx.props?.login !== 'librarycottonwood') return new Response('Library authorization required.',{status:403});
   if (request.method==='GET' || request.method==='DELETE') return new Response(null,{status:405,headers:{Allow:'POST'}});
   if (request.method!=='POST') return new Response(null,{status:405});
@@ -27,11 +28,16 @@ export async function handleMcp(request,env,ctx,reporter=runReport) {
   switch(message.method) {
     case 'initialize': return reply({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2026-07-28'].includes(message.params?.protocolVersion)?message.params.protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'Cottonwood Library Analytics',version:'0.1.0'},instructions:'Answer in friendly everyday language. Give the exact period and explain that these are tracked demo visits. Never invent data or turn a connection failure into zero.'});
     case 'ping': return reply({});
-    case 'tools/list': return reply({tools:[tool]});
+    case 'tools/list': return reply({tools:checker?[tool,statusTool]:[tool]});
     case 'tools/call': {
+      if(message.params?.name===statusTool.name && checker){
+        if(Object.keys(message.params.arguments||{}).length)return error(-32602,'Connection check takes no arguments.');
+        try {const result=await checker();return reply({content:[{type:'text',text:JSON.stringify(result)}],structuredContent:result});}
+        catch {return reply({isError:true,content:[{type:'text',text:'The connection check is temporarily unavailable. Ask again shortly; do not repeatedly reconnect accounts.'}]});}
+      }
       if (message.params?.name!==tool.name) return error(-32602,'Unknown report tool.');
       try { const result=await reporter(message.params.arguments,env);return reply({content:[{type:'text',text:JSON.stringify(result)}],structuredContent:result}); }
-      catch(e) { return reply({isError:true,content:[{type:'text',text:JSON.stringify({error:e.code||'temporarily_unavailable',message:e.code?e.message:'The visitor report connection needs attention. Please try again shortly.'})}]}); }
+      catch(e) { return reply({isError:true,content:[{type:'text',text:JSON.stringify({error:e.code||'temporarily_unavailable',message:e.code?e.message:'The visitor report connection needs attention. Please try again shortly.',...(e.recovery?{recovery:e.recovery}:{})})}]}); }
     }
     default:return error(-32601,'Method not found.');
   }

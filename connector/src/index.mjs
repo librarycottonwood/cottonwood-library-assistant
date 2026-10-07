@@ -2,6 +2,9 @@ import OAuthProvider, { authorizationErrorRedirect } from '@cloudflare/workers-o
 import { runReport } from './google.mjs';
 import { credentialFreeMcpCall } from './reports.mjs';
 import { handleMcp } from './mcp.mjs';
+import { handleReconnect } from './reconnect.mjs';
+import { connectionStatus } from './recovery.mjs';
+import { userOAuthReady } from './google-user.mjs';
 const ORIGIN='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>`&#${c.charCodeAt(0)};`);
 const scopes=['analytics:read','offline_access'];
@@ -9,17 +12,14 @@ const defaultHandler={async fetch(request,env) {
   const url=new URL(request.url);
   const oauth=env.OAUTH_PROVIDER;
   try {
+    const reconnect=await handleReconnect(request,env);if(reconnect)return reconnect;
     if (url.pathname==='/health') return Response.json({status:'ok',service:'Cottonwood Library Analytics',version:'0.1.0',sourceSha:env.BUILD_SOURCE_SHA || null},{headers:{'Cache-Control':'no-store'}});
     if (url.pathname==='/monitor' && request.method==='POST') {
       const presented=request.headers.get('Authorization')?.replace(/^Bearer /,'') || '';
       if (!env.MONITOR_TOKEN || presented.length!==env.MONITOR_TOKEN.length || [...presented].reduce((diff,c,i)=>diff | c.charCodeAt(0)^env.MONITOR_TOKEN.charCodeAt(i),0)!==0) return new Response('Unauthorized.',{status:401});
       const yesterday=new Date(Date.now()-86400000).toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
-      try {
-        await runReport({report:'visitors',start_date:yesterday,end_date:yesterday},env);
-        return Response.json({status:'ok',property:'557596091',checkedDate:yesterday},{headers:{'Cache-Control':'no-store'}});
-      } catch(e) {
-        return Response.json({status:e.code==='account_attention'?'account_attention':'temporarily_unavailable',message:e.code?e.message:'The visitor report connection needs attention.'},{status:503,headers:{'Cache-Control':'no-store'}});
-      }
+      const status=await connectionStatus(()=>runReport({report:'visitors',start_date:yesterday,end_date:yesterday},env),userOAuthReady(env));
+      return Response.json(status,{status:status.status==='ok'?200:503,headers:{'Cache-Control':'no-store'}});
     }
     if (url.pathname==='/authorize' && request.method==='GET') {
       const original=await oauth.parseAuthRequest(request);
@@ -46,7 +46,7 @@ const defaultHandler={async fetch(request,env) {
       if (!url.searchParams.get('code') || url.searchParams.has('error')) {headers.set('Location',authorizationErrorRedirect(original,'access_denied'));return new Response(null,{status:302,headers});}
       const response=await fetch('https://github.com/login/oauth/access_token',{method:'POST',headers:{Accept:'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:env.GITHUB_CLIENT_ID,client_secret:env.GITHUB_CLIENT_SECRET,code:url.searchParams.get('code'),redirect_uri:ORIGIN+'/callback',code_verifier:data.verifier}),signal:AbortSignal.timeout(15000)});
       const result=await response.json();
-      if (!response.ok || !result.access_token) return new Response('Sign-in could not finish. Return to ChatGPT and reconnect.',{status:503});
+      if (!response.ok || !result.access_token) return new Response('The library GitHub connection could not finish. Return to your library assistant for the next account step; repeated sign-in will not fix missing connection settings.',{status:503});
       const identity=await fetch('https://api.github.com/user',{headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${result.access_token}`,'User-Agent':'Cottonwood-Library-Analytics'},signal:AbortSignal.timeout(15000)});
       const user=await identity.json();
       if (!identity.ok || user.login!=='librarycottonwood' || String(user.id)!=='338888442') return new Response('Please use the library GitHub account to connect these reports.',{status:403,headers});
@@ -56,13 +56,16 @@ const defaultHandler={async fetch(request,env) {
     }
     if (url.pathname==='/') return new Response('Cottonwood Community Library private website reports. Connect through the library ChatGPT account.',{headers:{'Content-Type':'text/plain; charset=utf-8'}});
     return new Response('Not found.',{status:404});
-  } catch { return new Response('The library report connection could not finish. Return to ChatGPT and try connecting again.',{status:503,headers:{'Cache-Control':'no-store'}}); }
+  } catch { return new Response('The library report connection could not finish. Return to your library assistant for the next step. Do not repeatedly request account verification.',{status:503,headers:{'Cache-Control':'no-store'}}); }
 }};
 export default new OAuthProvider({
   apiRoute:'/mcp',apiHandler:{fetch(request,env,ctx) {
     if (!ctx.auth?.scope?.includes('analytics:read') || ctx.props?.login !== 'librarycottonwood') return new Response('Library authorization required.',{status:403});
     const safe=credentialFreeMcpCall(request,ctx);
-    return handleMcp(safe.request,{},safe.context,args=>runReport(args,env));
+    return handleMcp(safe.request,{},safe.context,args=>runReport(args,env),()=>{
+      const yesterday=new Date(Date.now()-86400000).toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
+      return connectionStatus(()=>runReport({report:'visitors',start_date:yesterday,end_date:yesterday},env),userOAuthReady(env));
+    });
   }},defaultHandler,
   authorizeEndpoint:'/authorize',tokenEndpoint:'/oauth/token',clientRegistrationEndpoint:'/oauth/register',
   scopesSupported:scopes,requiredScopes:['analytics:read'],

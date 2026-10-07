@@ -61,13 +61,15 @@ value, then remove this local copy. No token values are in source or this note.
 
 ## Finish credentials and installation
 
-1. Complete isolated **library** Google CLI sign-in when Donna is available.
-   Verify `gcloud auth list` identifies only the intended library setup identity
-   in the isolated configuration. Verify project billing remains disabled.
-2. Generate one service-account key directly into mode-0600 private setup
-   storage; never stdout. Install only its private-key value as Worker secret
-   `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`. The email is a nonsecret fixed binding.
-   Keep this key out of the library editing environment and repair worker.
+1. Prefer the new secure browser reconnect once its hosted readiness is verified.
+   The administrator chooses only librarycottonwood@gmail.com and approves the
+   read-only Google connection when ready. If Google needs Donna, request phone
+   approval once and wait. Do not use the obsolete CLI/key-download setup as a
+   volunteer workflow. A successful fixed-property read must precede success.
+2. The existing service-account reader remains a fallback, not a credential to
+   hand volunteers. No live reader key has been installed. Its future setup or
+   replacement requires a secure operator capability; do not pretend ordinary
+   ChatGPT GitHub tools can transfer it. The keyless path requires no keyfile.
 3. Complete GitHub email confirmation and generate the identity-app secret.
    Transfer it privately into Worker secret `GITHUB_CLIENT_SECRET`, without
    printing it, copying it into a chat, or taking screenshots of its display.
@@ -161,7 +163,7 @@ OpenAI API credits. Do not create another weekly task.
   were verified after restoration. This is infrastructure rollback evidence,
   not a live reporting/ChatGPT or automatic CI rollback test.
 
-- Connector: **9 tests passed**, including real Workers runtime OAuth discovery,
+- Connector: **17 tests passed**, including real Workers runtime OAuth discovery,
   PKCE, consent-cookie binding, CSRF denial, script escaping, read-only protocol
   behavior, removal of OAuth tokens and arbitrary headers before the repairable
   protocol module, fixed aggregate request/property policy, date comparisons, missing
@@ -220,3 +222,66 @@ Official references:
 [Cloudflare OAuth provider](https://github.com/cloudflare/workers-oauth-provider),
 [ChatGPT custom MCP installation](https://developers.openai.com/api/docs/guides/custom-mcp-server),
 [Worker rollback commands](https://developers.cloudflare.com/workers/wrangler/commands/workers/).
+
+## Guided recovery implementation (October 7)
+
+The installed private library instruction plugin is now version **0.1.2**, release
+`pluginrel_6ac5f70e34cc8191aee85961fec6e715`. Parent verified actual library
+readback and fresh ordinary Work chat
+`6ac5f733-b368-83e8-bc3e-68d3d4528329`: it automatically gives one Google-account
+identity step/link, distinguishes signed-in status from unfinished setup, explains
+separate GitHub confirmation, and refuses key pasting without claiming the secure
+connection screen is ready. It does not prove installed live report tools.
+
+New trusted recovery modules are `recovery.mjs`, `google-user.mjs` and
+`reconnect.mjs`. Existing GitHub identity/MCP authorization and service-account
+reader remain in place. An optional keyless Google grant can be renewed server-side
+and replaced through a human-started browser reconnect. It is disabled until a
+library Google client, client secret, 256-bit grant encryption key and verified
+production flag are configured. External Testing grants are deliberately
+unsupported: Analytics-scope refresh tokens expire after seven days in that mode.
+Production for this known single-library-account app avoids that forced weekly
+expiry, but revocation and Google security checks can still require human approval.
+An unverified warning can still appear under Google's small/personal-use exception;
+actual consent/warning screens have not been tested. No public distribution or
+verification submission was requested.
+
+The browser flow binds state and PKCE to an HttpOnly secure cookie, verifies the
+Google userinfo email and email_verified, and runs a real fixed-property read before
+replacing the encrypted old grant. Wrong accounts, cancellation, expired state,
+invalid client, revoked grant and denied report access preserve the prior grant.
+No permissions API is called. A read-only connection-status MCP tool returns one
+next step/link and succeeds only after a real report. It cannot repair a missing
+client or rejected reader key by ordinary login. The daily/weekly status path
+records classified causes and reconnect readiness, never counts or credentials.
+
+Fixtures: **17 tests passed**, including temporary-token expiry/renewal, revoked
+Google grant, rejected service-account key, invalid client, CSRF/PKCE/state expiry, wrong account, denied consent,
+failed report before replacement, access removal/restoration and error privacy.
+Existing 11 repair-boundary tests still pass. These are isolated synthetic tests;
+no live reader key, account access or permission was revoked.
+
+Library Cloud project Google Auth Platform was initially unconfigured. Branding
+was created using library-only support/contact email, a Web client with exactly
+`https://cottonwood-library-analytics.librarycottonwood.workers.dev/google/callback`,
+and no JavaScript origins. Production status was set and read back as **In production**, in the verified
+library account. Branding uses the connector homepage, privacy and terms links,
+without launching a public library website. Actual Google approval/grant and
+possible unverified-warning screens still need the administrator.
+The reader keys table was verified empty. No Google phone request was sent.
+
+Security correction: a newly created, unused OAuth client secret appeared in a
+copy button aria-label inspection. That client was immediately deleted; Google's
+confirmation says it can no longer make API requests, and the active client table
+was verified empty before replacement. Do not restore the deleted client from
+Google's 30-day recovery list. The replacement client was captured directly into
+private 0600 setup storage, without displaying or screenshotting its secret.
+Its public ID is `752467633750-bq3om43561a83qvocko763cicfahu79p.apps.googleusercontent.com`.
+Only this replacement may be configured. No active library credential was changed
+by that deletion, and the exposed client was never installed or granted access.
+
+Official recovery references:
+[Google refresh-token expiry](https://developers.google.com/identity/protocols/oauth2),
+[Google web-server OAuth](https://developers.google.com/identity/protocols/oauth2/web-server),
+[Small/personal-use verification exception](https://support.google.com/cloud/answer/13464323?hl=en),
+[Private Worker secrets](https://developers.cloudflare.com/workers/configuration/secrets/).

@@ -12,6 +12,8 @@ jobs:
     outputs:
       status: ${{ steps.probe.outputs.status }}
       hostedSourceSha: ${{ steps.probe.outputs.hostedSourceSha }}
+      recoveryReason: ${{ steps.probe.outputs.recoveryReason }}
+      reconnectReady: ${{ steps.probe.outputs.reconnectReady }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,6 +46,8 @@ jobs:
           CONNECTION_RESULT: ${{ needs.connection.result }}
           CONNECTION_STATUS: ${{ needs.connection.outputs.status }}
           HOSTED_SOURCE_SHA: ${{ needs.connection.outputs.hostedSourceSha }}
+          RECOVERY_REASON: ${{ needs.connection.outputs.recoveryReason }}
+          RECONNECT_READY: ${{ needs.connection.outputs.reconnectReady }}
         run: |
           python3 - <<'PY'
           import base64, datetime, json, os, urllib.error, urllib.request
@@ -63,9 +67,21 @@ jobs:
               'monitor_not_configured':('The library administrator must save the existing connection-check secret in the library repository. Do not change account permissions.', f'https://github.com/{repo}/settings/secrets/actions'),
               'authorization_check_failed':('The connector authorization check failed. Keep it unavailable until a checked code fix is deployed.', f'https://github.com/{repo}/actions/workflows/analytics-deploy.yml'),
           }
-          human=steps.get(status)
+          reason=os.environ.get('RECOVERY_REASON') or None
+          reconnect_ready=os.environ.get('RECONNECT_READY')=='true'
+          client_url='https://console.cloud.google.com/auth/clients?project=cottonwood-library-analytics'
+          google_reconnect=('Open Reconnect visitor reports and choose librarycottonwood@gmail.com. Complete any requested phone approval once, then wait. The assistant must verify a real report afterward.', 'https://cottonwood-library-analytics.librarycottonwood.workers.dev/reconnect')
+          recovery_steps={
+              'reader_missing':('The secure visitor connection still needs initial setup by the library administrator. Signing in alone cannot install the missing connection.', client_url),
+              'reader_key_rejected':('The saved reader connection was rejected. The library administrator must finish secure replacement; ordinary sign-in cannot replace its reader key.', client_url),
+              'google_client_rejected':('The library administrator must check the existing Google connection settings. Repeated sign-in cannot repair a rejected client setting.', client_url),
+              'reader_access_removed':('Open library Analytics and confirm Cottonwood Library - Demo is selected. The administrator should inspect the exact lost property-only reader access; do not change roles automatically.', 'https://analytics.google.com/analytics/web/#/a410873133p557596091/admin/property/accessmanagement'),
+          }
+          human=recovery_steps.get(reason,steps.get(status))
+          if reconnect_ready and reason in ('reader_missing','reader_key_rejected','google_grant_revoked'):
+              human=google_reconnect
           report={'sourceSha':source, 'result':os.environ['CONNECTION_RESULT'],
-              'status':status, 'hostedSourceSha':os.environ.get('HOSTED_SOURCE_SHA') or None,
+              'status':status, 'recoveryReason':reason, 'keylessReconnectReady':reconnect_ready, 'hostedSourceSha':os.environ.get('HOSTED_SOURCE_SHA') or None,
               'humanAction':None if human is None else {'step':human[0], 'url':human[1]},
               'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'runUrl':f"https://github.com/{repo}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
