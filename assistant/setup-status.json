@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-05 America/Los_Angeles",
+  "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/oobagi/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
   "demoHomepage": "https://38d0406e.cottonwood-library-preview.pages.dev",
@@ -40,15 +40,15 @@
     "tracking": "Consent-gated tracking verified on hosted demo: homepage page_view, donate_quick, and privacy page_view delivered to G-HKCKJ8R4D1 with HTTP 204; query strings excluded. Automated refusal/withdrawal/cookie-removal tests passed.",
     "assistantReporting": "Not connected",
     "history": "New demo test traffic only; no existing library history",
-    "handover": "Library administrator identities needed",
-    "dashboardVerification": "Realtime dashboard has not yet shown the test events; processing may be delayed.",
+    "handover": "Library Google account added as account Administrator and verified; Jaden retained",
+    "dashboardVerification": "Oct 6 Safari realtime UI showed 8 page_view events and 1 directions_click in the inspected 30-minute report with a San Jose comparison; demo activity, not general traffic totals.",
     "pictures": "https://38d0406e.cottonwood-library-preview.pages.dev/_review/",
     "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37419680481"
   },
   "libraryAccounts": {
-    "givebutter": "User confirms library access needed; not connected",
-    "facebook": "Library access missing; not connected",
-    "domain": "Registrar identified; authorized account access missing",
+    "givebutter": "Library admin access verified; official plugin connected and reports tested",
+    "facebook": "Board reports Page access; connection needs authorized Page access",
+    "domain": "Recovered and dashboard verified; registrar transfer not started",
     "checklist": "assistant/ACCESS.md"
   },
   "themeRefresh": {
@@ -95,5 +95,33 @@
     "preview": "https://38d0406e.cottonwood-library-preview.pages.dev",
     "sourceCommit": "4ffe9cd",
     "checks": "Hero photo and action tile left edges match at 1024, 1280 and 1440px; all desktop/phone page checks passed"
+  },
+  "libraryAccountHandover": {
+    "chatgptProject": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3/project",
+    "plan": "Library-owned Plus account verified in Safari",
+    "projectInstructions": "Friendly library instructions saved and reopened to verify persistence",
+    "accountInstructions": "Library-wide ChatGPT preferences saved; website access marked pending",
+    "trainingUse": "Improve the model disabled and verified false",
+    "givebutter": {
+      "accountId": "170378",
+      "login": "cottonlib@shasta.com",
+      "connection": "Official Givebutter plugin connected to the library ChatGPT account",
+      "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
+      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
+    },
+    "github": "Library-owned GitHub username requested; Safari was signed into Jaden personal oobagi. No repository transfer or new-account environment yet.",
+    "domain": {
+      "access": "Signed-in Squarespace domain dashboard verified",
+      "registrant": "Mary Ann Hasbrook",
+      "registrantEmail": "cottonlib@shasta.com",
+      "renewalDisplayed": "March 7, 2027 for $15",
+      "forwarding": "http://cottonwood-community-library.square.site",
+      "lock": "On",
+      "transfer": "Not started; Spaceship account and reviewed DNS/forwarding migration required. No DNS or registration changes."
+    },
+    "facebook": "Board reports personal-account access to managed Page. No access granted to Jaden and no ChatGPT connection yet.",
+    "analytics": "librarycottonwood@gmail.com added as account Administrator; access table verified alongside Jaden. Email notification disabled. Live demo report showed page views and directions_click; authenticated assistant reporting still unconnected.",
+    "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate."
   }
 }

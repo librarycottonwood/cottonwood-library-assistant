@@ -1,3 +1,5 @@
+> October 6 update: domain and Givebutter access recovered; library ChatGPT connection tested and Analytics administrator added. Facebook access exists with board members but is not yet granted for integration. See [current handover](HANDOVER.md). The recovery checklist below is historical.
+
 # Library account access — prepared October 5, 2026
 
 Suggested board deadline: **Thursday, October 8, 2026, 5 p.m. Pacific.** Assign one named board lead per account at the October 6 meeting. By the deadline, that lead should provide either restored access or the provider support case and next recovery step. Provider recovery timelines cannot be guaranteed.
