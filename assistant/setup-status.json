@@ -122,6 +122,11 @@
     },
     "facebook": "Board reports personal-account access to managed Page. No access granted to Jaden and no ChatGPT connection yet.",
     "analytics": "librarycottonwood@gmail.com added as account Administrator; access table verified alongside Jaden. Email notification disabled. Live demo report showed page views and directions_click; authenticated assistant reporting still unconnected.",
-    "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate."
+    "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
+    "projectReportRehearsal": {
+      "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
+      "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
+    }
   }
 }
