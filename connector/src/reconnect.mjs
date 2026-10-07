@@ -9,7 +9,7 @@ const escape=s=>String(s).replace(/[&<>"']/g,c=>`&#${c.charCodeAt(0)};`);
 const b64=data=>btoa(String.fromCharCode(...new Uint8Array(data))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 const cookie=request=>request.headers.get('Cookie')?.split(';').map(v=>v.trim()).find(v=>v.startsWith(COOKIE+'='))?.slice(COOKIE.length+1);
 function page(message,next,status=200,headers={}) {
-  return new Response(`<!doctype html><meta charset="utf-8"><title>Reconnect library visitor reports</title><h1>Library visitor reports</h1><p>${escape(message)}</p>${next||''}`,{status,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Content-Security-Policy':"default-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",'Referrer-Policy':'no-referrer',...headers}});
+  return new Response(`<!doctype html><meta charset="utf-8"><title>Reconnect library visitor reports</title><h1>Library visitor reports</h1><p>${escape(message)}</p>${next||''}`,{status,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Content-Security-Policy':"default-src 'none'; form-action 'self' https://accounts.google.com; base-uri 'none'; frame-ancestors 'none'",'Referrer-Policy':'strict-origin',...headers}});
 }
 function problem(reason,status=503) {
   const detail=recoveryDetail(reason);
@@ -35,7 +35,7 @@ export async function handleReconnect(request,env,fetcher=fetch) {
     await env.OAUTH_KV.put('google-recovery:'+state,JSON.stringify({phase:'google',verifier}),{expirationTtl:600});
     const target=new URL('https://accounts.google.com/o/oauth2/v2/auth');
     target.search=new URLSearchParams({client_id:env.GOOGLE_OAUTH_CLIENT_ID,redirect_uri:REDIRECT,response_type:'code',scope:'openid email https://www.googleapis.com/auth/analytics.readonly',access_type:'offline',prompt:'consent',login_hint:EMAIL,state,code_challenge:b64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier))),code_challenge_method:'S256'}).toString();
-    return new Response(null,{status:302,headers:{Location:target.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}});
+    return new Response(null,{status:302,headers:{Location:target.href,'Cache-Control':'no-store','Referrer-Policy':'strict-origin'}});
   }
   if(url.pathname==='/google/callback' && request.method==='GET') {
     const state=url.searchParams.get('state');const key='google-recovery:'+state;

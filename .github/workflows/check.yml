@@ -27,6 +27,7 @@ jobs:
         run: |
           npm ci --prefix connector --ignore-scripts
           npm test --prefix connector
+          node --test scripts/analytics-recovery-browser.test.mjs
           npm run build --prefix connector
       - name: Save and inspect a version
         run: |

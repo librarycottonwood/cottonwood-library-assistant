@@ -276,6 +276,9 @@ confirmation says it can no longer make API requests, and the active client tabl
 was verified empty before replacement. Do not restore the deleted client from
 Google's 30-day recovery list. The replacement client was captured directly into
 private 0600 setup storage, without displaying or screenshotting its secret.
+Its secret and a new 256-bit grant encryption key were then stored in Worker
+secrets, their names verified, and the task Google client plaintext/bootstrap
+files deleted. No local encryption-key copy was created.
 Its public ID is `752467633750-bq3om43561a83qvocko763cicfahu79p.apps.googleusercontent.com`.
 Only this replacement may be configured. No active library credential was changed
 by that deletion, and the exposed client was never installed or granted access.
@@ -285,3 +288,24 @@ Official recovery references:
 [Google web-server OAuth](https://developers.google.com/identity/protocols/oauth2/web-server),
 [Small/personal-use verification exception](https://support.google.com/cloud/answer/13464323?hl=en),
 [Private Worker secrets](https://developers.cloudflare.com/workers/configuration/secrets/).
+
+Hosted recovery activation: full cloud check for `9a6bed8a6b731444676850bed545f30c66f7f9e2`
+[passed](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37590051143),
+and that source was deployed. Actual `/reconnect` returns 200 with its Google
+button, `/monitor` correctly returns 503 `reader_missing` plus
+`keylessReconnectReady: true` and the exact reconnect link. This proves secure
+reconnect configuration, not approved Google access or restored reports.
+
+A subsequent real Chromium fixture exposed a browser Origin/privacy-header
+incompatibility, now fixed with `strict-origin` (no query leakage) and a
+`form-action` allowance restricted to self and accounts.google.com. The browser
+fixture passed cookie/CSRF/PKCE/navigation with every hop intercepted through CDP
+and DNS disabled; no Google network or human approval can occur in that test.
+It is included in exact-source cloud checks and credential-free repair verification.
+The final browser-header revision requires its own cloud check/deployment gate.
+
+Current next human step is the secure reconnect button using the library Google
+identity when the administrator/Donna are ready. No phone approval was requested
+by this implementation. GitHub identity-app confirmation/secret, actual library
+ChatGPT report-plugin installation, real report/dashboard verification and
+scheduled live MCP access remain separate unfinished gates.
