@@ -64,6 +64,16 @@ friendly sentences explaining the practical effect, not test counts, repositorie
 commands, or implementation plans. Keep detailed evidence in the maintenance
 work, available if the administrator asks. Do not send email or Facebook posts.
 
+Weekly repair reporting is also the fallback when GitHub bot merge events do not
+wake the immediate notification task. Inspect main-merged Library website upkeep
+PRs from the past seven days, including github-actions[bot], and successful checks
+and hosted trial evidence. Ignore isolated branches and non-main merges. Report
+actual new repairs or meaningful assistant improvements in one or two friendly
+sentences. Avoid duplicates already reported in available task history. Stay quiet
+when healthy with no new findings. The daily GitHub worker owns repairs; do not
+start a competing attempt or ask volunteers for technical plans. This uses the
+existing weekly Plus review, not another daily model run.
+
 ## Validation on October 6, 2026
 
 The library-account scheduled cloud task read current main commit
@@ -192,3 +202,25 @@ A current-source cloud publishing run 37570642969 passed. A repeat run
 artifact download and upload. Actual screenshot retention cleanup left seven
 archives totaling 65,509,401 bytes. Temporary local Cloudflare setup credentials
 were removed after cloud publishing passed.
+
+## October 6 evening delivery verification
+
+Library-account plugin 0.1.1 now supplies automatically selected library context
+and the immediate ChatGPT-to-Codex handoff. Fresh greeting, saved-site lookup,
+capability handoff and unsaved cloud edit/preview passed. Global preference
+injection remains unexplained; the installed skill is the verified delivery path.
+
+The immediate task produced an actual friendly Scheduled result after human
+main PR 4 (04:47:42 UTC), with last_run_time 04:48:22.030477 UTC and actual
+closed/merged PR4 payload. This is distinct from the earlier manual 04:41 run.
+The GitHub Actions bot then created and merged real handoff source PR 5 into
+main at 04:58:09 UTC. Exact check 37573883716, trusted save 37573866828 and main
+check 37574006291 passed. A subsequent peek still showed the human run timestamp
+and no bot event result. Bot-triggered delivery is not verified; do not claim
+that routine bot repairs always send immediate ChatGPT updates.
+
+The existing Monday weekly task prompt was updated and read back to explicitly
+report main bot repairs from the past seven days. Monday 14:00 Pacific flexible,
+cloud and enabled settings preserved. One native manual run was requested after
+this update; completed weekly result delivery has not yet been observed.
+The temporary bot validation workflow was removed; website content unchanged.

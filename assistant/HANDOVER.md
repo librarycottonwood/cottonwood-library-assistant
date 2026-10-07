@@ -139,3 +139,36 @@ a result/status or run-specific link. Existing notification prompt ignores
 non-main merges and duplicate/irrelevant events. The earlier isolated test is
 therefore not proof of current main-trigger failure. Event delivery and a real
 volunteer-facing message remain unverified.
+
+## Immediate ChatGPT handoff — plugin 0.1.1
+
+The same library plugin was updated through its account Plugin Creator, using
+the actual existing release and reading back the saved files. Release:
+pluginrel_6ac5d07129048191bc0dd86f38a89611. Native plugin page independently
+shows version 0.1.1. Capability questions in ordinary ChatGPT now explain the
+Codex handoff immediately; GitHub reads are explicitly not editing access.
+Fresh Work test 6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126 answered the exact question
+“Are you able to make changes to the site?” with the Codex / Choose environment /
+cottonwood-library-editor / Show me before saving handoff, with no access claim.
+
+Fresh cloud edit 01a114b1-24d4-72b3-b2d7-b3e2be2cf018 prepared the requested
+“Welcome, neighbors!” heading, checked desktop/phone, uploaded and returned
+https://78d676de.cottonwood-library-trial-preview.pages.dev/ plus /_review/,
+then asked whether to save. This is an unsaved draft, not a main website change.
+
+The existing notification event task actually ran following human-merged main
+PR 4: merge 04:47:42 UTC, task last_run 04:48:22.030477 UTC, October 6 evening
+Pacific. Its triggering context identified closed/merged PR 4, actor oobagi,
+actor_is_bot false, delivery 3b6b8640-c20a-11f1-8b37-ecbe43f241e5. The friendly
+result is visible in Scheduled, separate from the manual 04:41 run. Bot delivery
+is being validated separately by saving the real 0.1.1 handoff update through
+PR 5. Do not conflate the confirmed human event with bot-event support.
+
+Bot-path test: actual GitHub Actions bot PR 5 merged into main at 04:58:09 UTC
+with source cf9022717998c6553ae48f61fa8509f9fe5bf816. Save workflow
+37573866828, exact-source check 37573883716, main check 37574006291 and trial
+publish 37574054430 passed. No new bot-triggered task run was present on the
+subsequent peek; do not describe immediate automatic repair notifications as
+verified. Existing weekly prompt now explicitly reports bot repairs and was
+read back with unchanged Monday/cloud/enabled settings. Native manual weekly
+run requested once; delivery remains to verify. Temporary test workflow removed.

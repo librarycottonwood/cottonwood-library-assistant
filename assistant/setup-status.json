@@ -170,7 +170,7 @@
           "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206",
           "scheduledTask": "Library-account scheduled cloud baseline retrieved matching exact-source report"
         },
-        "limits": "Full isolated repair/verification/save passed. Fresh interactive Codex startup instructions and quiet-notification behavior remain unresolved. Source checks do not monitor hosted uptime or publish the public domain.",
+        "limits": "Cloud repair/save/trial publishing passed. Installed skill delivery and fresh edit/preview passed. Immediate bot-event and updated weekly notification delivery remain unverified.",
         "usage": "Daily checks use GitHub allowance, not ChatGPT. Repairs, weekly assistant review, weekly sign-in maintenance and event notifications use shared Plus allowance. No API key, API credits or automatic reload configured.",
         "repairValidation": {
           "managedSignInRun": "37565472835",
@@ -185,8 +185,15 @@
           "id": "6ac5beb375d88191a71e366504a60408",
           "enabled": true,
           "trigger": "Merged Library website upkeep PRs in library repository",
-          "validation": "Actual bot-created/merged isolated PR 3; first automation readback last_run null. Event delivery unverified.",
-          "testRun": "37567788142"
+          "validation": "Human-main PR4 triggered an actual friendly Scheduled update, last_run 2026-10-07T04:48:22.030477+00:00. Real bot-main PR5 merged, but subsequent peek showed no new run; immediate bot delivery remains unverified.",
+          "testRun": "37567788142",
+          "botTest": {
+            "pr": 5,
+            "run": "37573866828",
+            "mergedAt": "2026-10-07T04:58:09Z",
+            "check": "37574006291",
+            "publish": "37574054430"
+          }
         },
         "billing": {
           "minutesPerMonth": 2000,
@@ -197,7 +204,8 @@
           "screenshotArchivesRetained": 7,
           "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved",
           "actualScreenshotBytes": 65509401
-        }
+        },
+        "weeklyRepairReporting": "Existing Monday cloud prompt now explicitly reports bot repairs from past seven days; saved/read back, cadence unchanged. Native manual run requested; result delivery pending verification."
       },
       "trialSaving": {
         "status": "Verified through library-account GitHub connector, independent remote commit verification. No shell credential helper required. Website content restored after test.",
@@ -207,7 +215,7 @@
         "instructions": "AGENTS.md, assistant/START.md and assistant/WORKFLOW.md distinguish approved trial save from public launch."
       },
       "volunteerExperience": {
-        "status": "Library-account instruction plugin installed; fresh Codex website lookup and fresh Work greeting automatically recognized library context. Post-install editing/save and notification delivery remain to verify.",
+        "status": "Installed library skill automatically recognized fresh greetings, website lookup and cloud edit/preview. Fresh ordinary ChatGPT capability question immediately explains Codex handoff.",
         "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
         "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved.",
@@ -219,12 +227,15 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.1.0",
+          "version": "0.1.1",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
           "workGreetingTest": "https://chatgpt.com/c/6ac5cdf2-47c0-83e8-86d1-8cb34b5ea411",
-          "explicitInvocationRequiredInTests": false
+          "explicitInvocationRequiredInTests": false,
+          "releaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
+          "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
+          "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/"
         }
       },
       "stableSavedTrial": {
