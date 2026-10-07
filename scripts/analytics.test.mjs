@@ -2,7 +2,9 @@ import { chromium } from 'playwright';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-const host = 'https://cottonwood-library-preview.pages.dev';
+const analytics = JSON.parse(await readFile('assistant/analytics.json', 'utf8'));
+assert.equal(analytics.websiteHost, 'cottonwood-library-trial-preview.pages.dev', 'Tracking must cover the library-owned trial');
+const host = 'https://trial.' + analytics.websiteHost;
 const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || '/usr/bin/chromium', headless: true });
 try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });

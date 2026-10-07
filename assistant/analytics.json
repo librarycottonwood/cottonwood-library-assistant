@@ -1,6 +1,6 @@
 {
   "measurementId": "G-HKCKJ8R4D1",
-  "websiteHost": "cottonwood-library-preview.pages.dev",
+  "websiteHost": "cottonwood-library-trial-preview.pages.dev",
   "propertyName": "Cottonwood Library - Demo",
   "streamId": "16050629442",
   "demo": true,
@@ -9,5 +9,5 @@
   "accountId": "410873133",
   "propertyId": "557596091",
   "dashboard": "https://analytics.google.com/analytics/web/#/a410873133p557596091/realtime/overview",
-  "accountOwner": "Maintainer Google account; library administrator handover pending"
+  "accountOwner": "Library Google account librarycottonwood@gmail.com has Administrator access"
 }
