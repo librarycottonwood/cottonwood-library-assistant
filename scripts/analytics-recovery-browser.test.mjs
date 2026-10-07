@@ -1,17 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {access} from 'node:fs/promises';
-import {chromium} from 'playwright';
+import {launchBrowser} from './browser.mjs';
 import {handleReconnect} from '../connector/src/reconnect.mjs';
 
 test('real browser preserves recovery cookie and follows only the allowed Google redirect',async()=>{
   const origin='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
   const data=new Map();
   const env={GOOGLE_OAUTH_CLIENT_ID:'fixture',GOOGLE_OAUTH_CLIENT_SECRET:'fixture',GOOGLE_OAUTH_TOKEN_KEY:Buffer.alloc(32,1).toString('base64'),GOOGLE_OAUTH_PUBLISHING_STATUS:'production',OAUTH_KV:{get:async k=>data.get(k),put:async(k,v)=>data.set(k,v),delete:async k=>data.delete(k)}};
-  let executablePath=process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
-  if(!executablePath){try{await access('/usr/bin/chromium');executablePath='/usr/bin/chromium';}catch{}}
   // DNS cannot resolve external hosts, even if an interception regresses.
-  const browser=await chromium.launch({executablePath,headless:true,args:['--host-resolver-rules=MAP * ~NOTFOUND']});
+  const browser=await launchBrowser({args:['--host-resolver-rules=MAP * ~NOTFOUND']});
   let googleAuthorization=0,postStatus,cdp,interceptFailure;
   const pending=new Set();
   try {

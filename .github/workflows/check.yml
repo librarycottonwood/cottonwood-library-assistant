@@ -1,8 +1,7 @@
 name: Verify library website
 on:
   push:
-    branches-ignore:
-      - maintenance-reports
+    branches: [main]
   pull_request:
   workflow_dispatch:
   schedule:

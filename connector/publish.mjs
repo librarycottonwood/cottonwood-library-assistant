@@ -2,7 +2,7 @@
 // can never modify this file, and cannot modify the Worker configuration.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
-import { publisherReadiness } from './src/deployment-readiness.mjs';
+import { publisherReadiness, verifyHostedSource } from './src/deployment-readiness.mjs';
 function record(state) {
   if(process.env.GITHUB_OUTPUT)appendFileSync(process.env.GITHUB_OUTPUT,`state=${state}\n`);
 }
@@ -19,9 +19,7 @@ let deployed=false;
 try {
   invoke('deploy','--strict','--message','Checked library source '+sha,'--var','BUILD_SOURCE_SHA:'+sha);
   deployed=true;
-  const response=await fetch(origin+'/health',{signal:AbortSignal.timeout(20000)});
-  const health=await response.json();
-  if(!response.ok || health.sourceSha!==sha)throw Error('The hosted source did not match the checked source.');
+  await verifyHostedSource(origin+'/health',sha);
   execFileSync(process.execPath,['check-live.mjs'],{stdio:'pipe'});
   record('deployed_verified');
   console.log('The checked library Analytics connector was deployed and its read-only connection passed.');
