@@ -38,8 +38,9 @@ identity, asking for approval on its **Galaxy S22+**. One notification was sent.
 The prompt displayed **56** at that time; this number and request can expire.
 Do not resend or try alternate verification while Donna is unavailable. When
 she is ready, start one fresh library sign-in if needed and report the number
-actually displayed. The CLI setup is isolated under
-`/tmp/cottonwood-analytics-setup/gcloud` on the Mac. No Google approval has
+actually displayed. The pending CLI process was stopped and its isolated
+configuration, login log and code FIFO removed on the Mac; cleanup was verified.
+Create a fresh isolated setup only when Donna is ready. No Google approval has
 succeeded, and no valid Google credential is currently installed in the Worker.
 
 GitHub requires **Confirm access**, signed in as **@librarycottonwood**, before
@@ -166,7 +167,9 @@ OpenAI API credits. Do not create another weekly task.
   abandoned clients automatically expire.
 - Actual private hosted monitor probe returns `account_attention` for the absent
   Google reader key. This correctly requires account setup; it does not return
-  invented zero visitors or establish a successful live report.
+  invented zero visitors or establish a successful live report. The actual
+  `check-live.mjs` runner also verified its account-attention output and recorded
+  the currently deployed `6d3e0602518359188358fef7765edd974f8f653c` source SHA.
 - Dashboard read-only baseline: September 29–October 5 displayed **1 active
   user, 25 views, 57 events and 1 Direct session**. These dashboard figures have
   **not** yet been compared with the API. The dashboard listed homepage 8 views;
