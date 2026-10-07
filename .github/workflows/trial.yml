@@ -1,0 +1,80 @@
+name: Update saved trial website
+on:
+  workflow_run:
+    workflows: ['Verify library website']
+    types: [completed]
+  workflow_dispatch:
+concurrency:
+  group: library-saved-trial
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  publish:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Select an actually checked current version
+        id: checked
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_RUN: ${{ github.event.workflow_run.id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          from pathlib import Path
+          def gh(*args): return json.loads(subprocess.check_output(['gh','api',*args]))
+          repo=os.environ['GITHUB_REPOSITORY']
+          current=gh('repos/'+repo+'/git/ref/heads/main')['object']['sha']
+          if os.environ.get('EVENT_RUN'):
+              run=gh('repos/'+repo+'/actions/runs/'+os.environ['EVENT_RUN'])
+          else:
+              runs=gh('repos/'+repo+'/actions/workflows/check.yml/runs?branch=main&status=success&per_page=20')['workflow_runs']
+              run=next((r for r in runs if r['head_sha']==current and r['event']!='pull_request'), None)
+          ready=bool(run and run['conclusion']=='success' and run['head_sha']==current and run['head_repository']['full_name']==repo and run['head_branch']=='main')
+          if ready:
+              try:
+                  with urllib.request.urlopen('https://trial.cottonwood-library-trial-preview.pages.dev/_review/status.json', timeout=10) as response:
+                      hosted=json.load(response)
+                  if hosted.get('sourceSha')==current:
+                      ready=False  # Healthy daily checks do not repeatedly upload the same source.
+              except Exception:
+                  pass  # Missing/unreachable trial can be restored from the checked artifact.
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('ready='+str(ready).lower()+'\n')
+              if ready:
+                  f.write('source='+current+'\nrun='+str(run['id'])+'\nurl='+run['html_url']+'\n')
+          PY
+      - uses: actions/setup-node@v4
+        if: steps.checked.outputs.ready == 'true'
+        with:
+          node-version: '24'
+      - name: Install pinned publishing tools
+        if: steps.checked.outputs.ready == 'true'
+        run: |
+          npm install --global pnpm@11.15.1
+          pnpm install --frozen-lockfile
+      - name: Retrieve the exact checked release and pictures
+        if: steps.checked.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECK_RUN: ${{ steps.checked.outputs.run }}
+        run: gh run download "$CHECK_RUN" --name library-preview-and-screenshots --dir output
+      - name: Update and check the saved trial address
+        if: steps.checked.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ steps.checked.outputs.source }}
+          LIBRARY_CHECK_URL: ${{ steps.checked.outputs.url }}
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: |
+          current=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)
+          if [ "$current" != "$SOURCE_SHA" ]; then echo 'A newer saved version superseded this release.'; exit 0; fi
+          node scripts/trial-publish.mjs "$SOURCE_SHA" trial
