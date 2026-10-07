@@ -1,10 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { reportRequest } from '../src/reports.mjs';
+import { reportRequest, credentialFreeMcpCall } from '../src/reports.mjs';
 import { normalizeReport } from '../src/format.mjs';
 import { handleMcp } from '../src/mcp.mjs';
 import { retryFetch, runReport, clearTokenCache } from '../src/google.mjs';
 const dates={start_date:'2026-09-29',end_date:'2026-10-05'};
+test('repairable protocol receives no credentials in headers or context',async()=>{
+  const request=new Request('https://example.com/mcp',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer fixture-secret',Cookie:'fixture-cookie','X-Other-Credential':'fixture'},body:'{}'});
+  const safe=credentialFreeMcpCall(request,{auth:{scope:['analytics:read'],token:'fixture-secret'},props:{login:'librarycottonwood',extraSecret:'fixture-secret'}});
+  assert.equal(safe.request.headers.get('authorization'),null);assert.equal(safe.request.headers.get('cookie'),null);assert.equal(safe.request.headers.get('x-other-credential'),null);
+  assert.equal(safe.context.auth.token,undefined);assert.equal(safe.context.props.extraSecret,undefined);assert.equal(await safe.request.text(),'{}');
+});
 test('missing or invalid Google credentials report account attention, never zero',async()=>{
   clearTokenCache();
   for(const env of [{},{GOOGLE_SERVICE_ACCOUNT_EMAIL:'fixture@example.test',GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:'invalid-key'}]){

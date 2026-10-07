@@ -33,6 +33,24 @@ check of current source. If it is missing, inspect available workflow evidence
 or wait briefly for an in-progress check. If verification is unavailable, report
 that plainly and make no changes based on an assumed pass.
 
+Also read assistant/ANALYTICS-CONNECTOR.md and the latest
+.library-analytics-checks/latest.json and .library-analytics-deployments/latest.json
+from maintenance-reports. Compare their sourceSha and hostedSourceSha with main
+and the actual hosted /health source before saying a connector fix is deployed.
+A saved branch or checked main commit is not proof of a deployed report connection.
+Use the check's status, age, runUrl and humanAction. Missing or stale evidence
+means verification is unavailable. A credential lock or revoked access requires
+the plain human step and its real account link; never repeatedly resend MFA,
+change account permissions, or claim the account problem was repaired. GitHub
+identity confirmation is separate from Google phone approval. Review failures
+and repairs from the past seven days; report whether a fix was saved, deployed
+and verified, rolled back, or needs human action. Inspect open Library visitor
+reports need attention issues. Keep human requests in this existing pinned
+Weekly Maintenance Check chat, also accessible through Scheduled. Do not claim
+instant, phone or email alerts. Keep the existing cadence and task. A brief
+healthy weekly response is accepted. Actual scheduled connector tool use must
+be tested separately from reading its saved check status.
+
 Review failed checks and relevant security advisories for the pinned dependencies.
 Research only when a finding warrants it. Do not upgrade packages merely because
 newer releases exist. Keep this focused: at most one necessary, small maintenance
@@ -224,3 +242,7 @@ report main bot repairs from the past seven days. Monday 14:00 Pacific flexible,
 cloud and enabled settings preserved. One native manual run was requested after
 this update; completed weekly result delivery has not yet been observed.
 The temporary bot validation workflow was removed; website content unchanged.
+
+The Analytics prompt addition above is prepared in source on the connector
+branch. It has not yet been saved/read back in the library's existing native
+weekly task, and scheduled reading of its check/deployment records is untested.

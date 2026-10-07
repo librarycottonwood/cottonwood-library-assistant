@@ -70,9 +70,10 @@ value, then remove this local copy. No token values are in source or this note.
 3. Complete GitHub email confirmation and generate the identity-app secret.
    Transfer it privately into Worker secret `GITHUB_CLIENT_SECRET`, without
    printing it, copying it into a chat, or taking screenshots of its display.
-4. Generate a random 256-bit monitor credential privately and install it as
-   Worker secret `MONITOR_TOKEN` and GitHub repository secret
-   `LIBRARY_ANALYTICS_MONITOR_TOKEN`.
+4. The random 256-bit `MONITOR_TOKEN` is installed in the Worker. Its private
+   bootstrap copy is `/tmp/cottonwood-analytics-setup/monitor-token` (0600).
+   Save that value directly as GitHub repository secret
+   `LIBRARY_ANALYTICS_MONITOR_TOKEN`, then delete the bootstrap copy.
 5. Store the dedicated deployment credential in the **library repository**
    secret `LIBRARY_ANALYTICS_DEPLOY_TOKEN`. Read back secret names only, never
    values. Credentials are never committed.
@@ -97,8 +98,9 @@ Prepared workflows are not on main and are not enabled yet:
   health, denial of unauthenticated MCP access and a real read-only report.
   Its only credential is the restricted monitor credential. It stores status
   and a run URL under `.library-analytics-checks/` on `maintenance-reports`,
-  never visitor figures. A meaningful failure creates one library-assigned
-  issue, not an automatic permission/account change.
+  never visitor figures. Reports include hosted source SHA and a fixed, plain
+  human step/link for credential failures. A meaningful failure creates or updates
+  one library-assigned issue, without an automatic permission/account change.
 - The existing Plus repair worker permits connector protocol/formatting fixes
   and existing exact dependency version updates. Its repair container receives
   no Google key, Worker publisher credential, or monitor credential. Fixed
@@ -107,7 +109,10 @@ Prepared workflows are not on main and are not enabled yet:
 - `analytics-deploy.yml` publishes only after current-main website/connector
   checks succeed. The trusted publisher retains the previous Worker version,
   verifies the hosted source SHA and live read-only connection, and restores
-  the previous version if post-deployment verification fails. The manual Worker rollback/restoration path passed; automatic failure
+  the previous version if post-deployment verification fails. Deployment outcomes
+  (verified, rolled back, not deployed, superseded or needs attention) are saved
+  under `.library-analytics-deployments/` on `maintenance-reports`.
+  The manual Worker rollback/restoration path passed; automatic failure
   rollback and credentialed publishing still require a cloud CI rehearsal.
 - Newer main source supersedes an earlier check. No automated workflow changes
   permissions, accounts, billing, Analytics settings, public website content,
@@ -129,8 +134,8 @@ OpenAI API credits. Do not create another weekly task.
 - Actual library ChatGPT Plus Plugins → Add menu offers **Add custom MCP server**.
   This verifies plan/UI availability, not successful installation or tool use.
 - Full GitHub cloud website/connector verification passed for branch commit
-  `853e7bb112d6120fc56b2156cc6ca8d5d0cca53c`,
-  [run 37581732357](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37581732357).
+  `6d3e0602518359188358fef7765edd974f8f653c`,
+  [run 37582035453](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37582035453).
 - Website check/build, release safeguards, consent/privacy checks and 36 page
   checks passed. Desktop and phone captures were inspected; website source
   remained unchanged.
@@ -139,9 +144,10 @@ OpenAI API credits. Do not create another weekly task.
   were verified after restoration. This is infrastructure rollback evidence,
   not a live reporting/ChatGPT or automatic CI rollback test.
 
-- Connector: **8 tests passed**, including real Workers runtime OAuth discovery,
+- Connector: **9 tests passed**, including real Workers runtime OAuth discovery,
   PKCE, consent-cookie binding, CSRF denial, script escaping, read-only protocol
-  behavior, fixed aggregate request/property policy, date comparisons, missing
+  behavior, removal of OAuth tokens and arbitrary headers before the repairable
+  protocol module, fixed aggregate request/property policy, date comparisons, missing
   data, bounded transient retries, permission errors and Google token renewal.
   The report fixtures are synthetic and do not establish real visitor totals.
 - Maintenance: **11 boundary/vault tests passed**. Security files, scripts and
@@ -158,6 +164,9 @@ OpenAI API credits. Do not create another weekly task.
   test did not send another Google/GitHub verification request. A setup-test
   client and short-lived consent/upstream records were created in OAuth KV;
   abandoned clients automatically expire.
+- Actual private hosted monitor probe returns `account_attention` for the absent
+  Google reader key. This correctly requires account setup; it does not return
+  invented zero visitors or establish a successful live report.
 - Dashboard read-only baseline: September 29–October 5 displayed **1 active
   user, 25 views, 57 events and 1 Direct session**. These dashboard figures have
   **not** yet been compared with the API. The dashboard listed homepage 8 views;
@@ -184,7 +193,10 @@ OpenAI API credits. Do not create another weekly task.
   health source but does not prove scheduled live report access.
 - Update the existing weekly task's saved prompt to inspect Analytics status,
   avoiding duplicate tasks. Keep the user's accepted brief healthy weekly
-  update. The native task/prompt has not been changed in this implementation yet.
+  update. The addition in `assistant/MAINTENANCE.md` is prepared, but the native task
+  prompt has not been changed in this implementation yet. Requests belong in
+  the existing pinned Weekly Maintenance Check chat and Scheduled; no immediate
+  phone/email alert delivery is promised.
 
 Official references:
 [Google service-account authentication](https://developers.google.com/identity/protocols/oauth2/service-account),

@@ -1,5 +1,6 @@
 import OAuthProvider, { authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import { runReport } from './google.mjs';
+import { credentialFreeMcpCall } from './reports.mjs';
 import { handleMcp } from './mcp.mjs';
 const ORIGIN='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>`&#${c.charCodeAt(0)};`);
@@ -60,7 +61,8 @@ const defaultHandler={async fetch(request,env) {
 export default new OAuthProvider({
   apiRoute:'/mcp',apiHandler:{fetch(request,env,ctx) {
     if (!ctx.auth?.scope?.includes('analytics:read') || ctx.props?.login !== 'librarycottonwood') return new Response('Library authorization required.',{status:403});
-    return handleMcp(request,{},ctx,args=>runReport(args,env));
+    const safe=credentialFreeMcpCall(request,ctx);
+    return handleMcp(safe.request,{},safe.context,args=>runReport(args,env));
   }},defaultHandler,
   authorizeEndpoint:'/authorize',tokenEndpoint:'/oauth/token',clientRegistrationEndpoint:'/oauth/register',
   scopesSupported:scopes,requiredScopes:['analytics:read'],

@@ -1,6 +1,10 @@
 // Trusted publisher only. The repair container never receives this credential,
 // can never modify this file, and cannot modify the Worker configuration.
 import { execFileSync } from 'node:child_process';
+import { appendFileSync } from 'node:fs';
+function record(state) {
+  if(process.env.GITHUB_OUTPUT)appendFileSync(process.env.GITHUB_OUTPUT,`state=${state}\n`);
+}
 const origin='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 const sha=process.env.CHECKED_SHA;
 if(!/^[0-9a-f]{40}$/.test(sha || ''))throw Error('A checked source commit is required.');
@@ -16,15 +20,18 @@ try {
   const health=await response.json();
   if(!response.ok || health.sourceSha!==sha)throw Error('The hosted source did not match the checked source.');
   execFileSync(process.execPath,['check-live.mjs'],{stdio:'pipe'});
+  record('deployed_verified');
   console.log('The checked library Analytics connector was deployed and its read-only connection passed.');
 }catch {
   if(deployed) {
     try {
       invoke('rollback',previous,'--message','Restore previous library connector after failed verification');
+      record('rolled_back');
       console.error('The connector update failed verification; its previous deployment was restored.');
     }catch {
+      record('rollback_attention');
       console.error('The connector update needs administrator attention; automatic rollback could not finish.');
     }
-  }else console.error('The connector could not be updated. Its previous deployment is retained.');
+  }else {record('not_deployed');console.error('The connector could not be updated. Its previous deployment is retained.');}
   process.exitCode=1;
 }

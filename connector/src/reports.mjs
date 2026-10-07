@@ -4,6 +4,18 @@ export const TIMEZONE = 'America/Los_Angeles';
 export class ReportError extends Error {
   constructor(code, message) { super(message); this.code = code; }
 }
+// Repairable protocol/presentation code sees no bearer token, cookies, grant
+// metadata or secret bindings. Authorization was enforced by the fixed wrapper.
+export function credentialFreeMcpCall(request, ctx) {
+  const headers = new Headers();
+  for (const name of ['content-type','accept','mcp-protocol-version','content-length']) {
+    if (request.headers.has(name)) headers.set(name,request.headers.get(name));
+  }
+  return {
+    request: new Request(request,{headers}),
+    context: {auth:{scope:[...ctx.auth.scope]},props:{login:ctx.props.login}},
+  };
+}
 const metrics = {
   visitors: ['activeUsers', 'totalUsers', 'sessions', 'screenPageViews'],
   pages: ['screenPageViews', 'activeUsers'],
