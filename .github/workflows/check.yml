@@ -2,6 +2,10 @@ name: Verify library website
 on:
   push:
   pull_request:
+  workflow_dispatch:
+  schedule:
+    # Monday, 08:37 Pacific standard time / 09:37 Pacific daylight time.
+    - cron: '37 16 * * 1'
 permissions:
   contents: read
 jobs:
