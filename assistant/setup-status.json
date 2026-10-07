@@ -165,6 +165,12 @@
         "undoCommit": "4ee665d0b761674de35a311c60cb8c92c7a60b80",
         "scope": "Only homepage heading field; no real-domain publishing.",
         "instructions": "AGENTS.md, assistant/START.md and assistant/WORKFLOW.md distinguish approved trial save from public launch."
+      },
+      "volunteerExperience": {
+        "status": "Not ready for volunteer handoff. Stronger repository response instructions and separate global Codex instructions saved, but a fresh ordinary-request test did not receive either at startup. No replacement ready link offered.",
+        "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
+        "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
+        "diagnosis": "Fresh task starts at /workspace, repository is nested at /workspace/cottonwood-library-assistant, and no /workspace/AGENTS.md exists. Task reported no library instructions in initial context, including missing account-wide Codex instructions despite saved UI readback. It incorrectly queried Sites for a website before inspecting its cloud environment."
       }
     }
   }

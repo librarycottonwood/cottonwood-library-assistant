@@ -55,3 +55,7 @@ AGENTS.md, START.md and WORKFLOW.md now explicitly define approved trial saving 
 Inline screenshot embeds are paused in the instructions. Capture and inspection remain enabled; use the verified website preview and hosted pictures page for approval. Re-enable inline delivery only after a test proves rendering in the library account.
 
 Valid hosted PNGs are rejected by ChatGPT before loading; its absolute cloud-file route also fails. The tested session has no supported native Library upload tool. This remains unresolved. Jaden declined a support report; none was sent. Chrome sign-in is not required or requested.
+
+## Volunteer handoff is not ready
+
+The infrastructure and save/undo tests above passed, but a plain fresh-chat request to see the website failed to recognize the library. Its initial directory is /workspace, while the library AGENTS.md is nested in the repository; no workspace-root AGENTS.md exists. The account-wide Codex instruction field was empty; it has now been saved and reopened to verify (source in assistant/CODEX.md). A subsequent fresh task still reported those instructions were absent from its initial context. Repository response rules have been strengthened, but that is not proof of automatic first-message loading. Finish startup context delivery and validate normal friendly requests before handing the board a new editing chat. Technical setup/test chats have been archived to clean the sidebar.
