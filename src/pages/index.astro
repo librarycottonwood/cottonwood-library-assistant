@@ -4,20 +4,16 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from '../components/Icon.astro';
 import VisitPanel from '../components/VisitPanel.astro';
 import { bookSaleDateLabel } from '../content/editorial';
-import eventsArt from '../assets/actions/action-upcoming-events-foreground.png';
-import kidsArt from '../assets/actions/action-kids-families-foreground.png';
-import catalogArt from '../assets/actions/action-find-a-book-foreground.png';
-import donateArt from '../assets/actions/action-donate-foreground.png';
 import { contentRepository } from '../content/repository';
 import { resolveImage } from '../content/images';
 const { library, hero, programs } = await contentRepository.getHome();
 const { initiatives } = await contentRepository.getSupport();
 const bookSale = initiatives.find(item => item.id === 'book-sale')!;
 const actions = [
-  { label: 'Upcoming events', href: '/librarynews/', art: eventsArt, tone: 'action-sun' },
-  { label: 'Kids & families', href: '/kids/', art: kidsArt, tone: 'action-meadow' },
-  { label: 'Find a book', href: library.catalogUrl, art: catalogArt, tone: 'action-gold', event: 'catalog_quick' },
-  { label: 'Donate', href: '/fundraising-events/', art: donateArt, tone: 'action-forest', event: 'donate_quick' },
+  { label: 'Upcoming events', href: '/librarynews/', tone: 'action-sun' },
+  { label: 'Kids & families', href: '/kids/', tone: 'action-meadow' },
+  { label: 'Find a book', href: library.catalogUrl, tone: 'action-gold', event: 'catalog_quick' },
+  { label: 'Donate', href: '/fundraising-events/', tone: 'action-forest', event: 'donate_quick' },
 ];
 const resources = [
   { label: 'Library catalog', note: 'Browse our collection', href: library.catalogUrl, icon: 'book' as const },
@@ -39,13 +35,21 @@ const resources = [
   </section>
 
   <div class="container pb-10">
-    <nav aria-label="Library quick links" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <nav aria-label="Library quick links" data-button-style="paper" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {actions.map(action => <a href={action.href} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
         <span class="action-label">{action.label}</span>
-        <Image src={action.art} alt="" widths={[160, 260, 360]} sizes="150px" class="action-art" />
+        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${actions.indexOf(action)}`} />
       </a>)}
     </nav>
   </div>
+
+  <script>
+    const style = new URLSearchParams(location.search).get('button-style');
+    if (style === 'storybook' || style === 'paper' || style === 'folk') {
+      const buttons = document.querySelector<HTMLElement>('[aria-label="Library quick links"]');
+      if (buttons) buttons.dataset.buttonStyle = style;
+    }
+  </script>
 
   <section id="programs" tabindex="-1" class="container-editorial py-5 sm:pt-8 sm:pb-14" aria-labelledby="happening-heading">
     <div class="mb-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
