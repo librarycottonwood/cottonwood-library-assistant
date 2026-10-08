@@ -14,6 +14,9 @@ export function normalizeReport(data, request) {
     warnings: [
       'Recent data may take 24–48 hours to finish processing. Counts cover visitors who consented to tracking.',
       ...(request.report === 'visitors' ? ['People means active users, visits means sessions, and views means page views. These are different counts.'] : []),
+      ...(request.report === 'clicks' ? ['Clicks count button presses, not unique people. A donate click does not mean a donation was completed.'] : []),
+      ...(request.report === 'locations' ? ['Locations are estimated by Google from network data and can be approximate, especially for city.'] : []),
+      ...(request.report === 'sources' ? ['Direct can include bookmarks, typed addresses and apps that hide where a visit came from.'] : []),
       ...(request.report === 'directions' ? ['Directions clicks counts directions_click events, not unique people or confirmed library visits. No recorded clicks does not prove nobody wanted directions.'] : []),
       ...(request.body.dateRanges.length > 1 ? ['Compare only equivalent date ranges. A zero comparison count has no defined percentage increase. The dateRange dimension labels requested and comparison rows.'] : []),
       ...(data.metadata?.subjectToThresholding ? ['Google applied privacy thresholds; some figures may be withheld.'] : []),
