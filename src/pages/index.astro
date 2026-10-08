@@ -30,7 +30,7 @@ const resources = [
         <p class="mt-4 text-base text-muted">{library.address} · Cottonwood</p>
         <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+      <div class="feature-shape"><Image width={1100} quality={70} src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
     </div>
   </section>
 
@@ -59,7 +59,7 @@ const resources = [
     <div class="coming-up">
       <a href="/fundraising-events/book-sale/" class="coming-feature group">
         <div class="feature-shape">
-          <Image src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 530px" class="aspect-[1.9] w-full object-cover" />
+          <Image width={1100} quality={70} src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 530px" class="aspect-[1.9] w-full object-cover" />
         </div>
         <p class="eyebrow mt-5">{bookSaleDateLabel}</p>
         <h3 class="mt-2 font-display text-3xl leading-tight tracking-tight group-hover:underline sm:text-4xl">Quarterly book sale</h3>
@@ -69,7 +69,7 @@ const resources = [
       <div class="program-agenda">
         <p class="eyebrow mb-2 text-muted">Gather at the library</p>
         {programs.map(program => <a href={`/librarynews/${program.id}/`} class="program-row group">
-          <Image src={resolveImage(program.image.key)} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
+          <Image width={260} quality={70} src={resolveImage(program.image.key)} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
           <div class="min-w-0 flex-1">
             <p class="text-sm font-semibold text-muted">{program.schedule}</p>
             <h3 class="card-heading mt-1 group-hover:underline">{program.title}</h3>
@@ -91,13 +91,13 @@ const resources = [
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
         </div>
       </div>
-      <Image src={resolveImage('interior')} alt="Bookshelves and reading spaces inside Cottonwood Community Library." widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
+      <Image width={1100} quality={70} src={resolveImage('interior')} alt="Bookshelves and reading spaces inside Cottonwood Community Library." widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
     </div>
   </section>
 
   <section id="services" tabindex="-1" class="container-narrow pt-8 pb-4 sm:pt-14 sm:pb-8" aria-labelledby="services-heading">
     <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
-      <Image src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
+      <Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
       <div>
         <h2 id="services-heading" class="section-heading">Library services</h2>
         <nav aria-label="Library services" class="mt-5 divide-y divide-line">

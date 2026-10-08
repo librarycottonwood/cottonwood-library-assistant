@@ -10,7 +10,7 @@ const { story } = await contentRepository.getHome();
   <PageIntro title="Our story" />
   <section id="our-story" tabindex="-1" aria-labelledby="story-heading" class="container pb-12">
     <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-      <figure class="m-0"><Image src={resolveImage(story.image.key)} alt={story.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" class="aspect-[1.3] w-full rounded-[4px] object-cover" loading="eager" /></figure>
+      <figure class="m-0"><Image width={1100} quality={70} src={resolveImage(story.image.key)} alt={story.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" class="aspect-[1.3] w-full rounded-[4px] object-cover" loading="eager" /></figure>
       <div><h2 id="story-heading" class="section-heading">Built by neighbors.<br />Here for you.</h2><p class="mt-4 text-lg text-muted">Independent since 1996. Your donations keep us going.</p><div class="mt-5 max-w-[65ch] space-y-4 text-base leading-[1.8] text-muted">{story.paragraphs.map(paragraph => <p>{paragraph}</p>)}</div><a href="/fundraising-events/library-fund/" class="button button-primary mt-6">Make a donation</a></div>
     </div>
   </section>

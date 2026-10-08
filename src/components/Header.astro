@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import logo from '../../library-files/logos/cottonwood-community-library-logo.jpg';
 import Icon from './Icon.astro';
 import type { HomeContent } from '../content/types';
@@ -15,7 +16,7 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
 <header class="border-b border-line bg-paper">
   <div class="container flex min-h-20 flex-wrap items-center justify-between gap-3 py-3 lg:min-h-24">
     <a href="/" class="flex min-w-0 max-w-full items-center gap-3" aria-label="Cottonwood Community Library home">
-      <img src={logo.src} alt="" width="225" height="200" class="w-[54px] shrink-0 mix-blend-multiply sm:w-[67px]" />
+      <Image quality={70} src={logo} alt="" width={67} densities={[1, 2]} loading="eager" class="w-[54px] shrink-0 mix-blend-multiply sm:w-[67px]" />
       <span class="min-w-0 text-[1.0625rem] leading-[1.2] font-semibold tracking-[-.025em] sm:text-xl">Cottonwood<span class="mt-1 block text-[0.6875rem] font-medium tracking-[.1em] uppercase sm:text-[0.75rem]">Community Library</span></span>
     </a>
     <nav aria-label="Main navigation" class="hidden items-center gap-5 xl:flex">

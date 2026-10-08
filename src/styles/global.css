@@ -59,7 +59,7 @@
   .action-meadow { background: #80acd9; color: #192d24; }
   .action-gold { background: #e98f80; color: #192d24; }
   .action-forest { background: #9bbf75; color: #192d24; }
-  .button-concept-art { flex-shrink: 0; width: 125px; height: 112px; background-image: url('/images/button-concepts/styles.png'); background-size: 400% 300%; background-position: calc(var(--art-column) * 100% / 3) 0%; }
+  .button-concept-art { flex-shrink: 0; width: 125px; height: 112px; background-image: url('/images/button-concepts/styles.webp'); background-size: 400% 300%; background-position: calc(var(--art-column) * 100% / 3) 0%; }
   [data-button-style="paper"] .button-concept-art { background-position-y: 50%; }
   [data-button-style="folk"] .button-concept-art { background-position-y: 100%; }
   .feature-card { @apply block h-full overflow-hidden rounded-[4px] bg-transparent; }
