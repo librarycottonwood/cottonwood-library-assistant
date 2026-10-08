@@ -20,7 +20,7 @@ jobs:
           node-version: '24'
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs
+      - run: node --test scripts/release.test.mjs scripts/images.test.mjs
       - run: node scripts/analytics.test.mjs
       - name: Verify private Analytics connector without credentials
         run: |

@@ -6,8 +6,9 @@ interface Props { image: LibraryImage; variant?: 'card' | 'feature'; eager?: boo
 const { image, variant = 'card', eager = false } = Astro.props;
 const contained = image.fit === 'contain';
 ---
-<Image
+<Image quality={70}
   src={resolveImage(image.key)} alt={image.alt}
+  width={variant === 'card' ? 800 : 1100}
   widths={variant === 'card' ? [360, 600, 800] : [500, 800, 1100]}
   sizes={variant === 'card' ? '(max-width: 767px) 100vw, 33vw' : '(max-width: 1023px) 100vw, 60vw'}
   loading={eager ? 'eager' : 'lazy'}

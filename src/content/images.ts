@@ -13,7 +13,7 @@ import bookClub from '../../library-files/images/book-club.png';
 import bookDonation from '../../library-files/images/book-donor.png';
 import bookSale from '../../library-files/images/back-hall-bookshelf.jpeg';
 import childrensBookSale from '../../library-files/images/book-sale-childrens.jpeg';
-import holidayMarket from '../../library-files/images/holiday-market-storefront.png';
+import holidayMarket from '../../library-files/images/holiday-market-storefront.jpg';
 import firstFive from '../../library-files/images/first-5-shasta.jpg';
 import communityFoundation from '../../library-files/images/community-foundation-of-the-north-state.png';
 import founders from '../../library-files/images/founders-plaque.jpeg';

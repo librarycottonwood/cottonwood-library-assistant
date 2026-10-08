@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import logo from '../../library-files/logos/cottonwood-community-library-logo.jpg';
 import Icon from './Icon.astro';
 import InstagramIcon from './InstagramIcon.astro';
@@ -12,7 +13,7 @@ const { library, navigation } = Astro.props;
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.15fr_.7fr_1fr] lg:gap-16">
       <div class="sm:col-span-2 lg:col-span-1">
         <a href="/" class="inline-flex max-w-full items-center gap-4" aria-label="Cottonwood Community Library home">
-          <img src={logo.src} alt="" width="225" height="200" loading="lazy" class="w-20 shrink-0 mix-blend-multiply" />
+          <Image quality={70} src={logo} alt="" width={80} densities={[1, 2]} loading="lazy" class="w-20 shrink-0 mix-blend-multiply" />
           <span class="font-display text-[1.35rem] leading-snug">Cottonwood<br />Community Library</span>
         </a>
         <p class="mt-4 text-sm text-muted">Community-supported since 1996.</p>

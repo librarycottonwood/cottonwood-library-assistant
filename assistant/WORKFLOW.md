@@ -8,6 +8,12 @@
 6. The preview helper uploads the verified site with a separate `_review/` page containing the checked computer and phone pictures. It returns the immutable website, pictures page, and image URLs, and saves them to the release's `preview.json`. Show the verified website preview link and a friendly "See both pictures" link. Capture stays enabled, but omit inline image embeds while delivery is broken in the library account. Do not claim invisible attachments were shown. Ask for approval of this version. Keep the approved digest with the chat record.
 7. Production is intentionally unavailable to these scripts. Before launch, connect a human-controlled publishing service that authenticates the reviewer, binds approval to this digest, verifies the stored asset hashes, publishes those same assets, and retains/verifies rollback. Do not pass production credentials into the agent environment or represent Markdown instructions as an enforced approval gate.
 
+## Pictures
+
+Every new photo, screenshot, poster or logo goes through `pnpm assistant:image -- <file> --name <short-name>` before use. It turns the picture upright, shrinks it to at most 2400px, removes hidden camera and location details, and saves it in `library-files/images/` as JPEG (photos) or PNG (screenshots and graphics). Register it in `src/content/images.ts` and show it with `<Image>` from `astro:assets` (or `ContentImage`), with `width` set to the largest of `widths`, `quality={70}`, real `alt` text, and `loading="eager"` only for the first picture on a page. Never put photos in `public/` or use `<img src={picture.src}>`.
+
+`pnpm build` runs the picture check and fails when a picture is too large, keeps location details, is unused, or skips resizing. Fix the picture rather than loosening the limits in `scripts/images.mjs`.
+
 ## Cloud environment
 
 Connect this private repository in ChatGPT Work → Cloud. Use `bash scripts/cloud-setup.sh` as the install script. Use `assistant/START.md` as the start instructions. Publish the prepared environment after setup and checks succeed. Test a new task, rather than relying only on the environment setup conversation.
