@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { reportRequest, credentialFreeMcpCall } from '../src/reports.mjs';
+import { reportRequest, credentialFreeMcpCall, REPORTS, CLICK_EVENTS } from '../src/reports.mjs';
 import { normalizeReport } from '../src/format.mjs';
 import { handleMcp } from '../src/mcp.mjs';
 import { saveGrant } from '../src/google-user.mjs';
@@ -19,7 +19,25 @@ test('missing Google grant reports account attention, never zero',async()=>{
 test('only aggregate reports and fixed property inputs are accepted',()=>{
   assert.deepEqual(reportRequest({...dates,report:'visitors'}).body.metrics.map(m=>m.name),['activeUsers','totalUsers','sessions','screenPageViews']);
   for(const bad of [{property:'123'},{report:'users'},{start_date:'2026-02-30'},{end_date:'2026-01-01'},{limit:999},{compare_start_date:'2026-09-01'}]) assert.throws(()=>reportRequest({...dates,...bad}));
-  assert.equal(reportRequest({...dates,report:'directions'}).body.dimensionFilter.filter.stringFilter.value,'directions_click');
+  assert.deepEqual(reportRequest({...dates,report:'directions'}).body.dimensionFilter.filter.inListFilter.values,['directions_click']);
+});
+test('every report is a fixed aggregate query with bounded rows',()=>{
+  for(const report of Object.keys(REPORTS)){
+    const {body}=reportRequest({...dates,report});
+    assert.ok(Number(body.limit)>=1&&Number(body.limit)<=800,report);
+    for(const d of body.dimensions||[])assert.ok(!['userId','clientId','customUser'].some(x=>d.name.includes(x)),report);
+  }
+  assert.deepEqual(reportRequest({...dates,report:'clicks'}).body.dimensionFilter.filter.inListFilter.values,CLICK_EVENTS);
+  assert.deepEqual(reportRequest({...dates,report:'locations',limit:5}).body.dimensions.map(d=>d.name),['country','region','city']);
+  assert.equal(reportRequest({...dates,report:'locations',limit:5,compare_start_date:'2026-09-22',compare_end_date:'2026-09-28'}).body.limit,'10');
+  assert.equal(reportRequest({...dates,report:'daily'}).body.orderBys[0].dimension.dimensionName,'date');
+  assert.ok(normalizeReport({},reportRequest({...dates,report:'clicks'})).warnings.some(w=>w.includes('donation was completed')));
+});
+test('click report covers exactly the events the website sends',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const site=await readFile(new URL('../../src/components/Analytics.astro',import.meta.url),'utf8');
+  const sent=JSON.parse(site.match(/new Set\((\[[^\]]*\])\)/)[1].replaceAll("'",'"'));
+  assert.deepEqual([...sent].sort(),[...CLICK_EVENTS].sort());
 });
 test('comparison dates and missing data stay explicit',()=>{
   const req=reportRequest({...dates,compare_start_date:'2026-09-22',compare_end_date:'2026-09-28'});

@@ -13,7 +13,7 @@ const defaultHandler={async fetch(request,env) {
   const oauth=env.OAUTH_PROVIDER;
   try {
     const reconnect=await handleReconnect(request,env);if(reconnect)return reconnect;
-    if (url.pathname==='/health') return Response.json({status:'ok',service:'Cottonwood Library Analytics',version:'0.1.0',sourceSha:env.BUILD_SOURCE_SHA || null},{headers:{'Cache-Control':'no-store'}});
+    if (url.pathname==='/health') return Response.json({status:'ok',service:'Cottonwood Library Analytics',version:'0.2.0',sourceSha:env.BUILD_SOURCE_SHA || null},{headers:{'Cache-Control':'no-store'}});
     if (url.pathname==='/monitor' && request.method==='POST') {
       const presented=request.headers.get('Authorization')?.replace(/^Bearer /,'') || '';
       if (!env.MONITOR_TOKEN || presented.length!==env.MONITOR_TOKEN.length || [...presented].reduce((diff,c,i)=>diff | c.charCodeAt(0)^env.MONITOR_TOKEN.charCodeAt(i),0)!==0) return new Response('Unauthorized.',{status:401});
@@ -26,7 +26,7 @@ const defaultHandler={async fetch(request,env) {
       const details=await oauth.describeConsent(original);
       const consent=await oauth.beginConsent(original);
       consent.headers.set('Content-Type','text/html; charset=utf-8');
-      return new Response(`<!doctype html><meta charset="utf-8"><title>Library website reports</title><h1>Connect library website reports</h1><p>Allow <strong>${escape(details.clientName)}</strong> to read the library's tracked demo visits, popular pages, and directions clicks. This connection cannot change your website or Analytics settings.</p><p>Access goes to <strong>${escape(details.redirectHost)}</strong>. ${details.clientDomain?'Client published by '+escape(details.clientDomain):'This client registered its own name.'}</p>${details.redirectIsLoopback?'<p>This sends access to an app on your computer. Continue only if you started that app.</p>':''}<p>The connection stays signed in and renews automatically. Sign in with the library GitHub account to continue.</p><form method="post"><input type="hidden" name="handle" value="${escape(consent.handle)}"><button name="decision" value="approve">Connect reports</button> <button name="decision" value="deny">Cancel</button></form>`,{headers:consent.headers});
+      return new Response(`<!doctype html><meta charset="utf-8"><title>Library website reports</title><h1>Connect library website reports</h1><p>Allow <strong>${escape(details.clientName)}</strong> to read the library's tracked demo website statistics: visits, popular pages, button clicks, locations, traffic sources and devices. This connection cannot change your website or Analytics settings.</p><p>Access goes to <strong>${escape(details.redirectHost)}</strong>. ${details.clientDomain?'Client published by '+escape(details.clientDomain):'This client registered its own name.'}</p>${details.redirectIsLoopback?'<p>This sends access to an app on your computer. Continue only if you started that app.</p>':''}<p>The connection stays signed in and renews automatically. Sign in with the library GitHub account to continue.</p><form method="post"><input type="hidden" name="handle" value="${escape(consent.handle)}"><button name="decision" value="approve">Connect reports</button> <button name="decision" value="deny">Cancel</button></form>`,{headers:consent.headers});
     }
     if (url.pathname==='/authorize' && request.method==='POST') {
       const form=await request.formData();

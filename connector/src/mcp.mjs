@@ -1,13 +1,14 @@
 import { runReport } from './google.mjs';
+import { REPORTS } from './reports.mjs';
 const tool = {
   name: 'library_website_report',
-  description: 'Use this for Cottonwood library website visitor counts, popular pages, directions clicks, and date comparisons. Reads the library demo GA4 property only. Supply explicit dates in the property timezone America/Los_Angeles; infer this week/last week from today. Visitors are active users, visits are sessions, views are page views. No recorded data is different from connection failure. Do not extrapolate demo traffic to the existing public website.',
+  description: 'Use this for any Cottonwood library website statistics question. Reads the library demo GA4 property only. Reports: visitors (people, visits, views), pages (most viewed), clicks (catalog, donate and directions button clicks by button), directions (directions clicks total), locations (country, region, city), sources (how visitors arrived: search, social, direct, referring sites), devices (desktop, mobile, tablet), new_vs_returning, daily (day-by-day trend). Supply explicit dates in the property timezone America/Los_Angeles; infer this week/last week from today. Visitors are active users, visits are sessions, views are page views. No recorded data is different from connection failure. Do not extrapolate demo traffic to the existing public website. Gender and age are not available.',
   annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   inputSchema: { type: 'object', additionalProperties: false, required: ['report','start_date','end_date'], properties: {
-    report: { type:'string',enum:['visitors','pages','directions'] },
+    report: { type:'string',enum:Object.keys(REPORTS) },
     start_date:{type:'string',description:'Inclusive YYYY-MM-DD in America/Los_Angeles.'},end_date:{type:'string',description:'Inclusive YYYY-MM-DD in America/Los_Angeles.'},
     compare_start_date:{type:'string',description:'Optional inclusive comparison start; supply comparison end too.'},compare_end_date:{type:'string',description:'Optional inclusive comparison end; supply comparison start too.'},
-    limit:{type:'integer',minimum:1,maximum:25,default:10,description:'Maximum popular pages returned.'},
+    limit:{type:'integer',minimum:1,maximum:25,default:10,description:'Maximum rows for ranked reports (pages, clicks, locations, sources, devices, new_vs_returning).'},
   } },
 };
 const statusTool={name:'library_report_connection_status',description:'Check whether a real read-only library report succeeds. Use after reconnecting or on a failed visitor report. Returns the exact connection problem and one next step, never visitor counts or credentials. Does not change accounts, keys or permissions.',annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false},inputSchema:{type:'object',properties:{},additionalProperties:false}};
@@ -26,7 +27,7 @@ export async function handleMcp(request,env,ctx,reporter=runReport,checker) {
   const reply=result=>Response.json({jsonrpc:'2.0',id:message.id,result},{headers:{'Cache-Control':'no-store'}});
   const error=(code,message)=>Response.json({jsonrpc:'2.0',id:message.id,error:{code,message}},{headers:{'Cache-Control':'no-store'}});
   switch(message.method) {
-    case 'initialize': return reply({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2026-07-28'].includes(message.params?.protocolVersion)?message.params.protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'Cottonwood Library Analytics',version:'0.1.0'},instructions:'Answer in friendly everyday language. Give the exact period and explain that these are tracked demo visits. Never invent data or turn a connection failure into zero.'});
+    case 'initialize': return reply({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2026-07-28'].includes(message.params?.protocolVersion)?message.params.protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'Cottonwood Library Analytics',version:'0.2.0'},instructions:'Answer in friendly everyday language. Give the exact period and explain that these are tracked demo visits. Never invent data or turn a connection failure into zero.'});
     case 'ping': return reply({});
     case 'tools/list': return reply({tools:checker?[tool,statusTool]:[tool]});
     case 'tools/call': {
