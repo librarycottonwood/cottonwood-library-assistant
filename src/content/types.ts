@@ -76,15 +76,31 @@ export interface SupportContent {
   campaigns: FundraisingCampaign[];
 }
 
+/** The first campaign that has not ended is the active one; it drives every Donate button. */
 export interface FundraisingCampaign {
   id: string;
   title: string;
   description: string;
+  /** Approved donation page, such as the library's Givebutter campaign. */
   url: string;
+  /** Whole dollars, copied from the donation page. */
   raised: number;
   goal: number;
   currency: 'USD';
+  /** YYYY-MM-DD the raised amount was last copied. */
   updatedAt: string;
+  /** YYYY-MM-DD, inclusive (Pacific time). After this day the campaign disappears and Donate buttons revert. */
+  endsOn?: string;
+  image?: LibraryImage;
+}
+
+/** Site-wide banner, such as a holiday closure. Dates are YYYY-MM-DD in Pacific time, both inclusive. */
+export interface LibraryNotice {
+  id: string;
+  message: string;
+  startsOn: string;
+  endsOn: string;
+  link?: { label: string; href: string };
 }
 
 export interface SupportUpdate {
@@ -119,4 +135,8 @@ export interface LibraryPost {
   paragraphs: string[];
   externalUrl?: string;
   sourceLabel?: string;
+  /** Cover photo for the post page and news feeds. */
+  image?: LibraryImage;
+  /** Extra photos shown below the post. */
+  gallery?: LibraryImage[];
 }

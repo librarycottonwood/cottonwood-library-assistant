@@ -6,7 +6,10 @@ import Icon from '../../components/Icon.astro';
 import FeatureCard from '../../components/FeatureCard.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import PhotoGallery from '../../components/PhotoGallery.astro';
+import CampaignProgress from '../../components/CampaignProgress.astro';
 import { contentRepository } from '../../content/repository';
+import { activeCampaign } from '../../content/feeds';
+import { getDonateLink } from '../../content/donate';
 import type { SupportInitiative } from '../../content/types';
 export async function getStaticPaths() {
   const { initiatives } = await contentRepository.getSupport();
@@ -14,13 +17,17 @@ export async function getStaticPaths() {
 }
 interface Props { initiative: SupportInitiative; }
 const { initiative } = Astro.props;
-const { initiatives } = await contentRepository.getSupport();
+const { initiatives, campaigns } = await contentRepository.getSupport();
+// The library-fund page follows the shared donate link: the active fundraiser, then library.donationUrl.
+const donate = getDonateLink();
+const campaign = initiative.id === 'library-fund' ? activeCampaign(campaigns) : undefined;
+const action = initiative.id === 'library-fund' && donate.source !== 'fallback' ? { label: donate.label, href: donate.href } : initiative.action;
 ---
 <SiteLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary}>
   <PageIntro title={initiative.title} eyebrow={initiative.label} back={{ href: '/fundraising-events/', label: 'Support your library' }} />
   <article class="container grid items-start gap-10 pb-16 lg:grid-cols-[1.35fr_1fr] lg:gap-14">
     <div><ContentImage image={initiative.image} variant="feature" eager />{initiative.gallery && <PhotoGallery images={initiative.gallery} />}</div>
-    <aside class="rounded-[4px] bg-meadow p-7 sm:p-9"><h2 class="card-heading">{initiative.id === 'book-sale' ? 'Shop & support' : 'How to help'}</h2>{initiative.id === 'book-sale' && <p class="mt-4 text-base">Larger sales: roughly quarterly, when storage fills up. Next date to be announced.</p>}<ol class="mt-5 list-none space-y-4 p-0">{initiative.steps.map((step, index) => <li class="flex gap-3 text-base"><span class="shrink-0 font-semibold" aria-hidden="true">{index + 1}.</span><span>{step}</span></li>)}</ol><a href={initiative.action.href} class="button button-primary mt-6">{initiative.action.label}{initiative.action.download && <Icon name="download" class="size-4 shrink-0" />}</a><div class="mt-5"><Disclosure title={initiative.id === 'donate-books' ? 'What we can accept' : 'More information'}>{initiative.paragraphs.map(text => <p class="mt-3">{text}</p>)}</Disclosure></div></aside>
+    <aside class="rounded-[4px] bg-meadow p-7 sm:p-9"><h2 class="card-heading">{initiative.id === 'book-sale' ? 'Shop & support' : 'How to help'}</h2>{initiative.id === 'book-sale' && <p class="mt-4 text-base">Larger sales: roughly quarterly, when storage fills up. Next date to be announced.</p>}{campaign && <div class="mt-4"><p class="text-base font-semibold">{campaign.title}</p><CampaignProgress campaign={campaign} /></div>}<ol class="mt-5 list-none space-y-4 p-0">{initiative.steps.map((step, index) => <li class="flex gap-3 text-base"><span class="shrink-0 font-semibold" aria-hidden="true">{index + 1}.</span><span>{step}</span></li>)}</ol><a href={action.href} class="button button-primary mt-6">{action.label}{'download' in action && action.download && <Icon name="download" class="size-4 shrink-0" />}</a><div class="mt-5"><Disclosure title={initiative.id === 'donate-books' ? 'What we can accept' : 'More information'}>{initiative.paragraphs.map(text => <p class="mt-3">{text}</p>)}</Disclosure></div></aside>
   </article>
   <section class="container border-t border-line py-10 sm:py-12" aria-labelledby="other-ways"><h2 id="other-ways" class="section-heading mb-6">Other ways to help</h2><div class="grid gap-5 sm:grid-cols-3">{initiatives.filter(item => item.id !== initiative.id && item.category !== 'volunteering').slice(0, 3).map(item => <FeatureCard title={item.title} image={item.image} href={`/fundraising-events/${item.id}/`} />)}</div></section>
 </SiteLayout>
