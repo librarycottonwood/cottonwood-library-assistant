@@ -14,7 +14,7 @@ export async function getStaticPaths() {
   const [{ programs }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getPosts()]);
   return [
     ...programs.map(program => ({ params: { slug: program.id }, props: { program, post: undefined } })),
-    ...posts.filter(post => post.id !== 'summer-2026').map(post => ({ params: { slug: post.id }, props: { post, program: undefined } })),
+    ...posts.filter(post => post.id !== 'newsletter').map(post => ({ params: { slug: post.id }, props: { post, program: undefined } })),
   ];
 }
 interface Props { program?: Program; post?: LibraryPost; }

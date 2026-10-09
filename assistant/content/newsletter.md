@@ -20,6 +20,6 @@ newsletter: {
 },
 ```
 
-4. In `src/content/editorial.ts`, update the newsletter post (`id: 'newsletter'`): set `dateLabel` to the issue name and `publishedAt` to today if the volunteer gave a release date, otherwise leave it `null`.
+4. Nothing else to edit: the newsletter post in `src/content/editorial.ts` (id `newsletter`) and the page take the issue name, title and summary from `newsletter`.
 
 Everything else (page title, feed card) reads from `newsletter` automatically.

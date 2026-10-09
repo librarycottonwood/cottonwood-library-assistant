@@ -7,8 +7,8 @@ import { contentRepository } from '../../content/repository';
 import { resolveImage } from '../../content/images';
 const { newsletter, programs } = await contentRepository.getHome();
 ---
-<SiteLayout title="Summer 2026 newsletter | Cottonwood Community Library" description={newsletter.summary}>
-  <PageIntro title="Summer 2026 newsletter" eyebrow="From the library" back={{ href: '/librarynews/', label: 'Events & news' }} />
+<SiteLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
+  <PageIntro title={`${newsletter.issue} newsletter`} eyebrow="From the library" back={{ href: '/librarynews/', label: 'Events & news' }} />
   <article class="container-narrow grid items-start gap-10 pb-16 md:grid-cols-2">
     <div class="rounded-[4px] bg-[#e1d9c4] p-8"><Image width={600} quality={70} src={resolveImage(newsletter.cover.key)} alt={newsletter.cover.alt} widths={[350, 600]} sizes="(max-width: 767px) 80vw, 400px" class="h-auto w-full shadow-md" /></div>
     <div><h2 class="card-heading">Inside this issue</h2><p class="mt-5 text-base text-muted">{newsletter.summary}</p><a href={newsletter.fileUrl} class="button button-primary mt-7">Read the newsletter (PDF)<Icon name="download" class="size-4" /></a><h2 class="mt-10 text-base font-semibold">Explore the programs</h2><ul class="mt-3 list-none p-0">{programs.map(program => <li><a href={`/librarynews/${program.id}/`} class="text-link">{program.title}<Icon name="arrow" class="size-4" /></a></li>)}</ul></div>

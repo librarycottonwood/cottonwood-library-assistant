@@ -49,9 +49,10 @@ export const libraryPosts: LibraryPost[] = [
     ],
   },
   {
-    id: 'summer-2026', title: 'Summer at the library', publishedAt: null,
-    dateLabel: 'Summer 2026', category: 'Newsletter',
+    // The current newsletter issue; its page reads homeContent.newsletter.
+    id: 'newsletter', title: homeContent.newsletter.title, publishedAt: null,
+    dateLabel: homeContent.newsletter.issue, category: 'Newsletter',
     summary: homeContent.newsletter.summary,
-    href: '/librarynews/summer-2026/', paragraphs: [],
+    href: '/librarynews/newsletter/', paragraphs: [],
   },
 ];
