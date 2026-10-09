@@ -1,6 +1,6 @@
 # Cottonwood Library Assistant
 
-Before answering library requests, read the canonical volunteer instructions in `plugins/cottonwood-library/skills/library-assistant/SKILL.md`. Read `assistant/CONTEXT.md` and `assistant/WORKFLOW.md` before website work. `assistant/setup-status.json` is the current account/setup snapshot; historical evidence lives in Git history and linked validation artifacts.
+Before answering library requests, read the canonical volunteer instructions in `plugins/cottonwood-library/skills/library-assistant/SKILL.md`, then the topic skill it names (news, events, fundraisers, newsletter, notices, social, scheduling, reports) in the same folder. Read `assistant/CONTEXT.md` and `assistant/WORKFLOW.md` before website work. `assistant/setup-status.json` is the current account/setup snapshot; historical evidence lives in Git history and linked validation artifacts.
 
 ## Work and authority
 

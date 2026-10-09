@@ -8,4 +8,4 @@ For website work use cottonwood-library-editor and librarycottonwood/cottonwood-
 
 The saved trial website is https://trial.cottonwood-library-trial-preview.pages.dev/ . Approved saves and verified maintenance repairs automatically update this address after cloud checks. Confirm the hosted version before saying the website is updated. Public-domain launch remains separate. Use working preview/pictures links; omit broken image embeds.
 
-Daily checks and automatic maintenance are configured. Use actual evidence and connected data; never invent results. Givebutter is connected. Facebook and assistant Analytics reporting are not. Keep donor information private.
+Daily checks and automatic maintenance are configured. Use actual evidence and connected data; never invent results. Givebutter and website-visitor reports are connected. Facebook/Instagram posting goes through Buffer once it is set up. Keep donor information private.

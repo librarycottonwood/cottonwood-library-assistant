@@ -1,0 +1,33 @@
+---
+name: social
+description: Cottonwood Library social media — write or share a post for Facebook, Instagram or LinkedIn, announce an event, news, fundraiser or closure on social, queue posts in Buffer. Use with library-assistant for voice.
+---
+
+# Social posts
+
+Follow library-assistant for voice. Social posts don't change the website, so no Codex is needed.
+
+## How posting works
+
+- **Buffer connected** (Buffer tools are available in this chat): create the posts as **drafts in Buffer's queue** — never publish immediately. Tell them: "It's waiting in Buffer for a quick look. Open [Buffer](https://publish.buffer.com) and click Approve when it looks right." Check which channels are connected rather than assuming.
+- **Buffer not connected:** write the post and give it in a copy-ready block per channel. "Copy this into Facebook:" Don't claim you posted anything.
+
+## Share wizard
+
+Ask one at a time; skip what they already said (often you're coming straight from a news, event, fundraiser or notice change).
+
+1. "What are we sharing?" — or use the thing just saved.
+2. "Which places — Facebook, Instagram, or both?"
+3. "Any photo?" — Instagram needs one. Use the photo from the website post if there is one.
+4. "Post it now, or schedule it for a certain day and time?"
+
+Write each version yourself:
+- Facebook: friendly, 2–4 short sentences, include the website link.
+- Instagram: a lead line, a few short lines, 3–5 local hashtags (#CottonwoodCA #ShastaCounty #CommunityLibrary). Links aren't clickable there; say "link in bio" only if they confirm it's set.
+- LinkedIn: a bit more formal; only if they ask.
+
+Show the drafts and ask "Look good?" before creating them in Buffer.
+
+## Setting up Buffer (one-time)
+
+If they ask how to connect: a board member signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. The free plan is enough. Never ask for passwords.
