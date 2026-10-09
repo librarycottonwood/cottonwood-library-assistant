@@ -5,7 +5,9 @@ import PageIntro from '../../components/PageIntro.astro';
 import Icon from '../../components/Icon.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
+import PhotoGallery from '../../components/PhotoGallery.astro';
 import { postDate } from '../../content/feeds';
+import { getDonateLink } from '../../content/donate';
 import { contentRepository } from '../../content/repository';
 import type { Program, LibraryPost } from '../../content/types';
 export async function getStaticPaths() {
@@ -18,6 +20,7 @@ export async function getStaticPaths() {
 interface Props { program?: Program; post?: LibraryPost; }
 const { program, post } = Astro.props;
 const { library, programs } = await contentRepository.getHome();
+const donate = getDonateLink();
 ---
 {program && <SiteLayout title={`${program.title} | Cottonwood Community Library`} description={program.description}>
   <PageIntro title={program.title} back={{ href: '/librarynews/', label: 'Events & news' }} />
@@ -38,8 +41,8 @@ const { library, programs } = await contentRepository.getHome();
 
 {post && <SiteLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
   <PageIntro title={post.title} eyebrow={postDate(post)} back={{ href: '/librarynews/#news', label: 'Library news & stories' }} />
-  <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2"><ContentImage image={{ key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager /><div>{post.paragraphs.map(paragraph => <p class="mb-5 text-lg text-muted">{paragraph}</p>)}
+  <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2"><div><ContentImage image={post.image ?? { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager />{post.gallery && <PhotoGallery images={post.gallery} />}</div><div>{post.paragraphs.map(paragraph => <p class="mb-5 text-lg text-muted">{paragraph}</p>)}
     {post.externalUrl && <a href={post.externalUrl} class="text-link mt-5">Read at {post.sourceLabel ?? 'the source'}<Icon name="external" class="size-4" /></a>}
-    <a href="/fundraising-events/" class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
+    <a href={donate.href} class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
   </div></article>
 </SiteLayout>}

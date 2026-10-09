@@ -1,6 +1,22 @@
 import type { LibraryEvent, LibraryPost } from './types';
 import { homeContent } from './seed';
 
+/** Example news post (copy into libraryPosts below). publishedAt is YYYY-MM-DD.
+ * image and gallery are optional; each key must exist in images.ts and alt is required.
+ *   {
+ *     id: 'story-time-returns', title: 'Story Time is back',
+ *     publishedAt: '2026-10-09', category: 'Library news',
+ *     summary: 'Wednesdays at 11:30 a.m. for preschoolers and their grown-ups.',
+ *     href: '/librarynews/story-time-returns/',
+ *     paragraphs: ['First paragraph.', 'Second paragraph.'],
+ *     image: { key: 'storytime', alt: 'The Story Time corner with its alphabet rug.' },
+ *     gallery: [
+ *       { key: 'books', alt: 'A stack of picture books.', caption: 'New picture books.' },
+ *     ],
+ *   },
+ * The id and the end of href must match. Events go in libraryEvents with full times.
+ */
+
 // Published old-site announcement checked October 5: Friday/Saturday October
 // 16–17, 10 a.m.–2 p.m. The weekday/publication date establish the 2026 year.
 export const bookSaleDateLabel = 'October 16–17 · 10 a.m.–2 p.m.';

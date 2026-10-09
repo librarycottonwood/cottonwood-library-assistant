@@ -1,4 +1,4 @@
-import type { LibraryEvent, LibraryPost } from './types';
+import type { FundraisingCampaign, LibraryEvent, LibraryNotice, LibraryPost } from './types';
 
 export function upcomingEvents(events: LibraryEvent[], now = Date.now()): LibraryEvent[] {
   return events.filter(event => {
@@ -16,8 +16,50 @@ export function newestPosts(posts: LibraryPost[]): LibraryPost[] {
   return [...posts].sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
 }
 
+export function formatDay(day: string): string {
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${day}T12:00:00Z`));
+}
+
 export function postDate(post: LibraryPost): string {
-  return post.publishedAt
-    ? new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${post.publishedAt}T12:00:00Z`))
-    : post.dateLabel ?? 'From the library';
+  return post.publishedAt ? formatDay(post.publishedAt) : post.dateLabel ?? 'From the library';
+}
+
+/** Today's YYYY-MM-DD at the library, so day-based content changes at Pacific midnight. */
+export function libraryToday(now = Date.now()): string {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+  const part = (type: string) => parts.find(item => item.type === type)!.value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+
+// Fail the build with a plain message rather than silently hiding a mistyped date.
+function checkDay(value: string | undefined, label: string): void {
+  if (value === undefined) return;
+  const valid = /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T12:00:00Z`)) && new Date(`${value}T12:00:00Z`).toISOString().startsWith(value);
+  if (!valid) throw new Error(`${label} must be a real date written YYYY-MM-DD, not "${value}"`);
+}
+
+/** Campaigns still running today, in listed order. The first one is the active campaign. */
+export function currentCampaigns(campaigns: FundraisingCampaign[], now = Date.now()): FundraisingCampaign[] {
+  const today = libraryToday(now);
+  return campaigns.filter(campaign => {
+    checkDay(campaign.updatedAt, `Campaign ${campaign.id} updatedAt`);
+    checkDay(campaign.endsOn, `Campaign ${campaign.id} endsOn`);
+    if (!(campaign.goal > 0) || !(campaign.raised >= 0)) throw new Error(`Campaign ${campaign.id} needs a goal above 0 and a raised amount of 0 or more`);
+    return !campaign.endsOn || campaign.endsOn >= today;
+  });
+}
+
+export function activeCampaign(campaigns: FundraisingCampaign[], now = Date.now()): FundraisingCampaign | undefined {
+  return currentCampaigns(campaigns, now)[0];
+}
+
+/** Notices that have not ended. Ones starting later stay hidden until the visitor's browser reaches startsOn. */
+export function unexpiredNotices(notices: LibraryNotice[], now = Date.now()): (LibraryNotice & { started: boolean })[] {
+  const today = libraryToday(now);
+  return notices.flatMap(notice => {
+    checkDay(notice.startsOn, `Notice ${notice.id} startsOn`);
+    checkDay(notice.endsOn, `Notice ${notice.id} endsOn`);
+    if (notice.endsOn < notice.startsOn) throw new Error(`Notice ${notice.id} ends before it starts`);
+    return notice.endsOn >= today ? [{ ...notice, started: notice.startsOn <= today }] : [];
+  });
 }

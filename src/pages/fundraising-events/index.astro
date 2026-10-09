@@ -9,7 +9,9 @@ import UpdateFeed from '../../components/UpdateFeed.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import Icon from '../../components/Icon.astro';
 import { contentRepository } from '../../content/repository';
+import { activeCampaign } from '../../content/feeds';
 const [{ library, support }, { campaigns, updates, initiatives }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getPosts()]);
+const campaign = activeCampaign(campaigns);
 const options = [
   { id: 'donate-books', title: 'Donate books & DVDs', note: 'Material donations', image: { key: 'stacks', alt: 'Shelves of books in Cottonwood Community Library.' } },
   { id: 'book-sale', title: 'Shop a book sale', note: 'Every purchase helps', image: initiatives.find(item => item.id === 'book-sale')!.image },
@@ -20,7 +22,7 @@ const options = [
   <PageIntro title="Your gifts keep us open" description="No county funding. No taxpayer funding. Just community." />
   <section class="container grid items-stretch gap-6 pb-10 lg:grid-cols-2" aria-label="Financial donations">
     <ContentImage image={support.image} variant="feature" eager />
-    <GivingPanel library={library} campaigns={campaigns} />
+    <GivingPanel library={library} campaign={campaign} />
   </section>
   <section class="container pb-12" aria-labelledby="other-support-heading">
     <h2 id="other-support-heading" class="section-heading mb-6">Other ways to help</h2>

@@ -6,14 +6,16 @@ import VisitPanel from '../components/VisitPanel.astro';
 import { bookSaleDateLabel } from '../content/editorial';
 import { contentRepository } from '../content/repository';
 import { resolveImage } from '../content/images';
+import { getDonateLink } from '../content/donate';
 const { library, hero, programs } = await contentRepository.getHome();
 const { initiatives } = await contentRepository.getSupport();
+const donate = getDonateLink();
 const bookSale = initiatives.find(item => item.id === 'book-sale')!;
 const actions = [
   { label: 'Upcoming events', href: '/librarynews/', tone: 'action-sun' },
   { label: 'Kids & families', href: '/kids/', tone: 'action-meadow' },
   { label: 'Find a book', href: library.catalogUrl, tone: 'action-gold', event: 'catalog_quick' },
-  { label: 'Donate', href: '/fundraising-events/', tone: 'action-forest', event: 'donate_quick' },
+  { label: 'Donate', href: donate.href, tone: 'action-forest', event: 'donate_quick' },
 ];
 const resources = [
   { label: 'Library catalog', note: 'Browse our collection', href: library.catalogUrl, icon: 'book' as const },
@@ -87,7 +89,7 @@ const resources = [
         <h2 id="independent-heading" class="section-heading mt-4">Keep your<br /><em class="font-normal">library open.</em></h2>
         <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding.<br />Donations help cover day-to-day operations.</p>
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <a href="/fundraising-events/library-fund/" class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />Make a donation</a>
+          <a href={donate.href} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.label}</a>
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
         </div>
       </div>
