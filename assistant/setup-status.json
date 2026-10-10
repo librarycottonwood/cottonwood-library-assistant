@@ -107,7 +107,7 @@
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -125,7 +125,7 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
@@ -216,7 +216,7 @@
       },
       "volunteerExperience": {
         "status": "Installed library skill automatically recognized fresh greetings, website lookup and cloud edit/preview. Fresh ordinary ChatGPT capability question immediately explains Codex handoff.",
-        "instructions": "assistant/CODEX.md; Settings \u2192 Personalization \u2192 Custom instructions \u2192 Codex",
+        "instructions": "assistant/CODEX.md; Settings → Personalization → Custom instructions → Codex",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
         "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved.",
         "shortPromptTest": {
@@ -227,7 +227,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.1.1",
+          "version": "0.1.3",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -235,7 +235,9 @@
           "explicitInvocationRequiredInTests": false,
           "releaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
-          "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/"
+          "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
+          "sourceVersion": "0.2.0",
+          "pendingUpdate": "Source 0.2.0 splits the single skill into library-assistant plus news, events, fundraisers, newsletter, notices, social, scheduling and reports. Update the installed plugin with Plugin Creator, then test each wizard."
         }
       },
       "stableSavedTrial": {

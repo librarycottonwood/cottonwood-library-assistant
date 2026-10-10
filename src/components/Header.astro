@@ -2,9 +2,11 @@
 import { Image } from 'astro:assets';
 import logo from '../../library-files/logos/cottonwood-community-library-logo.jpg';
 import Icon from './Icon.astro';
+import { getDonateLink } from '../content/donate';
 import type { HomeContent } from '../content/types';
 interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
 const { library, navigation } = Astro.props;
+const donate = getDonateLink();
 const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.startsWith(href);
 ---
 <a href="/#visit" aria-label={`Library hours: ${library.hoursSummary}. View hours and directions.`} class="hours-banner group block bg-forest text-paper transition-colors hover:bg-forest-dark focus-visible:outline-offset-[-4px] focus-visible:outline-paper">
@@ -24,7 +26,7 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
     </nav>
     <div class="flex items-center gap-3">
       <a href={library.catalogUrl} data-analytics-event="catalog_header" class="button button-outline hidden px-4 text-sm sm:inline-flex"><Icon name="book" class="size-4" />Catalog</a>
-      <a href={library.donationUrl ?? '/fundraising-events/'} data-analytics-event="donate_header" class="button hidden bg-gold px-4 text-sm text-forest-dark hover:bg-meadow sm:inline-flex"><Icon name="heart" class="size-4" />Donate</a>
+      <a href={donate.href} data-analytics-event="donate_header" class="button hidden bg-gold px-4 text-sm text-forest-dark hover:bg-meadow sm:inline-flex"><Icon name="heart" class="size-4" />Donate</a>
       <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" class="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded border border-line px-3 text-sm xl:hidden" hidden>
         <span class="hidden sm:inline">Menu</span><Icon name="menu" class="menu-icon size-5" /><Icon name="close" class="close-icon hidden size-5" /><span class="sr-only sm:hidden">Menu</span>
       </button>

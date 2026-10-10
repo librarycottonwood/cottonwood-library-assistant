@@ -13,7 +13,7 @@ The obsolete cottonwood-library-assistant saved environment was deleted on Octob
 
 ## Instructions and code
 
-Canonical volunteer guidance: `plugins/cottonwood-library/skills/library-assistant/SKILL.md`. AGENTS.md retains repository authority and points to that guidance; START.md is only its startup entry point. The installed plugin contains a released snapshot, so changing its source does not automatically update ChatGPT. Current installed release and any unpublished changes belong in setup-status.json.
+Canonical volunteer guidance: `plugins/cottonwood-library/skills/` — `library-assistant` (voice, routing, preview/save) plus one skill per topic: news, events, fundraisers, newsletter, notices, social, scheduling, reports. Skills hold the conversation and wizard questions; technical steps live in `assistant/content/*.md` so most changes need no plugin re-release. AGENTS.md retains repository authority and points to that guidance; START.md is only its startup entry point. The installed plugin contains a released snapshot, so changing its source does not automatically update ChatGPT. Current installed release and any unpublished changes belong in setup-status.json.
 
 Content comes from `src/content/`; shared components from `src/components/`. `assistant/WORKFLOW.md` owns editing, review, saving and undo. `assistant/MAINTENANCE.md` owns maintenance and its schedule prompt. `assistant/ANALYTICS-CONNECTOR.md` contains connector setup and test evidence.
 
