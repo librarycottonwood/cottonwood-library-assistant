@@ -38,8 +38,8 @@ function checkDay(value: string | undefined, label: string): void {
   if (!valid) throw new Error(`${label} must be a real date written YYYY-MM-DD, not "${value}"`);
 }
 
-/** Givebutter ids go into a script URL and an element id, so only plain letters, digits, _ and - are allowed (never pasted HTML). */
-function checkWidgetId(value: unknown, label: string) {
+/** Givebutter ids go into a script URL and element attributes, so only plain letters, digits, _ and - are allowed (never pasted HTML). */
+export function checkGivebutterId(value: unknown, label: string) {
   if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(value)) throw new Error(`${label} must be just the id copied from the Givebutter widget code (letters, numbers, _ or -), not "${String(value)}"`);
 }
 
@@ -48,8 +48,9 @@ export function currentCampaigns(campaigns: FundraisingCampaign[], now = Date.no
   const today = libraryToday(now);
   return campaigns.filter(campaign => {
     checkDay(campaign.endsOn, `Campaign ${campaign.id} endsOn`);
-    checkWidgetId(campaign.givebutter?.account, `Campaign ${campaign.id} givebutter.account`);
-    checkWidgetId(campaign.givebutter?.goalBarWidgetId, `Campaign ${campaign.id} givebutter.goalBarWidgetId`);
+    checkGivebutterId(campaign.givebutter?.formWidgetId, `Campaign ${campaign.id} givebutter.formWidgetId`);
+    if (campaign.givebutter?.campaign !== undefined) checkGivebutterId(campaign.givebutter.campaign, `Campaign ${campaign.id} givebutter.campaign`);
+    if (campaign.givebutter?.account !== undefined) checkGivebutterId(campaign.givebutter.account, `Campaign ${campaign.id} givebutter.account`);
     return !campaign.endsOn || campaign.endsOn >= today;
   });
 }
