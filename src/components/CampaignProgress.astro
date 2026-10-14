@@ -1,28 +1,31 @@
 ---
 import { formatDay } from '../content/feeds';
+import { campaignAccount, givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
 import type { FundraisingCampaign } from '../content/types';
 interface Props { campaign: FundraisingCampaign; }
 const { campaign } = Astro.props;
-// Ids are validated in feeds.ts (letters, digits, _ and - only) before any page renders.
-const library = `https://widgets.givebutter.com/latest.umd.cjs?acct=${encodeURIComponent(campaign.givebutter.account)}`;
+// Ids are validated in feeds.ts / donate.ts (letters, digits, _ and - only) before any page renders.
+// SiteLayout already loads Givebutter's script on every page when the Donate buttons open its popup;
+// otherwise this component loads it, so a page never gets two copies.
+const script = sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(campaignAccount(campaign));
 ---
 {/*
-  Givebutter's official Goal Bar widget shows the live total, so nobody copies numbers by hand.
-  Privacy: the widget library is a functional third-party script from Givebutter. It loads only on
-  pages showing an active campaign (this component renders at most once per page), separately from
-  the consent-gated Google Analytics in Analytics.astro. There is no CSP/_headers file restricting
-  scripts; if one is added, allow https://widgets.givebutter.com (script and connect).
+  Givebutter's official Form widget (made with its goal bar turned on) shows the live total and the
+  donation form right here, so nobody copies numbers by hand and donors stay on our site.
+  Privacy: the widget library is a functional third-party script from Givebutter, separate from the
+  consent-gated Google Analytics in Analytics.astro. There is no CSP/_headers file restricting
+  scripts; if one is added, allow https://widgets.givebutter.com (script, frame and connect).
   Without JavaScript, or when the script is blocked (as in offline release checks), the link below
   stays visible; it hides only once the browser has registered the widget element.
 */}
-<div class="campaign-progress mt-4">
-  <givebutter-widget id={campaign.givebutter.goalBarWidgetId}></givebutter-widget>
+<div id="give" class="campaign-progress mt-4 scroll-mt-24">
+  <givebutter-widget id={campaign.givebutter.formWidgetId}></givebutter-widget>
   <p class="campaign-fallback text-sm">
     <a href={campaign.url} class="text-link">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></a>
   </p>
   {campaign.endsOn && <p class="mt-2 text-xs text-muted">Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></p>}
 </div>
-<script is:inline async src={library}></script>
+{script && <script is:inline async src={script}></script>}
 <style>
   givebutter-widget { display: block; }
   .campaign-progress:has(givebutter-widget:defined) .campaign-fallback { display: none; }

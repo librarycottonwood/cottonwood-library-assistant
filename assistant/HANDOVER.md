@@ -23,6 +23,7 @@ Content comes from `src/content/`; shared components from `src/components/`. `as
 2. GitHub identity for the Analytics MCP: the library's existing OAuth app still needs its secret/possible email confirmation. This is separate from the already connected website GitHub plugin. Then install and test the Analytics MCP in the library account, including its weekly cloud access.
 3. Facebook: obtain board-authorized Page access and test the actual reporting connection. Do not request anyone's personal Facebook password.
 4. Domain: Squarespace registration is recovered. Transfer to a library-owned Spaceship account only after preserving DNS/forwarding and reviewing the actual annual price. No transfer, nameserver change or public-domain launch has happened.
+5. Givebutter at launch: register the library's real domain in Givebutter's payment-method settings so Apple Pay appears in the on-site checkout (it is hidden until then; Venmo shows on computers only). Whoever creates the Donate-button and fundraiser widgets needs the Givebutter **Admin** or **Finance** role. Until the board supplies the general donation campaign (`library.givebutter`), Donate buttons stay plain links; see `assistant/content/fundraisers.md`.
 
 Givebutter's official library connection was tested. The account uses cottonlib@shasta.com. Donation destinations still need board review before launch. Keep the board's existing email addresses; domain DNS inspection found no configured domain inbox/MX service.
 

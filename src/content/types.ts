@@ -34,6 +34,9 @@ export interface HomeContent {
     instagramUrl: string;
     /** Null until the library supplies an approved campaign. Never a placeholder URL. */
     donationUrl: string | null;
+    /** The library's general donation campaign in Givebutter. Absent or null until the board supplies it;
+     * when set, every Donate button opens Givebutter's checkout popup on this site. */
+    givebutter?: GivebutterLibrary | null;
   };
   navigation: { label: string; href: string }[];
   hero: {
@@ -83,8 +86,15 @@ export interface FundraisingCampaign {
   description: string;
   /** Approved donation page, such as the library's Givebutter campaign. */
   url: string;
-  /** Ids from Givebutter's Goal Bar widget code (campaign → Sharing → Widgets). The live total comes from Givebutter, never from this file. */
-  givebutter: { account: string; goalBarWidgetId: string };
+  /** Ids from Givebutter (campaign → Sharing → Widgets → Form, goal bar on). The live total comes from Givebutter, never from this file. */
+  givebutter: {
+    /** id="…" of the Form widget's <givebutter-widget> element. Shown inline, goal bar included. */
+    formWidgetId: string;
+    /** The campaign's short code (shown above its name in Givebutter). Optional: when set, every Donate button opens this fundraiser's checkout popup. */
+    campaign?: string;
+    /** acct=… from the widget script, only when it differs from library.givebutter.account. */
+    account?: string;
+  };
   /** YYYY-MM-DD, inclusive (Pacific time). After this day the campaign disappears and Donate buttons revert. */
   endsOn?: string;
   image?: LibraryImage;
@@ -135,4 +145,10 @@ export interface LibraryPost {
   image?: LibraryImage;
   /** Extra photos shown below the post. */
   gallery?: LibraryImage[];
+}
+
+/** From Givebutter: account is the acct=… value in the widget script; campaign is the general donation campaign's short code. */
+export interface GivebutterLibrary {
+  account: string;
+  campaign: string;
 }
