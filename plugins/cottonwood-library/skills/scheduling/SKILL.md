@@ -13,6 +13,11 @@ Follow library-assistant for voice. These are ChatGPT scheduled tasks in this li
 - **The one exception:** the Monday website check may update the active fundraiser's raised amount from Givebutter, and says so in its report.
 - **Never on a schedule:** saving other website changes, publishing social posts, sending emails, changing accounts. Those always wait for a person to say yes. A schedule can prepare a draft and ask.
 
+## Before creating anything
+
+- Check existing tasks first. The Monday "Cottonwood Weekly Website Check" already reports the fundraiser total and website health. If that covers the request, say so and offer to show it instead of making a new task.
+- **Never create, change or pause a task until they say yes** to the plain-words summary below.
+
 ## Schedule wizard
 
 Ask one at a time; skip what they already said.
