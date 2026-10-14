@@ -6,17 +6,19 @@ const { library, support } = homeContent;
  * These are ongoing ways to help, not invented fundraising campaigns.
  *
  * campaigns: only real, approved fundraisers. The first campaign that has not ended becomes
- * the active one: it shows Givebutter's live Goal Bar widget and every Donate button links
- * to its url. givebutter ids come from the campaign's Sharing → Widgets → Goal Bar code:
- * account is the acct=… value in the script src, goalBarWidgetId is the id="…" of the
- * <givebutter-widget> element (see assistant/content/fundraisers.md).
+ * the active one: it shows Givebutter's inline Form widget (goal bar on) and every Donate button
+ * gives to it. givebutter ids come from the campaign's Sharing → Widgets → Form code:
+ * formWidgetId is the id="…" of the <givebutter-widget> element. campaign (optional) is the
+ * campaign's short code; with it, Donate buttons open this fundraiser's checkout popup, without it
+ * they link to the on-site form. account (optional) is the acct=… value, only when it differs from
+ * library.givebutter.account in seed.ts (see assistant/content/fundraisers.md).
  * endsOn is optional (YYYY-MM-DD, Pacific time, inclusive); after it, or once the entry is removed, Donate buttons revert on their own.
  * The image key must exist in images.ts. Example entry (copy inside campaigns: [ ]):
  *   {
  *     id: 'roof-2026', title: 'New roof fund',
  *     description: 'Help replace the library roof before winter rains.',
  *     url: 'https://givebutter.com/example-campaign',
- *     givebutter: { account: 'AbC123xYz', goalBarWidgetId: 'gb4Xy7Lm' },
+ *     givebutter: { formWidgetId: 'gb4Xy7Lm', campaign: 'R4T5Y6' },
  *     endsOn: '2026-12-31', // optional
  *     image: { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }, // optional
  *   },

@@ -237,8 +237,8 @@
           "releaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.2",
-          "pendingUpdate": "Source 0.2.0 splits the single skill into library-assistant plus news, events, fundraisers, newsletter, notices, social, scheduling and reports. Update the installed plugin with Plugin Creator, then test each wizard."
+          "sourceVersion": "0.2.3",
+          "pendingUpdate": "Source 0.2.0 splits the single skill into library-assistant plus news, events, fundraisers, newsletter, notices, social, scheduling and reports. Source 0.2.3 adds the one-time Givebutter Donate-button setup (checkout popup) and switches fundraisers to the Form widget with goal bar. Update the installed plugin with Plugin Creator, then test each wizard."
         }
       },
       "stableSavedTrial": {

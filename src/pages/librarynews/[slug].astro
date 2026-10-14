@@ -7,7 +7,7 @@ import Disclosure from '../../components/Disclosure.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
 import PhotoGallery from '../../components/PhotoGallery.astro';
 import { postDate } from '../../content/feeds';
-import { getDonateLink } from '../../content/donate';
+import { checkoutAttributes, getDonateLink } from '../../content/donate';
 import { contentRepository } from '../../content/repository';
 import type { Program, LibraryPost } from '../../content/types';
 export async function getStaticPaths() {
@@ -43,6 +43,6 @@ const donate = getDonateLink();
   <PageIntro title={post.title} eyebrow={postDate(post)} back={{ href: '/librarynews/#news', label: 'Library news & stories' }} />
   <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2"><div><ContentImage image={post.image ?? { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager />{post.gallery && <PhotoGallery images={post.gallery} />}</div><div>{post.paragraphs.map(paragraph => <p class="mb-5 text-lg text-muted">{paragraph}</p>)}
     {post.externalUrl && <a href={post.externalUrl} class="text-link mt-5">Read at {post.sourceLabel ?? 'the source'}<Icon name="external" class="size-4" /></a>}
-    <a href={donate.href} class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
+    <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
   </div></article>
 </SiteLayout>}

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import CampaignProgress from './CampaignProgress.astro';
-import { getDonateLink } from '../content/donate';
+import { checkoutAttributes, getDonateLink } from '../content/donate';
 import { resolveImage } from '../content/images';
 import type { HomeContent, FundraisingCampaign } from '../content/types';
 interface Props { library: HomeContent['library']; campaign?: FundraisingCampaign; }
@@ -18,11 +18,11 @@ const donate = getDonateLink();
     <h3 class="mt-2 text-lg font-semibold">{campaign.title}</h3>
     <p class="mt-2 text-base text-muted">{campaign.description}</p>
     <CampaignProgress campaign={campaign} />
-    <a href={donate.href} class="button button-primary mt-5 self-start">{donate.label}<Icon name="external" class="size-4" /></a>
+    <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-5 self-start">{donate.label}{donate.external && <Icon name="external" class="size-4" />}</a>
   </> : <>
     <p class="mt-3 text-base text-muted">Help keep books, programs and doors open.</p>
     {/* The fallback donate link is the library-fund page, which itself asks visitors to email; email directly from here. */}
-    <a href={donate.source === 'fallback' ? `mailto:${library.email}?subject=Supporting%20the%20library` : donate.href} class="button button-primary mt-5 self-start">{donate.source === 'fallback' ? 'Email us to give' : donate.label}</a>
+    <a href={donate.source === 'fallback' ? `mailto:${library.email}?subject=Supporting%20the%20library` : donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-5 self-start">{donate.source === 'fallback' ? 'Email us to give' : donate.label}</a>
   </>}
   <a href={library.phoneHref} class="text-link mt-3 self-start">Call {library.phone}</a>
 </aside>
