@@ -36,6 +36,9 @@ try {
       // Exercise the real address/directions fallback in offline cloud captures.
       // Live map rendering is checked separately with the provider available.
       if (url.hostname === 'tiles.openfreemap.org') return route.fulfill({ contentType: 'application/json', body: '{}' });
+      // Same for an active fundraiser: an empty Givebutter library leaves the widget undefined,
+      // so the "See progress and give on Givebutter" fallback link is what gets checked.
+      if (url.hostname === 'widgets.givebutter.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
       return url.origin === base ? route.continue() : route.abort();
     });
     for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {

@@ -26,7 +26,7 @@ Write each version yourself:
 - Instagram: a lead line, a few short lines, 3–5 local hashtags (#CottonwoodCA #ShastaCounty #CommunityLibrary). Links aren't clickable there; say "link in bio" only if they confirm it's set.
 - LinkedIn: a bit more formal; only if they ask.
 
-Get the facts from the saved website (the event, post or fundraiser), not from memory: date, weekday, time, place, cost or entry rules, and the link to its page. Never fill in details from other conversations. If something isn't on the website, ask.
+Get the facts from the saved website, not from memory or planning documents. Check the upcoming events and news at https://trial.cottonwood-library-trial-preview.pages.dev/librarynews/ first (or `src/content/editorial.ts` in the repository). Use: date, weekday, time, place, cost or entry rules, and the link to its page. Never fill in details from other conversations. If something isn't on the website, ask.
 
 Show the drafts and ask "Look good?" before creating them in Buffer.
 

@@ -14,6 +14,7 @@ The banner shows across the top of every page between a start and end date, then
 Ask one at a time; skip what they already said.
 
 1. "What should it say?" — then tighten it to one short sentence ("Closed Thursday, Nov 26 for Thanksgiving. Happy holidays!").
+   Always confirm the exact days, even for a holiday ("Just Thursday the 26th, or Friday too?"). Never assume.
 2. "When should it start showing?" — default: now.
 3. "When should it come down?" — default: the end of the closure day. Repeat dates back with the weekday.
 4. "Should it link anywhere?" — optional, e.g. a news post.

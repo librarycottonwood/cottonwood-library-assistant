@@ -38,13 +38,18 @@ function checkDay(value: string | undefined, label: string): void {
   if (!valid) throw new Error(`${label} must be a real date written YYYY-MM-DD, not "${value}"`);
 }
 
+/** Givebutter ids go into a script URL and an element id, so only plain letters, digits, _ and - are allowed (never pasted HTML). */
+function checkWidgetId(value: unknown, label: string) {
+  if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(value)) throw new Error(`${label} must be just the id copied from the Givebutter widget code (letters, numbers, _ or -), not "${String(value)}"`);
+}
+
 /** Campaigns still running today, in listed order. The first one is the active campaign. */
 export function currentCampaigns(campaigns: FundraisingCampaign[], now = Date.now()): FundraisingCampaign[] {
   const today = libraryToday(now);
   return campaigns.filter(campaign => {
-    checkDay(campaign.updatedAt, `Campaign ${campaign.id} updatedAt`);
     checkDay(campaign.endsOn, `Campaign ${campaign.id} endsOn`);
-    if (!(campaign.goal > 0) || !(campaign.raised >= 0)) throw new Error(`Campaign ${campaign.id} needs a goal above 0 and a raised amount of 0 or more`);
+    checkWidgetId(campaign.givebutter?.account, `Campaign ${campaign.id} givebutter.account`);
+    checkWidgetId(campaign.givebutter?.goalBarWidgetId, `Campaign ${campaign.id} givebutter.goalBarWidgetId`);
     return !campaign.endsOn || campaign.endsOn >= today;
   });
 }
