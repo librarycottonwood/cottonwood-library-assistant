@@ -83,12 +83,8 @@ export interface FundraisingCampaign {
   description: string;
   /** Approved donation page, such as the library's Givebutter campaign. */
   url: string;
-  /** Whole dollars, copied from the donation page. */
-  raised: number;
-  goal: number;
-  currency: 'USD';
-  /** YYYY-MM-DD the raised amount was last copied. */
-  updatedAt: string;
+  /** Ids from Givebutter's Goal Bar widget code (campaign → Sharing → Widgets). The live total comes from Givebutter, never from this file. */
+  givebutter: { account: string; goalBarWidgetId: string };
   /** YYYY-MM-DD, inclusive (Pacific time). After this day the campaign disappears and Donate buttons revert. */
   endsOn?: string;
   image?: LibraryImage;

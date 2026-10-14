@@ -3,15 +3,27 @@ import { formatDay } from '../content/feeds';
 import type { FundraisingCampaign } from '../content/types';
 interface Props { campaign: FundraisingCampaign; }
 const { campaign } = Astro.props;
-const money = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: campaign.currency, maximumFractionDigits: 0 }).format(value);
-const summary = `${money(campaign.raised)} raised of ${money(campaign.goal)} goal`;
-const percent = Math.min(100, Math.round((campaign.raised / campaign.goal) * 100));
-const labelId = `campaign-${campaign.id}-progress`;
+// Ids are validated in feeds.ts (letters, digits, _ and - only) before any page renders.
+const library = `https://widgets.givebutter.com/latest.umd.cjs?acct=${encodeURIComponent(campaign.givebutter.account)}&p=other`;
 ---
-<div class="mt-4">
-  <p id={labelId} class="text-sm"><strong>{money(campaign.raised)}</strong> raised of {money(campaign.goal)} goal</p>
-  <div role="progressbar" aria-labelledby={labelId} aria-valuemin="0" aria-valuemax={campaign.goal} aria-valuenow={Math.min(campaign.raised, campaign.goal)} aria-valuetext={summary} class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-paper ring-1 ring-line">
-    <div class="h-full rounded-full bg-forest" style={`width: ${percent}%`} />
-  </div>
-  <p class="mt-2 text-xs text-muted">Updated <time datetime={campaign.updatedAt}>{formatDay(campaign.updatedAt)}</time>{campaign.endsOn && <> · Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></>}</p>
+{/*
+  Givebutter's official Goal Bar widget shows the live total, so nobody copies numbers by hand.
+  Privacy: the widget library is a functional third-party script from Givebutter. It loads only on
+  pages showing an active campaign (this component renders at most once per page), separately from
+  the consent-gated Google Analytics in Analytics.astro. There is no CSP/_headers file restricting
+  scripts; if one is added, allow https://widgets.givebutter.com (script and connect).
+  Without JavaScript, or when the script is blocked (as in offline release checks), the link below
+  stays visible; it hides only once the browser has registered the widget element.
+*/}
+<div class="campaign-progress mt-4">
+  <givebutter-widget id={campaign.givebutter.goalBarWidgetId}></givebutter-widget>
+  <p class="campaign-fallback text-sm">
+    <a href={campaign.url} class="text-link">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></a>
+  </p>
+  {campaign.endsOn && <p class="mt-2 text-xs text-muted">Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></p>}
 </div>
+<script is:inline async src={library}></script>
+<style>
+  givebutter-widget { display: block; }
+  .campaign-progress:has(givebutter-widget:defined) .campaign-fallback { display: none; }
+</style>

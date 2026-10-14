@@ -10,8 +10,7 @@ Follow library-assistant for voice. These are ChatGPT scheduled tasks in this li
 ## What a scheduled task may do
 
 - **Read and report:** visitor numbers, Givebutter totals, upcoming events, reminders, draft ideas for posts.
-- **The one exception:** the Monday website check may update the active fundraiser's raised amount from Givebutter, and says so in its report.
-- **Never on a schedule:** saving other website changes, publishing social posts, sending emails, changing accounts. Those always wait for a person to say yes. A schedule can prepare a draft and ask.
+- **Never on a schedule:** saving website changes (the fundraiser bar on the site is live from Givebutter, so nothing needs updating), publishing social posts, sending emails, changing accounts. Those always wait for a person to say yes. A schedule can prepare a draft and ask.
 
 ## Before creating anything
 
@@ -32,4 +31,4 @@ Create it with the scheduling tool if this chat has one. If not, walk them throu
 
 ## Change or stop
 
-Find the task by name, confirm, then change or pause it the same way. Don't delete the Monday "Cottonwood Weekly Website Check" — pausing it stops the fundraiser updates and website health reports. The current instructions for it live in the repository's `assistant/tasks/weekly-maintenance.md`.
+Find the task by name, confirm, then change or pause it the same way. Don't delete the Monday "Cottonwood Weekly Website Check" — pausing it stops the weekly fundraiser total and website health reports. Its ChatGPT prompt is a short pointer that reads the repository's `assistant/tasks/weekly-maintenance.md` on each run, so changes go in that file, not in ChatGPT.

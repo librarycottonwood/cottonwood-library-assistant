@@ -5,16 +5,18 @@ const { library, support } = homeContent;
 /** Source: research/site-inventory.md, Get Involved and About Us.
  * These are ongoing ways to help, not invented fundraising campaigns.
  *
- * campaigns: only real, approved fundraisers with figures copied from the donation page.
- * The first campaign that has not ended becomes the active one: it shows a progress bar
- * and every Donate button links to its url. endsOn is optional (YYYY-MM-DD, Pacific time,
- * inclusive); after it, or once the entry is removed, Donate buttons revert on their own.
+ * campaigns: only real, approved fundraisers. The first campaign that has not ended becomes
+ * the active one: it shows Givebutter's live Goal Bar widget and every Donate button links
+ * to its url. givebutter ids come from the campaign's Sharing → Widgets → Goal Bar code:
+ * account is the acct=… value in the script src, goalBarWidgetId is the id="…" of the
+ * <givebutter-widget> element (see assistant/content/fundraisers.md).
+ * endsOn is optional (YYYY-MM-DD, Pacific time, inclusive); after it, or once the entry is removed, Donate buttons revert on their own.
  * The image key must exist in images.ts. Example entry (copy inside campaigns: [ ]):
  *   {
  *     id: 'roof-2026', title: 'New roof fund',
  *     description: 'Help replace the library roof before winter rains.',
  *     url: 'https://givebutter.com/example-campaign',
- *     raised: 4250, goal: 12000, currency: 'USD', updatedAt: '2026-10-09',
+ *     givebutter: { account: 'AbC123xYz', goalBarWidgetId: 'gb4Xy7Lm' },
  *     endsOn: '2026-12-31', // optional
  *     image: { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }, // optional
  *   },
