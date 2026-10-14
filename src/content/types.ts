@@ -44,7 +44,7 @@ export interface HomeContent {
   };
   programs: Program[];
   services: { id: string; title: string; description: string; icon: 'book' | 'computer' | 'printer' }[];
-  borrowing: { question: string; answer: string }[];
+  borrowing: { question: string; answer: string; image?: LibraryImage }[];
   newsletter: {
     issue: string;
     title: string;

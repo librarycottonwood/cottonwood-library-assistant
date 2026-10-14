@@ -11,7 +11,7 @@ const storyTime = programs.find(program => program.id === 'story-time')!;
 <SiteLayout title="Kids & families | Cottonwood Community Library">
   <PageIntro title="Kids & families" />
   <section class="container grid items-center gap-7 pb-10 lg:grid-cols-2" aria-labelledby="storytime-heading">
-    <div class="overflow-hidden rounded-[4px]"><Image width={1100} quality={70} src={resolveImage(storyTime.image.key)} alt={storyTime.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" class="aspect-[1.5] w-full object-cover" loading="eager" /></div>
+    <div class="overflow-hidden rounded-[4px]"><Image width={1100} quality={70} src={resolveImage('craftRoom')} alt="The library’s craft room, with an “Adventure Awaits” mural of children in capes, a row of hanging craft aprons and wooden chairs." widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" class="aspect-[1.5] w-full object-cover" loading="eager" /></div>
     <div><h2 id="storytime-heading" class="section-heading">Story Time</h2><p class="mt-3 font-semibold">{storyTime.schedule}</p><p class="mt-3 text-base text-muted">Stories, songs, crafts & a snack.</p><a href="/librarynews/story-time/" class="button button-primary mt-5">Come to Story Time</a></div>
   </section>
   <section class="container grid gap-4 pb-12 sm:grid-cols-2" aria-label="More for young readers">

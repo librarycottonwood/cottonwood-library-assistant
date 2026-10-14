@@ -45,7 +45,7 @@ export const homeContent = {
       schedule: 'Wednesdays · 11:30 a.m.',
       description: 'Stories, songs, a simple craft, and a healthy snack. A little midweek magic for your little ones.',
       details: 'Stories, songs, crafts and a snack for preschoolers during the school year; older children are welcome in summer. First 5 Shasta helps provide take-home books.',
-      image: { key: 'storytime', alt: 'The library’s colorful Story Time corner, with an alphabet rug and shelves of picture books.' },
+      image: { key: 'storytime', alt: 'The Story Time corner set up with rows of small wooden chairs on an alphabet rug, under a sky-blue draped ceiling with puffy clouds.' },
     },
     {
       audience: 'adults', id: 'main-street-readers', title: 'Main Street Readers',
@@ -69,7 +69,7 @@ export const homeContent = {
   ],
   borrowing: [
     { question: 'How do I borrow books?', answer: 'If you’re 18 or older, bring photo ID and proof of residence to the front desk. Family accounts let other household members, including minors, borrow under the primary account holder’s name. We don’t issue physical library cards—just tell a volunteer your account name. New patrons may borrow 3 items, increasing to 10 after the first successful return.' },
-    { question: 'Can I renew my items?', answer: 'Items can be renewed twice, in person or by phone. Late fees are 10¢ per day, capped at the item’s replacement cost. Fees are payable in cash before the next checkout. Use the outdoor book drop to return items when we’re closed.' },
+    { question: 'Can I renew my items?', answer: 'Items can be renewed twice, in person or by phone. Late fees are 10¢ per day, capped at the item’s replacement cost. Fees are payable in cash before the next checkout. Use the outdoor book drop to return items when we’re closed.', image: { key: 'bookDrop', alt: 'The library’s outdoor book drop, hand-painted with “BOOK DROP” and a green caterpillar.' } },
     { question: 'How do I use the computers and printer?', answer: 'Sign in at the front desk before using a computer. First-time users need to read and agree to the computer-use policy. Black-and-white printing is 20¢ per page or 40¢ for a double-sided page; black-and-white copies are 20¢ per page and color copies are $1. The Wi-Fi password is on the placard at the front desk.' },
   ],
   newsletter: {
