@@ -44,7 +44,7 @@ givebutter: { account: 'AbC123xYz', campaign: 'Q1W2E3' } as HomeContent['library
 
 While it is `null` (today), every Donate button is a plain link exactly as before.
 
-When set, every Donate button (header, home quick tile, home "Give to the library", news posts, the Support page panel and the library-fund page) keeps its look and analytics but gets `data-gb-account` and `data-gb-campaign`. That is Givebutter's documented "make any website element into a Widget" option (help article above, section "Advanced"): Givebutter's script catches the click and opens the campaign's checkout popup on our site. `checkoutAttributes()` in `src/content/donate.ts` adds them. The `href` stays a real page (`library.donationUrl`, else `https://givebutter.com/<campaign>`), so people without JavaScript, or with Givebutter blocked, still reach the donation page.
+When set, every Donate button (header, home quick tile, home "Give to the library", news posts and the Donate page, `/fundraising-events/`) keeps its look and analytics but gets `data-gb-account` and `data-gb-campaign`. That is Givebutter's documented "make any website element into a Widget" option (help article above, section "Advanced"): Givebutter's script catches the click and opens the campaign's checkout popup on our site. `checkoutAttributes()` in `src/content/donate.ts` adds them. The `href` stays a real page (`library.donationUrl`, else `https://givebutter.com/<campaign>`), so people without JavaScript, or with Givebutter blocked, still reach the donation page.
 
 The Givebutter script then loads once on every page (`src/layouts/SiteLayout.astro`). The privacy page already says so.
 
@@ -79,11 +79,11 @@ If `account` is missing from both the campaign and `library.givebutter`, the bui
 
 ## How it behaves
 
-- The **first campaign that hasn't ended** is the active one. The Support page panel and the library-fund page show its inline Form widget (goal bar inside) at `#give`, with a "See progress and give on Givebutter" link to `url` until the widget loads.
+- The **first campaign that hasn't ended** is the active one. The Donate page (`/fundraising-events/`) shows its inline Form widget (goal bar inside) at `#give`, with a "See progress and give on Givebutter" link to `url` until the widget loads.
 - Donate buttons while it runs (`getDonateLink()`):
   - with `givebutter.campaign` set → they open **that fundraiser's** checkout popup; `href` = `url`.
-  - without it → they link to the on-site form, `/fundraising-events/library-fund/#give`.
-- No active fundraiser → `library.givebutter` popup if set; else `library.donationUrl`; else the library-fund page.
+  - without it → they link to the on-site form, `/fundraising-events/#give`.
+- No active fundraiser → `library.givebutter` popup if set; else `library.donationUrl`; else the Donate page, which asks people to call or email until online giving is set up. (`/fundraising-events/library-fund/` is an old address that redirects there.)
 - Script: one tag per page. Site-wide when the Donate buttons open a popup; otherwise only on pages showing a fundraiser form (`CampaignProgress.astro`).
 - `pnpm assistant:capture` blocks Givebutter, so captures show the fallback links; that is expected.
 - `endsOn` is applied when the site is built. To be sure the buttons switch back on time, remove the entry when it ends (the weekly task reports ended campaigns).

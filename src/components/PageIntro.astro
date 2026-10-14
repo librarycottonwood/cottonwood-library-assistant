@@ -1,11 +1,12 @@
 ---
-interface Props { title: string; eyebrow?: string; description?: string; back?: { label: string; href: string }; }
-const { title, eyebrow, description, back } = Astro.props;
+// Page title block. width: 'wide' lines up with .container sections below; 'prose' with .container-prose pages.
+interface Props { title: string; description?: string; meta?: string; back?: { label: string; href: string }; width?: 'wide' | 'prose'; }
+const { title, description, meta, back, width = 'wide' } = Astro.props;
 ---
-<div class="container pt-6 pb-8 sm:pt-8 sm:pb-10">
-  <nav aria-label="Breadcrumb" class="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted"><a href="/" class="hover:underline">Home</a>{back && <><span aria-hidden="true">/</span><a href={back.href} class="hover:underline">{back.label}</a></>}</nav>
-  {eyebrow && <p class="eyebrow mb-3 text-muted">{eyebrow}</p>}
-  <h1 class="page-heading">{title}</h1>
-  {description && <p class="mt-5 max-w-2xl text-lg text-muted">{description}</p>}
+<div class:list={[width === 'prose' ? 'container-prose' : 'container', 'pt-8 pb-12 sm:pt-10 sm:pb-16']}>
+  <nav aria-label="Breadcrumb" class="mb-8 flex flex-wrap items-center gap-2 text-sm text-muted"><a href="/" class="hover:underline">Home</a>{back && <><span aria-hidden="true">/</span><a href={back.href} class="hover:underline">{back.label}</a></>}</nav>
+  <h1 class="page-heading max-w-[18ch]">{title}</h1>
+  {meta && <p class="mt-4 text-base text-muted">{meta}</p>}
+  {description && <p class="lede measure mt-5">{description}</p>}
   <slot />
 </div>

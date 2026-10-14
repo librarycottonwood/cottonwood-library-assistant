@@ -10,7 +10,7 @@ const contained = image.fit === 'contain';
   src={resolveImage(image.key)} alt={image.alt}
   width={variant === 'card' ? 800 : 1100}
   widths={variant === 'card' ? [360, 600, 800] : [500, 800, 1100]}
-  sizes={variant === 'card' ? '(max-width: 767px) 100vw, 33vw' : '(max-width: 1023px) 100vw, 60vw'}
+  sizes={variant === 'card' ? '(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 380px' : '(max-width: 1023px) 100vw, 600px'}
   loading={eager ? 'eager' : 'lazy'}
   class:list={[
     'w-full',

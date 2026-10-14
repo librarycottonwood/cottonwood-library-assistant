@@ -4,12 +4,10 @@ import type { LibraryImage } from '../content/types';
 interface Props { title: string; href: string; image: LibraryImage; note?: string; }
 const { title, href, image, note } = Astro.props;
 ---
-<article>
-  <a href={href} class="feature-card group">
-    <div class="feature-card-image"><ContentImage image={image} /></div>
-    <div class="min-w-0 px-4 py-4 sm:px-5 sm:py-5">
-      <h3 class="card-heading group-hover:underline">{title}</h3>
-      {note && <p class="mt-2 text-sm font-medium text-muted">{note}</p>}
-    </div>
-  </a>
-</article>
+<a href={href} class="card">
+  <div class="card-media"><ContentImage image={image} /></div>
+  <div class="card-body">
+    <h3 class="card-title">{title}</h3>
+    {note && <p class="card-text">{note}</p>}
+  </div>
+</a>

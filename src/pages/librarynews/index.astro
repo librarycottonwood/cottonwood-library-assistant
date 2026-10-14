@@ -1,37 +1,38 @@
 ---
-import { Image } from 'astro:assets';
-import { resolveImage } from '../../content/images';
-import { bookSaleDateLabel } from '../../content/editorial';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import ProgramCard from '../../components/ProgramCard.astro';
-import EventList from '../../components/EventList.astro';
-import EventCalendar from '../../components/EventCalendar.astro';
+import EventAgenda from '../../components/EventAgenda.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { contentRepository } from '../../content/repository';
-const [{ programs }, events, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+const [{ programs, library }, events, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+// "Wednesdays · 11:30 a.m." → day and time, so each regular program states both plainly.
+const when = (schedule: string) => { const [day, time] = schedule.split(' · '); return { day, time }; };
 ---
-<SiteLayout title="Upcoming events & news | Cottonwood Community Library">
-  <PageIntro title="Upcoming events" />
-  <section class="container pb-10" aria-labelledby="events-heading">
-    <h2 id="events-heading" class="sr-only">Upcoming dated events</h2>
-    <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.15fr]">
-      <EventCalendar events={events} />
-      <div>
-        <a href="/fundraising-events/book-sale/" class="group block">
-          <Image width={1100} quality={70} src={resolveImage('bookSale')} alt="Shelves of books waiting for their next reader at the library book sale." widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 55vw" loading="eager" class="aspect-[2] w-full rounded-[4px] object-cover" />
-          <p class="mt-4 text-sm font-semibold text-muted">{bookSaleDateLabel}</p>
-          <h2 class="card-heading mt-1 group-hover:underline">Find a treasure. Support your library.</h2>
-        </a>
-        <EventList events={events} />
+<SiteLayout title="Events & news | Cottonwood Community Library">
+  <PageIntro title="Events & news" description={`Everything happens at the library, ${library.address}, unless noted.`} width="prose" />
+  <section class="container-prose section pt-0" aria-labelledby="events-heading">
+    <h2 id="events-heading" class="section-heading section-header">Upcoming events</h2>
+    <EventAgenda events={events} />
+  </section>
+  <section id="regular" tabindex="-1" class="section section-tint" aria-labelledby="regular-heading">
+    <div class="container-prose">
+      <div class="section-header">
+        <h2 id="regular-heading" class="section-heading">Regular programs</h2>
+        <p class="lede">The same day and time each week or month.</p>
       </div>
+      <ul class="m-0 list-none border-b border-line p-0">
+        {programs.map(program => { const { day, time } = when(program.schedule); return <li class="agenda-day">
+          <p class="agenda-date"><span class="font-semibold">{day}</span>{time && <span class="mt-1 block font-sans text-base tracking-normal">{time}</span>}</p>
+          <div>
+            <h3 class="text-xl font-semibold leading-snug"><a href={`/librarynews/${program.id}/`} class="underline decoration-1 underline-offset-4 hover:decoration-2">{program.title}</a></h3>
+            <p class="mt-1 text-base text-muted">{program.description}</p>
+          </div>
+        </li>; })}
+      </ul>
     </div>
   </section>
-  <section class="container pb-12" aria-labelledby="regular-heading">
-    <h2 id="regular-heading" class="section-heading mb-6">Regular programs</h2>
-    <div class="grid gap-5 sm:grid-cols-3">{programs.map(program => <ProgramCard program={program} />)}</div>
-  </section>
-  <section id="news" tabindex="-1" class="bg-meadow/50 py-10 sm:py-12" aria-labelledby="news-heading">
-    <div class="container-narrow"><h2 id="news-heading" class="section-heading mb-6">News & stories</h2><PostFeed posts={posts} /></div>
+  <section id="news" tabindex="-1" class="container-prose section" aria-labelledby="news-heading">
+    <h2 id="news-heading" class="section-heading section-header">News</h2>
+    <PostFeed posts={posts} />
   </section>
 </SiteLayout>

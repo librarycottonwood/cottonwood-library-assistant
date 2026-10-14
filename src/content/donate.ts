@@ -12,7 +12,7 @@ export interface DonateLink {
   href: string;
   label: string;
   campaignTitle?: string;
-  /** campaign: active fundraiser · library: library.givebutter / library.donationUrl · fallback: the library-fund page. */
+  /** campaign: active fundraiser · library: library.givebutter / library.donationUrl · fallback: the Donate page (call or email until online giving is set up). */
   source: 'campaign' | 'library' | 'fallback';
   /** Present when the button opens Givebutter's checkout popup on this site. */
   checkout?: GivebutterCheckout;
@@ -37,7 +37,8 @@ export function campaignAccount(campaign: FundraisingCampaign): string {
 }
 
 /** On-site spot where the active fundraiser's donation form is shown. */
-export const FUNDRAISER_FORM_HREF = '/fundraising-events/library-fund/#give';
+export const DONATE_PAGE_HREF = '/fundraising-events/';
+export const FUNDRAISER_FORM_HREF = `${DONATE_PAGE_HREF}#give`;
 
 /** The one place every Donate button gets its destination. Ending or removing a
  * campaign in support.ts reverts every button at the next build. With nothing
@@ -57,7 +58,7 @@ export function getDonateLink(now = Date.now()): DonateLink {
   const { donationUrl } = homeContent.library;
   if (library) return { href: donationUrl ?? `https://givebutter.com/${library.campaign}`, label: 'Give to the library', source: 'library', checkout: { account: library.account, campaign: library.campaign }, external: false };
   if (donationUrl) return { href: donationUrl, label: 'Give to the library', source: 'library', external: true };
-  return { href: '/fundraising-events/library-fund/', label: 'Make a donation', source: 'fallback', external: false };
+  return { href: DONATE_PAGE_HREF, label: 'Make a donation', source: 'fallback', external: false };
 }
 
 /** Attributes that turn one of our own Donate links into Givebutter's checkout popup. Spread onto the <a>. */

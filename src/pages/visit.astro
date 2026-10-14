@@ -8,26 +8,42 @@ import LibraryMap from '../components/LibraryMap.astro';
 import { contentRepository } from '../content/repository';
 const { library, borrowing } = await contentRepository.getHome();
 const services = [
-  { id: 'borrowing', title: 'Books & DVDs', note: 'Browse our catalog', icon: 'book' as const, href: library.catalogUrl, image: { key: 'newReads', alt: 'A table display of new chapter books for junior readers in front of library shelves.' } },
-  { id: 'computers', title: 'Computers & Wi-Fi', note: 'Ask at the front desk', icon: 'computer' as const, image: { key: 'computerLab', alt: 'A row of public computer stations along a long counter, with a round table and a large tree mural at the back of the room.' } },
-  { id: 'printing', title: 'Print & copy', note: 'Black & white: 20¢ · Color copies: $1', icon: 'printer' as const, image: { key: 'copyRoom', alt: 'The library’s copier near a row of windows, with a round table, a tree mural and a wall plaque nearby.' } },
+  { id: 'borrowing', title: 'Books & DVDs', note: 'New patrons borrow 3 items, then up to 10.', action: { label: 'Browse the catalog', href: library.catalogUrl, external: true }, image: { key: 'newReads', alt: 'A table display of new chapter books for junior readers in front of library shelves.' } },
+  { id: 'computers', title: 'Computers & Wi-Fi', note: 'Sign in at the front desk to use a computer.', action: { label: 'How it works', href: '#questions' }, image: { key: 'computerLab', alt: 'A row of public computer stations along a long counter, with a round table and a large tree mural at the back of the room.' } },
+  { id: 'printing', title: 'Print & copy', note: 'Black & white: 20¢ a page. Color copies: $1.', action: { label: 'Printing prices', href: '#questions' }, image: { key: 'copyRoom', alt: 'The library’s copier near a row of windows, with a round table, a tree mural and a wall plaque nearby.' } },
 ];
 ---
 <SiteLayout title="Visit & services | Cottonwood Community Library">
-  <PageIntro title="Visit & services" />
-  <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container grid items-start gap-8 pb-10 lg:grid-cols-2">
-    <ContentImage image={{ key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California, Est. 1882” sign, with rows of bookshelves beyond.' }} variant="feature" eager />
-    <div class="rounded-[4px] bg-meadow p-6 sm:p-8">
-      <h2 id="visit-heading" class="card-heading">{library.address}</h2>
-      <p class="mt-1 text-base text-muted">{library.locality}</p>
-      <dl class="mt-5">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-sm"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
-      <a href={library.directionsUrl} class="button button-primary mt-4"><Icon name="pin" class="size-4" />Get directions</a>
+  <PageIntro title="Visit & services" description="Hours, directions and what you can do at the library." />
+  <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container section pt-0">
+    <div class="split">
+      <ContentImage image={{ key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California, Est. 1882” sign, with rows of bookshelves beyond.' }} variant="feature" eager />
+      <div class="panel">
+        <h2 id="visit-heading" class="card-heading">{library.address}</h2>
+        <p class="mt-1 text-base text-muted">{library.locality}</p>
+        <dl class="mt-6">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-base"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-5"><Icon name="pin" class="size-4" />Get directions</a>
+      </div>
     </div>
   </section>
-  <section id="services" tabindex="-1" aria-labelledby="services-heading" class="container pb-12">
-    <h2 id="services-heading" class="section-heading mb-6">Services and resources</h2>
-    <div class="grid gap-4 sm:grid-cols-3">{services.map(service => <div id={service.id} tabindex="-1" class="overflow-hidden rounded-[4px] border border-line p-5"><div class="-mx-5 -mt-5 mb-4"><ContentImage image={service.image} /></div><Icon name={service.icon} class="mb-4 size-7" /><h3 class="text-lg font-semibold">{service.title}</h3>{service.href ? <a href={service.href} class="text-link mt-1">{service.note}</a> : <p class="mt-2 text-sm text-muted">{service.note}</p>}</div>)}</div>
-    <div class="mt-7">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p>{item.image && <div class="mt-4 max-w-sm overflow-hidden rounded-[4px]"><ContentImage image={item.image} /></div>}</Disclosure>)}</div>
+  <section id="services" tabindex="-1" aria-labelledby="services-heading" class="section section-tint">
+    <div class="container">
+      <h2 id="services-heading" class="section-heading section-header">Services</h2>
+      <div class="card-grid">{services.map(service => <div id={service.id} tabindex="-1" class="card">
+        <div class="card-media"><ContentImage image={service.image} /></div>
+        <div class="card-body">
+          <h3 class="card-title">{service.title}</h3>
+          <p class="card-text">{service.note}</p>
+          <div class="card-action"><a href={service.action.href} class="text-link">{service.action.label}<Icon name={service.action.external ? 'external' : 'arrow'} class="size-4" /></a></div>
+        </div>
+      </div>)}</div>
+    </div>
   </section>
-<section class="container pb-12" aria-label="Library location"><LibraryMap /></section>
+  <section id="questions" tabindex="-1" aria-labelledby="questions-heading" class="container section">
+    <div class="measure">
+      <h2 id="questions-heading" class="section-heading section-header">Borrowing questions</h2>
+      <div class="border-t border-line">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p>{item.image && <div class="mt-5 max-w-sm overflow-hidden rounded-[4px]"><ContentImage image={item.image} /></div>}</Disclosure>)}</div>
+    </div>
+  </section>
+  <section class="container section pt-0" aria-label="Library location"><LibraryMap /></section>
 </SiteLayout>

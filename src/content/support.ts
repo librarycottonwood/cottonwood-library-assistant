@@ -34,18 +34,10 @@ export const supportContent: SupportContent = {
     {
       id: 'community-foundation', title: 'Support for everyday operations', category: 'Community giving', image: { key: 'communityFoundation', alt: 'Community Foundation of the North State', fit: 'contain' },
       body: 'The library has thanked the Community Foundation of the North State for a grant that helps cover day-to-day operating costs.',
-      href: '/fundraising-events/library-fund/', linkLabel: 'Support the library',
+      href: '/fundraising-events/', linkLabel: 'Support the library',
     },
   ],
   initiatives: [
-    {
-      id: 'library-fund', title: 'Keep the library open', category: 'giving', label: 'Financial support',
-      summary: 'Support the day-to-day work of your community library.',
-      image: homeContent.hero.image,
-      paragraphs: [homeContent.story.paragraphs[1], 'Financial donations support day-to-day operations. Contact the library to ask about giving and its current fundraising needs.'],
-      steps: ['Contact the library about making a gift.', 'The library can help you choose the right way to give.'],
-      action: { label: 'Ask about giving', href: `mailto:${library.email}?subject=Supporting%20the%20library` },
-    },
     {
       id: 'volunteer', title: 'Give your time', category: 'volunteering', label: 'Volunteering',
       summary: 'Help with the everyday work that keeps books and people connected.',

@@ -3,7 +3,6 @@ import ContentImage from '../../components/ContentImage.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import Icon from '../../components/Icon.astro';
-import Disclosure from '../../components/Disclosure.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
 import PhotoGallery from '../../components/PhotoGallery.astro';
 import { postDate } from '../../content/feeds';
@@ -23,26 +22,40 @@ const { library, programs } = await contentRepository.getHome();
 const donate = getDonateLink();
 ---
 {program && <SiteLayout title={`${program.title} | Cottonwood Community Library`} description={program.description}>
-  <PageIntro title={program.title} back={{ href: '/librarynews/', label: 'Events & news' }} />
-  <section class="container grid items-start gap-9 pb-16 lg:grid-cols-[1.35fr_1fr] lg:gap-14" aria-label={`${program.title} details`}>
-    <ContentImage image={program.image} variant="feature" eager />
-    <div>
-      <dl class="space-y-6 rounded-[4px] bg-meadow p-7">
-        <div><dt class="mb-2 flex items-center gap-2 text-sm font-semibold"><Icon name="calendar" class="size-5" />When</dt><dd class="m-0 text-lg">{program.schedule}</dd></div>
-        <div><dt class="mb-2 flex items-center gap-2 text-sm font-semibold"><Icon name="pin" class="size-5" />Where</dt><dd class="m-0 text-base">{library.address}<br />{library.locality}</dd></div>
-      </dl>
-      <p class="mt-5 text-base text-muted">{program.details}</p>
-      <a href={library.directionsUrl} class="button button-primary mt-4">Get directions</a>
-      <div class="mt-5"><Disclosure title="Before you come"><p>Call {library.phone} to check for holiday changes or cancellations.</p><a href={library.phoneHref} class="text-link mt-3">Call the library<Icon name="phone" class="size-4" /></a></Disclosure></div>
+  <PageIntro title={program.title} description={program.description} back={{ href: '/librarynews/', label: 'Events & news' }} />
+  <section class="container section pt-0" aria-label={`${program.title} details`}>
+    <div class="split">
+      <ContentImage image={program.image} variant="feature" eager />
+      <div class="panel">
+        <dl class="space-y-5">
+          <div><dt class="flex items-center gap-2 text-sm font-semibold"><Icon name="calendar" class="size-5" />When</dt><dd class="m-0 mt-1 text-xl font-semibold">{program.schedule}</dd></div>
+          <div><dt class="flex items-center gap-2 text-sm font-semibold"><Icon name="pin" class="size-5" />Where</dt><dd class="m-0 mt-1 text-lg">{library.address}, {library.locality}</dd></div>
+        </dl>
+        <a href={library.directionsUrl} class="button button-primary mt-7">Get directions</a>
+      </div>
+    </div>
+    <div class="measure mt-16">
+      <p class="text-lg leading-[1.75]">{program.details}</p>
+      <p class="mt-5 text-base text-muted">Call <a href={library.phoneHref} class="underline">{library.phone}</a> to check for holiday changes or cancellations.</p>
     </div>
   </section>
-  <section class="container border-t border-line py-10 sm:py-12" aria-labelledby="more-programs"><h2 id="more-programs" class="section-heading mb-6">More at the library</h2><div class="grid gap-5 sm:grid-cols-3">{programs.filter(other => other.id !== program.id).map(other => <ProgramCard program={other} />)}</div></section>
+  <section class="section section-tint" aria-labelledby="more-programs">
+    <div class="container">
+      <h2 id="more-programs" class="section-heading section-header">More at the library</h2>
+      <div class="card-grid">{programs.filter(other => other.id !== program.id).map(other => <ProgramCard program={other} />)}</div>
+    </div>
+  </section>
 </SiteLayout>}
 
 {post && <SiteLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
-  <PageIntro title={post.title} eyebrow={postDate(post)} back={{ href: '/librarynews/#news', label: 'Library news & stories' }} />
-  <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2"><div><ContentImage image={post.image ?? { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager />{post.gallery && <PhotoGallery images={post.gallery} />}</div><div>{post.paragraphs.map(paragraph => <p class="mb-5 text-lg text-muted">{paragraph}</p>)}
-    {post.externalUrl && <a href={post.externalUrl} class="text-link mt-5">Read at {post.sourceLabel ?? 'the source'}<Icon name="external" class="size-4" /></a>}
-    <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-7">Support your library<Icon name="heart" class="size-5" /></a>
-  </div></article>
+  <PageIntro title={post.title} meta={postDate(post)} back={{ href: '/librarynews/#news', label: 'Events & news' }} width="prose" />
+  <article class="container-prose section pt-0">
+    <ContentImage image={post.image ?? { key: 'exterior', alt: 'Cottonwood Community Library on Main Street.' }} variant="feature" eager />
+    <div class="prose-flow mt-12 text-lg">{post.paragraphs.map(paragraph => <p>{paragraph}</p>)}</div>
+    {post.gallery && <PhotoGallery images={post.gallery} />}
+    <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+      <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary"><Icon name="heart" class="size-5" />Support your library</a>
+      {post.externalUrl && <a href={post.externalUrl} class="text-link">Read at {post.sourceLabel ?? 'the source'}<Icon name="external" class="size-4" /></a>}
+    </div>
+  </article>
 </SiteLayout>}

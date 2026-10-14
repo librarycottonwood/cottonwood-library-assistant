@@ -1,16 +1,17 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
 ---
 <SiteLayout title="Privacy | Cottonwood Library demo">
-  <section class="container py-12">
-    <h1 class="font-display text-4xl">Privacy on this demo website</h1>
-    <div class="mt-6 max-w-2xl space-y-5">
+  <PageIntro title="Privacy on this demo website" width="prose" />
+  <section class="container-prose section pt-0" aria-label="Privacy details">
+    <div class="prose-flow">
       <p>This is a demonstration website. Its statistics are test traffic, not a report of visits to the library's existing website.</p>
       <p>If you choose "Allow statistics," Google Analytics uses cookies to measure the pages you visit and selected catalog and donation-button clicks. Clicking a donation button does not mean a donation was completed.</p>
       <p>Our tracking does not send names, email addresses, form contents, or website address query strings. Advertising features and Google's enhanced measurement are disabled. Google processes browser and usage information according to its <a class="underline" href="https://policies.google.com/privacy">privacy policy</a>.</p>
       <p>Choosing "No thanks" prevents this website from loading Google Analytics. Use "Privacy choices" at the bottom of any page to change your decision. Withdrawing your choice stops tracking and removes this site's Analytics cookies.</p>
       <p>The embedded map uses OpenStreetMap data served by OpenFreeMap. Loading it sends normal web requests to the map provider; it does not request your device location.</p>
-      <p>Donations made on this site go through Givebutter. Once the Donate buttons are set to open Givebutter's checkout here, every page loads Givebutter's widget script; until then, only the donation pages showing a running fundraiser load it, so the total stays current. That sends normal web requests to Givebutter, which processes them, and any donation, under its own privacy policy.</p>
+      <p>Donations made on this site go through Givebutter. Once the Donate buttons are set to open Givebutter's checkout here, every page loads Givebutter's widget script; until then, only the Donate page loads it, and only while a fundraiser is running, so the total stays current. That sends normal web requests to Givebutter, which processes them, and any donation, under its own privacy policy.</p>
       <p>The library's website, fundraising service, catalog, and social accounts are separate services. Their privacy practices may differ. Contact details on this prototype remain subject to library review.</p>
     </div>
   </section>

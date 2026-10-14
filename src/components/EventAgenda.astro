@@ -1,0 +1,61 @@
+---
+// Dated events grouped by day (Pacific time), soonest first. "Today", "Tomorrow" and
+// "This week" are filled in by the visitor's browser, because pages are built ahead of time.
+import Icon from './Icon.astro';
+import type { LibraryEvent } from '../content/types';
+import { upcomingEvents } from '../content/feeds';
+interface Props { events: LibraryEvent[]; }
+const zone = 'America/Los_Angeles';
+const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
+const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: zone });
+const monthDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
+const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: zone });
+const clock = (value: string) => {
+  const parts = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: zone }).formatToParts(new Date(value));
+  const get = (type: string) => parts.find(part => part.type === type)?.value ?? '';
+  const minutes = get('minute');
+  return `${get('hour')}${minutes === '00' ? '' : ':' + minutes} ${get('dayPeriod').toLowerCase() === 'am' ? 'a.m.' : 'p.m.'}`;
+};
+const timeRange = (event: LibraryEvent) => event.endsAt ? `${clock(event.startsAt)}–${clock(event.endsAt)}` : clock(event.startsAt);
+const days = new Map<string, LibraryEvent[]>();
+for (const event of upcomingEvents(Astro.props.events)) {
+  const key = dayKey.format(new Date(event.startsAt));
+  days.set(key, [...(days.get(key) ?? []), event]);
+}
+---
+{days.size > 0 ? <ol class="agenda m-0 list-none border-b border-line p-0">
+  {[...days].map(([key, events]) => {
+    const date = new Date(events[0].startsAt);
+    return <li class="agenda-day" data-day={key}>
+      <div>
+        <p class="agenda-date"><time datetime={key}><span class="font-semibold">{weekday.format(date)}</span> · {monthDay.format(date)}</time><span class="sr-only">, {fullDay.format(date)}</span></p>
+        <p class="agenda-badge" data-relative hidden></p>
+      </div>
+      <ul class="m-0 list-none space-y-6 p-0">
+        {events.map(event => <li>
+          <p class="text-base font-semibold"><time datetime={event.startsAt}>{timeRange(event)}</time></p>
+          <h3 class="mt-1 text-xl font-semibold leading-snug"><a href={event.href} class="underline decoration-1 underline-offset-4 hover:decoration-2">{event.title}</a></h3>
+          <p class="mt-1 flex items-center gap-2 text-base text-muted"><Icon name="pin" class="size-4 shrink-0" />{event.summary}</p>
+        </li>)}
+      </ul>
+    </li>;
+  })}
+</ol> : <p class="border-y border-line py-7 text-base text-muted">No special events are scheduled right now. Our regular programs are below.</p>}
+{days.size > 0 && <script is:inline>
+  (function () {
+    var key = function (date) {
+      var parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
+      var get = function (type) { return parts.find(function (part) { return part.type === type; }).value; };
+      return get('year') + '-' + get('month') + '-' + get('day');
+    };
+    var now = Date.now();
+    var today = key(new Date(now)), tomorrow = key(new Date(now + 864e5)), week = key(new Date(now + 6 * 864e5));
+    document.querySelectorAll('.agenda-day[data-day]').forEach(function (day) {
+      var d = day.dataset.day;
+      if (d < today) { day.hidden = true; return; }
+      var label = d === today ? 'Today' : d === tomorrow ? 'Tomorrow' : d <= week ? 'This week' : '';
+      var badge = day.querySelector('[data-relative]');
+      if (badge && label) { badge.textContent = label; badge.hidden = false; }
+    });
+  })();
+</script>}

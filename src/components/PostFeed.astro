@@ -7,10 +7,10 @@ interface Props { posts: LibraryPost[]; }
 const { posts } = Astro.props;
 ---
 <ul class="m-0 list-none divide-y divide-line p-0">
-  {newestPosts(posts).map(post => <li class:list={['py-5 first:pt-0', post.image && 'grid grid-cols-[5rem_1fr] items-start gap-4 sm:grid-cols-[7rem_1fr] sm:gap-5']}>
+  {newestPosts(posts).map(post => <li class:list={['py-6 first:pt-0', post.image && 'grid grid-cols-[5rem_1fr] items-start gap-4 sm:grid-cols-[7rem_1fr] sm:gap-5']}>
     {/* Decorative: the linked title beside it already names the post. */}
     {post.image && <Image width={224} quality={70} src={resolveImage(post.image.key)} alt="" widths={[160, 224]} sizes="(max-width: 639px) 80px, 112px" class="aspect-square w-full rounded-[3px] object-cover" loading="lazy" />}
     <div><p class="mb-2 text-sm text-muted">{post.publishedAt ? <time datetime={post.publishedAt}>{postDate(post)}</time> : postDate(post)}{post.externalUrl && <> · {post.sourceLabel ?? 'External article'}</>}</p>
-    <h3 class="card-heading"><a href={post.externalUrl ?? post.href} class="underline decoration-1 hover:decoration-2">{post.title}</a></h3></div>
+    <h3 class="card-title"><a href={post.externalUrl ?? post.href} class="underline decoration-1 hover:decoration-2">{post.title}</a></h3></div>
   </li>)}
 </ul>

@@ -8,7 +8,6 @@ import interior from '../../library-files/images/plan-your-visit-hero.jpg';
 import newsletter from '../assets/newsletter-cover.jpg';
 import watercolor from '../../library-files/images/library-painting.jpeg';
 import entrance from '../../library-files/images/library-entrance.jpg';
-import craftRoom from '../../library-files/images/adventure-awaits-craft-room.jpg';
 import newReads from '../../library-files/images/junior-readers-display.jpg';
 import copyRoom from '../../library-files/images/copy-room.jpg';
 import bookDrop from '../../library-files/images/caterpillar-book-drop.jpg';
@@ -24,7 +23,7 @@ import firstFive from '../../library-files/images/first-5-shasta.jpg';
 import communityFoundation from '../../library-files/images/community-foundation-of-the-north-state.png';
 import founders from '../../library-files/images/founders-plaque.jpeg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, stacks, books, interior, newsletter, watercolor, entrance, craftRoom, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, stacks, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

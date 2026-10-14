@@ -5,6 +5,6 @@ import type { LibraryImage } from '../content/types';
 interface Props { images: LibraryImage[]; }
 const { images } = Astro.props;
 ---
-<div class="mt-9 grid gap-7 sm:grid-cols-2">
-  {images.map(image => <figure class="m-0"><Image width={600} quality={70} src={resolveImage(image.key)} alt={image.alt} widths={[360, 600]} sizes="(max-width: 639px) 100vw, 30vw" class="h-auto w-full rounded-[4px]" loading="lazy" />{image.caption && <figcaption class="mt-3 text-sm text-muted">{image.caption}</figcaption>}</figure>)}
+<div class="mt-10 grid gap-8">
+  {images.map(image => <figure class="m-0"><Image width={800} quality={70} src={resolveImage(image.key)} alt={image.alt} widths={[400, 800]} sizes="(max-width: 767px) 100vw, 640px" class="h-auto max-h-[30rem] w-auto max-w-full rounded-[4px]" loading="lazy" />{image.caption && <figcaption class="mt-3 text-sm text-muted">{image.caption}</figcaption>}</figure>)}
 </div>

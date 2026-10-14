@@ -9,6 +9,6 @@ const { updates } = Astro.props;
 <ul class="m-0 list-none divide-y divide-line p-0">
   {updates.map(update => <li class="grid gap-4 py-7 first:pt-0 sm:grid-cols-[4.5rem_1fr] sm:gap-5">
     <Image quality={70} src={resolveImage(update.image.key)} alt={update.image.alt} width={144} height={144} class="size-18 rounded-[3px] bg-white object-contain p-1" loading="lazy" />
-    <div><p class="eyebrow mb-2 text-muted">{update.category}</p><h3 class="card-heading">{update.title}</h3><p class="mt-3 text-base text-muted">{update.body}</p><a href={update.href} class="text-link mt-3">{update.linkLabel}<Icon name="arrow" class="size-4" /></a></div>
+    <div><h3 class="card-title">{update.title}</h3><p class="mt-3 text-base text-muted">{update.body}</p><a href={update.href} class="text-link mt-3">{update.linkLabel}<Icon name="arrow" class="size-4" /></a></div>
   </li>)}
 </ul>

@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from '../components/Icon.astro';
+import ProgramCard from '../components/ProgramCard.astro';
 import VisitPanel from '../components/VisitPanel.astro';
 import { bookSaleDateLabel } from '../content/editorial';
 import { contentRepository } from '../content/repository';
@@ -24,7 +25,7 @@ const resources = [
 ];
 ---
 <SiteLayout>
-  <section class="container py-8 sm:py-10" aria-labelledby="welcome-heading">
+  <section class="container pt-8 pb-20 sm:pt-10 sm:pb-28" aria-labelledby="welcome-heading">
     <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
@@ -34,75 +35,61 @@ const resources = [
       </div>
       <div class="feature-shape"><Image width={1100} quality={70} src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
     </div>
-  </section>
-
-  <div class="container pb-10">
-    <nav aria-label="Library quick links" data-button-style="paper" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {actions.map(action => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
+  
+    <nav aria-label="Library quick links" class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {actions.map((action, column) => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
         <span class="action-label">{action.label}</span>
-        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${actions.indexOf(action)}`} />
+        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${column}`} />
       </a>)}
     </nav>
-  </div>
+  </section>
 
-  <script>
-    const style = new URLSearchParams(location.search).get('button-style');
-    if (style === 'storybook' || style === 'paper' || style === 'folk') {
-      const buttons = document.querySelector<HTMLElement>('[aria-label="Library quick links"]');
-      if (buttons) buttons.dataset.buttonStyle = style;
-    }
-  </script>
-
-  <section id="programs" tabindex="-1" class="container-editorial py-5 sm:pt-8 sm:pb-14" aria-labelledby="happening-heading">
-    <div class="mb-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+  <section id="programs" tabindex="-1" class="container section pt-0" aria-labelledby="happening-heading">
+    <div class="section-header-row">
       <h2 id="happening-heading" class="section-heading">Coming up</h2>
-      <a href="/librarynews/" class="text-link">See the calendar<Icon name="arrow" class="size-4" /></a>
+      <a href="/librarynews/" class="text-link">All events<Icon name="arrow" class="size-4" /></a>
     </div>
-    <div class="coming-up">
-      <a href="/fundraising-events/book-sale/" class="coming-feature group">
-        <div class="feature-shape">
-          <Image width={1100} quality={70} src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 530px" class="aspect-[1.9] w-full object-cover" />
-        </div>
-        <p class="eyebrow mt-5">{bookSaleDateLabel}</p>
+    <a href="/fundraising-events/book-sale/" class="split group">
+      <Image width={1100} quality={70} src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 600px" class="feature-shape aspect-[1.6] w-full object-cover" />
+      <div>
+        <p class="text-lg font-semibold">{bookSaleDateLabel}</p>
         <h3 class="mt-2 font-display text-3xl leading-tight tracking-tight group-hover:underline sm:text-4xl">Quarterly book sale</h3>
-        <p class="mt-3 text-base text-muted">Back-door entry · Cash only.</p>
-        <span class="text-link mt-2">Explore the sale<Icon name="arrow" class="size-4" /></span>
-      </a>
-      <div class="program-agenda">
-        <p class="eyebrow mb-2 text-muted">Gather at the library</p>
-        {programs.map(program => <a href={`/librarynews/${program.id}/`} class="program-row group">
-          <Image width={260} quality={70} src={resolveImage(program.image.key)} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold text-muted">{program.schedule}</p>
-            <h3 class="card-heading mt-1 group-hover:underline">{program.title}</h3>
-          </div>
-          <Icon name="arrow" class="size-5 shrink-0" />
-        </a>)}
+        <p class="mt-3 text-lg text-muted">Back-door entry · Cash only.</p>
+        <span class="text-link mt-4">Explore the sale<Icon name="arrow" class="size-4" /></span>
       </div>
+    </a>
+  </section>
+
+  <section class="section section-tint" aria-labelledby="regular-heading">
+    <div class="container">
+      <div class="section-header-row">
+        <h2 id="regular-heading" class="section-heading">Regular programs</h2>
+        <a href="/librarynews/#regular" class="text-link">Times & details<Icon name="arrow" class="size-4" /></a>
+      </div>
+      <div class="card-grid">{programs.map(program => <ProgramCard program={program} />)}</div>
     </div>
   </section>
 
-  <section class="container py-7 sm:py-10" aria-labelledby="independent-heading">
+  <section class="container section" aria-labelledby="independent-heading">
     <div class="giving-banner">
       <div class="giving-copy">
-        <p class="eyebrow text-gold">Community-funded library</p>
-        <h2 id="independent-heading" class="section-heading mt-4">Keep your<br /><em class="font-normal">library open.</em></h2>
-        <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding.<br />Donations help cover day-to-day operations.</p>
-        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.label}</a>
+        <h2 id="independent-heading" class="section-heading">Keep your<br /><em class="font-normal">library open.</em></h2>
+        <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding. Donations cover day-to-day operations.</p>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.source === 'fallback' ? 'Ways to give' : donate.label}</a>
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
         </div>
       </div>
-      <Image width={1100} quality={70} src={resolveImage('readingNook')} alt="A sunny reading nook inside the library, with a large window, wooden chairs, a patterned armchair, a magazine rack and a bookcase." widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
+      <Image width={1100} quality={70} src={resolveImage('readingNook')} alt="A sunny reading nook inside the library, with a large window, wooden chairs, a patterned armchair, a magazine rack and a bookcase." widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 600px" class="giving-photo" />
     </div>
   </section>
 
-  <section id="services" tabindex="-1" class="container-narrow pt-8 pb-4 sm:pt-14 sm:pb-8" aria-labelledby="services-heading">
-    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
-      <Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
+  <section id="services" tabindex="-1" class="container section pt-0" aria-labelledby="services-heading">
+    <div class="split">
+      <Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
       <div>
         <h2 id="services-heading" class="section-heading">Library services</h2>
-        <nav aria-label="Library services" class="mt-5 divide-y divide-line">
+        <nav aria-label="Library services" class="mt-6 divide-y divide-line border-y border-line">
           {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
             <Icon name={resource.icon} class="size-6 shrink-0" />
             <span class="flex-1"><span class="block text-lg font-semibold group-hover:underline">{resource.label}</span><span class="block text-sm text-muted">{resource.note}</span></span>
@@ -113,5 +100,5 @@ const resources = [
     </div>
   </section>
 
-  <VisitPanel />
+  <div class="border-t border-line"><VisitPanel /></div>
 </SiteLayout>

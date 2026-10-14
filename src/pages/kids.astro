@@ -9,13 +9,25 @@ const { programs, library } = await contentRepository.getHome();
 const storyTime = programs.find(program => program.id === 'story-time')!;
 ---
 <SiteLayout title="Kids & families | Cottonwood Community Library">
-  <PageIntro title="Kids & families" />
-  <section class="container grid items-center gap-7 pb-10 lg:grid-cols-2" aria-labelledby="storytime-heading">
-    <div class="overflow-hidden rounded-[4px]"><Image width={1100} quality={70} src={resolveImage('craftRoom')} alt="The library’s craft room, with an “Adventure Awaits” mural of children in capes, a row of hanging craft aprons and wooden chairs." widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" class="aspect-[1.5] w-full object-cover" loading="eager" /></div>
-    <div><h2 id="storytime-heading" class="section-heading">Story Time</h2><p class="mt-3 font-semibold">{storyTime.schedule}</p><p class="mt-3 text-base text-muted">Stories, songs, crafts & a snack.</p><a href="/librarynews/story-time/" class="button button-primary mt-5">Come to Story Time</a></div>
+  <PageIntro title="Kids & families" description="Stories, songs and a room full of books for young readers." />
+  <section class="container section pt-0" aria-labelledby="storytime-heading">
+    <div class="split">
+      <Image width={1100} quality={70} src={resolveImage(storyTime.image.key)} alt={storyTime.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 600px" class="feature-shape aspect-[1.4] w-full object-cover" loading="eager" />
+      <div class="measure">
+        <h2 id="storytime-heading" class="section-heading">Story Time</h2>
+        <p class="mt-4 text-lg font-semibold">{storyTime.schedule}</p>
+        <p class="mt-3 text-lg text-muted">{storyTime.details}</p>
+        <a href="/librarynews/story-time/" class="button button-primary mt-7">Story Time details</a>
+      </div>
+    </div>
   </section>
-  <section class="container grid gap-4 pb-12 sm:grid-cols-2" aria-label="More for young readers">
-    <a href={library.catalogUrl} class="action-tile action-gold"><Icon name="book" class="size-8 shrink-0" /><h2 class="text-xl font-bold">Find a book</h2></a>
-    <a href="/visit/#borrowing" class="action-tile action-meadow"><Icon name="pin" class="size-8 shrink-0" /><h2 class="text-xl font-bold">Visit with your family</h2></a>
+  <section class="section section-tint" aria-labelledby="young-readers-heading">
+    <div class="container">
+      <h2 id="young-readers-heading" class="section-heading section-header">More for young readers</h2>
+      <div class="grid gap-4 md:grid-cols-2">
+        <a href={library.catalogUrl} class="action-tile action-gold"><span class="action-label">Find a book</span><Icon name="book" class="size-10 shrink-0" /></a>
+        <a href="/visit/#borrowing" class="action-tile action-meadow"><span class="action-label">Visit with your family</span><Icon name="pin" class="size-10 shrink-0" /></a>
+      </div>
+    </div>
   </section>
 </SiteLayout>
