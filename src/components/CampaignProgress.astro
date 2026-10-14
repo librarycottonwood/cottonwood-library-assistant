@@ -4,7 +4,7 @@ import type { FundraisingCampaign } from '../content/types';
 interface Props { campaign: FundraisingCampaign; }
 const { campaign } = Astro.props;
 // Ids are validated in feeds.ts (letters, digits, _ and - only) before any page renders.
-const library = `https://widgets.givebutter.com/latest.umd.cjs?acct=${encodeURIComponent(campaign.givebutter.account)}&p=other`;
+const library = `https://widgets.givebutter.com/latest.umd.cjs?acct=${encodeURIComponent(campaign.givebutter.account)}`;
 ---
 {/*
   Givebutter's official Goal Bar widget shows the live total, so nobody copies numbers by hand.

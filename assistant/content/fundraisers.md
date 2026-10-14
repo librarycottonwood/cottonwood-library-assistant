@@ -26,7 +26,7 @@ The site shows Givebutter's official **Goal Bar widget**, which updates itself. 
 3. The pasted code looks like this:
 
    ```html
-   <script src="https://widgets.givebutter.com/latest.umd.cjs?acct=AbC123xYz&p=other" async></script>
+   <script src="https://widgets.givebutter.com/latest.umd.cjs?acct=AbC123xYz" async></script>
    <givebutter-widget id="gb4Xy7Lm"></givebutter-widget>
    ```
 
