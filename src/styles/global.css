@@ -65,6 +65,12 @@
 
   /* Layouts: single column by default; .split only for a photo or map beside short text */
   .split { @apply grid items-center gap-10 lg:grid-cols-2 lg:gap-16; }
+  /* A photo beside a panel: both columns the same height and top-aligned. The photo fills its
+     column (object-cover) so it always matches the panel; the panel centres its content. */
+  .split-equal { @apply grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-16; }
+  .split-media { @apply relative aspect-[1.5] overflow-hidden rounded-[4px] lg:aspect-auto lg:min-h-[22rem]; }
+  .split-media img { @apply absolute inset-0 h-full w-full; }
+  .split-equal > .panel, .split-equal > .split-text { @apply flex flex-col justify-center; }
   .card-grid { @apply grid gap-6 md:grid-cols-2 lg:grid-cols-3; }
 
   /* Type */
@@ -95,6 +101,8 @@
 
   /* Home */
   .feature-shape { @apply overflow-hidden rounded-[4px] rounded-tr-[80px] sm:rounded-tr-[115px]; }
+  /* Address badge anchored to the hero photo's bottom-left corner; overhangs the frame from tablet up. */
+  .address-pill { @apply absolute bottom-3 left-3 inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-paper px-4 py-2 text-sm font-semibold text-forest shadow-[0_6px_18px_rgba(25,45,36,.18)] hover:bg-meadow sm:-bottom-5 sm:left-6 sm:text-[0.9375rem]; }
   .action-tile { @apply flex min-h-32 items-center justify-between gap-3 rounded-[4px] px-6 py-4 text-forest transition-colors hover:brightness-95; }
   .action-tile:focus-visible { outline-width: 3px; outline-offset: 5px; }
   .action-label { @apply max-w-40 text-xl font-bold leading-[1.4]; overflow-wrap: normal; }
@@ -112,5 +120,7 @@
   /* Events agenda */
   .agenda-day { @apply grid gap-3 border-t border-line py-7 sm:grid-cols-[9.5rem_1fr] sm:gap-8; }
   .agenda-date { @apply font-display text-[1.375rem] leading-tight tracking-[-.02em]; }
+  .agenda-item { @apply grid grid-cols-[4.5rem_1fr] items-start gap-4 sm:grid-cols-[6.5rem_1fr] sm:gap-5; }
+  .thumb { @apply aspect-square w-full rounded-[3px] bg-[#eee8d8] object-cover; }
   .agenda-badge { @apply mt-2 inline-block rounded-[3px] bg-gold px-2 py-0.5 text-[0.8125rem] font-semibold text-forest-dark; }
 }

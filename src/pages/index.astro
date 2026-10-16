@@ -30,13 +30,15 @@ const resources = [
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
         <p class="mt-4 text-lg text-muted">Come read, play and connect.</p>
-        <p class="mt-4 text-base text-muted">{library.address} · Cottonwood</p>
         <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image width={1100} quality={70} src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+      <div class="relative">
+        <div class="feature-shape"><Image width={1100} quality={70} src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="address-pill"><Icon name="pin" class="size-4 shrink-0" />{library.address} · Cottonwood</a>
+      </div>
     </div>
   
-    <nav aria-label="Library quick links" class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <nav aria-label="Library quick links" class="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {actions.map((action, column) => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
         <span class="action-label">{action.label}</span>
         <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${column}`} />
@@ -85,9 +87,9 @@ const resources = [
   </section>
 
   <section id="services" tabindex="-1" class="container section pt-0" aria-labelledby="services-heading">
-    <div class="split">
-      <Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
-      <div>
+    <div class="split-equal">
+      <div class="split-media"><Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="object-cover" /></div>
+      <div class="split-text">
         <h2 id="services-heading" class="section-heading">Library services</h2>
         <nav aria-label="Library services" class="mt-6 divide-y divide-line border-y border-line">
           {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">

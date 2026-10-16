@@ -11,11 +11,10 @@ const { library } = homeContent;
     <a href={library.directionsUrl} class="text-link">Get directions</a>
   </div>
   <div class="map-canvas" data-map-canvas role="region" aria-label="Map showing Cottonwood Community Library on Main Street"></div>
-  <button type="button" class="map-recenter" hidden data-map-recenter>Back to library</button>
   <span class="map-label" hidden data-map-label>Cottonwood Library</span>
 </div>
 <style>
-.library-map{position:relative;min-height:380px;overflow:hidden;border-radius:4px;background:#e9edde}.map-fallback{min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}.map-canvas{position:absolute;inset:0;opacity:0;transition:opacity .3s}.map-label{position:absolute;top:18px;left:18px;background:#f8f6ef;padding:8px 12px;border-radius:3px;font-size:13px;font-weight:600;pointer-events:none}.map-recenter{position:absolute;bottom:42px;left:18px;background:#253e32;color:white;border:0;border-radius:3px;padding:11px 16px;min-height:44px;font:600 14px var(--font-sans);box-shadow:0 2px 8px #0002}.map-recenter:hover{background:#192d24}.map-canvas :global(.maplibregl-ctrl-attrib){font-size:10px}.map-canvas :global(.maplibregl-canvas){filter:saturate(.65)}
+.library-map{position:relative;aspect-ratio:3/2;min-height:260px;overflow:hidden;border-radius:4px;background:#e9edde}.map-fallback{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}.map-canvas{position:absolute;inset:0;opacity:0;transition:opacity .3s}.map-label{position:absolute;top:18px;left:18px;background:#f8f6ef;padding:8px 12px;border-radius:3px;font-size:13px;font-weight:600;pointer-events:none}.map-canvas :global(.maplibregl-ctrl-attrib){font-size:10px}.map-canvas :global(.maplibregl-canvas){filter:saturate(.65)}
 </style>
 <script>
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -36,10 +35,7 @@ for (const section of sections) {
       const map = new Map({container:host,style,center:[-122.2805738,40.3873866],zoom:14.5,scrollZoom:false,cooperativeGestures:true,attributionControl:{compact:false}});
       new Marker({color:'#253e32'}).setLngLat([-122.2805738,40.3873866]).addTo(map);
       map.addControl(new NavigationControl({showCompass:false}),'top-right');
-      const recenter=section.querySelector<HTMLButtonElement>('[data-map-recenter]');
-      recenter?.addEventListener('click',()=>map.flyTo({center:[-122.2805738,40.3873866],zoom:14.5,bearing:0,pitch:0,animate:!window.matchMedia('(prefers-reduced-motion: reduce)').matches}));
       map.once('idle',()=>{
-        if(recenter) recenter.hidden=false;
         host.style.opacity='1';
         section.dataset.mapReady='true';
         const label=section.querySelector<HTMLElement>('[data-map-label]');if(label)label.hidden=false;

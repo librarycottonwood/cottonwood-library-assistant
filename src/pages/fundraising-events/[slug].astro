@@ -16,23 +16,26 @@ interface Props { initiative: SupportInitiative; }
 const { initiative } = Astro.props;
 const { initiatives } = await contentRepository.getSupport();
 const action = initiative.action;
+const details = initiative.paragraphs.filter(text => text !== initiative.summary);
 const others = initiatives.filter(item => item.id !== initiative.id && item.category !== 'volunteering').slice(0, 3);
 ---
 <SiteLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary}>
   <PageIntro title={initiative.title} description={initiative.summary} back={{ href: '/fundraising-events/', label: 'Support us' }} />
   <section class="container section pt-0" aria-labelledby="how-heading">
-    <div class="split lg:items-start">
-      <ContentImage image={initiative.image} variant="feature" eager />
+    <div class="split-equal">
+      <div class="split-media"><ContentImage image={initiative.image} variant="feature" eager /></div>
       <div class="panel">
         <h2 id="how-heading" class="card-heading">{initiative.id === 'book-sale' ? 'Shop & support' : 'How to help'}</h2>
         {initiative.id === 'book-sale' && <p class="mt-3 text-base font-semibold">Next sale: {bookSaleDateLabel}</p>}
         <ol class="mt-5 list-none space-y-3 p-0">{initiative.steps.map((step, index) => <li class="flex gap-3 text-base"><span class="shrink-0 font-semibold" aria-hidden="true">{index + 1}.</span><span>{step}</span></li>)}</ol>
-        <a href={action.href} class="button button-primary mt-7">{action.label}{action.download && <Icon name="download" class="size-4 shrink-0" />}</a>
+        <a href={action.href} class="button button-primary mt-7 self-start">{action.label}{action.download && <Icon name="download" class="size-4 shrink-0" />}</a>
       </div>
     </div>
-    <div class="measure prose-flow mt-16">{initiative.paragraphs.filter(text => text !== initiative.summary).map(text => <p>{text}</p>)}</div>
-    {initiative.gallery && <div class="measure"><PhotoGallery images={initiative.gallery} /></div>}
   </section>
+  {(details.length > 0 || initiative.gallery) && <section class="container-prose section pt-0" aria-label="More about this">
+    {details.length > 0 && <div class="prose-flow">{details.map(text => <p>{text}</p>)}</div>}
+    {initiative.gallery && <PhotoGallery images={initiative.gallery} />}
+  </section>}
   {others.length > 0 && <section class="section section-tint" aria-labelledby="other-ways">
     <div class="container">
       <h2 id="other-ways" class="section-heading section-header">Other ways to help</h2>

@@ -28,8 +28,8 @@ const options = [
       <p class="mt-10 text-base">Like to give your time? <a href="/fundraising-events/volunteer/" class="font-semibold underline">Volunteer at the library</a></p>
     </div>
   </section>
-  <section id="stories" tabindex="-1" class="container section" aria-labelledby="support-stories-heading">
-    <div class="measure">
+  <section id="stories" tabindex="-1" class="container-prose section" aria-labelledby="support-stories-heading">
+    <div>
       <h2 id="support-stories-heading" class="section-heading section-header">Why your support matters</h2>
       <PostFeed posts={posts.filter(post => post.id !== 'newsletter')} />
       <div class="mt-8 border-t border-line"><Disclosure title="Community acknowledgments"><UpdateFeed updates={updates} /></Disclosure></div>

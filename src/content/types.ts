@@ -127,6 +127,8 @@ export interface LibraryEvent {
   endsAt?: string;
   summary: string;
   href: string;
+  /** Optional thumbnail for the events list; key must exist in images.ts. */
+  image?: LibraryImage;
 }
 
 /** Library-written updates or attributed links to articles. Undated items stay last. */

@@ -2,14 +2,20 @@
 import { Image } from 'astro:assets';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
-import Icon from '../components/Icon.astro';
+import InfoCard from '../components/InfoCard.astro';
 import { contentRepository } from '../content/repository';
 import { resolveImage } from '../content/images';
 const { programs, library } = await contentRepository.getHome();
 const storyTime = programs.find(program => program.id === 'story-time')!;
+// Real content only: the catalog, family accounts (borrowing FAQ) and the children's shelf of the ongoing book sale.
+const cards = [
+  { title: 'Find a book', note: 'Search our shelves for picture books and chapter books.', image: { key: 'newReads', alt: 'A table display of new chapter books for junior readers in front of library shelves.' }, action: { label: 'Browse the catalog', href: library.catalogUrl, external: true } },
+  { title: 'Borrow as a family', note: 'Kids can borrow on a grown-up’s family account.', image: { key: 'bookDrop', alt: 'The library’s outdoor book drop, hand-painted with “BOOK DROP” and a green caterpillar.' }, action: { label: 'How borrowing works', href: '/visit/#questions' } },
+  { title: 'Kids’ books for sale', note: 'Children’s and young-adult books in our ongoing book sale.', image: { key: 'childrensBookSale', alt: 'Children’s and young-adult books in the library’s ongoing book sale.' }, action: { label: 'Shop the book sale', href: '/fundraising-events/book-sale/' } },
+];
 ---
 <SiteLayout title="Kids & families | Cottonwood Community Library">
-  <PageIntro title="Kids & families" description="Stories, songs and a room full of books for young readers." />
+  <PageIntro title="Kids & families" />
   <section class="container section pt-0" aria-labelledby="storytime-heading">
     <div class="split">
       <Image width={1100} quality={70} src={resolveImage(storyTime.image.key)} alt={storyTime.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 600px" class="feature-shape aspect-[1.4] w-full object-cover" loading="eager" />
@@ -24,10 +30,7 @@ const storyTime = programs.find(program => program.id === 'story-time')!;
   <section class="section section-tint" aria-labelledby="young-readers-heading">
     <div class="container">
       <h2 id="young-readers-heading" class="section-heading section-header">More for young readers</h2>
-      <div class="grid gap-4 md:grid-cols-2">
-        <a href={library.catalogUrl} class="action-tile action-gold"><span class="action-label">Find a book</span><Icon name="book" class="size-10 shrink-0" /></a>
-        <a href="/visit/#borrowing" class="action-tile action-meadow"><span class="action-label">Visit with your family</span><Icon name="pin" class="size-10 shrink-0" /></a>
-      </div>
+      <div class="card-grid">{cards.map(card => <InfoCard {...card} />)}</div>
     </div>
   </section>
 </SiteLayout>

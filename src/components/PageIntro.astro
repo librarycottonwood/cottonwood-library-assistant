@@ -1,10 +1,20 @@
 ---
-// Page title block. width: 'wide' lines up with .container sections below; 'prose' with .container-prose pages.
+// Page title block. Top-level pages have no breadcrumb (the main navigation shows where you are).
+// Subpages pass `back` (their parent) and get "Home / Parent / This page".
+// width: 'wide' lines up with .container sections below; 'prose' with .container-prose pages.
 interface Props { title: string; description?: string; meta?: string; back?: { label: string; href: string }; width?: 'wide' | 'prose'; }
 const { title, description, meta, back, width = 'wide' } = Astro.props;
 ---
-<div class:list={[width === 'prose' ? 'container-prose' : 'container', 'pt-8 pb-12 sm:pt-10 sm:pb-16']}>
-  <nav aria-label="Breadcrumb" class="mb-8 flex flex-wrap items-center gap-2 text-sm text-muted"><a href="/" class="hover:underline">Home</a>{back && <><span aria-hidden="true">/</span><a href={back.href} class="hover:underline">{back.label}</a></>}</nav>
+<div class:list={[width === 'prose' ? 'container-prose' : 'container', 'pt-12 pb-12 sm:pt-16 sm:pb-16']}>
+  {back && <nav aria-label="Breadcrumb" class="mb-8 text-sm text-muted">
+    <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+      <li><a href="/" class="underline decoration-1 underline-offset-4 hover:text-forest">Home</a></li>
+      <li aria-hidden="true">/</li>
+      <li><a href={back.href} class="underline decoration-1 underline-offset-4 hover:text-forest">{back.label}</a></li>
+      <li aria-hidden="true">/</li>
+      <li><span aria-current="page">{title}</span></li>
+    </ol>
+  </nav>}
   <h1 class="page-heading max-w-[18ch]">{title}</h1>
   {meta && <p class="mt-4 text-base text-muted">{meta}</p>}
   {description && <p class="lede measure mt-5">{description}</p>}

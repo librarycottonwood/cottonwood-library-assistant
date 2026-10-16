@@ -24,6 +24,7 @@ export const libraryEvents: LibraryEvent[] = ['16', '17'].map(day => ({
   id: `book-sale-october-${day}`, title: 'Quarterly book sale',
   startsAt: `2026-10-${day}T10:00:00-07:00`, endsAt: `2026-10-${day}T14:00:00-07:00`,
   summary: 'Back-door entry · Cash only', href: '/fundraising-events/book-sale/',
+  image: { key: 'bookSale', alt: '' },
 }));
 
 // September 29 copy is a proposed library update based on Jaden's meeting notes.

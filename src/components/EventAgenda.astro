@@ -1,7 +1,9 @@
 ---
 // Dated events grouped by day (Pacific time), soonest first. "Today", "Tomorrow" and
 // "This week" are filled in by the visitor's browser, because pages are built ahead of time.
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import { resolveImage } from '../content/images';
 import type { LibraryEvent } from '../content/types';
 import { upcomingEvents } from '../content/feeds';
 interface Props { events: LibraryEvent[]; }
@@ -32,10 +34,14 @@ for (const event of upcomingEvents(Astro.props.events)) {
         <p class="agenda-badge" data-relative hidden></p>
       </div>
       <ul class="m-0 list-none space-y-6 p-0">
-        {events.map(event => <li>
-          <p class="text-base font-semibold"><time datetime={event.startsAt}>{timeRange(event)}</time></p>
-          <h3 class="mt-1 text-xl font-semibold leading-snug"><a href={event.href} class="underline decoration-1 underline-offset-4 hover:decoration-2">{event.title}</a></h3>
-          <p class="mt-1 flex items-center gap-2 text-base text-muted"><Icon name="pin" class="size-4 shrink-0" />{event.summary}</p>
+        {events.map(event => <li class="agenda-item">
+          {/* Decorative: the title beside it names the event. */}
+          <Image width={208} quality={70} src={resolveImage(event.image?.key ?? 'exterior')} alt="" widths={[144, 208]} sizes="(max-width: 639px) 72px, 104px" class="thumb" loading="lazy" />
+          <div>
+            <p class="text-base font-semibold"><time datetime={event.startsAt}>{timeRange(event)}</time></p>
+            <h3 class="mt-1 text-xl font-semibold leading-snug"><a href={event.href} class="underline decoration-1 underline-offset-4 hover:decoration-2">{event.title}</a></h3>
+            <p class="mt-1 flex items-start gap-2 text-base text-muted"><Icon name="pin" class="mt-1 size-4 shrink-0" />{event.summary}</p>
+          </div>
         </li>)}
       </ul>
     </li>;

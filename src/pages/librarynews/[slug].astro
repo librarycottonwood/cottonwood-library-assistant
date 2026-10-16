@@ -22,21 +22,19 @@ const { library, programs } = await contentRepository.getHome();
 const donate = getDonateLink();
 ---
 {program && <SiteLayout title={`${program.title} | Cottonwood Community Library`} description={program.description}>
-  <PageIntro title={program.title} description={program.description} back={{ href: '/librarynews/', label: 'Events & news' }} />
+  <PageIntro title={program.title} back={{ href: '/librarynews/', label: 'Events & news' }} />
   <section class="container section pt-0" aria-label={`${program.title} details`}>
-    <div class="split">
-      <ContentImage image={program.image} variant="feature" eager />
+    <div class="split-equal">
+      <div class="split-media"><ContentImage image={program.image} variant="feature" eager /></div>
       <div class="panel">
         <dl class="space-y-5">
           <div><dt class="flex items-center gap-2 text-sm font-semibold"><Icon name="calendar" class="size-5" />When</dt><dd class="m-0 mt-1 text-xl font-semibold">{program.schedule}</dd></div>
           <div><dt class="flex items-center gap-2 text-sm font-semibold"><Icon name="pin" class="size-5" />Where</dt><dd class="m-0 mt-1 text-lg">{library.address}, {library.locality}</dd></div>
         </dl>
-        <a href={library.directionsUrl} class="button button-primary mt-7">Get directions</a>
+        <p class="mt-6 border-t border-forest/15 pt-5 text-base">{program.details}</p>
+        <p class="mt-3 text-sm text-muted">Call <a href={library.phoneHref} class="underline">{library.phone}</a> to check for holiday changes or cancellations.</p>
+        <a href={library.directionsUrl} class="button button-primary mt-6 self-start">Get directions</a>
       </div>
-    </div>
-    <div class="measure mt-16">
-      <p class="text-lg leading-[1.75]">{program.details}</p>
-      <p class="mt-5 text-base text-muted">Call <a href={library.phoneHref} class="underline">{library.phone}</a> to check for holiday changes or cancellations.</p>
     </div>
   </section>
   <section class="section section-tint" aria-labelledby="more-programs">

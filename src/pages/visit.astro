@@ -3,6 +3,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import ContentImage from '../components/ContentImage.astro';
 import Icon from '../components/Icon.astro';
+import InfoCard from '../components/InfoCard.astro';
 import Disclosure from '../components/Disclosure.astro';
 import LibraryMap from '../components/LibraryMap.astro';
 import { contentRepository } from '../content/repository';
@@ -14,36 +15,30 @@ const services = [
 ];
 ---
 <SiteLayout title="Visit & services | Cottonwood Community Library">
-  <PageIntro title="Visit & services" description="Hours, directions and what you can do at the library." />
+  <PageIntro title="Visit & services" />
   <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container section pt-0">
-    <div class="split">
-      <ContentImage image={{ key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California, Est. 1882” sign, with rows of bookshelves beyond.' }} variant="feature" eager />
+    <div class="split-equal">
+      <div class="split-media"><ContentImage image={{ key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California, Est. 1882” sign, with rows of bookshelves beyond.' }} variant="feature" eager /></div>
       <div class="panel">
         <h2 id="visit-heading" class="card-heading">{library.address}</h2>
         <p class="mt-1 text-base text-muted">{library.locality}</p>
         <dl class="mt-6">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-base"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
-        <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-5"><Icon name="pin" class="size-4" />Get directions</a>
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-5 self-start"><Icon name="pin" class="size-4" />Get directions</a>
       </div>
     </div>
   </section>
   <section id="services" tabindex="-1" aria-labelledby="services-heading" class="section section-tint">
     <div class="container">
       <h2 id="services-heading" class="section-heading section-header">Services</h2>
-      <div class="card-grid">{services.map(service => <div id={service.id} tabindex="-1" class="card">
-        <div class="card-media"><ContentImage image={service.image} /></div>
-        <div class="card-body">
-          <h3 class="card-title">{service.title}</h3>
-          <p class="card-text">{service.note}</p>
-          <div class="card-action"><a href={service.action.href} class="text-link">{service.action.label}<Icon name={service.action.external ? 'external' : 'arrow'} class="size-4" /></a></div>
-        </div>
-      </div>)}</div>
+      <div class="card-grid">{services.map(service => <InfoCard id={service.id} title={service.title} note={service.note} image={service.image} action={service.action} />)}</div>
     </div>
   </section>
-  <section id="questions" tabindex="-1" aria-labelledby="questions-heading" class="container section">
-    <div class="measure">
-      <h2 id="questions-heading" class="section-heading section-header">Borrowing questions</h2>
-      <div class="border-t border-line">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p>{item.image && <div class="mt-5 max-w-sm overflow-hidden rounded-[4px]"><ContentImage image={item.image} /></div>}</Disclosure>)}</div>
-    </div>
+  <section id="questions" tabindex="-1" aria-labelledby="questions-heading" class="container-prose section">
+    <h2 id="questions-heading" class="section-heading section-header">Borrowing questions</h2>
+    <div class="border-t border-line">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p>{item.image && <div class="mt-5 max-w-sm overflow-hidden rounded-[4px]"><ContentImage image={item.image} /></div>}</Disclosure>)}</div>
   </section>
-  <section class="container section pt-0" aria-label="Library location"><LibraryMap /></section>
+  <section class="container-prose section pt-0" aria-labelledby="map-heading">
+    <h2 id="map-heading" class="section-heading section-header">Find us</h2>
+    <LibraryMap />
+  </section>
 </SiteLayout>
