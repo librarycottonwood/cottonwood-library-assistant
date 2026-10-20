@@ -182,9 +182,14 @@ export function validateSanitySnapshot(snapshot, expected) {
     const eventSlug = slug(doc.slug?.current,'event.slug');
     if (doc.href) safeHref(doc.href,'event.href');
     const program = doc.program ? reference(doc.program,'program','event.program') : undefined;
-    const sessions = unique(array(doc.sessions,'event.sessions').map(session => { const start = instant(session.startsAt,'event.startsAt'); const end = session.endsAt ? instant(session.endsAt,'event.endsAt') : undefined; if (end && Date.parse(end) < Date.parse(start)) fail('event ends before it starts'); return { _key: id(session._key,'session._key'), startsAt: start, ...(end ? { endsAt: end } : {}) }; }), '_key', 'sessions');
+    const sessions = unique(array(doc.sessions,'event.sessions').map(session => {
+      const start = instant(session.startsAt,'event.startsAt');
+      const end = instant(session.endsAt,'event.endsAt');
+      if (Date.parse(end) <= Date.parse(start)) fail('event end time must be later than its start time');
+      return { _key: id(session._key,'session._key'), startsAt: start, endsAt: end };
+    }), '_key', 'sessions');
     if (!sessions.length) fail('event requires at least one session');
-    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title: text(doc.title,'event.title'), summary: text(doc.summary,'event.summary'), href: `/events/${eventSlug}/`, startsAt: session.startsAt, ...(session.endsAt ? { endsAt: session.endsAt } : {}), ...(doc.image ? { image: image(doc.image,'event.image') } : {}), ...(doc.location ? { location: text(doc.location,'event.location') } : {}), ...(program ? { programId: slug(program.slug?.current,'event.program.slug') } : {}) }));
+    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title: text(doc.title,'event.title'), summary: text(doc.summary,'event.summary'), href: `/events/${eventSlug}/`, startsAt: session.startsAt, endsAt: session.endsAt, ...(doc.image ? { image: image(doc.image,'event.image') } : {}), ...(doc.location ? { location: text(doc.location,'event.location') } : {}), ...(program ? { programId: slug(program.slug?.current,'event.program.slug') } : {}) }));
   }), 'id', 'events');
   const posts = unique(docs.filter(doc => doc._type === 'post').map(doc => {
     const postSlug = slug(doc.slug?.current,'post.slug');

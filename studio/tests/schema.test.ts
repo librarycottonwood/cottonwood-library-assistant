@@ -21,6 +21,13 @@ test('the actual compiled Sanity form prevents publication when a confirmed date
   assert.ok(result.markers.some((marker) => marker.code === 'value.required' && marker.path.includes('startsAt')));
 });
 
+test('the actual compiled Sanity form blocks an event with a start but no end time', async () => {
+  const {endsAt, ...session} = event.sessions[0];
+  const result = await validateDocument({schema, document: {...event, sessions: [session]}});
+  assert.equal(result.status, 'failed');
+  assert.ok(result.markers.some((marker) => marker.code === 'value.required' && marker.path.includes('endsAt')));
+});
+
 test('built-in rules in the compiled program schema accept an imported image and require its description', async () => {
   const program = {...base, _id: 'program.readers', _type: 'program', title: 'Readers', slug: {_type: 'slug', current: 'readers'}, audience: 'adults', schedule: 'As announced', description: 'Share your reading.', details: 'Contact the library for confirmed dates.', image: {_type: 'libraryImage', legacyKey: 'exterior', alt: 'The library entrance.'}};
   const result = await validateDocument({schema, document: program});

@@ -4,8 +4,8 @@ export function upcomingEvents(events: LibraryEvent[], now = Date.now()): Librar
   return events.filter(event => {
     const zoned = (value: string) => /^\d{4}-\d{2}-\d{2}T.+(?:Z|[+-]\d{2}:\d{2})$/.test(value);
     const start = Date.parse(event.startsAt);
-    const end = event.endsAt ? Date.parse(event.endsAt) : start;
-    if (!zoned(event.startsAt) || (event.endsAt && !zoned(event.endsAt)) || !Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+    const end = Date.parse(event.endsAt);
+    if (!zoned(event.startsAt) || !zoned(event.endsAt) || !Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
       throw new Error(`Invalid event dates: ${event.id}`);
     }
     return end >= now;

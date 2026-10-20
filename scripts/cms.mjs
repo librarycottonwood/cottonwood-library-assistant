@@ -69,7 +69,7 @@ export async function seedSnapshot(config,{root=process.cwd()}={}) {
   for (const event of source.events) {
     const key=slug(event.title);
     if (!grouped.has(key)) grouped.set(key,{_id:`event-${key}`,_type:'event',slug:{_type:'slug',current:key},title:event.title,summary:event.summary,href:event.href,sessions:[]});
-    grouped.get(key).sessions.push({_key:event.id,_type:'eventSession',startsAt:event.startsAt,...(event.endsAt?{endsAt:event.endsAt}:{})});
+    grouped.get(key).sessions.push({_key:event.id,_type:'eventSession',startsAt:event.startsAt,endsAt:event.endsAt});
   }
   docs.push(...grouped.values());
   for (const post of source.posts.filter(post=>post.id!=='newsletter')) {

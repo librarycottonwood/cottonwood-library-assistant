@@ -17,7 +17,7 @@ const days = Array.from({length},(_,i)=>({number:i+1,events:events.filter(e=>key
     {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day=><span class="py-2 text-xs font-semibold">{day}</span>)}
     {Array.from({length:monthStart.getUTCDay()},()=> <span aria-hidden="true"></span>)}
     {days.map(day=>day.events.length ? <span data-calendar-date data-calendar-label={`${label} ${day.number}`}>
-      <a href={day.events[0].href} aria-label={`${label} ${day.number}: ${day.events[0].title}`} data-calendar-events={JSON.stringify(day.events.map(event => ({ href: event.href, title: event.title, expires: event.endsAt ?? event.startsAt })))} class="flex aspect-square items-center justify-center rounded-[3px] bg-forest font-semibold text-paper hover:bg-forest-dark">{day.number}</a>
+      <a href={day.events[0].href} aria-label={`${label} ${day.number}: ${day.events[0].title}`} data-calendar-events={JSON.stringify(day.events.map(event => ({ href: event.href, title: event.title, expires: event.endsAt })))} class="flex aspect-square items-center justify-center rounded-[3px] bg-forest font-semibold text-paper hover:bg-forest-dark">{day.number}</a>
       <span data-calendar-plain hidden class="flex aspect-square items-center justify-center text-sm">{day.number}</span>
     </span> : <span class="flex aspect-square items-center justify-center text-sm">{day.number}</span>)}
   </div>

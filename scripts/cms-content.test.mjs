@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { SANITY_API_VERSION, SANITY_QUERY, fetchSanitySnapshot, safeHref, sanityConfig, validateSanitySnapshot } from '../src/content/sanity.mjs';
+import { upcomingEvents } from '../src/content/feeds.ts';
 const picture = { legacyKey: 'exterior', alt: 'The library entrance.' };
 const fixture = () => ({ schemaVersion: 1, projectId: 'testproject', dataset: 'rehearsal', documents: [
   { _id:'library-settings',_type:'siteSettings', library:{name:'Test library',phone:'(530) 555-0100',phoneHref:'tel:+15305550100',email:'hello@example.org',address:'1 Main Street',locality:'Cottonwood, CA',mailingAddress:'PO Box 1',timezone:'America/Los_Angeles',hoursSummary:'Saturday 11–2',hours:[{days:'Saturday',hours:'11–2'}],catalogUrl:'https://catalog.example.org/',directionsUrl:'https://maps.example.org/',instagramUrl:'https://instagram.com/example',donationUrl:null},navigation:[{label:'Events',href:'/librarynews/'}],hero:{eyebrow:'Welcome',heading:['Your library.','Your community.'],introduction:'Come visit.',image:picture},services:[{id:'computers',title:'Computers',description:'Use a computer.',icon:'computer'}],borrowing:[{question:'How?',answer:'Ask us.'}],story:{heading:'Our story',paragraphs:['Built by neighbors.'],image:picture},support:{title:'Help',introduction:'Volunteer.',image:picture,volunteerFileUrl:'/documents/application.pdf',materials:'Books',bookSale:'During opening hours',wowPoints:'Ask the cashier'},currentNewsletter:{_ref:'newsletter-summer-2026'}},
@@ -29,6 +30,19 @@ test('a correction changes every occurrence derived from that record without dup
   assert.equal(result.events[0].startsAt,'2027-03-05T11:00:00-08:00');
   assert.ok(result.events.every(event=>event.title==='Corrected sale title'));
   assert.equal(result.posts[0].eventIds.length,1);
+});
+test('published event sessions cannot omit an end time or end at or before their start', () => {
+  for (const endsAt of [undefined, null, '', 'not a date', '2027-03-05T10:00:00-08:00', '2027-03-05T09:00:00-08:00']) {
+    const snapshot = fixture();
+    doc(snapshot, 'event').sessions[0].endsAt = endsAt;
+    assert.throws(() => validateSanitySnapshot(snapshot), /event\.endsAt|end time must be later/);
+  }
+});
+test('upcoming events remain listed during the event and expire after the required end time', () => {
+  const [event] = validateSanitySnapshot(fixture()).events;
+  assert.deepEqual(upcomingEvents([event], Date.parse('2027-03-05T12:00:00-08:00')), [event]);
+  assert.deepEqual(upcomingEvents([event], Date.parse('2027-03-05T14:00:01-08:00')), []);
+  assert.throws(() => upcomingEvents([{...event, endsAt: undefined}]), /Invalid event dates/);
 });
 test('post publication dates follow the Pacific calendar across evening, midnight, year and DST boundaries', () => {
   const cases = [

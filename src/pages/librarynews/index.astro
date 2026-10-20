@@ -18,7 +18,7 @@ const events = upcomingEvents(allEvents);
     <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.15fr]">
       <EventCalendar events={events} />
       <div>
-        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt ?? events[0].startsAt}><ContentImage image={events[0].image} variant="feature" eager /></div>}
+        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt}><ContentImage image={events[0].image} variant="feature" eager /></div>}
         <EventList events={events} emptyMessage="No special events are scheduled right now. Our regular programs are below." />
       </div>
     </div>

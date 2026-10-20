@@ -11,7 +11,7 @@ const fullDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle
 ---
 <div data-event-list data-event-limit={limit}>
 <ul hidden={events.length === 0} data-event-rows class="m-0 list-none divide-y divide-line p-0">
-  {events.map((event, index) => <li data-event-expires={event.endsAt ?? event.startsAt} hidden={index >= (limit ?? Infinity)} class="flex items-start gap-5 py-6">
+  {events.map((event, index) => <li data-event-expires={event.endsAt} hidden={index >= (limit ?? Infinity)} class="flex items-start gap-5 py-6">
     <div class="flex w-18 shrink-0 flex-col items-center rounded bg-meadow p-3" aria-hidden="true"><span class="eyebrow">{month.format(new Date(event.startsAt))}</span><span class="text-3xl font-bold">{day.format(new Date(event.startsAt))}</span></div>
     <div><h3 class="card-heading"><a href={event.href} class="hover:underline">{event.title}</a></h3><p class="mt-2 text-sm font-semibold"><time datetime={event.startsAt}>{fullDate.format(new Date(event.startsAt))} Pacific</time></p><p class="mt-2 text-base text-muted">{event.summary}</p><a href={event.href} class="text-link mt-2">Event details<Icon name="arrow" class="size-4" /></a></div>
   </li>)}

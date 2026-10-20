@@ -51,7 +51,7 @@ export const eventSession = defineType({
   description: 'Enter each confirmed occurrence. All dates and times here are Pacific time.',
   fields: [
     defineField({name: 'startsAt', title: 'Starts (Pacific time)', type: 'datetime', options: {displayTimeZone: 'America/Los_Angeles', allowTimeZoneSwitch: false}, validation: (rule) => rule.required()}),
-    defineField({name: 'endsAt', title: 'Ends (Pacific time)', type: 'datetime', options: {displayTimeZone: 'America/Los_Angeles', allowTimeZoneSwitch: false}}),
+    defineField({name: 'endsAt', title: 'Ends (Pacific time)', type: 'datetime', description: 'Required so the event stays listed until it finishes.', options: {displayTimeZone: 'America/Los_Angeles', allowTimeZoneSwitch: false}, validation: (rule) => rule.required().error('Choose an end date and time.')}),
   ],
   validation: (rule) => rule.custom(validSession),
   preview: {select: {start: 'startsAt', end: 'endsAt'}, prepare({start, end}) {

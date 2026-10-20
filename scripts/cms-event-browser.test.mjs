@@ -27,7 +27,7 @@ test('expired CMS events stop being promoted in actual browser pages without a n
     event.sessions=[{_key:'first',startsAt:'2099-04-17T10:00:00-07:00',endsAt:'2099-04-17T14:00:00-07:00'},
       {_key:'second',startsAt:'2099-04-18T11:00:00-07:00',endsAt:'2099-04-18T15:00:00-07:00'}];
     snapshot.documents.push({...structuredClone(event),_id:'event-afternoon',title:'Afternoon companion event',slug:{current:'afternoon-companion'},sessions:[{_key:'afternoon',startsAt:'2099-04-17T15:00:00-07:00',endsAt:'2099-04-17T16:00:00-07:00'}]});
-    snapshot.documents.push({...structuredClone(event),_id:'event-moment',title:'Final start-only event',slug:{current:'start-only-event'},sessions:[{_key:'moment',startsAt:'2099-04-18T16:00:00-07:00'}]});
+    snapshot.documents.push({...structuredClone(event),_id:'event-evening',title:'Final evening event',slug:{current:'evening-event'},sessions:[{_key:'evening',startsAt:'2099-04-18T16:00:00-07:00',endsAt:'2099-04-18T17:00:00-07:00'}]});
     const snapshotFile=path.join(folder,'snapshot.json');await saveSnapshot(snapshot,snapshotFile);
     const output=path.join(folder,'site');
     const build=spawnSync(process.execPath,['scripts/build.mjs'],{encoding:'utf8',timeout:120000,maxBuffer:5*1024*1024,env:{...process.env,LIBRARY_CONTENT_SOURCE:'sanity',SANITY_PROJECT_ID:config.projectId,SANITY_DATASET:config.dataset,SANITY_SNAPSHOT_PATH:snapshotFile,CMS_BUILD_OUT_DIR:output}});
@@ -60,7 +60,7 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         await page.clock.fastForward(30000);
         assert.equal(await active().count(),3);
         assert.equal(await list.locator('[data-event-expires="2099-04-17T14:00:00-07:00"]').isVisible(),false);
-        assert.equal(await active().filter({hasText:'Final start-only event'}).count(),1,'homepage rotates the fourth occurrence into its three-item limit');
+        assert.equal(await active().filter({hasText:'Final evening event'}).count(),1,'homepage rotates the fourth occurrence into its three-item limit');
         assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),false,'expired featured photo is no longer promoted');
         if(route==='/librarynews/'){
           const day=page.locator('[data-calendar-label="April 2099 17"]');
@@ -74,10 +74,11 @@ test('expired CMS events stop being promoted in actual browser pages without a n
           assert.equal(await day.locator('a').isVisible(),false);assert.equal(await day.locator('[data-calendar-plain]').isVisible(),true);
         }
         await advance('2099-04-18T22:00:01Z');assert.equal(await active().count(),1);
-        assert.match(await active().innerText(),/Final start-only event/);
-        if(route==='/librarynews/')assert.equal(await page.locator('[data-calendar-label="April 2099 18"] a').getAttribute('href'),'/events/start-only-event/');
-        // A session without endsAt expires after its confirmed startsAt.
-        await advance('2099-04-18T23:00:01Z');assert.equal(await active().count(),0);
+        assert.match(await active().innerText(),/Final evening event/);
+        if(route==='/librarynews/')assert.equal(await page.locator('[data-calendar-label="April 2099 18"] a').getAttribute('href'),'/events/evening-event/');
+        // An event that has started stays listed until its confirmed end.
+        await advance('2099-04-18T23:30:00Z');assert.equal(await active().count(),1);
+        await advance('2099-04-19T00:00:01Z');assert.equal(await active().count(),0);
         assert.equal(await list.locator('[data-event-empty]').isVisible(),true);assert.match(await list.locator('[data-event-empty]').innerText(),/No special events are scheduled/);
         if(route==='/librarynews/')assert.equal(await page.locator('[data-calendar-events]:visible').count(),0);
         // A fresh page load also hides the same expired records immediately.

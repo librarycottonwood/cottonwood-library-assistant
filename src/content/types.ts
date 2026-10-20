@@ -149,7 +149,7 @@ export interface LibraryEvent {
   location?: string;
   programId?: string;
   startsAt: string;
-  endsAt?: string;
+  endsAt: string;
   summary: string;
   href: string;
 }

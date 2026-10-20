@@ -4,7 +4,9 @@ import {studioEnvironment} from '../environment.ts';
 import {pacificDateLabel} from '../dates.ts';
 import {uniqueSessions, validDateRange, validImage, validLink, validNewsletter, validSession} from '../validation.ts';
 
-test('events reject backwards times, including equivalent UTC and Pacific offsets', () => {
+test('events require an end time and reject backwards times, including equivalent UTC and Pacific offsets', () => {
+  assert.match(String(validSession({startsAt: '2026-11-07T18:00:00Z'})), /Choose an end date and time/);
+  assert.match(String(validSession({startsAt: '2026-11-07T18:00:00Z', endsAt: ''})), /Choose an end date and time/);
   assert.equal(validSession({startsAt: '2026-11-07T18:00:00Z', endsAt: '2026-11-07T11:00:00-08:00'}), true);
   assert.match(String(validSession({startsAt: '2026-11-07T18:00:00Z', endsAt: '2026-11-07T09:30:00-08:00'})), /later/);
   assert.match(String(validSession({startsAt: '2026-11-07T10:00:00-08:00', endsAt: '2026-11-07T18:00:00Z'})), /later/);

@@ -4,7 +4,7 @@ This standalone Sanity Studio supplies the library’s editing forms. It does no
 
 ## What volunteers edit
 
-- **Events:** one record per event, with a list of confirmed dates. Date pickers and list previews use Pacific time. The website expands that one record into occurrences. A regular schedule does not invent dates.
+- **Events:** one record per event, with a list of confirmed dates. Every date requires a start and an end time, with the end later than the start. Date pickers and list previews use Pacific time. The website keeps each occurrence listed until it ends. A regular schedule does not invent dates.
 - **Blog posts:** title, summary, formatted text, cover picture, photo gallery, and references to existing events.
 - **Regular programs:** the reusable program description, picture, and regular schedule.
 - **Newsletters:** upload a PDF and its cover, then select it under Library settings → Homepage. Older PDFs remain available.
@@ -53,7 +53,7 @@ The adapter reads the raw Sanity snapshot envelope `{schemaVersion: 1, projectId
 | --- | --- |
 | `siteSettings`, fixed `_id: library-settings` | `library`, `navigation`, `hero`, `services`, `borrowing`, `story`, `support` preserve the existing provider-neutral home shape. Optional `serviceImage`/`givingImage` replace shared section pictures. `currentNewsletter` references `newsletter`; programs are separate documents. |
 | `givingSettings`, fixed `_id: library-giving` | `updates[]`, `initiatives[]`, `campaigns[]` preserve the existing support shape. |
-| `event` | `slug.current`, `title`, `summary`, optional `image`, `sessions[{_key, startsAt, endsAt?}]`, optional `location`, `href`, `program` reference. |
+| `event` | `slug.current`, `title`, `summary`, optional `image`, `sessions[{_key, startsAt, endsAt}]` with both times required, optional `location`, `href`, `program` reference. |
 | `post` | `slug.current`, `title`, optional `publishedAt`/`dateLabel`, `category`, `summary`, `body` Portable Text, optional `image`, `gallery[]`, `eventRefs[]`, imported `href`, `externalUrl`, `sourceLabel`. |
 | `program` | `slug.current` is the existing program ID; `audience`, `title`, `schedule`, `description`, `details`, `image`, optional `orderRank`. |
 | `newsletter` | `slug.current` is the stable archive address; `issue`, `title`, `summary`, `file` (Sanity file asset) **or** migration-only `legacyFileUrl`, `cover`. |

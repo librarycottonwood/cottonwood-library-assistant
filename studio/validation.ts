@@ -31,7 +31,8 @@ export function validSession(value: unknown): true | string {
   if (!value || typeof value !== 'object') return true;
   const session = value as {startsAt?: string; endsAt?: string};
   if (session.startsAt && !Number.isFinite(Date.parse(session.startsAt))) return 'Choose a valid start date and time.';
-  if (session.endsAt && !Number.isFinite(Date.parse(session.endsAt))) return 'Choose a valid end date and time.';
+  if (!session.endsAt) return 'Choose an end date and time.';
+  if (!Number.isFinite(Date.parse(session.endsAt))) return 'Choose a valid end date and time.';
   return session.startsAt && session.endsAt && Date.parse(session.endsAt) <= Date.parse(session.startsAt)
     ? 'The end time must be later than the start time.' : true;
 }

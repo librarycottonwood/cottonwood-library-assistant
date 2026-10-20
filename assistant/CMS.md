@@ -22,7 +22,7 @@ When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published
 | Library settings and hours | Shared contact details, map/address, navigation, page copy; phone link and hours summary derive automatically |
 | Giving and acknowledgments | Ways to help, thank-yous and approved Givebutter widget identifiers |
 
-Upcoming event rows, featured pictures and calendar highlights recheck their confirmed end/start times in the visitor's browser, including after a tab resumes. Ended events stop being promoted between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
+Each confirmed event date requires both a start and an end time, with the end later than the start. Upcoming event rows, featured pictures and calendar highlights recheck the confirmed end time in the visitor's browser, including after a tab resumes. Events stay listed while they are happening and stop being promoted after they end, between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
 
 Payments, donors and live fundraising totals stay in Givebutter. Donor data, passwords, keys, private board records and personal details do not belong in public website documents. Public Sanity datasets expose published documents and original uploaded assets even when a website does not link them. The website emits resized, metadata-free images; check Sanity's treatment of **original uploads** during the live rehearsal before claiming the entire upload pipeline removes private metadata.
 
