@@ -1,38 +1,34 @@
 ---
-import { Image } from 'astro:assets';
+import Image from '../components/OptimizedImage.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from '../components/Icon.astro';
+import ContentImage from '../components/ContentImage.astro';
+import EventList from '../components/EventList.astro';
+import { upcomingEvents } from '../content/feeds';
 import VisitPanel from '../components/VisitPanel.astro';
-import { bookSaleDateLabel } from '../content/editorial';
 import { contentRepository } from '../content/repository';
-import { resolveImage } from '../content/images';
 import { checkoutAttributes, getDonateLink } from '../content/donate';
-const { library, hero, programs } = await contentRepository.getHome();
-const { initiatives } = await contentRepository.getSupport();
-const donate = getDonateLink();
-const bookSale = initiatives.find(item => item.id === 'book-sale')!;
+const { library, hero, programs, services, serviceImage, givingImage, support } = await contentRepository.getHome();
+const events = upcomingEvents(await contentRepository.getEvents());
+const donate = await getDonateLink();
 const actions = [
   { label: 'Upcoming events', href: '/librarynews/', tone: 'action-sun' },
   { label: 'Kids & families', href: '/kids/', tone: 'action-meadow' },
   { label: 'Find a book', href: library.catalogUrl, tone: 'action-gold', event: 'catalog_quick' },
   { label: 'Donate', href: donate.href, tone: 'action-forest', event: 'donate_quick', attributes: checkoutAttributes(donate) },
 ];
-const resources = [
-  { label: 'Library catalog', note: 'Browse our collection', href: library.catalogUrl, icon: 'book' as const },
-  { label: 'Computers & Wi-Fi', note: 'Public computers and Wi-Fi', href: '/visit/#computers', icon: 'computer' as const },
-  { label: 'Printing & copying', note: 'Black-and-white prints: 20¢ per page', href: '/visit/#printing', icon: 'printer' as const },
-];
+const resources = services.map(service => ({ label: service.title, note: service.description, href: service.id === 'borrowing' ? library.catalogUrl : `/visit/#${service.id}`, icon: service.icon }));
 ---
 <SiteLayout>
   <section class="container py-8 sm:py-10" aria-labelledby="welcome-heading">
     <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
-        <p class="mt-4 text-lg text-muted">Come read, play and connect.</p>
+        <p class="mt-4 text-lg text-muted">{hero.introduction}</p>
         <p class="mt-4 text-base text-muted">{library.address} · Cottonwood</p>
         <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image width={1100} quality={70} src={resolveImage(hero.image.key)} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+      <div class="feature-shape"><Image width={1100} quality={70} image={hero.image} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
     </div>
   </section>
 
@@ -59,19 +55,14 @@ const resources = [
       <a href="/librarynews/" class="text-link">See the calendar<Icon name="arrow" class="size-4" /></a>
     </div>
     <div class="coming-up">
-      <a href="/fundraising-events/book-sale/" class="coming-feature group">
-        <div class="feature-shape">
-          <Image width={1100} quality={70} src={resolveImage(bookSale.image.key)} alt={bookSale.image.alt} widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 530px" class="aspect-[1.9] w-full object-cover" />
-        </div>
-        <p class="eyebrow mt-5">{bookSaleDateLabel}</p>
-        <h3 class="mt-2 font-display text-3xl leading-tight tracking-tight group-hover:underline sm:text-4xl">Quarterly book sale</h3>
-        <p class="mt-3 text-base text-muted">Back-door entry · Cash only.</p>
-        <span class="text-link mt-2">Explore the sale<Icon name="arrow" class="size-4" /></span>
-      </a>
+      <div class="coming-feature">
+        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt}><ContentImage image={events[0].image} variant="feature" /></div>}
+        <EventList events={events} limit={3} emptyMessage="No special events are scheduled right now. Explore our regular programs." />
+      </div>
       <div class="program-agenda">
         <p class="eyebrow mb-2 text-muted">Gather at the library</p>
         {programs.map(program => <a href={`/librarynews/${program.id}/`} class="program-row group">
-          <Image width={260} quality={70} src={resolveImage(program.image.key)} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
+          <Image width={260} quality={70} image={program.image} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
           <div class="min-w-0 flex-1">
             <p class="text-sm font-semibold text-muted">{program.schedule}</p>
             <h3 class="card-heading mt-1 group-hover:underline">{program.title}</h3>
@@ -86,20 +77,20 @@ const resources = [
     <div class="giving-banner">
       <div class="giving-copy">
         <p class="eyebrow text-gold">Community-funded library</p>
-        <h2 id="independent-heading" class="section-heading mt-4">Keep your<br /><em class="font-normal">library open.</em></h2>
-        <p class="mt-5 max-w-sm text-lg text-paper/85">No county or taxpayer funding.<br />Donations help cover day-to-day operations.</p>
+        <h2 id="independent-heading" class="section-heading mt-4">{support.title}</h2>
+        <p class="mt-5 max-w-sm text-lg text-paper/85">{support.introduction}</p>
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
           <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.label}</a>
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
         </div>
       </div>
-      <Image width={1100} quality={70} src={resolveImage('interior')} alt="Bookshelves and reading spaces inside Cottonwood Community Library." widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
+      <Image width={1100} quality={70} image={givingImage ?? support.image} alt={(givingImage ?? support.image).alt} widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
     </div>
   </section>
 
   <section id="services" tabindex="-1" class="container-narrow pt-8 pb-4 sm:pt-14 sm:pb-8" aria-labelledby="services-heading">
     <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
-      <Image width={800} quality={70} src={resolveImage('computerLab')} alt="Public computers inside Cottonwood Community Library." widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
+      <Image width={800} quality={70} image={serviceImage ?? hero.image} alt={(serviceImage ?? hero.image).alt} widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
       <div>
         <h2 id="services-heading" class="section-heading">Library services</h2>
         <nav aria-label="Library services" class="mt-5 divide-y divide-line">

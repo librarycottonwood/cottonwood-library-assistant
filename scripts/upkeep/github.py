@@ -26,7 +26,7 @@ def output(name, value):
 def allowed(path):
     # Connector authorization, credentials, request policy and publishing remain
     # outside the repair scope. Its protocol handler receives no secret bindings.
-    return path in ('package.json', 'pnpm-lock.yaml', 'connector/package.json', 'connector/package-lock.json', 'connector/src/mcp.mjs', 'connector/src/format.mjs') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
+    return path in ('package.json', 'pnpm-lock.yaml', 'connector/package.json', 'connector/package-lock.json', 'connector/src/mcp.mjs', 'connector/src/format.mjs', 'src/content/sanity.mjs', 'src/content/repository.ts', 'studio/package.json', 'studio/pnpm-lock.yaml') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
 
 mode = sys.argv[1] if __name__ == '__main__' else None
 if mode == 'prepare':
@@ -83,7 +83,7 @@ elif mode == 'patch':
     else:
         if any(Path(p).is_symlink() for p in paths):
             raise RuntimeError('Automatic repairs cannot introduce symbolic links')
-        for package_path in ('package.json', 'connector/package.json'):
+        for package_path in ('package.json', 'connector/package.json', 'studio/package.json'):
             if package_path not in paths:
                 continue
             original = json.loads(subprocess.check_output(['git', 'show', 'HEAD:' + package_path]))

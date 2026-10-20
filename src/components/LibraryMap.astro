@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
-import { homeContent } from '../content/seed';
-const { library } = homeContent;
+import { contentRepository } from '../content/repository';
+const { library } = await contentRepository.getHome();
 ---
 <div class="library-map" data-library-map>
   <div class="map-fallback">

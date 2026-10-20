@@ -1,5 +1,7 @@
 # Fundraisers: technical steps
 
+First verify the active content provider using [CMS workflow](../CMS.md). Once Sanity is connected, use its records and Studio/connected tools; the source-file locations below describe the local prototype and migration inputs. Do not maintain both copies.
+
 Used by the `fundraisers` skill. Follow `assistant/WORKFLOW.md` for checking, preview and save. The Monday weekly task only reports the Givebutter total; it never edits the site.
 
 Givebutter facts these steps rely on (https://docs.givebutter.com/widgets/getting-started and https://help.givebutter.com/en/articles/6464859):

@@ -5,7 +5,7 @@ Before answering library requests, read the canonical volunteer instructions in 
 ## Work and authority
 
 Make changes in this isolated repository. Do not touch the separate Squarespace migration or other checkouts.
-Edit the content source when possible. Preserve other work and keep changes narrow.
+Before content edits, read `assistant/CMS.md` and verify the active provider. Once Sanity is connected, ordinary publishing edits CMS records, not the old seed files. Never infer account setup from this branch's implementation. Edit the content source when possible. Preserve other work and keep changes narrow.
 Prepare every new picture with `pnpm assistant:image` (see Pictures in assistant/WORKFLOW.md); `pnpm build` blocks unoptimized pictures. Run `pnpm check`, `pnpm build`, and `pnpm assistant:capture`. Inspect both screenshots before presenting them. Test affected navigation/forms, not just appearance.
 Prepare an immutable release with `pnpm assistant:prepare`. Preview that saved release. Approval refers to its exact digest; never rebuild or silently substitute another version after approval.
 When the volunteer approves a trial change, follow the Save trial changes section in assistant/WORKFLOW.md. Saving source to the library repository is allowed and separate from launching the public domain. Do not refuse a trial save just because public publishing is unavailable.

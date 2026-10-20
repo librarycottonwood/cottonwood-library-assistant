@@ -9,7 +9,7 @@ import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donat
 interface Props { title?: string; description?: string; }
 const [content, notices] = await Promise.all([contentRepository.getHome(), contentRepository.getNotices()]);
 // Donate buttons are on every page, so once they open Givebutter's popup its script loads once per page here.
-const givebutterAccount = sitewideGivebutterAccount();
+const givebutterAccount = await sitewideGivebutterAccount();
 ---
 <PageLayout {...Astro.props}>
   <NoticeBanner notices={notices} />

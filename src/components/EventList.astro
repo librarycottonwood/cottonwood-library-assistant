@@ -2,15 +2,46 @@
 import Icon from './Icon.astro';
 import type { LibraryEvent } from '../content/types';
 import { upcomingEvents } from '../content/feeds';
-interface Props { events: LibraryEvent[]; }
+interface Props { events: LibraryEvent[]; emptyMessage?: string; limit?: number; }
+const { emptyMessage = 'No upcoming events are scheduled right now.', limit } = Astro.props;
 const events = upcomingEvents(Astro.props.events);
 const day = new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'America/Los_Angeles' });
 const month = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'America/Los_Angeles' });
 const fullDate = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'short', timeZone: 'America/Los_Angeles' });
 ---
-{events.length > 0 && <ul class="m-0 list-none divide-y divide-line p-0">
-  {events.map(event => <li class="flex items-start gap-5 py-6">
+<div data-event-list data-event-limit={limit}>
+<ul hidden={events.length === 0} data-event-rows class="m-0 list-none divide-y divide-line p-0">
+  {events.map((event, index) => <li data-event-expires={event.endsAt} hidden={index >= (limit ?? Infinity)} class="flex items-start gap-5 py-6">
     <div class="flex w-18 shrink-0 flex-col items-center rounded bg-meadow p-3" aria-hidden="true"><span class="eyebrow">{month.format(new Date(event.startsAt))}</span><span class="text-3xl font-bold">{day.format(new Date(event.startsAt))}</span></div>
     <div><h3 class="card-heading"><a href={event.href} class="hover:underline">{event.title}</a></h3><p class="mt-2 text-sm font-semibold"><time datetime={event.startsAt}>{fullDate.format(new Date(event.startsAt))} Pacific</time></p><p class="mt-2 text-base text-muted">{event.summary}</p><a href={event.href} class="text-link mt-2">Event details<Icon name="arrow" class="size-4" /></a></div>
   </li>)}
-</ul>}
+</ul>
+<p data-event-empty hidden={events.length > 0} class="text-base text-muted">{emptyMessage}</p>
+</div>
+
+<script>
+  // The static release remains useful between CMS edits: an ended occurrence
+  // stops being promoted without changing any record or publishing a new release.
+  const refreshEvents = () => {
+    const now = Date.now();
+    for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
+      const maximum = Number(list.dataset.eventLimit ?? Infinity);
+      let shown = 0;
+      for (const row of list.querySelectorAll<HTMLElement>('[data-event-expires]')) {
+        const active = Date.parse(row.dataset.eventExpires!) >= now && shown < maximum;
+        row.hidden = !active;
+        if (active) shown++;
+      }
+      const rows = list.querySelector<HTMLElement>('[data-event-rows]');
+      const empty = list.querySelector<HTMLElement>('[data-event-empty]');
+      if (rows) rows.hidden = shown === 0;
+      if (empty) empty.hidden = shown > 0;
+    }
+    for (const feature of document.querySelectorAll<HTMLElement>('[data-event-feature-expires]')) {
+      feature.hidden = Date.parse(feature.dataset.eventFeatureExpires!) < now;
+    }
+  };
+  refreshEvents();
+  window.setInterval(refreshEvents, 30000);
+  document.addEventListener('visibilitychange', refreshEvents);
+</script>

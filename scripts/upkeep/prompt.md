@@ -14,6 +14,14 @@ src/layouts/**, src/styles/**, package.json, pnpm-lock.yaml,
 connector/package.json, connector/package-lock.json, connector/src/mcp.mjs
 and connector/src/format.mjs. Package changes may only update existing exact
 dependency versions, never scripts, package metadata, or new dependencies.
+Technical CMS adapter fixes may change only src/content/sanity.mjs and
+src/content/repository.ts. Preserve published-only reads, strict validation,
+the fail-closed provider boundary and credential-free rendering. Never add
+business facts, fallback content, draft access, write access or approval bypasses.
+Studio dependency repairs may update only existing exact versions in
+studio/package.json and its pnpm-lock.yaml; never change forms, schema or content.
+The publishing service, its authentication, its tests and all deployment
+workflows require reviewed changes and remain outside automatic repair scope.
 For the Analytics connector,
 fix only protocol handling or report presentation; never change authentication,
 property selection, report request permissions, secrets, hosting configuration,

@@ -51,6 +51,11 @@ class RepairBoundaryTests(unittest.TestCase):
         self.tmp.cleanup()
     def patch(self):
         import subprocess
+        # Host-generated result files live outside the checkout in real runs.
+        # This fixture keeps them in its temp folder; remove them between calls.
+        self.run('git','reset','--','outputs','repair.patch')
+        for name in ('outputs','repair.patch'):
+            (self.root/name).unlink(missing_ok=True)
         env=dict(os.environ,GITHUB_REPOSITORY='librarycottonwood/cottonwood-library-assistant',GITHUB_OUTPUT=str(self.root/'outputs'),RUNNER_TEMP=str(self.root))
         return subprocess.run(['python3',str(Path(__file__).with_name('github.py').resolve()),'patch',self.source],cwd=self.root,env=env,capture_output=True,text=True)
     def test_check_script_cannot_be_weakened(self):
@@ -96,6 +101,36 @@ class RepairBoundaryTests(unittest.TestCase):
         self.assertNotEqual(self.patch().returncode,0)
         path.write_text(json.dumps({**original,'dependencies':{'oauth':'1.2.4'}}))
         self.assertEqual(self.patch().returncode,0)
+    def test_cms_adapter_repair_can_be_exported_but_data_and_publishing_cannot(self):
+        adapter=self.root/'src/content/sanity.mjs'
+        adapter.parent.mkdir(parents=True,exist_ok=True)
+        adapter.write_text('original adapter')
+        self.run('git','add','src/content')
+        self.run('git','commit','-qm','CMS adapter fixture')
+        self.source=self.run('git','rev-parse','HEAD').stdout.strip()
+        adapter.write_text('technical adapter repair')
+        self.assertEqual(self.patch().returncode,0)
+        adapter.write_text('original adapter')
+        for name in ('src/content/seed.ts','studio/schema.ts','cms-publisher/src/index.mjs','.github/workflows/cms.yml','scripts/cms-publishing.mjs'):
+            file=self.root/name
+            file.parent.mkdir(parents=True,exist_ok=True)
+            file.write_text('out of scope change')
+            self.assertNotEqual(self.patch().returncode,0,name)
+            file.unlink()
+    def test_studio_dependency_repair_cannot_change_scripts_or_add_packages(self):
+        import json
+        file=self.root/'studio/package.json';file.parent.mkdir()
+        original={'scripts':{'check':'tsc --noEmit'},'dependencies':{'sanity':'6.20.0'}}
+        file.write_text(json.dumps(original))
+        self.run('git','add','studio')
+        self.run('git','commit','-qm','Studio fixture')
+        self.source=self.run('git','rev-parse','HEAD').stdout.strip()
+        file.write_text(json.dumps({**original,'dependencies':{'sanity':'6.20.1'}}))
+        self.assertEqual(self.patch().returncode,0)
+        file.write_text(json.dumps({**original,'scripts':{'check':'echo pass'}}))
+        self.assertNotEqual(self.patch().returncode,0)
+        file.write_text(json.dumps({**original,'dependencies':{'sanity':'6.20.0','new-package':'1.0.0'}}))
+        self.assertNotEqual(self.patch().returncode,0)
 
 if __name__ == '__main__':
     unittest.main()

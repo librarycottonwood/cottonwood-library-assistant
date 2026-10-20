@@ -1,5 +1,7 @@
 # Events: technical steps
 
+First verify the active content provider using [CMS workflow](../CMS.md). Once Sanity is connected, use its records and Studio/connected tools; the source-file locations below describe the local prototype and migration inputs. Do not maintain both copies.
+
 Used by the `events` skill. Follow `assistant/WORKFLOW.md` for checking, preview and save.
 
 ## Where
@@ -11,7 +13,7 @@ Used by the `events` skill. Follow `assistant/WORKFLOW.md` for checking, preview
   id: 'story-time-2026-11-08',          // lowercase, unique: name + date
   title: 'Saturday Story Time',
   startsAt: '2026-11-08T10:00:00-08:00', // Pacific with offset: -07:00 summer (PDT), -08:00 winter (PST)
-  endsAt: '2026-11-08T11:00:00-08:00',  // optional
+  endsAt: '2026-11-08T11:00:00-08:00',  // required, later than the start
   summary: 'Stories and a craft for ages 3–8. Free.', // one short line
   href: '/librarynews/story-time/',     // the page with details
 },
