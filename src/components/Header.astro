@@ -6,7 +6,7 @@ import { checkoutAttributes, getDonateLink } from '../content/donate';
 import type { HomeContent } from '../content/types';
 interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
 const { library, navigation } = Astro.props;
-const donate = getDonateLink();
+const donate = await getDonateLink();
 const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.startsWith(href);
 ---
 <a href="/#visit" aria-label={`Library hours: ${library.hoursSummary}. View hours and directions.`} class="hours-banner group block bg-forest text-paper transition-colors hover:bg-forest-dark focus-visible:outline-offset-[-4px] focus-visible:outline-paper">

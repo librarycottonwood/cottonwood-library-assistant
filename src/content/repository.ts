@@ -1,8 +1,7 @@
-import type { HomeContent, SupportContent, LibraryEvent, LibraryNotice, LibraryPost } from './types';
-import { homeContent } from './seed';
-import { supportContent } from './support';
-import { libraryEvents, libraryPosts } from './editorial';
-import { libraryNotices } from './notices';
+import { readFile } from 'node:fs/promises';
+import process from 'node:process';
+import { fetchSanitySnapshot, sanityConfig, validateSanitySnapshot, type SanityContent } from './sanity.mjs';
+import type { HomeContent, SupportContent, LibraryEvent, LibraryNotice, LibraryPost, LibraryNewsletter } from './types';
 
 export interface ContentRepository {
   getHome(): Promise<HomeContent>;
@@ -10,17 +9,31 @@ export interface ContentRepository {
   getEvents(): Promise<LibraryEvent[]>;
   getPosts(): Promise<LibraryPost[]>;
   getNotices(): Promise<LibraryNotice[]>;
+  getNewsletters(): Promise<LibraryNewsletter[]>;
 }
 
-// Deliberately local for the UI prototype. A Sanity implementation can map
-// published CMS documents into HomeContent without changing page components.
-// Do not add a silent seed fallback to a future production CMS implementation.
-const localContentRepository: ContentRepository = {
-  async getHome() { return homeContent; },
-  async getSupport() { return supportContent; },
-  async getEvents() { return libraryEvents; },
-  async getPosts() { return libraryPosts; },
-  async getNotices() { return libraryNotices; },
-};
+const env = { ...import.meta.env, ...process.env };
 
-export const contentRepository = localContentRepository;
+// One validated snapshot feeds every route during the build. Reject promises stay
+// rejected: a CMS outage cannot quietly mix old seed records into the website.
+let content: Promise<SanityContent> | undefined;
+async function sanityContent(): Promise<SanityContent> {
+  return content ??= (async () => {
+    const config = sanityConfig(env);
+    const snapshotPath = env.SANITY_SNAPSHOT_PATH;
+    const snapshot = snapshotPath ? JSON.parse(await readFile(snapshotPath, 'utf8')) : await fetchSanitySnapshot(config, { token: env.SANITY_READ_TOKEN });
+    return validateSanitySnapshot(snapshot, config);
+  })();
+}
+const sanityRepository: ContentRepository = {
+  async getHome() { return (await sanityContent()).home; },
+  async getSupport() { return (await sanityContent()).support; },
+  async getEvents() { return (await sanityContent()).events; },
+  async getPosts() { return (await sanityContent()).posts; },
+  async getNotices() { return (await sanityContent()).notices; },
+  async getNewsletters() { return (await sanityContent()).newsletters; },
+};
+const source = env.LIBRARY_CONTENT_SOURCE ?? 'local';
+if (source !== 'local' && source !== 'sanity') throw new Error('LIBRARY_CONTENT_SOURCE must be local or sanity');
+export const contentSource = source;
+export const contentRepository: ContentRepository = source === 'sanity' ? sanityRepository : (await import('./local')).localContentRepository;

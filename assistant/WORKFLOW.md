@@ -1,5 +1,13 @@
 # Administrator and agent workflow
 
+## Content provider first
+
+Read `assistant/CMS.md` and verify the actual provider before choosing an edit path. Until the library's Sanity project is connected, the local prototype and source-edit workflow below remain available. Once enabled, events, posts, programs, newsletters, notices, settings/hours and giving records are edited in Sanity; do not duplicate those edits in seed/editorial files. Use the connected CMS tools only when they actually exist, or the included Studio forms. Layout/code changes still use the source workflow below.
+
+CMS publication queues an immutable website preview; it does not itself make the trial website live. The reviewer uses the separate authenticated approval service, and `cms.yml` promotes the exact checked artifact to **cms-trial** only. It verifies the hosted result and attempts verified restoration after a failed upload. The public domain and existing **trial** address are separate. Account creation, nonprofit approval, plugin release and real-account rehearsals are pending; do not represent local tests as their completion.
+
+## Source edits
+
 1. Read the request, inspect current files/status, and research what is needed. Resolve routine implementation choices independently.
 2. Make the smallest useful edit. Verify with `pnpm check` and `pnpm build`.
 3. Run `pnpm assistant:prepare`; it saves the built site under an immutable SHA-256 digest in `output/releases/`. Keep the manifest and previous release.

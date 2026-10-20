@@ -40,9 +40,11 @@ export const homeContent = {
   hero: {
     eyebrow: 'Rooted in Cottonwood · Open to you',
     heading: ['Your community.', 'Your library.'],
-    introduction: 'A good book. A familiar face. A place to belong. Discover a little of everything at your community-supported library on Main Street.',
+    introduction: 'Come read, play and connect.',
     image: { key: 'exterior', alt: 'Cottonwood Community Library on Main Street, decorated with flags and red, white, and blue bunting.', caption: 'A little library with a big heart, right here on Main Street.' },
   },
+  serviceImage: { key: 'computerLab', alt: 'Public computer workstations inside Cottonwood Community Library.' },
+  givingImage: { key: 'interior', alt: 'Bookshelves and reading spaces inside Cottonwood Community Library.' },
   programs: [
     {
       audience: 'children', id: 'story-time', title: 'Story Time',
@@ -67,9 +69,9 @@ export const homeContent = {
     },
   ],
   services: [
-    { id: 'borrowing', title: 'Find your next read', description: 'Browse the shelves, discover a new favorite, and make yourself at home.', icon: 'book' },
-    { id: 'computers', title: 'Get connected', description: 'Use our public computers or bring your own device. Ask at the front desk for Wi-Fi access.', icon: 'computer' },
-    { id: 'printing', title: 'Print & copy', description: 'Black-and-white copies and prints: 20¢ per page. Color copies: $1.', icon: 'printer' },
+    { id: 'borrowing', title: 'Library catalog', description: 'Browse our collection.', icon: 'book' },
+    { id: 'computers', title: 'Computers & Wi-Fi', description: 'Public computers and Wi-Fi.', icon: 'computer' },
+    { id: 'printing', title: 'Printing & copying', description: 'Black-and-white: 20¢ per page. Color copies: $1.', icon: 'printer' },
   ],
   borrowing: [
     { question: 'How do I borrow books?', answer: 'If you’re 18 or older, bring photo ID and proof of residence to the front desk. Family accounts let other household members, including minors, borrow under the primary account holder’s name. We don’t issue physical library cards—just tell a volunteer your account name. New patrons may borrow 3 items, increasing to 10 after the first successful return.' },
@@ -83,7 +85,7 @@ export const homeContent = {
     cover: { key: 'newsletter', alt: 'Cover of the Cottonwood Community Library Summer 2026 newsletter.', fit: 'contain' },
   },
   story: {
-    heading: 'Built by neighbors\nBeloved by generations',
+    heading: 'Built by neighbors. Here for you.',
     paragraphs: [
       'When Cottonwood lost its county library branch, this community came together to bring it back. In 1996, a library opened in a rented downtown space. In 2007, thanks to land donated by Dr. James and Mary Reifert and the generosity of our neighbors, we opened the doors on Main Street.',
       'Today, a part-time director and dedicated volunteers keep our library going. With no government funding, every book, program, and open door is made possible by community support.',
@@ -91,8 +93,8 @@ export const homeContent = {
     image: { key: 'founders', alt: 'The library’s founders plaque honoring Dr. James and Mary Reifert.', caption: 'Dr. James and Mary Reifert donated the land for the library.' },
   },
   support: {
-    title: 'Help write our next chapter',
-    introduction: 'Your gifts and volunteer hours keep our community library open.',
+    title: 'Keep your library open.',
+    introduction: 'No county or taxpayer funding. Donations help cover day-to-day operations.',
     image: { key: 'watercolor', alt: 'Watercolor of Cottonwood Community Library, with its red roof, American flag and garden.' },
     volunteerFileUrl: '/documents/cottonwood-library-volunteer-application.pdf',
     materials: 'We welcome gently used books and unblemished DVDs. Please bring materials to library personnel. We can’t accept damaged books, dictionaries, encyclopedias, textbooks, or used workbooks.',

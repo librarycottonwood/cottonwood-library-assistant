@@ -12,11 +12,7 @@ import { contentRepository } from '../../content/repository';
 import { activeCampaign } from '../../content/feeds';
 const [{ library, support }, { campaigns, updates, initiatives }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getPosts()]);
 const campaign = activeCampaign(campaigns);
-const options = [
-  { id: 'donate-books', title: 'Donate books & DVDs', note: 'Material donations', image: { key: 'stacks', alt: 'Shelves of books in Cottonwood Community Library.' } },
-  { id: 'book-sale', title: 'Shop a book sale', note: 'Every purchase helps', image: initiatives.find(item => item.id === 'book-sale')!.image },
-  { id: 'wow-points', title: 'Give WOW points', note: 'Holiday Market rewards', image: initiatives.find(item => item.id === 'wow-points')!.image },
-];
+const options = initiatives.filter(item => item.category === 'community');
 ---
 <SiteLayout title="Donate & support | Cottonwood Community Library" description="Your donations keep Cottonwood’s independent community library open.">
   <PageIntro title="Your gifts keep us open" description="No county funding. No taxpayer funding. Just community." />
@@ -26,7 +22,7 @@ const options = [
   </section>
   <section class="container pb-12" aria-labelledby="other-support-heading">
     <h2 id="other-support-heading" class="section-heading mb-6">Other ways to help</h2>
-    <div class="grid gap-5 sm:grid-cols-3">{options.map(option => <FeatureCard title={option.title} note={option.note} image={option.image} href={`/fundraising-events/${option.id}/`} />)}</div>
+    <div class="grid gap-5 sm:grid-cols-3">{options.map(option => <FeatureCard title={option.title} note={option.label} image={option.image} href={`/fundraising-events/${option.id}/`} />)}</div>
   </section>
   <section id="stories" tabindex="-1" class="bg-meadow/50 py-10 sm:py-12" aria-labelledby="support-stories-heading">
     <div class="container-narrow"><h2 id="support-stories-heading" class="section-heading mb-6">Why your support matters</h2><PostFeed posts={posts} />

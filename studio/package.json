@@ -1,0 +1,28 @@
+{
+  "name": "@cottonwood/library-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "engines": { "node": ">=24 <25" },
+  "scripts": {
+    "dev": "node scripts/run.mjs dev",
+    "build": "node scripts/run.mjs build",
+    "build:offline": "node scripts/run.mjs build --offline-fixture",
+    "check": "tsc --noEmit && node --experimental-strip-types --test tests/*.test.ts",
+    "validate:import": "node --experimental-strip-types scripts/validate-import.ts",
+    "schema:extract": "node scripts/run.mjs schema extract --path schema.json --force"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sanity": "6.20.0",
+    "styled-components": "6.6.0"
+  },
+  "devDependencies": {
+    "@sanity/validation": "6.20.0",
+    "@types/node": "24.10.0",
+    "@types/react": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}

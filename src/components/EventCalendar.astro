@@ -9,14 +9,41 @@ const monthStart = new Date(Date.UTC(year, month - 1, 1));
 const length = new Date(Date.UTC(year, month, 0)).getUTCDate();
 const label = new Intl.DateTimeFormat('en-US', {month:'long',year:'numeric',timeZone:'UTC'}).format(monthStart);
 const key = (date: Date) => new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'America/Los_Angeles'}).format(date);
-const days = Array.from({length},(_,i)=>({number:i+1,event:events.find(e=>key(new Date(e.startsAt))===`${year}-${String(month).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`)}));
+const days = Array.from({length},(_,i)=>({number:i+1,events:events.filter(e=>key(new Date(e.startsAt))===`${year}-${String(month).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`)}));
 ---
 <div class="rounded-[4px] bg-meadow p-5 sm:p-7">
   <h2 class="card-heading mb-5">{label}</h2>
   <div class="grid grid-cols-7 gap-1 text-center">
     {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day=><span class="py-2 text-xs font-semibold">{day}</span>)}
     {Array.from({length:monthStart.getUTCDay()},()=> <span aria-hidden="true"></span>)}
-    {days.map(day=>day.event ? <a href={day.event.href} aria-label={`${label} ${day.number}: ${day.event.title}`} class="flex aspect-square items-center justify-center rounded-[3px] bg-forest font-semibold text-paper hover:bg-forest-dark">{day.number}</a> : <span class="flex aspect-square items-center justify-center text-sm">{day.number}</span>)}
+    {days.map(day=>day.events.length ? <span data-calendar-date data-calendar-label={`${label} ${day.number}`}>
+      <a href={day.events[0].href} aria-label={`${label} ${day.number}: ${day.events[0].title}`} data-calendar-events={JSON.stringify(day.events.map(event => ({ href: event.href, title: event.title, expires: event.endsAt ?? event.startsAt })))} class="flex aspect-square items-center justify-center rounded-[3px] bg-forest font-semibold text-paper hover:bg-forest-dark">{day.number}</a>
+      <span data-calendar-plain hidden class="flex aspect-square items-center justify-center text-sm">{day.number}</span>
+    </span> : <span class="flex aspect-square items-center justify-center text-sm">{day.number}</span>)}
   </div>
-  <p class="mt-4 text-sm text-muted">Highlighted dates: upcoming book sale.</p>
+  <p data-calendar-note class="mt-4 text-sm text-muted">Highlighted dates: upcoming events.</p>
 </div>
+
+<script>
+  const refreshCalendar = () => {
+    const now = Date.now();
+    for (const cell of document.querySelectorAll<HTMLElement>('[data-calendar-date]')) {
+      const link = cell.querySelector<HTMLAnchorElement>('[data-calendar-events]')!;
+      const plain = cell.querySelector<HTMLElement>('[data-calendar-plain]')!;
+      const events: { href: string; title: string; expires: string }[] = JSON.parse(link.dataset.calendarEvents!);
+      const event = events.find(event => Date.parse(event.expires) >= now);
+      link.hidden = !event;
+      plain.hidden = Boolean(event);
+      if (event) {
+        link.href = event.href;
+        link.setAttribute('aria-label', `${cell.dataset.calendarLabel}: ${event.title}`);
+      }
+    }
+    for (const note of document.querySelectorAll<HTMLElement>('[data-calendar-note]')) {
+      note.hidden = !note.parentElement?.querySelector('[data-calendar-events]:not([hidden])');
+    }
+  };
+  refreshCalendar();
+  window.setInterval(refreshCalendar, 30000);
+  document.addEventListener('visibilitychange', refreshCalendar);
+</script>

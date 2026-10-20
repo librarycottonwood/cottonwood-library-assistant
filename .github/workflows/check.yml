@@ -22,6 +22,10 @@ jobs:
       - run: bash scripts/cloud-setup.sh
       - run: node --test scripts/release.test.mjs scripts/images.test.mjs
       - run: node scripts/analytics.test.mjs
+      - name: Verify CMS content, forms, and publisher without accounts or deployment
+        env:
+          SANITY_TELEMETRY_DISABLED: '1'
+        run: bash scripts/cms-check.sh
       - name: Verify private Analytics connector without credentials
         run: |
           npm ci --prefix connector --ignore-scripts
@@ -38,8 +42,79 @@ jobs:
           name: library-preview-and-screenshots
           path: output/
           retention-days: 7
-  record-result:
+  cms-live:
     needs: verify
+    # This is separate from fixture/source checks. No account setup, imports,
+    # approvals, mutation tokens, or deployment are performed by this job.
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.LIBRARY_CONTENT_SOURCE == 'sanity'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LIBRARY_CONTENT_SOURCE: sanity
+      SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+      SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile
+      - name: Read and validate actual published CMS content
+        id: content
+        env:
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+        run: |
+          pnpm cms:doctor
+          pnpm cms:snapshot --out output/cms-health/published-snapshot.json
+      - name: Build from that frozen snapshot without a CMS token
+        id: render
+        env:
+          SANITY_SNAPSHOT_PATH: ${{ github.workspace }}/output/cms-health/published-snapshot.json
+        run: pnpm build
+      - name: Check CMS publication status and reconcile missed deliveries into previews
+        id: publisher
+        env:
+          CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
+          CMS_STATUS_TOKEN: ${{ secrets.CMS_STATUS_TOKEN }}
+        run: node scripts/cms-health.mjs
+      - name: Record the scope and result without publishing content or credentials
+        if: always()
+        env:
+          CONTENT_RESULT: ${{ steps.content.outcome }}
+          RENDER_RESULT: ${{ steps.render.outcome }}
+          PUBLISHER_RESULT: ${{ steps.publisher.outcome }}
+        run: |
+          node --input-type=module <<'JS'
+          import {mkdir, writeFile} from 'node:fs/promises';
+          const contentRead = process.env.CONTENT_RESULT === 'success';
+          const render = process.env.RENDER_RESULT === 'success';
+          const publisher = process.env.PUBLISHER_RESULT === 'success';
+          const report = {
+            sourceSha: process.env.GITHUB_SHA,
+            checkedAt: new Date().toISOString(),
+            result: contentRead && render && publisher ? 'published_content_and_publisher_checked' : 'check_failed',
+            contentRead, render, publisher,
+            livePublishingVerified: false,
+            scope: 'Read actual published content, build its frozen snapshot, check publisher status, and reconcile missed deliveries into pending previews. No content mutation, approval, deployment, or ChatGPT tool check; publication evidence remains per operation.',
+            runUrl: `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+          };
+          await mkdir('output/cms-health', {recursive: true});
+          await writeFile('output/cms-health/report.json', JSON.stringify(report, null, 2) + '\n');
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-cms-health
+          path: |
+            output/cms-health/report.json
+            output/cms-health/publisher.json
+          retention-days: 7
+          if-no-files-found: warn
+  record-result:
+    needs: [verify, cms-live]
     if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -50,13 +125,24 @@ jobs:
       contents: write
       actions: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        if: needs.cms-live.result != 'skipped'
+        continue-on-error: true
+        with:
+          name: library-cms-health
+          path: cms-health-report
       - name: Record checked source for the library assistant
         env:
           GH_TOKEN: ${{ github.token }}
           LIBRARY_CHECK_RESULT: ${{ needs.verify.result }}
+          LIBRARY_CMS_LIVE_RESULT: ${{ needs.cms-live.result }}
         run: |
           python3 - <<'PY'
           import base64, datetime, json, os, urllib.error, urllib.request
+          from pathlib import Path
           repo = os.environ['GITHUB_REPOSITORY']
           source = os.environ['GITHUB_SHA']
           branch = 'maintenance-reports'
@@ -75,10 +161,13 @@ jobs:
                   raise
               api('/git/refs', 'POST', {'ref': 'refs/heads/' + branch, 'sha': source})
           path = '/contents/.library-checks/' + source + '.json'
-          report = {'sourceSha': source, 'result': os.environ['LIBRARY_CHECK_RESULT'],
+          source_result = os.environ['LIBRARY_CHECK_RESULT']
+          cms_live_result = os.environ['LIBRARY_CMS_LIVE_RESULT']
+          overall_result = source_result if source_result != 'success' else ('failure' if cms_live_result not in ('success', 'skipped') else 'success')
+          report = {'sourceSha': source, 'result': overall_result, 'sourceChecksResult': source_result, 'cmsLiveResult': cms_live_result,
               'checkedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'runUrl': f"https://github.com/{repo}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
-              'scope': 'Build, release safeguards, privacy consent, and desktop/phone page checks; not hosted uptime or public publishing.'}
+              'scope': 'Website build/release/privacy/browser checks; CMS migration tests; Studio fixture compilation/schema checks; local publisher runtime tests/dry build. cmsLiveResult records the separately gated published-content read/build, or skipped until configured. No account approval, hosted uptime, or public publishing verification.'}
           body = {'branch': branch, 'message': 'Record website checks for ' + source[:7],
               'content': base64.b64encode((json.dumps(report, indent=2) + '\n').encode()).decode()}
           try:
@@ -87,18 +176,23 @@ jobs:
               if error.code != 404:
                   raise
           api(path, 'PUT', body)
+          cms_report = {'sourceSha': source, 'checkedAt': report['checkedAt'], 'result': cms_live_result,
+              'scope': 'Separate CMS content/publisher check; skipped until library account setup. No private token or CMS document export.'}
+          for name in ('report', 'publisher'):
+              file = Path('cms-health-report') / (name + '.json')
+              if file.exists():
+                  cms_report[name] = json.loads(file.read_text())
+          cms_path = '/contents/.library-cms-checks/latest.json'
+          cms_body = {'branch': branch, 'message': 'Record CMS check for ' + source[:7],
+              'content': base64.b64encode((json.dumps(cms_report, indent=2) + '\n').encode()).decode()}
+          try:
+              cms_body['sha'] = api(cms_path + '?ref=' + branch)['sha']
+          except urllib.error.HTTPError as error:
+              if error.code != 404:
+                  raise
+          api(cms_path, 'PUT', cms_body)
           PY
-      - name: Keep screenshot storage within the trial budget
+      - name: Keep source and CMS preview storage within the trial budget
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          python3 - <<'PY'
-          import json, os, subprocess
-          repo = os.environ['GITHUB_REPOSITORY']
-          pages = json.loads(subprocess.check_output(['gh','api','--paginate','--slurp',f'repos/{repo}/actions/artifacts?per_page=100']))
-          artifacts = [a for p in pages for a in p['artifacts'] if a['name']=='library-preview-and-screenshots' and not a['expired']]
-          artifacts.sort(key=lambda a: (a['created_at'],a['id']), reverse=True)
-          for artifact in artifacts[7:]:
-              subprocess.run(['gh','api',f"repos/{repo}/actions/artifacts/{artifact['id']}",'-X','DELETE'],check=True)
-          print('Retained the seven most recent website screenshot archives. Hosted previews remain available.')
-          PY
+        run: python3 scripts/cms-artifacts.py

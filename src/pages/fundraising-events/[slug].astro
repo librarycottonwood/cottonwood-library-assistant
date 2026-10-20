@@ -19,7 +19,7 @@ interface Props { initiative: SupportInitiative; }
 const { initiative } = Astro.props;
 const { initiatives, campaigns } = await contentRepository.getSupport();
 // The library-fund page follows the shared donate link: the active fundraiser, then library.donationUrl.
-const donate = getDonateLink();
+const donate = await getDonateLink();
 const campaign = initiative.id === 'library-fund' ? activeCampaign(campaigns) : undefined;
 const action = initiative.id === 'library-fund' && donate.source !== 'fallback' ? { label: donate.label, href: donate.href } : initiative.action;
 // Only the shared donate link opens Givebutter's popup; other pages keep their own action.

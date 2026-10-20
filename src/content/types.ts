@@ -1,6 +1,10 @@
 /** Provider-neutral content: a future CMS adapter returns this same shape. */
 export interface LibraryImage {
-  key: string;
+  key?: string;
+  /** Validated Sanity CDN image; never an arbitrary remote URL. */
+  url?: string;
+  width?: number;
+  height?: number;
   alt: string;
   caption?: string;
   /** Preserve the full artwork/logo instead of cropping it like a photograph. */
@@ -45,16 +49,12 @@ export interface HomeContent {
     introduction: string;
     image: LibraryImage;
   };
+  serviceImage?: LibraryImage;
+  givingImage?: LibraryImage;
   programs: Program[];
   services: { id: string; title: string; description: string; icon: 'book' | 'computer' | 'printer' }[];
   borrowing: { question: string; answer: string }[];
-  newsletter: {
-    issue: string;
-    title: string;
-    summary: string;
-    fileUrl: string;
-    cover: LibraryImage;
-  };
+  newsletter: LibraryNewsletter | null;
   story: { heading: string; paragraphs: string[]; image: LibraryImage };
   support: { title: string; introduction: string; image: LibraryImage; volunteerFileUrl: string; materials: string; bookSale: string; wowPoints: string };
 }
@@ -119,10 +119,35 @@ export interface SupportUpdate {
   linkLabel: string;
 }
 
+export interface LibraryNewsletter {
+  id?: string;
+  issue: string;
+  title: string;
+  summary: string;
+  fileUrl: string;
+  cover: LibraryImage;
+}
+
+export interface RichTextSpan { _key: string; _type: 'span'; text: string; marks: string[]; }
+export interface RichTextBlock {
+  _key: string;
+  _type: 'block';
+  style: 'normal' | 'h2' | 'h3' | 'blockquote';
+  children: RichTextSpan[];
+  markDefs: { _key: string; _type: 'link'; href: string }[];
+  listItem?: 'bullet' | 'number';
+  level?: number;
+}
+
 /** Confirmed occurrences only. Recurrence descriptions do not create dates. */
 export interface LibraryEvent {
   id: string;
   title: string;
+  documentId?: string;
+  slug?: string;
+  image?: LibraryImage;
+  location?: string;
+  programId?: string;
   startsAt: string;
   endsAt?: string;
   summary: string;
@@ -139,6 +164,8 @@ export interface LibraryPost {
   summary: string;
   href: string;
   paragraphs: string[];
+  body?: RichTextBlock[];
+  eventIds?: string[];
   externalUrl?: string;
   sourceLabel?: string;
   /** Cover photo for the post page and news feeds. */

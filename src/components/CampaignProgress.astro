@@ -7,7 +7,7 @@ const { campaign } = Astro.props;
 // Ids are validated in feeds.ts / donate.ts (letters, digits, _ and - only) before any page renders.
 // SiteLayout already loads Givebutter's script on every page when the Donate buttons open its popup;
 // otherwise this component loads it, so a page never gets two copies.
-const script = sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(campaignAccount(campaign));
+const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(await campaignAccount(campaign));
 ---
 {/*
   Givebutter's official Form widget (made with its goal bar turned on) shows the live total and the

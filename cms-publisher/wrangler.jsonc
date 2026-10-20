@@ -1,0 +1,19 @@
+{
+  "name": "cottonwood-library-cms-publisher",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-06",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "workers_dev": true,
+  "observability": {"enabled": false},
+  // Deliberately unconfigured: do not create library accounts or enable paid resources.
+  "vars": {
+    "PUBLIC_ORIGIN": "",
+    "SANITY_PROJECT_ID": "",
+    "SANITY_DATASET": "",
+    "PREVIEW_HOST_SUFFIX": "cottonwood-library-trial-preview.pages.dev"
+  },
+  "durable_objects": {
+    "bindings": [{"name": "CMS_LEDGER", "class_name": "CmsLedger"}]
+  },
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["CmsLedger"]}]
+}

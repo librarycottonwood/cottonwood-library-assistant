@@ -147,7 +147,7 @@ jobs:
         if: steps.patch.outputs.patch == 'true'
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep bash -c \
-            'bash scripts/cloud-setup.sh && node --test scripts/release.test.mjs && node scripts/analytics.test.mjs && npm ci --prefix connector --ignore-scripts && npm test --prefix connector && node --test scripts/analytics-recovery-browser.test.mjs && npm run build --prefix connector && version=$(node scripts/release.mjs prepare) && node scripts/capture.mjs "$version"'
+            'bash scripts/cloud-setup.sh && bash scripts/cms-check.sh && node --test scripts/release.test.mjs && node scripts/analytics.test.mjs && npm ci --prefix connector --ignore-scripts && npm test --prefix connector && node --test scripts/analytics-recovery-browser.test.mjs && npm run build --prefix connector && version=$(node scripts/release.mjs prepare) && node scripts/capture.mjs "$version"'
       - uses: actions/upload-artifact@v4
         if: success() && steps.patch.outputs.patch == 'true'
         with:

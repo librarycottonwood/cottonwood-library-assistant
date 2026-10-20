@@ -1,0 +1,106 @@
+# Library content management
+
+## Current state and ownership
+
+This branch adds the CMS implementation. **No Sanity account/project exists for the library yet.** Google sign-in and the nonprofit application wait for the meeting. No account, plan, billing, hosted Studio, webhook or ChatGPT connection is provisioned by this code. The installed library plugin has not been updated by editing its source here.
+
+Keep the library's Google identity as the permanent Sanity owner, with a second library administrator/recovery path. Invite Jaden separately. The website, GitHub, Cloudflare, Google, Givebutter and ChatGPT remain library-owned. Runtime publishing must not require Jaden's laptop or the Pi.
+
+**Additional recurring budget: $0.** Apply for Sanity's [nonprofit plan](https://www.sanity.io/docs/platform-management/non-profit-plan) once there is a project ID. The plan/application is not approved yet. Confirm its current limits and renewal terms with Sanity; do not add a card, enable overages or assume eligibility. Start only within the free allowance while waiting. The existing ChatGPT Plus sign-in handles bounded technical upkeep; no paid OpenAI API is introduced. Do not enable Sanity image generation/transformation tools. GitHub/Cloudflare allowances remain finite and must stop before paid overage.
+
+## Shared content sources
+
+When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published-content snapshot for a whole build. Missing configuration, broken references, unavailable content or invalid data stop that build. They never silently substitute the prototype's old content.
+
+| Edit in Studio | Used by the website |
+| --- | --- |
+| One event with confirmed sessions | Homepage coming up, calendar, event list/detail, referenced news posts |
+| One program | Shared recurring program descriptions and pictures; no invented dates |
+| One blog post | News feed and article, rich text, cover/gallery, event references |
+| Newsletter PDF and cover | Current issue selected in settings; old issues remain in the archive |
+| Notice with Pacific first/last dates | Shared notice banner |
+| Library settings and hours | Shared contact details, map/address, navigation, page copy; phone link and hours summary derive automatically |
+| Giving and acknowledgments | Ways to help, thank-yous and approved Givebutter widget identifiers |
+
+Upcoming event rows, featured pictures and calendar highlights recheck their confirmed end/start times in the visitor's browser, including after a tab resumes. Ended events stop being promoted between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
+
+Payments, donors and live fundraising totals stay in Givebutter. Donor data, passwords, keys, private board records and personal details do not belong in public website documents. Public Sanity datasets expose published documents and original uploaded assets even when a website does not link them. The website emits resized, metadata-free images; check Sanity's treatment of **original uploads** during the live rehearsal before claiming the entire upload pipeline removes private metadata.
+
+Until connected, `LIBRARY_CONTENT_SOURCE=local` keeps the current prototype usable. Its seed/editorial files are migration inputs. After activation, volunteers edit the CMS; do not also update those files for ordinary publishing. Code/layout work stays in reviewed GitHub changes.
+
+## Volunteer workflow
+
+1. Gather the facts in ChatGPT using the existing short topic wizards, or open the Studio forms directly.
+2. When the library's Sanity connection and permitted tools are actually available, ChatGPT reads the existing record and edits a **draft**. Use references for existing events/programs. Ordinary requests never require editing source files or a PR. Never invent a tool name, claim a connection from instructions alone or publish through unrestricted raw mutations.
+3. The library reviews the draft in Studio and deliberately publishes it to the CMS. The current website-preview workflow reads **published CMS content**, not private drafts. A CMS publish queues the checked website preview; it does not itself prove the website changed.
+4. The separate review service shows the exact preview and computer/phone evidence. The library signs in with its GitHub identity and approves that version. Only then can the service promote the same checked assets to the dedicated **CMS trial** website.
+5. The service checks the hosted files before saying the website was updated. If the content/source changes after the preview, it needs a fresh preview and approval.
+
+There are deliberately two distinct review actions at this stage: CMS publication and approval of the built website. No private-draft visual preview is implemented. A future simplification must preserve actual authenticated approval and exact-version checking; a chat message alone is not an enforced publishing gate.
+
+If the Sanity tools are unavailable in the library's current ChatGPT plan/session, use Studio's included forms. Do not buy another subscription or redirect routine content edits to source-code work. Connecting Sanity and deciding which write tools ChatGPT may use are meeting-time human actions. The [official Sanity MCP guide](https://www.sanity.io/docs/ai/mcp-server) describes that connection; actual Plus-account availability and write confirmations must be tested.
+
+## Meeting setup
+
+1. Library representative uses the library Google sign-in to create the organization/project. Confirm library ownership, backup administrator and recovery. Record the project ID and dataset; submit the nonprofit application for that project. Stop at any paid upgrade/card request.
+2. Choose published dataset visibility knowingly. Create a **read-only** server token only if needed. Use separate narrowly scoped credentials for the signed webhook, workflow callbacks, private status checks, GitHub dispatch and reviewer OAuth. The publisher documentation lists these. No write token is needed in the website or publishing worker.
+3. Configure `studio/.env.local` using its example and run/host the real Studio. Public Studio variables contain project/dataset identifiers only. Confirm exact CORS origins and appropriate individual roles. Use a separately invited contributor/draft identity for automated editing where the account's plan permits it; retain publish/admin authority with the library. Connecting MCP as the owning Google identity would inherit its privileges. If draft-only access is unavailable while nonprofit approval is pending, use Studio directly and defer ChatGPT write access. Tool prompts and UI singleton controls are not access control.
+4. Export the current prototype for review, using the **actual** project ID and dataset:
+
+   ```sh
+   pnpm cms:seed --project ACTUAL_PROJECT_ID --dataset ACTUAL_DATASET --out output/cms/migration.json
+   pnpm --dir studio validate:import ../output/cms/migration.json
+   ```
+
+   This is a migration preview containing existing prototype copy, including historical events. It is not approved library content. Review dates, hours, links, wording and donation settings with the board. The exporter groups the existing two-day book sale into one event with two sessions.
+
+5. Run the explicitly authorized import with a temporary setup-only write token stored outside chat/repository:
+
+   ```sh
+   SANITY_PROJECT_ID=ACTUAL_PROJECT_ID SANITY_DATASET=ACTUAL_DATASET pnpm cms:import --file output/cms/migration.json --write-drafts
+   ```
+
+   The command reads `SANITY_WRITE_TOKEN` from the administrator's environment. It uploads the prepared pictures/PDFs, creates **drafts only**, skips existing drafts/published records, and never overwrites or publishes them. Revoke the temporary token afterward. `--keep-legacy-assets` deliberately retains repository asset references instead of uploading; this is a migration option, not the ordinary editor workflow.
+
+6. Review those drafts in the real Studio. Publish the initial complete settings/content only when authorized. Confirm actual references and image/PDF uploads work. A partial dataset fails rather than rendering a mixed website.
+7. Configure the separate worker and OAuth review app using `cms-publisher/README.md`. Configure GitHub variables/secrets named by `.github/workflows/cms.yml` and `check.yml`; enable `LIBRARY_CONTENT_SOURCE=sanity` only after the dataset and webhook are ready. Studio build success does not establish this connection.
+8. Test the complete path on `cms-trial.cottonwood-library-trial-preview.pages.dev`. It is separate from the existing saved trial and real public domain. No domain attachment, registrar change or public launch is part of this PR.
+9. Connect the official Sanity MCP in the library ChatGPT account, expose only needed tools, and rehearse with an ordinary new chat. Update/release the library plugin source after this branch is accepted, then test the installed version. Editing repository instructions alone does not update the installed plugin or existing scheduled task.
+
+## Publishing, failures and maintenance
+
+The signed webhook records document/revision identity, deduplicates deliveries and asks GitHub to build the current reviewed source. The build validates the complete published dataset, optimizes images, renders real routes, checks links/layout on computer and phone, and saves an immutable release. The worker binds the review to source, document revision, content fingerprint, asset digest and successful preview run.
+
+`cms.yml` can publish only to the fixed CMS trial branch. It checks the human approval receipt, current source/content and exact checked artifact; it does not rebuild after approval. It retains the previous verified immutable site and restores/checks it if the new hosted result fails verification. If recovery cannot be verified, say the website needs attention; a saved database pointer is not evidence the old website is still live. See `cms-publisher/README.md` for precise state/credential contracts.
+
+The existing daily source check also runs the CMS fixture suite. Once configured, a trusted-main-only job reads live published content, builds from a frozen snapshot without passing credentials to Astro, checks private publisher status and reconciles missed webhook deliveries. It does not change CMS content. Existing bounded Plus upkeep can fix a small technical rendering/adapter problem or exact existing Studio dependency versions, then must pass the same checks before saving. It cannot change library facts, forms/schema, permissions, publishing/authentication logic, tests or workflows. Those failures require a reviewed change or account owner action. A source repair changes the approved source version and requires a fresh CMS preview; old approval is never transferred.
+
+The private publisher status records what was attempted and what was actually verified. Volunteers should see one practical message, for example:
+
+- “Your event is saved in the CMS. Please review the website preview.”
+- “Your event is on the trial website. I checked the date and time.”
+- “That update did not pass its checks. The previous checked website was restored.” **Only after actual recovery verification.**
+- “The update needs attention. Please reconnect the library account.” Include one real clickable next step.
+
+The Monday assistant review reads current source checks, CMS/publisher status and actual repair/deploy outcomes, then explains new failures or repairs plainly. Immediate GitHub-to-ChatGPT notifications remain unverified; do not promise instant alerts. A healthy report must not hide an expired/missing check, unconnected CMS, pending review, lost credentials, allowance exhaustion or failed rollback.
+
+GitHub artifact storage is bounded. Approval must refer to an available checked artifact; if it expires/is pruned, prepare a new preview. Never rebuild an apparently identical substitute and reuse approval. Hosting/API outages, expired sign-ins, revoked permissions and depleted quotas may need a library administrator. AI repair cannot guarantee unattended recovery from those conditions.
+
+## Acceptance before handoff
+
+Run `bash scripts/cms-check.sh`, `pnpm check`, `pnpm build`, release safeguards, analytics/connector checks and computer/phone capture. The CMS suite uses real Studio validation, a real Astro build and a real local Worker/SQLite runtime. Provider responses and identities in service tests are explicitly synthetic; they do not prove live accounts or deployment.
+
+Then rehearse in the **library account**, observing the actual final website and private status:
+
+- Create one event; correct its date/time once; check every appearance, including calendar and event references.
+- Add a rich-text blog post with a real photo/gallery; verify image privacy, resizing, links and layout on phone/computer.
+- Replace the current newsletter PDF, then verify the current issue and the older archive download.
+- Publish a closure and correct hours once; confirm shared contact/hours displays agree.
+- Unpublish content, including references; verify stale promotions disappear and invalid missing references block release safely.
+- Reject a preview; make another edit while one is pending; confirm stale approval cannot deploy.
+- Test duplicate/missed webhooks, service outage, tampered artifact, wrong source/digest and unauthorized reviewer.
+- Intentionally fail a build and hosted verification; confirm actual previous-site recovery and the library-facing explanation.
+- Test an allowed maintenance repair and a forbidden content/auth change; inspect the real cloud checks, saved source and new preview approval.
+- Export/restore Sanity content **and assets**, recover accounts using the second library administrator, and complete a publish without Jaden's account/laptop/Pi.
+
+Backups, retention, restore, plan limits, ChatGPT delivery and live recovery are handoff gates until demonstrated. This code does not configure a backup schedule or claim the nonprofit plan/account connection has succeeded.

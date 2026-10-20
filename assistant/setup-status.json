@@ -252,5 +252,16 @@
         "latestPublishRun": "37570642969"
       }
     }
+  },
+  "cms": {
+    "asOf": "2026-10-20 America/Los_Angeles",
+    "implementation": "Sanity Studio, validated snapshot adapter, migration, checked CMS trial publishing and maintenance integration added in the CMS branch; not deployed or connected.",
+    "account": "Pending meeting: library Google sign-in, project/dataset and backup administrator. No account created by this work.",
+    "nonprofit": "Application not submitted; requires actual library-owned project ID and human eligibility details. No paid plan, card or overage authorized.",
+    "contentSource": "local until explicitly configured as sanity after account setup and rehearsal",
+    "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
+    "handoff": "assistant/CMS.md and studio/README.md; real OAuth, uploads, approvals, trial deployment, rollback, backup/restore and ChatGPT tool delivery remain live-account acceptance gates.",
+    "plugin": "Repository guidance updated conditionally; installed plugin and existing scheduled task have not been released/changed by this branch.",
+    "production": "No public-domain, registrar, existing trial deployment or account changes."
   }
 }

@@ -1,15 +1,15 @@
 ---
-import { Image } from 'astro:assets';
-import { resolveImage } from '../../content/images';
-import { bookSaleDateLabel } from '../../content/editorial';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
 import EventList from '../../components/EventList.astro';
+import ContentImage from '../../components/ContentImage.astro';
+import { upcomingEvents } from '../../content/feeds';
 import EventCalendar from '../../components/EventCalendar.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { contentRepository } from '../../content/repository';
-const [{ programs }, events, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+const [{ programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+const events = upcomingEvents(allEvents);
 ---
 <SiteLayout title="Upcoming events & news | Cottonwood Community Library">
   <PageIntro title="Upcoming events" />
@@ -18,12 +18,8 @@ const [{ programs }, events, posts] = await Promise.all([contentRepository.getHo
     <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.15fr]">
       <EventCalendar events={events} />
       <div>
-        <a href="/fundraising-events/book-sale/" class="group block">
-          <Image width={1100} quality={70} src={resolveImage('bookSale')} alt="Shelves of books waiting for their next reader at the library book sale." widths={[500,800,1100]} sizes="(max-width:1023px) 100vw, 55vw" loading="eager" class="aspect-[2] w-full rounded-[4px] object-cover" />
-          <p class="mt-4 text-sm font-semibold text-muted">{bookSaleDateLabel}</p>
-          <h2 class="card-heading mt-1 group-hover:underline">Find a treasure. Support your library.</h2>
-        </a>
-        <EventList events={events} />
+        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt ?? events[0].startsAt}><ContentImage image={events[0].image} variant="feature" eager /></div>}
+        <EventList events={events} emptyMessage="No special events are scheduled right now. Our regular programs are below." />
       </div>
     </div>
   </section>

@@ -1,0 +1,186 @@
+name: Checked CMS trial publishing
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [preview, publish]
+        required: true
+      operation_id:
+        type: string
+        required: true
+      document_id:
+        type: string
+        required: true
+      document_revision:
+        type: string
+        required: true
+      source_sha:
+        type: string
+        required: true
+      callback_url:
+        type: string
+        required: true
+      content_digest:
+        type: string
+        default: ''
+      release_digest:
+        type: string
+        default: ''
+      preview_run_id:
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+env:
+  LIBRARY_CONTENT_SOURCE: ${{ vars.LIBRARY_CONTENT_SOURCE }}
+  CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+  CMS_MODE: ${{ inputs.mode }}
+  CMS_OPERATION_ID: ${{ inputs.operation_id }}
+  CMS_DOCUMENT_ID: ${{ inputs.document_id }}
+  CMS_DOCUMENT_REVISION: ${{ inputs.document_revision }}
+  CMS_SOURCE_SHA: ${{ inputs.source_sha }}
+  CMS_CALLBACK_URL: ${{ inputs.callback_url }}
+  CMS_CONTENT_DIGEST: ${{ inputs.content_digest }}
+  CMS_RELEASE_DIGEST: ${{ inputs.release_digest }}
+  CMS_PREVIEW_RUN_ID: ${{ inputs.preview_run_id }}
+  CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
+  SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+  SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+jobs:
+  setup-pending:
+    if: vars.LIBRARY_CONTENT_SOURCE != 'sanity'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: echo 'CMS setup is pending. No account connection or website publication was attempted.' >> "$GITHUB_STEP_SUMMARY"
+  preview:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.ref == 'refs/heads/main' && vars.LIBRARY_CONTENT_SOURCE == 'sanity' && inputs.mode == 'preview'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: write
+    concurrency:
+      group: library-cms-preview-${{ inputs.operation_id }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate trusted operation and pin the current source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: |
+          node scripts/cms-publishing.mjs validate
+          git checkout --detach "$CMS_SOURCE_SHA"
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile
+      - name: Capture one read-only published snapshot
+        env:
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+        run: node scripts/cms-publishing.mjs snapshot
+      - name: Check and render the frozen content without account tokens
+        env:
+          LIBRARY_CONTENT_SOURCE: sanity
+          SANITY_SNAPSHOT_PATH: ${{ github.workspace }}/output/cms/snapshot.json
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm check
+          pnpm build
+          pnpm cms:test
+      - name: Save and inspect the immutable release
+        run: |
+          node scripts/cms-publishing.mjs build
+      - name: Upload and verify the dedicated immutable preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/cms-publishing.mjs preview
+      - name: Reserve space within the existing artifact allowance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/cms-artifacts.py --reserve-preview
+      - uses: actions/upload-artifact@v4
+        with:
+          name: library-cms-checked-preview
+          path: |
+            output/cms/operation.json
+            output/cms/snapshot.json
+            output/releases/
+            output/playwright/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Bound the combined source and CMS preview archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/cms-artifacts.py
+      - name: Tell the review service this exact preview is ready
+        env:
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/cms-publishing.mjs callback --stage preview_ready
+      - name: Record failed preview without claiming publication
+        if: failure()
+        env:
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/cms-publishing.mjs callback --stage build_failed
+  publish:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.ref == 'refs/heads/main' && vars.LIBRARY_CONTENT_SOURCE == 'sanity' && inputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: library-cms-trial-publishing
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate the approved operation and current source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: |
+          node scripts/cms-publishing.mjs validate
+          git checkout --detach "$CMS_SOURCE_SHA"
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile
+      - name: Retrieve the exact successful checked preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/cms-publishing.mjs download
+      - name: Recheck human approval and publish only those saved assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/cms-publishing.mjs publish
+      - name: Confirm the hosted result to the review service
+        env:
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/cms-publishing.mjs callback --stage deployed_verified
+      - name: Record failed promotion and actual recovery outcome
+        if: failure()
+        env:
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/cms-publishing.mjs callback --stage deploy_failed
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: library-cms-publish-result
+          path: output/cms/publish-result.json
+          retention-days: 7
+          if-no-files-found: warn
