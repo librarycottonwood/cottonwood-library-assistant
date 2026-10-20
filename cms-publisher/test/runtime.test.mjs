@@ -242,7 +242,11 @@ test('local runtime: browser approval enforces session, origin, CSRF, exact hash
     const authBefore = await f.request(`/operations/${id}/authorization`, {headers: {Authorization: `Bearer ${secrets.CMS_WORKFLOW_TOKEN}`}}); assert.equal(authBefore.status, 409);
     const session = await f.login(id); const values = await f.form(id, session.cookie);
     assert.equal((await f.approve(id, '', values)).status, 401);
-    assert.equal((await f.approve(id, session.cookie.slice(0, -1) + (session.cookie.endsWith('a') ? 'b' : 'a'), values)).status, 401);
+    // The last base64url character can differ only in ignored padding bits.
+    // Change the first signature character so the decoded HMAC always changes.
+    const signatureAt = session.cookie.lastIndexOf('.') + 1;
+    const forgedCookie = session.cookie.slice(0, signatureAt) + (session.cookie[signatureAt] === 'a' ? 'b' : 'a') + session.cookie.slice(signatureAt + 1);
+    assert.equal((await f.approve(id, forgedCookie, values)).status, 401);
     assert.equal((await f.approve(id, session.cookie, values, {Origin: 'https://attacker.example'})).status, 403);
     assert.equal((await f.approve(id, session.cookie, {...values, csrf: 'forged'})).status, 403);
     assert.equal((await f.approve(id, session.cookie, {...values, releaseDigest: 'e'.repeat(64)})).status, 409);
