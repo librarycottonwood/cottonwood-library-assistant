@@ -1,6 +1,6 @@
 ---
 name: notices
-description: Cottonwood Library closure and announcement banner — library closed, holiday hours, closing early, weather, power outage, "heads up" message across the top of the website; change or remove a banner. Use with library-assistant for voice and the preview-then-save rule.
+description: Use when a volunteer wants to announce a closure, temporary hours, weather disruption, or another notice across the website, or change or remove that notice.
 ---
 
 # Notice banner

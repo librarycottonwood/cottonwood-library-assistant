@@ -1,6 +1,6 @@
 ---
 name: fundraisers
-description: Cottonwood Library fundraisers and donations — set up the Donate buttons with Givebutter, start a fundraiser or campaign (new roof, books, a goal), how much has been raised, change a fundraiser, end a fundraiser, or change where the Donate buttons go. Givebutter totals and widget code. Use with library-assistant for voice and the preview-then-save rule.
+description: Use when a volunteer wants to set up Donate buttons, start or end a fundraiser, change its details, or check how much it has raised.
 ---
 
 # Fundraisers

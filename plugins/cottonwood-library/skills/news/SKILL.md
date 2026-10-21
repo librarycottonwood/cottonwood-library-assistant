@@ -1,6 +1,6 @@
 ---
 name: news
-description: Cottonwood Library news posts — write or post an announcement, library news, a thank-you, an event recap with photos; edit, fix, update or take down an existing post. Use with library-assistant for voice and the preview-then-save rule.
+description: Use when a volunteer wants to publish, edit, or remove library news, an announcement, a thank-you, or an event recap with photos.
 ---
 
 # Library news

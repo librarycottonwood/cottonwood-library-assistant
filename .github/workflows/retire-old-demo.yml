@@ -1,0 +1,50 @@
+name: Retire old demo address
+on: workflow_dispatch
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: library-old-demo-retirement
+  cancel-in-progress: false
+jobs:
+  redirect:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Require the exact current checked main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {execFileSync} from 'node:child_process';
+          const api=path=>JSON.parse(execFileSync('gh',['api',`repos/${process.env.GITHUB_REPOSITORY}/${path}`],{encoding:'utf8'}));
+          const current=api('git/ref/heads/main').object.sha;
+          if(current!==process.env.GITHUB_SHA)throw Error('A newer source version exists.');
+          const runs=api('actions/workflows/check.yml/runs?branch=main&status=success&per_page=20').workflow_runs;
+          if(!runs.some(run=>run.head_sha===current&&run.head_repository?.full_name===process.env.GITHUB_REPOSITORY&&run.head_branch==='main'&&['push','schedule','workflow_dispatch'].includes(run.event)))throw Error('This exact main version has not passed verification.');
+          JS
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile
+      - name: Redirect only the retired demo and verify the approved CMS trial
+        env:
+          LIBRARY_CONTENT_SOURCE: ${{ vars.LIBRARY_CONTENT_SOURCE }}
+          CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
+          CMS_STATUS_TOKEN: ${{ secrets.CMS_STATUS_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/retire-old-demo.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: library-old-demo-retirement
+          path: output/trial-retirement/
+          retention-days: 7
+          if-no-files-found: warn

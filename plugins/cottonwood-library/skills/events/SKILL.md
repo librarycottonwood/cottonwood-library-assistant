@@ -1,6 +1,6 @@
 ---
 name: events
-description: Cottonwood Library events and calendar — add an event (book sale, story time, meeting, class), change its time or details, move it to another date, or cancel it. Use with library-assistant for voice and the preview-then-save rule.
+description: Use when a volunteer wants to add, reschedule, change, or cancel a library event or recurring program date.
 ---
 
 # Library events
@@ -12,10 +12,14 @@ Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Tec
 Ask one at a time; skip what they already said.
 
 1. "What's the event called?"
-2. "What day and time? And when does it end?" — repeat it back with the weekday ("Saturday, November 8, 10 a.m.–noon?") so mistakes get caught.
-3. "Anything people should know?" — cost, bring something, sign-up, which door. Optional.
-4. "Does it repeat, or just this once?" — for a few repeats, add each date; for a weekly program with no end, ask how many weeks to list.
-5. "Want a news post or a Facebook post about it too?" — after saving, use the news or social skill.
+2. "What date is it?"
+3. "What time does it start?"
+4. "What time does it end?" — required. Repeat the confirmed date, weekday and time range back together so mistakes get caught.
+5. "Anything people should know?" — cost, location, sign-up, what to bring or which door. Optional; use the confirmed library location when appropriate.
+6. "Does it repeat, or just this once?" — ask only when unclear. Gather each confirmed date; do not invent future occurrences.
+7. "Any photo or flyer to include?" — optional; skip if they already supplied one or declined.
+
+After the event is saved, offer a news or social post only when useful. Do not hold up the event to ask about unrelated follow-up work.
 
 All times are Pacific. Write a short one-line summary yourself. Preview and ask to save.
 

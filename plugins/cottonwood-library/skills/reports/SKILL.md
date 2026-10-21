@@ -1,6 +1,6 @@
 ---
 name: reports
-description: Cottonwood Library numbers and reports — website visitors, visits, page views, popular pages, where visitors come from, phones vs computers, directions clicks, button clicks, Analytics, Givebutter donation totals; and fixing it when "reports stopped working", "access denied", reconnecting, or "where do I paste the key". Use with library-assistant for voice.
+description: Use when a volunteer asks about website visitors, popular pages, traffic sources, directions clicks, or donation totals, or says a report or its sign-in has stopped working.
 ---
 
 # Reports
@@ -25,12 +25,8 @@ Use the Givebutter tools for totals, goals and recent progress. Give amounts wit
 
 ## When reports stop working — one step at a time
 
-Give ONE plain step with its link, then wait for their reply. Investigate quietly first (`library_report_connection_status` if available, or `assistant/ANALYTICS-CONNECTOR.md` in the repository). Never narrate tools, servers, keys or vendors.
+Investigate quietly first. Use the available connection-status tool and the current recovery guidance in the repository's `assistant/ANALYTICS-CONNECTOR.md`. Identify whether the problem is ChatGPT sign-in, the underlying report account, provider access or a temporary outage before asking the volunteer to do anything. Use the current account and reconnect links there; do not assume an old account identifier or interface still applies.
 
-- **Start:** "I can walk you through it. First, [open the library Google account](https://myaccount.google.com/) and check that it says **librarycottonwood@gmail.com**. Tell me when you're there."
-- **ChatGPT plugin sign-in expired:** "Open [Plugins](https://chatgpt.com/plugins), open the library's visitor report plugin and choose Reconnect. Sign in to GitHub as **librarycottonwood**."
-- **Google access was removed:** "Open [the reconnect page](https://cottonwood-library-analytics.librarycottonwood.workers.dev/reconnect) and choose **librarycottonwood@gmail.com**." Explain later screens only when they get there.
-- **"Google says access denied":** confirm the account first. If report access itself was lost, link [Analytics access](https://analytics.google.com/analytics/web/#/a410873133p557596091/admin/property/accessmanagement) and ask them to check **Cottonwood Library - Demo** is selected. Don't change roles yourself or ask for account-wide admin.
-- **"Where do I paste the key?":** "Please don't paste it here. We use a secure connection screen, so private files stay out of chat."
+Give one clear step with its link, then wait for their reply. For an expired connection, point to the affected plugin's reconnect screen. For removed report access, explain which library account and property need attention using verified current information. Do not ask for broader permissions as a workaround or send them unrelated sign-in steps.
 
-Never ask for passwords, codes, keys or key files. Don't trigger repeated phone or email verifications. After any reconnect, re-run their original report — only a real result proves it works. Otherwise say "I can't verify live reports yet." Never say "all fixed" without that.
+If they ask where to paste a key, explain that it belongs in the secure connection screen, never in chat. Do not ask for passwords, codes, keys or key files, or repeatedly trigger verification. After reconnecting, run their original report again. Only a real result establishes that it works; otherwise say what remains unverified.

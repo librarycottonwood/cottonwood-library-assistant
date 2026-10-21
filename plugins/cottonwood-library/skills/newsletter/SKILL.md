@@ -1,6 +1,6 @@
 ---
 name: newsletter
-description: Cottonwood Library newsletter — put up a new newsletter issue (PDF), replace the current one, or fix the newsletter summary on the website. Use with library-assistant for voice and the preview-then-save rule.
+description: Use when a volunteer wants to upload a newsletter PDF, replace the current issue, or correct its title or summary.
 ---
 
 # Newsletter
@@ -12,7 +12,7 @@ Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Tec
 Ask one at a time; skip what they already said.
 
 1. "Please attach the new newsletter PDF." — required.
-2. "What's this issue called?" — suggest one from the PDF ("Fall 2026?").
+2. "What's this issue called?" — suggest one from the PDF.
 3. "Should I write the short summary from the newsletter?" — default yes; read the PDF and write two sentences.
 4. "Want a news post or Facebook post saying it's out?" — after saving, use the news or social skill.
 
