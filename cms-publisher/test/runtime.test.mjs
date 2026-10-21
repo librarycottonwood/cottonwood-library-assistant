@@ -6,6 +6,7 @@ import {Miniflare} from 'miniflare';
 import {readFileSync} from 'node:fs';
 import {encodeSignatureHeader} from '@sanity/webhook';
 import {revisionVector} from '../src/contract.mjs';
+import {launchBrowser} from '../../scripts/browser.mjs';
 
 // These run actual Worker + SQLite Durable Object HTTP handlers locally. All
 // outbound providers are explicit stubs: no Sanity/GitHub account or deployment.
@@ -132,6 +133,41 @@ function fixture(overrides = {}) {
   }
   return {mf, external, request, status, result, webhook, queued, previewResult, previewReady, login, form, approve, approved};
 }
+
+test('browser forms: native approval and refresh preserve their same-origin request identity', {timeout: 60000}, async () => {
+  const browser = await launchBrowser({args: ['--host-resolver-rules=MAP * ~NOTFOUND']});
+  try {
+    for (const action of ['approve', 'refresh']) {
+      const f = fixture();
+      const context = await browser.newContext({serviceWorkers: 'block'});
+      try {
+        const id = await f.previewReady();
+        const session = await f.login(id);
+        await context.addCookies([{name: '__Host-cms_review', value: session.cookie.slice('__Host-cms_review='.length),
+          domain: new URL(origin).hostname, path: '/', secure: true, httpOnly: true, sameSite: 'Lax'}]);
+        const received = [];
+        await context.route('**/*', async route => {
+          const request = route.request();
+          if (new URL(request.url()).origin !== origin) return route.abort();
+          const headers = await request.allHeaders();
+          if (request.method() === 'POST') received.push({origin: headers.origin, path: new URL(request.url()).pathname});
+          const response = await f.mf.dispatchFetch(request.url(), {method: request.method(), headers,
+            ...(request.postDataBuffer() ? {body: request.postDataBuffer()} : {}), redirect: 'manual'});
+          await route.fulfill({status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer())});
+        });
+        const page = await context.newPage();
+        await page.goto(`${origin}/review/${id}`);
+        const response = page.waitForResponse(value => value.request().method() === 'POST' && value.url().endsWith(`/${action}`));
+        await page.getByRole('button', {name: action === 'approve' ? 'Approve this trial update' : 'Prepare a fresh preview', exact: true}).click();
+        const submitted = await response;
+        assert.deepEqual(received, [{origin, path: `/review/${id}/${action}`}]);
+        assert.equal(submitted.status(), 303);
+        assert.equal(f.external.dispatches.length, 2);
+        assert.equal(f.external.dispatches[1].inputs.mode, action === 'approve' ? 'publish' : 'preview');
+      } finally {await context.close(); await f.mf.dispose();}
+    }
+  } finally {await browser.close();}
+});
 
 test('local runtime: unconfigured service fails closed before contacting a provider', async () => {
   const f = fixture({SANITY_PROJECT_ID: '', REVIEW_GITHUB_CLIENT_ID: ''});
