@@ -42,6 +42,25 @@ export async function prepare(input, { outDir = 'library-files/images', name, in
   return output;
 }
 
+export async function pruneUnusedBuiltImages({root = '.', dist = 'dist'} = {}) {
+  // Astro emits imported local originals even when CMS replacements mean no
+  // page uses them. Keep every referenced asset and every source/recovery file.
+  const originals = new Set((await Promise.all(SOURCES.filter(dir => dir !== 'public')
+    .map(dir => walk(path.join(root, dir), RASTER)))).flat().map(file => path.basename(file)));
+  const textFiles = await walk(path.join(root, dist), /\.(html|css|m?js|json|svg|xml|txt|webmanifest|map)$/i);
+  const references = await Promise.all(textFiles.map(file => readFile(file, 'utf8')));
+  const removed = [];
+  for (const file of await walk(path.join(root, dist, '_astro'), RASTER)) {
+    const name = path.basename(file);
+    const emitted = name.match(/^(.+)\.[A-Za-z0-9_-]+\.(png|jpe?g|webp|avif|gif)$/i);
+    if (!emitted || !originals.has(`${emitted[1]}.${emitted[2]}`)) continue;
+    if (references.some(text => text.includes(name) || text.includes(encodeURIComponent(name)))) continue;
+    await rm(file);
+    removed.push(path.relative(path.join(root, dist), file));
+  }
+  return removed;
+}
+
 export async function check({ root = '.', dist } = {}) {
   const problems = [];
   const at = file => path.relative(root, file);

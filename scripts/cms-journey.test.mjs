@@ -54,6 +54,14 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
     snapshot.documents.push({_id:'notice-rehearsal',_type:'notice',slug:{current:'cms-rehearsal'},message:'CMS rehearsal notice is active.',startsOn:today,endsOn:today});
     // No preexisting campaign should inject synthetic donation totals into a rehearsal.
     giving.campaigns=[];
+    // CMS photo changes can leave imported local originals unused. Reuse one
+    // real source image so the actual Astro build exercises that output path.
+    function replacePictures(value) {
+      if (!value || typeof value !== 'object') return;
+      if (value._type === 'libraryImage' && value.legacyKey) value.legacyKey = 'exterior';
+      for (const child of Object.values(value)) replacePictures(child);
+    }
+    replacePictures(snapshot.documents);
     const snapshotFile=path.join(folder,'snapshot.json');
     const approved=await saveSnapshot(snapshot,snapshotFile);
     const output=path.join(folder,'site');
@@ -101,6 +109,11 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
     assert.equal(version.provider,'sanity');assert.equal(version.contentDigest,approved.contentDigest);
     for(const file of await filesUnder(output)){
       if(/\.(html|js|json)$/.test(file))assert.ok(!(await readFile(file,'utf8')).includes(environment.SANITY_READ_TOKEN),`read token leaked into ${file}`);
+      if(file.endsWith('.html')) {
+        for (const [, asset] of (await readFile(file,'utf8')).matchAll(/(?:src|srcset)="[^"\n]*?(\/_astro\/[^\s",]+\.(?:webp|png|jpe?g))/g)) {
+          assert.ok((await stat(path.join(output, asset))).isFile(), `rendered picture missing: ${asset}`);
+        }
+      }
       if(/\.(webp|png|jpe?g)$/i.test(file))assert.ok((await stat(file)).size<=300000,`unoptimized browser image ${file}`);
     }
     // A later malformed publication must fail before replacing the checked site.
