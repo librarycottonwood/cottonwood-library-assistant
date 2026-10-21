@@ -40,11 +40,11 @@ export function inputContext(env = process.env) {
 }
 
 function token(env, name) {if (!env[name]) fail(`${name} is required for this controlled operation.`); return env[name];}
-async function requestJson(url, {fetcher = fetch, headers = {}, method = 'GET', body, missing = false} = {}) {
+async function requestJson(url, {fetcher = fetch, headers = {}, method = 'GET', body, missing = false, label = 'Controlled publishing request'} = {}) {
   const response = await fetcher(url, {method, headers: {...headers, ...(body ? {'Content-Type': 'application/json'} : {})},
     ...(body ? {body: JSON.stringify(body)} : {}), redirect: 'error', signal: AbortSignal.timeout(30000)});
   if (missing && response.status === 404) return null;
-  if (!response.ok) fail(`Controlled publishing request failed (${response.status}). No successful update claimed.`);
+  if (!response.ok) fail(`${label} failed (${response.status}). No successful update claimed.`);
   return response.json();
 }
 const githubHeaders = env => ({Authorization: `Bearer ${token(env, 'GH_TOKEN')}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'Cottonwood-Library-CMS'});
@@ -163,22 +163,35 @@ export async function checkHosting(env, {fetcher = fetch, requireEmptyTrial = fa
   hostingEnvironment(env);
   const base = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/pages/projects/${PROJECT}`;
   const headers = {Authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`};
-  const project = await requestJson(base, {fetcher, headers});
+  const project = await requestJson(base, {fetcher, headers, label: 'CMS hosting project request'});
   if (!project.success || project.result?.name !== PROJECT || project.result?.production_branch !== 'production' ||
       !Array.isArray(project.result.domains) || !project.result.domains.length ||
       project.result.domains.some(domain => domain !== `${PROJECT}.pages.dev` && !domain.endsWith(`.${PROJECT}.pages.dev`))) {
     fail('The isolated hosting project must use production branch production and have no custom/public library domains.');
   }
-  if (!requireEmptyTrial) return;
+  // Exercise the inventory connection during preview too, before asking for approval.
+  // The live Pages API rejects per_page=100; 25 succeeds. Keep the same 1,000-record bound.
+  const pageSize = 25;
   // A missing DNS name does not prove a branch never existed. Confirm that first
   // publication is new through the authenticated hosting deployment inventory.
-  for (let page = 1; page <= 10; page++) {
-    const records = await requestJson(`${base}/deployments?env=preview&per_page=100&page=${page}`, {fetcher, headers});
-    if (!records.success || !Array.isArray(records.result)) fail('Could not verify the previous CMS trial hosting state.');
+  for (let page = 1; page <= 40; page++) {
+    const records = await requestJson(`${base}/deployments?env=preview&per_page=${pageSize}&page=${page}`, {fetcher, headers, label: 'CMS hosting deployment inventory request'});
+    const perPage = records.result_info?.per_page ?? pageSize;
+    const totalPages = records.result_info?.total_pages;
+    if (!records.success || !Array.isArray(records.result) || !Number.isInteger(perPage) || perPage < 1 || perPage > pageSize ||
+        records.result.length > perPage || (records.result_info?.page !== undefined && records.result_info.page !== page) ||
+        (totalPages !== undefined && (!Number.isInteger(totalPages) || totalPages < 0 || (!totalPages && records.result.length)))) {
+      fail('Could not verify the previous CMS trial hosting state.');
+    }
+    if (!requireEmptyTrial) return;
     if (records.result.some(item => item.deployment_trigger?.metadata?.branch === 'cms-trial' || item.aliases?.some(alias => alias.replace(/\/$/, '') === TRIAL_ORIGIN))) {
       fail('An existing CMS trial has no verified recovery record; reconnect it before publishing.');
     }
-    if (records.result.length < 100) return;
+    if (totalPages !== undefined && page >= totalPages) return;
+    if (records.result.length < perPage) {
+      if (totalPages > page) fail('Could not verify the previous CMS trial hosting state.');
+      return;
+    }
   }
   fail('The CMS trial deployment inventory is too large to confirm first publication safely.');
 }

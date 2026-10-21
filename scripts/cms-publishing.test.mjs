@@ -175,10 +175,63 @@ test('rollback reconstruction uses pinned immutable preview bytes and keeps chec
 test('hosting guard refuses a production branch collision, public domain, or untracked existing CMS trial', async () => {
   const credentials = {CLOUDFLARE_ACCOUNT_ID: 'e05729fd6b6fad329e31896d8b1c2da9', CLOUDFLARE_API_TOKEN: 'local-fixture-hosting-token'};
   const good = {success: true, result: {name: 'cottonwood-library-trial-preview', production_branch: 'production', domains: ['cottonwood-library-trial-preview.pages.dev']}};
-  await checkHosting(credentials, {fetcher: async () => Response.json(good)});
+  await checkHosting(credentials, {fetcher: async url => Response.json(String(url).includes('/deployments?') ? {success: true, result: []} : good)});
   for (const changes of [{production_branch: 'cms-trial'}, {domains: ['cottonwoodlibrary.org']}]) {
     await assert.rejects(checkHosting(credentials, {fetcher: async () => Response.json({...good, result: {...good.result, ...changes}})}));
   }
   await assert.rejects(checkHosting(credentials, {requireEmptyTrial: true, fetcher: async url =>
     Response.json(String(url).includes('/deployments?') ? {success: true, result: [{deployment_trigger: {metadata: {branch: 'cms-trial'}}}]} : good)}), /no verified recovery/);
+});
+
+const hostingCredentials = {CLOUDFLARE_ACCOUNT_ID: 'e05729fd6b6fad329e31896d8b1c2da9', CLOUDFLARE_API_TOKEN: 'local-fixture-hosting-token'};
+const hostingProject = {success: true, result: {name: 'cottonwood-library-trial-preview', production_branch: 'production', domains: ['cottonwood-library-trial-preview.pages.dev']}};
+
+test('Pages inventory uses the page size accepted by the actual provider and is checked before preview', async () => {
+  const requests = [];
+  const fetcher = async value => {
+    const url = new URL(value); requests.push(url);
+    if (!url.pathname.endsWith('/deployments')) return Response.json(hostingProject);
+    // Based on the account-connected probe: 100 returned 400/8000024; 25 returned 200.
+    if (url.searchParams.get('per_page') !== '25') return Response.json({success: false, errors: [{code: 8000024}]}, {status: 400});
+    return Response.json({success: true, result: [], result_info: {page: 1, per_page: 25, total_pages: 0}});
+  };
+  await checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true});
+  requests.length = 0;
+  await checkHosting(hostingCredentials, {fetcher});
+  assert.equal(requests.length, 2);
+  await assert.rejects(checkHosting(hostingCredentials, {fetcher: async value => new URL(value).pathname.endsWith('/deployments') ?
+    Response.json({success: false}, {status: 400}) : Response.json(hostingProject)}), /hosting deployment inventory request failed \(400\)/);
+});
+
+test('first publication scans every page, including a smaller provider page, before declaring the branch new', async () => {
+  const seen = [];
+  let existing = false;
+  const fetcher = async value => {
+    const url = new URL(value);
+    if (!url.pathname.endsWith('/deployments')) return Response.json(hostingProject);
+    const page = Number(url.searchParams.get('page')); seen.push(page);
+    return Response.json({success: true,
+      result: page === 1 ? Array.from({length: 20}, () => ({deployment_trigger: {metadata: {branch: 'trial'}}})) :
+        [{deployment_trigger: {metadata: {branch: existing ? 'cms-trial' : 'another-draft'}}}],
+      result_info: {page, per_page: 20, total_pages: 2}});
+  };
+  await checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true});
+  assert.deepEqual(seen, [1, 2]);
+  existing = true; seen.length = 0;
+  await assert.rejects(checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true}), /no verified recovery/);
+  assert.deepEqual(seen, [1, 2]);
+});
+
+test('first publication fails closed on inconsistent paging or an inventory beyond the existing 1,000-record bound', async () => {
+  const projectOr = body => async value => Response.json(new URL(value).pathname.endsWith('/deployments') ? body : hostingProject);
+  for (const result_info of [{page: 2, per_page: 25}, {page: 1, per_page: 0}, {page: 1, per_page: 25, total_pages: 2}]) {
+    await assert.rejects(checkHosting(hostingCredentials, {requireEmptyTrial: true, fetcher: projectOr({success: true, result: [], result_info})}), /Could not verify/);
+  }
+  let pages = 0;
+  await assert.rejects(checkHosting(hostingCredentials, {requireEmptyTrial: true, fetcher: async value => {
+    if (!new URL(value).pathname.endsWith('/deployments')) return Response.json(hostingProject);
+    pages++;
+    return Response.json({success: true, result: Array.from({length: 25}, () => ({}))});
+  }}), /inventory is too large/);
+  assert.equal(pages, 40);
 });
