@@ -24,17 +24,17 @@ Every new photo, screenshot, poster or logo goes through `pnpm assistant:image -
 
 ## Working in the library's chat
 
-Use ChatGPT Work in Safari for guided library tasks, including CMS content changes. For source work in that conversation, use the connected GitHub tools when available: inspect current main, create an isolated branch/draft, make the narrow edit and run the repository checks. Read the actual results and inspect the built desktop/phone evidence internally. Chat is available for questions and discussion; a request's tools and permissions determine what can actually be completed. Do not require a Codex handoff for a change supported here.
+Use ChatGPT Work for guided content changes through the connected CMS. Code changes use the library's prepared coding environment and the source workflow above. Connected GitHub access can read and save source, but does not attach that coding environment or establish preview access. Verify the available tools rather than assuming one conversation can invoke another. Preview the changed source through the repository's existing workflow; do not substitute a separately recreated page.
 
 The ordinary pull-request check builds local sample content. Label that evidence honestly. A sample-content screenshot is not a preview of current published Sanity records and cannot authorize an update to the saved CMS trial. For the website update, use the actual Sanity snapshot, separate authenticated review and exact checked artifact described in [CMS.md](CMS.md). If a working preview cannot be delivered in this chat, identify that unfinished step; do not redirect the volunteer into a known broken workspace or claim publication.
 
 Preview links are the default volunteer output. Native picture attachments have worked in ChatGPT Work in Safari, but show them only on request. Keep screenshot checks separate from delivery: capturing an image does not prove it was shown in the chat.
 
-## Optional developer cloud environment
+## Coding environment
 
-The private cloud environments are retained for developer recovery. They are not the volunteer's default editing destination. Safari Codex follow-ups currently fail with `DisposableStack`; editing either environment has returned HTTP 403. Check `assistant/setup-status.json` and current browser behavior before treating an old environment rehearsal as current availability. The new recovery environment also lacks verified hosted-preview access.
+Use the prepared library environment for source work when it is available. Read `assistant/setup-status.json` and verify current account behavior before relying on an earlier rehearsal. Keep dated browser failures and access limitations in that setup record rather than encoding a temporary workaround as the volunteer workflow.
 
-If a developer repairs this route, connect the private repository, use `bash scripts/cloud-setup.sh` and `assistant/START.md`, preserve the tested writable `/workspace` package/cache wrapper, then publish the prepared environment. Verify a new task, a follow-up, actual hosted access and preview delivery before recommending it. Local layout checks are separate from network and publishing access. Keep existing credentials/environments until a replacement is verified. Do not put production credentials in the agent environment. Test weekly maintenance independently; an editor error does not establish a maintenance failure.
+For environment setup or repair, connect the private repository, use `bash scripts/cloud-setup.sh` and `assistant/START.md`, preserve the tested writable `/workspace` package/cache wrapper, then publish the prepared environment. Verify a new task, a follow-up, actual hosted access and preview delivery before recommending it. Local layout checks are separate from network and publishing access. Keep existing credentials/environments until a replacement is verified. Do not put production credentials in the agent environment. Test weekly maintenance independently; an editor error does not establish a maintenance failure.
 
 ## Save trial changes
 
