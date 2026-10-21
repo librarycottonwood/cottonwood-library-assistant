@@ -254,8 +254,8 @@
     }
   },
   "cms": {
-    "asOf": "2026-10-20 America/Los_Angeles",
-    "implementation": "PR22 merged at 3476069d4ee6286ad1e3f6f926d07331c8410987. Real native Studio deployed and library account/draft access verified. Website publishing bridge not yet configured.",
+    "asOf": "2026-10-20 18:12 America/Los_Angeles",
+    "implementation": "PR22 implementation and PR23/24 setup/dependency fixes merged. Native Studio, real Sanity content, publisher and signed webhook are connected. Read current service/workflow results for each publishing outcome.",
     "account": "Library signed in via GitHub as librarycottonwood; organization/project ownership and native Studio access verified. Google identity linking and backup administrator/recovery are not verified.",
     "organizationId": "oprdu6k2x",
     "projectId": "2ou0xy2r",
@@ -266,19 +266,32 @@
       "contentDigest": "eccede8d9118a85ea0ebe7adbb782f83a92b97da1b2953058931a57ed4397eca",
       "draftsCreated": 9,
       "assetsUploaded": 16,
-      "publishedContent": 0,
-      "verification": "Authenticated raw read-back confirmed nine content drafts, zero published content records and 16 image/file assets. Native hosted Studio opened the imported book-sale draft. Existing prototype facts still require library review."
+      "publishedContent": 9,
+      "verification": "Nine existing prototype records published through native hosted Studio; read-only adapter snapshot validated all nine content records and 16 assets. Dates and copy remain trial content requiring board review before public launch. Redundant migration asset markers and the invalid empty donation URL were cleared."
     },
     "nonprofit": "Application submitted October 20, 2026 through Sanity's official Google Form, signed in as librarycottonwood@gmail.com, for project 2ou0xy2r. Confirmation: Your response has been recorded. Response copy requested. Decision pending; form states up to 14 business days. No paid plan, card or overage authorized.",
-    "contentSource": "local; only drafts exist in Sanity. Enable sanity after initial content review/publication and publishing bridge rehearsal.",
+    "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
-    "handoff": "assistant/CMS.md and studio/README.md; real OAuth, uploads, approvals, trial deployment, rollback, backup/restore and ChatGPT tool delivery remain live-account acceptance gates.",
+    "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
     "plugin": "Repository guidance updated conditionally; installed plugin and existing scheduled task have not been released/changed by this branch.",
-    "production": "Public domain and registrar unchanged. Existing saved trial updated by PR22 merge; its verification and publishing workflows passed. CMS trial publishing remains unconfigured.",
+    "production": "Public domain and registrar unchanged. Saved source trial and isolated cms-trial are separate; human exact-version approval remains required for CMS trial promotion.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
       "savedTrialPublish": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142724",
       "analyticsDeploy": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142741"
+    },
+    "publishing": {
+      "origin": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev",
+      "trial": "https://cms-trial.cottonwood-library-trial-preview.pages.dev/",
+      "webhookId": "mMUKrPTnjwXaQO3X",
+      "webhookType": "document; published create/update/delete only; drafts and versions disabled",
+      "oauthApp": "https://github.com/settings/applications/3950337",
+      "reviewIdentity": "librarycottonwood (338888442); identity only, no repository scopes",
+      "dispatch": "Fine-grained library-owned token: only this repository; Actions write, Contents read",
+      "deploymentPermissions": "Current Individual Workers Editor roles, each restricted to its own CMS publisher or Analytics Worker. No legacy Workers Scripts role retained.",
+      "publisherDeploy": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39524340506",
+      "status": "Configuration and authenticated empty-ledger access verified. Each preview/approval/deployment result must be checked live; /health is configuration only.",
+      "secrets": "Server/GitHub secret storage only; temporary local setup material is removed after account verification."
     }
   }
 }

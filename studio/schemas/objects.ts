@@ -35,7 +35,7 @@ export const libraryImage = defineType({
   fields: [
     text('alt', 'Picture description', 'A short description for visitors using a screen reader.'),
     defineField({name: 'caption', title: 'Caption', type: 'string'}),
-    defineField({name: 'fit', title: 'Picture display', type: 'string', initialValue: 'cover', options: {
+    defineField({name: 'fit', title: 'Picture display', type: 'string', options: {
       list: [{title: 'Fill the photo area', value: 'cover'}, {title: 'Show the whole poster or logo', value: 'contain'}], layout: 'radio',
     }}),
     defineField({name: 'legacyKey', title: 'Imported picture reference', type: 'string',

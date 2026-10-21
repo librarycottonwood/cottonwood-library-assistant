@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {createSchema} from 'sanity';
+import {createSchema, resolveInitialValue} from 'sanity';
 import {validateDocument} from '@sanity/validation';
 import {schemaTypes} from '../schemas/index.ts';
 import {validateImportSnapshot} from '../scripts/validate-import.ts';
@@ -13,6 +13,23 @@ test('built-in rules in the compiled event schema accept a valid record without 
   const result = await validateDocument({schema, document: event});
   assert.equal(result.status, 'notEvaluated'); // No API client: custom rules are tested separately below.
   assert.deepEqual(result.markers, []);
+});
+
+test('creating a native event does not seed an empty picture that blocks publication', async () => {
+  // The native resolver checks the browser scheduler; Node uses its immediate fallback.
+  const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window');
+  Object.defineProperty(globalThis, 'window', {value: {}, configurable: true});
+  try {
+    const initial = await resolveInitialValue(schema, {id: 'event', title: 'Event', schemaType: 'event', value: {_type: 'event'}}, {}, {
+      projectId: 'cmslocal', dataset: 'production', schema, currentUser: null,
+      getClient: () => {throw new Error('Initial event values must not require an account.');},
+    }, {useCache: false});
+    const result = await validateDocument({schema, document: {...initial, ...event}});
+    assert.deepEqual(result.markers, []);
+  } finally {
+    if (previousWindow) Object.defineProperty(globalThis, 'window', previousWindow);
+    else Reflect.deleteProperty(globalThis, 'window');
+  }
 });
 
 test('the actual compiled Sanity form prevents publication when a confirmed date is missing', async () => {
