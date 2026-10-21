@@ -9,7 +9,8 @@ const html = (body, status = 200, extra = {}) => new Response(`<!doctype html><h
   status, headers: {
     'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store',
     'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
-    'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff',
+    // Native form posts need their real Origin; no-referrer turns it into null.
+    'Referrer-Policy': 'same-origin', 'X-Content-Type-Options': 'nosniff',
     ...extra,
   },
 });
