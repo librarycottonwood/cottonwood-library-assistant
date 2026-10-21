@@ -1,11 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Miniflare, convertV4MiniflareOptions } from 'miniflare';
+import { Miniflare } from 'miniflare';
+import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 const origin='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 test('real Workers runtime enforces OAuth discovery, PKCE, consent cookies and CSRF',async()=>{
   execFileSync('npx',['--no-install','wrangler','deploy','--dry-run','--outdir','dist'],{stdio:'pipe',env:{...process.env,WRANGLER_SEND_METRICS:'false'}});
-  const mf=new Miniflare(convertV4MiniflareOptions({modules:true,scriptPath:'dist/index.js',compatibilityDate:'2026-10-06',compatibilityFlags:['global_fetch_strictly_public'],kvNamespaces:['OAUTH_KV'],bindings:{GITHUB_CLIENT_ID:'fixture-client'}}));
+  const mf=new Miniflare({telemetry:{enabled:false},workers:[{config:{
+    name:'analytics-test',compatibilityDate:'2026-10-06',compatibilityFlags:['global_fetch_strictly_public'],
+    manifest:{mainModule:'index.js',modulesRoot:process.cwd(),modules:{'index.js':{type:'esm',contents:readFileSync('dist/index.js','utf8')}}},
+    env:{OAUTH_KV:{type:'kv',id:'analytics-test'},GITHUB_CLIENT_ID:{type:'text',value:'fixture-client'}},
+    exports:{},
+  },dev:{rootPath:process.cwd()}}]});
   try {
     const resource=await mf.dispatchFetch(origin+'/.well-known/oauth-protected-resource/mcp');assert.equal(resource.status,200);assert.deepEqual((await resource.json()).scopes_supported,['analytics:read']);
     const denied=await mf.dispatchFetch(origin+'/mcp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})});assert.equal(denied.status,401);assert.match(denied.headers.get('www-authenticate'),/resource_metadata/);

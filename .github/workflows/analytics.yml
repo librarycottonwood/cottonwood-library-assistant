@@ -16,10 +16,11 @@ jobs:
       reconnectReady: ${{ steps.probe.outputs.reconnectReady }}
       humanAction: ${{ steps.probe.outputs.humanAction }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+          package-manager-cache: false
       - name: Check cloud connection without report data
         id: probe
         env:

@@ -18,13 +18,14 @@ jobs:
       state: ${{ steps.deploy.outputs.state }}
       publish: ${{ steps.current.outputs.publish }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+          package-manager-cache: false
       - run: npm ci --prefix connector --ignore-scripts
       - run: npm test --prefix connector
       - run: npm run build --prefix connector

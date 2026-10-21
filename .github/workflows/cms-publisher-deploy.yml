@@ -1,0 +1,47 @@
+name: Update checked CMS publisher
+on:
+  workflow_run:
+    workflows: ['Verify library website']
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: library-cms-publisher-deployment
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Require configured access and current checked main
+        id: ready
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CMS_PUBLISHER_DEPLOY_TOKEN }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo 'CMS publisher deployment access is not configured.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          current=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [ "$current" = "$CHECKED_SHA" ]; then echo 'deploy=true' >> "$GITHUB_OUTPUT"; fi
+      - if: steps.ready.outputs.deploy == 'true'
+        run: npm ci --prefix cms-publisher --ignore-scripts
+      - name: Deploy checked code, preserve secrets, verify source and configuration
+        if: steps.ready.outputs.deploy == 'true'
+        working-directory: cms-publisher
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CMS_PUBLISHER_DEPLOY_TOKEN }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: node deploy.mjs

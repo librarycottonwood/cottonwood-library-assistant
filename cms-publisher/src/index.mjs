@@ -62,6 +62,7 @@ export default {
       if (url.pathname === '/health' && request.method === 'GET') {
         return json({service: 'Cottonwood Library CMS publishing', version: '0.1.0',
           status: ready.webhook && ready.review ? 'configured' : 'setup_pending',
+          sourceSha: /^[a-f0-9]{40}$/.test(env.BUILD_SOURCE_SHA || '') ? env.BUILD_SOURCE_SHA : null,
           configurationOnly: true, scope: 'Configuration only; health is not proof of live publishing.'});
       }
       if (!ready.webhook) return setupPending();
