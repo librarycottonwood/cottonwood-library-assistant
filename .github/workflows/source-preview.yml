@@ -1,0 +1,67 @@
+name: Host checked code preview
+on:
+  workflow_run:
+    workflows: [Verify library website]
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  preview:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: library-code-preview-${{ github.event.workflow_run.head_branch }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: write
+      pull-requests: write
+    env:
+      SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+      SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+      SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+      CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+    steps:
+      # workflow_run loads this workflow and helper code from trusted main.
+      # Never check out PR source or run artifact code in this privileged job.
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Verify the current library draft and its successful check
+        id: context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/source-preview.mjs context
+      - name: Download the static preview without hosting credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.context.outputs.artifact_id }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID/zip" > output/source-preview/bundle.zip
+          python3 scripts/source-preview-archive.py output/source-preview/bundle.zip output/source-preview/download
+      - name: Upload only verified static assets and report the exact preview link
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/source-preview.mjs deploy
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: library-source-preview-result
+          path: output/source-preview/result.json
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Keep preview archives within the existing allowance
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/cms-artifacts.py

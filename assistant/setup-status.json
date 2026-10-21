@@ -306,7 +306,8 @@
         "branch": "draft/simple-website-approval-2026-10-21",
         "draftSource": "78dc0f735ba731c6a1d8d711fe38fdf8999e671d",
         "limits": "The Codex Safari client remains unresolved. This record establishes draft editing/saving, not source merge, live publisher deployment or a repaired Codex client.",
-        "workPreviewAccess": "The code draft did not produce a verified preview through the existing coding environment. Work created a separate Sites mockup, then reported deleting it when corrected. Asking it to use the existing environment instead opened a separate cloud-browser ChatGPT sign-in. That attempt was cancelled; no built-in Work-to-Codex handoff was established."
+        "workPreviewAccess": "The code draft did not produce a verified preview through the existing coding environment. Work created a separate Sites mockup, then reported deleting it when corrected. Asking it to use the existing environment instead opened a separate cloud-browser ChatGPT sign-in. That attempt was cancelled; no built-in Work-to-Codex handoff was established.",
+        "sourcePreviewRepair": "Draft implementation extends PR checks to build actual public Sanity content and bundles the checked static site. A separate trusted-main workflow verifies artifact/source/content pins, uploads to the existing isolated Cloudflare preview project and reports the link on the PR. Not enabled or accepted end to end yet. The actual anonymous published-content read succeeded; this adds no account, secret or paid subscription."
       }
     }
   },
