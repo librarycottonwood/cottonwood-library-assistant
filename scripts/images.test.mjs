@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, readFile, stat, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
-import { prepare, check, LIMITS } from './images.mjs';
+import { prepare, check, pruneUnusedBuiltImages, LIMITS } from './images.mjs';
 
 test('prepare removes location data, caps size, and picks the right format', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'library-images-'));
@@ -38,4 +38,26 @@ test('check blocks raw pictures, oversized files and unused uploads', async () =
     assert.match(problems, /<img src=\{x\.src\}>/);
     assert.match(problems, /CSS background/);
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test('CMS replacement removes only unused emitted originals and still blocks oversized referenced pictures', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'library-cms-images-'));
+  try {
+    for (const dir of ['library-files/images', 'dist/_astro', 'src']) await mkdir(path.join(root, dir), {recursive: true});
+    const photo = await sharp({create: {width: 20, height: 20, channels: 3, background: '#fff'}}).png().toBuffer();
+    for (const name of ['replaced.png', 'html.png', 'css.png', 'script.png']) await writeFile(path.join(root, 'library-files/images', name), photo);
+    await writeFile(path.join(root, 'src/registry.ts'), 'replaced.png html.png css.png script.png');
+    for (const name of ['replaced.HASH.png', 'html.HASH.png', 'css.HASH.png', 'script.HASH.png', 'remote.HASH.png']) {
+      await writeFile(path.join(root, 'dist/_astro', name), Buffer.alloc(LIMITS.servedBytes + 1));
+    }
+    await writeFile(path.join(root, 'dist/index.html'), '<img srcset="/_astro/html.HASH.png 800w">');
+    await writeFile(path.join(root, 'dist/_astro/style.css'), '.cover {background: url(css.HASH.png)}');
+    await writeFile(path.join(root, 'dist/_astro/script.js'), 'const image = "script.HASH.png";');
+    assert.deepEqual(await pruneUnusedBuiltImages({root}), ['_astro/replaced.HASH.png']);
+    assert.deepEqual(await readFile(path.join(root, 'library-files/images/replaced.png')), photo);
+    for (const name of ['html.HASH.png', 'css.HASH.png', 'script.HASH.png', 'remote.HASH.png']) {
+      assert.equal((await stat(path.join(root, 'dist/_astro', name))).size, LIMITS.servedBytes + 1);
+      assert.ok((await check({root, dist: 'dist'})).some(problem => problem.includes(name)));
+    }
+  } finally {await rm(root, {recursive: true, force: true});}
 });
