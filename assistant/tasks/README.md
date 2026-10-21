@@ -8,7 +8,7 @@ and anyone signed in can change them, so this folder is the source of truth.
 | --- | --- | --- | --- | --- |
 | Weekly Maintenance Check | `weekly-maintenance-pointer.md` | `weekly-maintenance.md` | Monday 14:00 America/Los_Angeles | Cloud (current binding and enabled/paused status in setup-status.json) |
 
-The task was observed paused in the library account on October 20. Confirm its actual enabled/paused status before promising a future run; editing its prompt does not resume it.
+The existing task was resumed in the library account on October 20. Its Monday afternoon schedule and enabled state were read back. Two actual runs through **Run now** posted results in the Maintenance chat; the second finished in 58 seconds without a permission question after the two maintenance website permissions were saved for that chat. The chat was unarchived so the board can find its reports. Future scheduled dispatch is separate from these manual-trigger checks; confirm the current state before promising a run.
 
 The weekly task's maintained ChatGPT prompt is the short pointer in
 `weekly-maintenance-pointer.md`: it tells the task to open

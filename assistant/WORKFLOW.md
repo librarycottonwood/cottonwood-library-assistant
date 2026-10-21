@@ -30,6 +30,8 @@ Library editing entry point: `https://chatgpt.com/codex/cloud`. It opens the Clo
 
 The published install/start configuration additionally puts pnpm and caches under `/workspace`, because the default home directories in this cloud runtime were unwritable. Keep that tested wrapper when updating the environment.
 
+Verify a new task and a follow-up in the volunteer's browser before calling the workspace ready. Local layout checks and actual hosted access are separate checks; record their results and account/browser blockers in setup-status.json. Keep the existing environment and credentials until a replacement is verified. Test the weekly review independently; an editor error does not establish a maintenance failure.
+
 Allow package/download hosts during installation. Browser installation may require system dependencies. Do not put secrets in the repository. Add only preview project credentials to the environment's secret store after testing the dedicated preview project. Account linking and publishing the cloud environment require the signed-in account UI.
 
 ## Save trial changes

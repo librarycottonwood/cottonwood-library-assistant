@@ -130,7 +130,23 @@
     },
     "cloudSetup": {
       "chat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
-      "status": "Replacement cottonwood-library-editor published. Fresh library-account task uploaded to library-owned Pages and fetched website/pictures successfully; 36 desktop/phone page checks passed. Saving and undo separately verified through library-owned GitHub connector.",
+      "status": "October 20: original editor starts new tasks, but the account rejects its Edit action with HTTP 403. A private recovery environment was prepared and published; a fresh task restored its tools and checked local phone layouts. Editor follow-ups still fail in Safari with DisposableStack. Earlier hosted preview/save/undo results below are historical; the interactive editor is not ready for handoff.",
+      "recovery": {
+        "environment": "cottonwood-library-editor-recovery",
+        "setupChat": "https://chatgpt.com/local/01a15cc5-f116-764a-815f-82fd4798f008?hostId=local",
+        "published": true,
+        "readyForHandoff": false,
+        "repository": "librarycottonwood/cottonwood-library-assistant",
+        "sourceSha": "9fe0bbf21e29b464824205594615fdbd791a74e2",
+        "configuration": "Focused startup guidance reads current AGENTS, START and WORKFLOW files. Pinned pnpm and writable caches live under /workspace. Private, package-manager network preset, no added secrets or environment variables.",
+        "setupChecks": "Actual setup check/build, 42 local CMS tests and desktop/phone browser checks passed. The Pages redirect runner lost XDG_CONFIG_HOME; its actual runtime cases passed directly with the writable configuration directory.",
+        "freshTask": "https://chatgpt.com/local/01a15cdb-8275-77f2-af4d-0f6e03d12022",
+        "freshTaskResult": "Ordinary request: Check our website for display problems on phones. Restored workspace checked local layouts, internal links and menus at four phone widths. It correctly reported that network restrictions prevented a live-site check. No website edits or publication.",
+        "existingEditorTest": "https://chatgpt.com/local/01a15cd4-b308-73c0-bf5e-befc76058036",
+        "existingEditorResult": "A new task checked 13 hosted pages at three phone widths. Its follow-up failed with Can't find variable: DisposableStack, including after reloading current assets and using keyboard submission.",
+        "remaining": "Both saved environments reject Edit with HTTP 403. Safari follow-up submission is unresolved; matching public Codex report remains open. Recovery network access and hosted-preview publishing are not verified. Original environment and its scoped preview credential were preserved.",
+        "upstreamIssue": "https://github.com/openai/codex/issues/55361"
+      },
       "githubConnection": "Library ChatGPT connected as librarycottonwood; owned repository selected",
       "credential": "Library-owned Cloudflare Pages Write token; api.cloudflare.com-bound network secret.",
       "freshTask": {
@@ -159,7 +175,9 @@
         }
       },
       "maintenanceSchedules": {
-        "status": "Daily GitHub checks and bounded repair worker configured; Weekly Maintenance Check exists but is paused in the library account as observed in Safari October 20.",
+        "status": "Daily GitHub checks and bounded repair worker configured; existing Weekly Maintenance Check resumed in the library account October 20. Enabled state and Monday afternoon schedule read back in Safari; next run shown in six days.",
+        "checkedAt": "2026-10-20 America/Los_Angeles",
+        "enabled": true,
         "githubSchedule": "Daily 16:37 UTC; source changes also trigger checks",
         "assistantSchedule": "Monday afternoon around 14:00 America/Los_Angeles; cloud executor",
         "automationId": "6ac6e4a661a081918e9c985036d9cf97",
@@ -170,7 +188,7 @@
           "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206",
           "scheduledTask": "Library-account scheduled cloud baseline retrieved matching exact-source report"
         },
-        "limits": "Cloud repair/save/trial publishing passed. Installed skill delivery and fresh edit/preview passed. Immediate bot-event and updated weekly notification delivery remain unverified.",
+        "limits": "Two current Run now executions posted into the existing Maintenance chat. Future clock-triggered execution and immediate bot-event notification delivery remain unverified. Earlier cloud repair/save/publishing results are historical evidence, not proof that current editor follow-ups work.",
         "usage": "Daily checks use GitHub allowance, not ChatGPT. Repairs, weekly assistant review, weekly sign-in maintenance and event notifications use shared Plus allowance. No API key, API credits or automatic reload configured.",
         "repairValidation": {
           "managedSignInRun": "37565472835",
@@ -205,8 +223,14 @@
           "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved",
           "actualScreenshotBytes": 65509401
         },
-        "weeklyPointerPrompt": "Existing task reads assistant/tasks/weekly-maintenance.md from current main. Its pointer was simplified and saved October 20; paused status and schedule settings were preserved. No run or delivery is claimed.",
-        "weeklyRepairReporting": "The maintained weekly review covers verified repairs, CMS trial state, report access and one practical next step. Actual task is paused; future execution and delivery are not established by this prompt edit.",
+        "weeklyPointerPrompt": "Existing task reads assistant/tasks/weekly-maintenance.md from current main. Its focused pointer was saved October 20 and read back when resuming; no duplicate task was created.",
+        "weeklyRepairReporting": "Two actual Run now executions completed in the existing library-account chat. The second took 58 seconds, used GitHub and Library Analytics, checked the approved hosted trial and reported the pending preview separately, without a permission question. Future scheduled dispatch has not yet occurred.",
+        "weeklyRun": {
+          "chat": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571-maintenance/c/6ac6e474-2260-83e8-bd0f-0256173e4788",
+          "browserPermissions": "CMS trial and CMS publisher allowed for this Maintenance chat only; no all-sites grant.",
+          "visibility": "Existing Weekly Maintenance chat unarchived; Archive action read back after reload.",
+          "result": "Approved trial online, current checks passed, fresh visitor report succeeded, no new repair problems, newer preview awaiting review, no active fundraiser in published content. No website edits or publication."
+        },
         "previousAutomationId": "6ac5a460da40819092fe6b5e6403c3cd"
       },
       "trialSaving": {
@@ -249,7 +273,7 @@
         "workspacePrompt": {
           "source": "assistant/START.md",
           "sourceUpdated": true,
-          "accountSave": "Not completed: the existing cottonwood-library-editor Edit action returned Couldn\u2019t start editing environment twice, including after refreshing settings. Existing environment, credentials and access were preserved."
+          "accountSave": "Focused start instructions saved and read back in the private recovery environment, then published and used by a fresh task October 20. Existing editor cannot be republished through Edit (HTTP 403). Recovery is not the volunteer default: its live network access is unverified and Safari follow-ups fail; see cloudSetup.recovery."
         }
       },
       "stableSavedTrial": {
