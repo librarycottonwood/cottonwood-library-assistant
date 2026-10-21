@@ -39,6 +39,8 @@ The maintained repository is `librarycottonwood/cottonwood-library-assistant`. R
 - Content provider and publishing route: `assistant/CMS.md`.
 - Website/code work, previews, approval and saving: `AGENTS.md` and `assistant/WORKFLOW.md`.
 - Account/setup evidence: `assistant/setup-status.json`. Treat dated entries as evidence to verify, not a promise that access still works.
+- General donations, newsletter signup/email and social coordination: `assistant/COMMUNICATIONS.md`. Read current CMS/account records before claiming those connections work.
+- Semester milestones and public-domain launch preparation: `assistant/ROADMAP.md` and `assistant/DOMAIN-LAUNCH.md`.
 - Repairs and website health: `assistant/MAINTENANCE.md`.
 
 Use the tools actually available in this chat. Instructions do not establish a working connection. Verify the current record or website when facts matter; old drafts and chats may have been tests. If access fails, investigate first, then give the volunteer one practical next step.
