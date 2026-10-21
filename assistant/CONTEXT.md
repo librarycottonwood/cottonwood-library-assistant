@@ -5,9 +5,9 @@ This repository holds the custom library website and conversational upkeep pilot
 
 The website is static Astro with Node 24 and pnpm 11.15.1. No payment collection or form backend is configured here. Cloudflare Pages can host the static output; additional Pages Functions can be added when an actual request needs them.
 
-Content management is being moved to Sanity; read `assistant/CMS.md` before editing. The implementation is present, but library Google sign-in, project creation, nonprofit application, ChatGPT connection, hosting and live publishing tests are still pending. No additional paid subscription is authorized.
+Content management is being moved to Sanity; read `assistant/CMS.md` before editing. PR #22 is merged. The library-owned GitHub identity `librarycottonwood` owns the connected project `2ou0xy2r` / `production`; the real editor is hosted at https://cottonwood-community-library.sanity.studio/. Nine migrated content records are drafts, with 16 uploaded assets and no published content at setup. Nonprofit approval, backup administrator, ChatGPT connection and the website publishing bridge/rehearsal remain pending. No additional paid subscription is authorized.
 
-With `LIBRARY_CONTENT_SOURCE=sanity`, published CMS records feed one validated snapshot per build through `src/content/repository.ts`. Studio forms live in `studio/`; signed publishing/review logic in `cms-publisher/`. Native CMS publication and verified website deployment are distinct. The new CMS trial is isolated from the saved trial and real domain. Until the account is configured, the default local prototype uses these migration inputs:
+With `LIBRARY_CONTENT_SOURCE=sanity`, published CMS records feed one validated snapshot per build through `src/content/repository.ts`. Studio forms live in `studio/`; signed publishing/review logic in `cms-publisher/`. Native CMS publication and verified website deployment are distinct. The new CMS trial is isolated from the saved trial and real domain. The website still uses the local provider until reviewed initial content and the publishing bridge are configured and rehearsed. Its migration inputs are:
 - Homepage heading, hours, programs: `src/content/seed.ts`.
 - Stories/news/events: `src/content/editorial.ts` and `src/content/feeds.ts`.
 - Giving: `src/content/support.ts`.

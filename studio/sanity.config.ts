@@ -8,9 +8,13 @@ import {PublishingLayout} from './components/PublishingLayout';
 export default defineConfig({
   name: 'cottonwood-library',
   title: 'Cottonwood Community Library',
-  ...studioEnvironment(process.env),
+  // Sanity substitutes public variables by their full property name at build time.
+  ...studioEnvironment({
+    SANITY_STUDIO_PROJECT_ID: process.env.SANITY_STUDIO_PROJECT_ID,
+    SANITY_STUDIO_DATASET: process.env.SANITY_STUDIO_DATASET,
+  }),
   plugins: [structureTool({structure})],
-  components: {layout: PublishingLayout},
+  studio: {components: {layout: PublishingLayout}},
   schema: {
     types: schemaTypes,
     templates: (templates) => templates.filter((template) => !singletonTypes.has(template.schemaType)),

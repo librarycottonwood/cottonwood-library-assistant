@@ -1,6 +1,6 @@
 # Cottonwood Library CMS
 
-This standalone Sanity Studio supplies the library’s editing forms. It does not create a Sanity account, project, dataset, membership, billing plan, or deployment. There are no paid plugins or AI tools in this package. The library’s Google sign-in and nonprofit application are still meeting-time setup steps.
+This standalone Sanity Studio supplies the library’s editing forms. The real editor is deployed at https://cottonwood-community-library.sanity.studio/ under the library-owned GitHub identity `librarycottonwood`, project `2ou0xy2r`, dataset `production`. Nine existing prototype records were imported as drafts with 16 assets; no content was published. There are no paid plugins or AI tools in this package. Nonprofit approval, a second administrator and the website publishing bridge remain pending; publishing in Studio does not currently update the website.
 
 ## What volunteers edit
 
@@ -34,8 +34,8 @@ To check a migration snapshot against the actual Studio schema without an accoun
 
 ## Connect at the meeting
 
-1. A library representative signs in to Sanity with the permanent library-owned Google identity and creates the library-owned project/organization. Keep recovery and another administrator with the library; invite Jaden separately. Do not use a developer-owned project as the permanent home.
-2. Apply for the nonprofit plan using that project ID. Approval and free quotas must be verified; do not add a card or enable paid tools as part of this setup.
+1. The library created its organization/project using its permanent GitHub identity `librarycottonwood`. Keep recovery and another administrator with the library; invite Jaden separately. Do not use a developer-owned project as the permanent home. Google sign-in is not yet linked/verified.
+2. The nonprofit application for that project was submitted from the library Google account on October 20. Await the decision and verify free quotas; do not add a card or enable paid tools as part of this setup.
 3. Choose the dataset name and visibility. A public published dataset must contain only public website material. Keep donor/private information outside it. Draft access, write access, and exports require appropriate authorization.
 4. Copy `.env.example` to `.env.local` inside `studio/`, and fill in `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`. These are public identifiers. Never place an API token in any `SANITY_STUDIO_*` variable: those variables are embedded in the browser bundle.
 5. Import the reviewed content snapshot with the repository’s migration process. Check both singleton documents and all imported assets before enabling publication. No content is imported by `pnpm install` or `pnpm build`.
@@ -43,7 +43,7 @@ To check a migration snapshot against the actual Studio schema without an accoun
 7. Connect the signed publishing webhook and its separate approval/status service. Add draft preview access only through an authenticated server; never put a draft-read or publishing token in the public website or Studio environment.
 8. Test one new event, a time correction, a photo post, a newsletter replacement, a closure, unpublishing, concurrent changes, and a deliberately failed update in the actual library account. Confirm the live website and the library-facing status agree. Test backup restore and recovery without Jaden or the Pi before handoff.
 
-Until those steps are done, this is an implemented but unconnected CMS. Normal `dev` and `build` fail with setup instructions when identifiers are missing, instead of silently using a personal or example project.
+Studio hosting and native draft access are connected. The remaining steps are required before claiming end-to-end website publishing or a completed handoff. Normal `dev` and `build` fail with setup instructions when identifiers are missing, instead of silently using a personal or example project. Keep literal `process.env.SANITY_STUDIO_*` references in `sanity.config.ts`: Sanity replaces these at production build time; passing the entire `process.env` object only works in development.
 
 ## Document contract
 

@@ -2,9 +2,9 @@
 
 ## Content provider first
 
-Read `assistant/CMS.md` and verify the actual provider before choosing an edit path. Until the library's Sanity project is connected, the local prototype and source-edit workflow below remain available. Once enabled, events, posts, programs, newsletters, notices, settings/hours and giving records are edited in Sanity; do not duplicate those edits in seed/editorial files. Use the connected CMS tools only when they actually exist, or the included Studio forms. Layout/code changes still use the source workflow below.
+Read `assistant/CMS.md` and verify the actual provider before choosing an edit path. The library's Sanity project and hosted editor are connected, but the website still uses the local provider while initial content review and the publishing bridge are pending. New CMS work uses drafts in the real Studio. Once the website provider is enabled, events, posts, programs, newsletters, notices, settings/hours and giving records are edited in Sanity; do not duplicate those edits in seed/editorial files. Use the connected CMS tools only when they actually exist, or the included Studio forms. Layout/code changes still use the source workflow below.
 
-CMS publication queues an immutable website preview; it does not itself make the trial website live. The reviewer uses the separate authenticated approval service, and `cms.yml` promotes the exact checked artifact to **cms-trial** only. It verifies the hosted result and attempts verified restoration after a failed upload. The public domain and existing **trial** address are separate. Account creation, nonprofit approval, plugin release and real-account rehearsals are pending; do not represent local tests as their completion.
+After the publishing bridge is configured, CMS publication queues an immutable website preview; it does not itself make the trial website live. The reviewer uses the separate authenticated approval service, and `cms.yml` promotes the exact checked artifact to **cms-trial** only. It verifies the hosted result and attempts verified restoration after a failed upload. The public domain and existing **trial** address are separate. Nonprofit approval, plugin release and real-account publishing rehearsals are pending; do not represent local tests as their completion.
 
 ## Source edits
 
