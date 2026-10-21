@@ -5,7 +5,7 @@ description: Use when a volunteer wants to upload a newsletter PDF, replace the 
 
 # Newsletter
 
-Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Technical steps (PDF location, cover picture, summary): repository `assistant/content/newsletter.md`. Read it before editing.
+Follow library-assistant for conversation and the current CMS publishing route. Technical steps (PDF location, cover picture, summary): repository `assistant/content/newsletter.md`. Read it before editing.
 
 ## New issue wizard
 

@@ -1,27 +1,13 @@
-# Newsletter: technical steps
+# Newsletters
 
-First verify the active content provider using [CMS workflow](../CMS.md). Once Sanity is connected, use its records and Studio/connected tools; the source-file locations below describe the local prototype and migration inputs. Do not maintain both copies.
+Use the newsletter wizard. Read [CMS workflow](../CMS.md) for the current connection and publishing route. Create or correct a Sanity **Newsletters** record, not files or settings in `seed.ts`.
 
-Used by the `newsletter` skill. Follow `assistant/WORKFLOW.md` for checking, preview and save.
+A `newsletter` has `issue`, `title`, `slug.current`, `summary`, a native PDF `file.asset._ref` and a `cover` picture with useful `alt` text. Generate a cover from the PDF's first page when the available tools permit it; otherwise guide the volunteer through uploading a cover in Studio. Do not pretend a file was uploaded when it is only attached to chat. Confirm the actual file asset is a PDF.
 
-The site shows one current issue at `/librarynews/newsletter/`, plus a card in the news feed and on the home page.
+For a new issue, preserve older newsletter records and PDFs. In **Library settings and hours → Homepage → Current newsletter**, change `siteSettings.currentNewsletter` on the existing `library-settings` document to reference that issue. This selection drives the current-issue page and homepage card; older issues remain in the archive. Do not create another settings document or maintain a second current-issue copy.
 
-## New issue
+For a correction to the same issue, keep its document identity and page address. Replacing a PDF does not authorize deleting the previous asset when it may still be shared.
 
-1. Save the PDF as `public/documents/cottonwood-library-newsletter-<season>-<year>.pdf` (lowercase, hyphens). Keep older PDFs unless asked to remove them.
-2. Make the cover: render page 1 of the PDF to an image (e.g. `pdftoppm -png -r 110 -f 1 -l 1 file.pdf cover`), then run it through the picture rules: `pnpm assistant:image -- cover-1.png --name newsletter-cover`. If no PDF renderer is installed, ask the volunteer for a photo or screenshot of the cover. Replace `src/assets/newsletter-cover.jpg` (or update the `newsletter` import in `src/content/images.ts` to the new file and delete the old one so the picture check doesn't flag it as unused).
-3. Update `newsletter` in `src/content/seed.ts`:
+Prepare both the issue and current-selection drafts as needed, then show the proposed issue and selection here. After confirmation, publish the exact records through supported CMS tools. Use Studio only for an unavailable operation. The published selection must reference a published, valid newsletter. The current website preview reads published records only. Follow [publishing workflow](../WORKFLOW.md), then check the current download, cover and older archive download on the verified website.
 
-```ts
-newsletter: {
-  issue: 'Fall 2026',                       // shown as "Fall 2026 newsletter"
-  title: 'A little news from your library', // headline on the card
-  summary: 'Two sentences on what is inside.',
-  fileUrl: '/documents/cottonwood-library-newsletter-fall-2026.pdf',
-  cover: { key: 'newsletter', alt: 'Cover of the Cottonwood Community Library Fall 2026 newsletter.', fit: 'contain' },
-},
-```
-
-4. Nothing else to edit: the newsletter post in `src/content/editorial.ts` (id `newsletter`) and the page take the issue name, title and summary from `newsletter`.
-
-Everything else (page title, feed card) reads from `newsletter` automatically.
+Field definitions: `studio/schemas/documents.ts`; singleton IDs: `studio/structure.ts`. `legacyFileUrl` is migration-only; new issues use native file assets.

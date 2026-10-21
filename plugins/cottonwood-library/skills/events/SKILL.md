@@ -5,7 +5,7 @@ description: Use when a volunteer wants to add, reschedule, change, or cancel a 
 
 # Library events
 
-Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Technical steps (event fields, times, calendar): repository `assistant/content/events.md`. Read it before editing.
+Follow library-assistant for conversation and the current CMS publishing route. Technical steps (event fields, times, calendar): repository `assistant/content/events.md`. Read it before editing.
 
 ## New event wizard
 

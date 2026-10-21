@@ -1,26 +1,25 @@
-# Events: technical steps
+# Events
 
-First verify the active content provider using [CMS workflow](../CMS.md). Once Sanity is connected, use its records and Studio/connected tools; the source-file locations below describe the local prototype and migration inputs. Do not maintain both copies.
+Use the events wizard to gather the facts. Read [CMS workflow](../CMS.md) for the current connection and publishing route. Ordinary event edits belong in Sanity, not the migration files in `src/content/`.
 
-Used by the `events` skill. Follow `assistant/WORKFLOW.md` for checking, preview and save.
+## Create or correct an event
 
-## Where
+Open **Events** in Studio, or use the connected Sanity tools to read the existing record and schema. An `event` holds the name (`title`), page address (`slug.current`), short description (`summary`), optional picture (`image`), location and related `program` reference.
 
-`libraryEvents` in `src/content/editorial.ts`. Type `LibraryEvent` in `src/content/types.ts`. They appear in the calendar and list on `/librarynews/` and the home page. Past events drop off automatically (`src/content/feeds.ts`).
+**Confirmed dates** is `sessions[]`. Each `eventSession` needs a stable `_key`, `startsAt` and `endsAt`. Both times are required; the end must be later than the start. Use America/Los_Angeles for the event's date, including the correct daylight-saving offset. Repeat the date, weekday and time range to the volunteer before saving. Ask for a missing end time rather than guessing.
 
-```ts
-{
-  id: 'story-time-2026-11-08',          // lowercase, unique: name + date
-  title: 'Saturday Story Time',
-  startsAt: '2026-11-08T10:00:00-08:00', // Pacific with offset: -07:00 summer (PDT), -08:00 winter (PST)
-  endsAt: '2026-11-08T11:00:00-08:00',  // required, later than the start
-  summary: 'Stories and a craft for ages 3–8. Free.', // one short line
-  href: '/librarynews/story-time/',     // the page with details
-},
-```
+Add confirmed occurrences to the same event. A program's regular schedule is descriptive; it does not authorize inventing future dates. Reuse an existing program reference. The homepage, event list and calendar derive from these sessions; do not update each appearance separately.
 
-- One entry per date. A repeating event is several entries (a `.map` over dates is fine, as the book sale does).
-- Check the UTC offset for the date: daylight saving ends the first Sunday in November and starts the second Sunday in March.
-- `href`: a related news post or support page if one exists; otherwise `/librarynews/`. Don't link to a page that doesn't exist — `pnpm assistant:capture` checks internal links.
-- **Move:** change `startsAt`/`endsAt` and the `id` date. **Cancel:** remove the entry, or keep it with `title: 'CANCELLED: …'` and a summary saying so if the volunteer asked to keep it visible.
-- Keep events in date order.
+Preserve document identity and existing page addresses when correcting an event. New slugs use lowercase letters/numbers separated by hyphens. An optional destination (`href`) must be an existing page or confirmed safe link. Use native uploaded image references and useful picture descriptions; do not add new migration image keys.
+
+## Move, cancel or remove
+
+- Move the requested session by changing both times, preserving other dates and references.
+- For cancellation, ask whether to remove that occurrence or keep it visibly cancelled. There is no cancellation-status field: if keeping it, use clear cancelled wording in the title/summary. Check the effect on other sessions before changing a shared title.
+- Before unpublishing or deleting an event, inspect references from posts and programs. Resolve affected references with the volunteer; do not delete unrelated content or shared assets.
+
+Events remain promoted until their confirmed end time, including while they are happening. Ended sessions disappear from Coming up and calendar highlights without deleting the historical event page.
+
+Save edits as a CMS draft through permitted tools or the real Studio. Show the proposed event in chat. After the volunteer confirms it, use the supported CMS publishing tool to queue the preview, then obtain approval of the checked website version on its review page. Studio is a fallback when a required tool is unavailable. Verify the hosted result as described in [publishing workflow](../WORKFLOW.md). A private CMS draft has no website preview in the current implementation.
+
+Field definitions: `studio/schemas/documents.ts`, `studio/schemas/objects.ts`. Read the current schema before a tool mutation; Studio validation alone does not protect API writes.
