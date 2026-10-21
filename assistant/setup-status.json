@@ -255,13 +255,30 @@
   },
   "cms": {
     "asOf": "2026-10-20 America/Los_Angeles",
-    "implementation": "Sanity Studio, validated snapshot adapter, migration, checked CMS trial publishing and maintenance integration added in the CMS branch; not deployed or connected.",
-    "account": "Pending meeting: library Google sign-in, project/dataset and backup administrator. No account created by this work.",
+    "implementation": "PR22 merged at 3476069d4ee6286ad1e3f6f926d07331c8410987. Real native Studio deployed and library account/draft access verified. Website publishing bridge not yet configured.",
+    "account": "Library signed in via GitHub as librarycottonwood; organization/project ownership and native Studio access verified. Google identity linking and backup administrator/recovery are not verified.",
+    "organizationId": "oprdu6k2x",
+    "projectId": "2ou0xy2r",
+    "dataset": "production",
+    "studioUrl": "https://cottonwood-community-library.sanity.studio/",
+    "studioAppId": "atvxa15iv13so2hw9kkp8zp2",
+    "migration": {
+      "contentDigest": "eccede8d9118a85ea0ebe7adbb782f83a92b97da1b2953058931a57ed4397eca",
+      "draftsCreated": 9,
+      "assetsUploaded": 16,
+      "publishedContent": 0,
+      "verification": "Authenticated raw read-back confirmed nine content drafts, zero published content records and 16 image/file assets. Native hosted Studio opened the imported book-sale draft. Existing prototype facts still require library review."
+    },
     "nonprofit": "Application not submitted; requires actual library-owned project ID and human eligibility details. No paid plan, card or overage authorized.",
-    "contentSource": "local until explicitly configured as sanity after account setup and rehearsal",
+    "contentSource": "local; only drafts exist in Sanity. Enable sanity after initial content review/publication and publishing bridge rehearsal.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md; real OAuth, uploads, approvals, trial deployment, rollback, backup/restore and ChatGPT tool delivery remain live-account acceptance gates.",
     "plugin": "Repository guidance updated conditionally; installed plugin and existing scheduled task have not been released/changed by this branch.",
-    "production": "No public-domain, registrar, existing trial deployment or account changes."
+    "production": "Public domain and registrar unchanged. Existing saved trial updated by PR22 merge; its verification and publishing workflows passed. CMS trial publishing remains unconfigured.",
+    "mergedSourceChecks": {
+      "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
+      "savedTrialPublish": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142724",
+      "analyticsDeploy": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142741"
+    }
   }
 }

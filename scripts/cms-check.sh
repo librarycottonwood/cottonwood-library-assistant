@@ -8,6 +8,7 @@ pnpm cms:test
 pnpm --dir studio install --ignore-workspace --frozen-lockfile
 pnpm --dir studio check
 pnpm --dir studio build:offline
+node --test scripts/studio-production-browser.test.mjs
 SANITY_STUDIO_PROJECT_ID=cmscheck SANITY_STUDIO_DATASET=validation pnpm --dir studio schema:extract
 pnpm cms:seed --project cmscheck --dataset validation --out output/cms/migration-schema.json
 pnpm --dir studio validate:import ../output/cms/migration-schema.json

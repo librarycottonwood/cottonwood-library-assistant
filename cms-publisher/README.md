@@ -1,6 +1,6 @@
 # CMS publishing bridge
 
-Implemented, unconnected infrastructure for the library-owned Sanity project. No account, project, OAuth application, token, hosting resource, nonprofit application, or deployment has been created. Missing configuration returns `setup_pending`. The Google sign-in and nonprofit application remain meeting-time setup.
+Implemented, unconnected publishing infrastructure. The library's real Sanity project `2ou0xy2r` / `production` and hosted Studio are connected under GitHub identity `librarycottonwood`; see `assistant/setup-status.json`. This bridge has no deployed Worker, review OAuth application, service credentials or configured webhook yet. Missing configuration returns `setup_pending`. The website still uses the local provider; nonprofit approval and the real publishing rehearsal remain pending.
 
 This Worker receives Sanity's signed **published** changes, records an operation durably, requests a checked website preview, collects an actual human approval, and requests promotion of that exact saved release to the **isolated `cms-trial` branch only**. It does not publish to the public library domain or give a content-drafting agent production authority. Publishing in Studio saves CMS content; it does not establish that the website is updated. Authenticated draft previews are not implemented by this bridge.
 

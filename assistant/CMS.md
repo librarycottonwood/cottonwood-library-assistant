@@ -2,9 +2,11 @@
 
 ## Current state and ownership
 
-This branch adds the CMS implementation. **No Sanity account/project exists for the library yet.** Google sign-in and the nonprofit application wait for the meeting. No account, plan, billing, hosted Studio, webhook or ChatGPT connection is provisioned by this code. The installed library plugin has not been updated by editing its source here.
+PR #22 merged the CMS implementation on October 20, 2026. The library signed in through its GitHub identity `librarycottonwood`, which owns organization `oprdu6k2x` and project `2ou0xy2r` (Cottonwood Community Library), dataset `production`. The real native Studio is hosted at https://cottonwood-community-library.sanity.studio/ (app `atvxa15iv13so2hw9kkp8zp2`). The initial import created nine content drafts and uploaded 16 assets; no content was published. These are existing prototype records for review, not confirmed new events.
 
-Keep the library's Google identity as the permanent Sanity owner, with a second library administrator/recovery path. Invite Jaden separately. The website, GitHub, Cloudflare, Google, Givebutter and ChatGPT remain library-owned. Runtime publishing must not require Jaden's laptop or the Pi.
+**The website still uses the local provider.** The signed website publishing bridge, ChatGPT connection, nonprofit application, backup administrator and live publishing/recovery rehearsals remain pending. Studio publishing does not currently update the website. The installed library plugin has not been updated by editing its source here. See `assistant/setup-status.json` for the dated account snapshot.
+
+Keep ownership with the library's account and add a second library administrator/recovery path. The library chose GitHub sign-in during setup; a Google sign-in has not been linked or verified. Invite Jaden separately. The website, GitHub, Cloudflare, Google, Givebutter and ChatGPT remain library-owned. Runtime publishing must not require Jaden's laptop or the Pi.
 
 **Additional recurring budget: $0.** Apply for Sanity's [nonprofit plan](https://www.sanity.io/docs/platform-management/non-profit-plan) once there is a project ID. The plan/application is not approved yet. Confirm its current limits and renewal terms with Sanity; do not add a card, enable overages or assume eligibility. Start only within the free allowance while waiting. The existing ChatGPT Plus sign-in handles bounded technical upkeep; no paid OpenAI API is introduced. Do not enable Sanity image generation/transformation tools. GitHub/Cloudflare allowances remain finite and must stop before paid overage.
 
@@ -42,7 +44,7 @@ If the Sanity tools are unavailable in the library's current ChatGPT plan/sessio
 
 ## Meeting setup
 
-1. Library representative uses the library Google sign-in to create the organization/project. Confirm library ownership, backup administrator and recovery. Record the project ID and dataset; submit the nonprofit application for that project. Stop at any paid upgrade/card request.
+1. Organization/project creation is complete under the library's GitHub sign-in. Confirm the second library administrator and recovery, then submit the nonprofit application for project `2ou0xy2r` using confirmed eligibility details. Stop at any paid upgrade/card request.
 2. Choose published dataset visibility knowingly. Create a **read-only** server token only if needed. Use separate narrowly scoped credentials for the signed webhook, workflow callbacks, private status checks, GitHub dispatch and reviewer OAuth. The publisher documentation lists these. No write token is needed in the website or publishing worker.
 3. Configure `studio/.env.local` using its example and run/host the real Studio. Public Studio variables contain project/dataset identifiers only. Confirm exact CORS origins and appropriate individual roles. Use a separately invited contributor/draft identity for automated editing where the account's plan permits it; retain publish/admin authority with the library. Connecting MCP as the owning Google identity would inherit its privileges. If draft-only access is unavailable while nonprofit approval is pending, use Studio directly and defer ChatGPT write access. Tool prompts and UI singleton controls are not access control.
 4. Export the current prototype for review, using the **actual** project ID and dataset:
@@ -103,4 +105,4 @@ Then rehearse in the **library account**, observing the actual final website and
 - Test an allowed maintenance repair and a forbidden content/auth change; inspect the real cloud checks, saved source and new preview approval.
 - Export/restore Sanity content **and assets**, recover accounts using the second library administrator, and complete a publish without Jaden's account/laptop/Pi.
 
-Backups, retention, restore, plan limits, ChatGPT delivery and live recovery are handoff gates until demonstrated. This code does not configure a backup schedule or claim the nonprofit plan/account connection has succeeded.
+Backups, retention, restore, plan limits, ChatGPT delivery and live recovery are handoff gates until demonstrated. Studio account access and hosting have been verified; this code does not configure a backup schedule or claim nonprofit approval or end-to-end website publishing.
