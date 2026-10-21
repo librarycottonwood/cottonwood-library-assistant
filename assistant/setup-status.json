@@ -253,7 +253,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.6",
+          "version": "0.2.7",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -261,9 +261,9 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.6",
+          "sourceVersion": "0.2.7",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.6. Manage showed all ten skills enabled; installed base guidance read back. Added publishing/reconnect/discard/undo workflow, removed the routine Codex/Studio handoff and replaced old source-file content instructions with native Sanity fields. No additional permissions were added by this instruction-plugin update."
+          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.7. Manage showed all ten skills enabled and the active version read back. The 0.2.6 fresh ordinary event request stayed in chat, created a private draft and offered the website preview; its draft was discarded and chat archived. Version 0.2.7 additionally removes the unnecessary explanation of approval rules. The instruction-plugin updates added no permissions."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -299,7 +299,7 @@
     }
   },
   "cms": {
-    "asOf": "2026-10-20 18:12 America/Los_Angeles",
+    "asOf": "2026-10-20 America/Los_Angeles",
     "implementation": "PR22 implementation and PR23/24 setup/dependency fixes merged. Native Studio, real Sanity content, publisher and signed webhook are connected. Read current service/workflow results for each publishing outcome.",
     "account": "Library signed in via GitHub as librarycottonwood; organization/project ownership and native Studio access verified. Google identity linking and backup administrator/recovery are not verified.",
     "organizationId": "oprdu6k2x",
@@ -318,7 +318,7 @@
     "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
-    "plugin": "Cottonwood Library instruction plugin 0.2.6 installed and read back October 20. The separate official Sanity plugin 1.0.0 was authorized in the actual library Plus account. Actual read, private event-draft create, end-time correction and discard succeeded in normal Safari chat. No event was published by this rehearsal. Full ChatGPT-to-website approval/deployment and recovery remain separate acceptance checks.",
+    "plugin": "Cottonwood Library instruction plugin 0.2.7 installed and read back October 20. The separate official Sanity plugin 1.0.0 was authorized in the actual library Plus account. Actual read, private event-draft create, end-time correction and discard succeeded in normal Safari chat. A fresh ordinary request with updated instructions stayed in chat and offered the website preview; that draft was also discarded. No event was published by these rehearsals. Full ChatGPT-to-website approval/deployment and recovery remain separate acceptance checks.",
     "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
@@ -361,7 +361,14 @@
       ],
       "cleanup": "Private rehearsal event discarded without publication; conversation archived after evidence capture. Existing published events and website retained.",
       "evidence": "output/sanity-workflow/connected-draft-correct-discard.txt",
-      "publishing": "Official supported publish_documents capability documented; this account rehearsal did not publish content. Plugin 0.2.6 directs supported CMS publishing through the chat after content confirmation; website exact-version approval remains separate."
+      "publishing": "Official supported publish_documents capability documented; this account rehearsal did not publish content. Plugin 0.2.6 directs supported CMS publishing through the chat after content confirmation; website exact-version approval remains separate.",
+      "updatedWizard": {
+        "chat": "https://chatgpt.com/c/6ad85826-2934-83e8-a0b5-87c60e276067",
+        "versionTested": "0.2.6",
+        "result": "Fresh normal request created a private draft, called it your event draft and asked about preparing the website preview without sending the volunteer to Studio. It added an unwanted explanation of the approval rule, corrected in installed version 0.2.7.",
+        "cleanup": "Draft discarded; chat archived.",
+        "evidence": "output/sanity-workflow/plugin-0.2.6-fresh-wizard.txt"
+      }
     }
   }
 }
