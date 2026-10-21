@@ -107,7 +107,7 @@
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -125,7 +125,7 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
@@ -253,7 +253,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.5",
+          "version": "0.2.6",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -261,9 +261,9 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.5",
+          "sourceVersion": "0.2.6",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "Existing library-owned plugin updated in Safari to 0.2.5 on October 20. Installed version, use-case descriptions and full library-assistant guidance read back. No new permissions or connection added."
+          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.6. Manage showed all ten skills enabled; installed base guidance read back. Added publishing/reconnect/discard/undo workflow, removed the routine Codex/Studio handoff and replaced old source-file content instructions with native Sanity fields. No additional permissions were added by this instruction-plugin update."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -318,7 +318,7 @@
     "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
-    "plugin": "Installed existing Cottonwood Library plugin 0.2.5 verified in the library account. Topic wizards retained; descriptions now specify when to use each skill. ChatGPT-to-Sanity writing and full scenario rehearsals remain separate acceptance checks.",
+    "plugin": "Cottonwood Library instruction plugin 0.2.6 installed and read back October 20. The separate official Sanity plugin 1.0.0 was authorized in the actual library Plus account. Actual read, private event-draft create, end-time correction and discard succeeded in normal Safari chat. No event was published by this rehearsal. Full ChatGPT-to-website approval/deployment and recovery remain separate acceptance checks.",
     "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
@@ -344,6 +344,24 @@
         "releaseDigest": "efb48344fee3e6079ab046641cee7db950a026f22a9f1d1c891d8dc9166cf174",
         "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39535874197"
       }
+    },
+    "chatgptConnection": {
+      "asOf": "2026-10-20 America/Los_Angeles",
+      "pluginId": "plugin_asdk_app_69ceae6d8d78819192e59f76b8e170b5",
+      "pluginVersion": "1.0.0",
+      "installed": true,
+      "identity": "librarycottonwood, GitHub sign-in",
+      "authorization": "Explicitly approved by Jaden; Sanity consent scoped the connection to librarycottonwood organization and stated seven days of access. It inherits the library identity; draft-only permissions have not been demonstrated.",
+      "rehearsalChat": "https://chatgpt.com/c/6ad85556-8c18-83e8-8f61-5d24a6a70edc",
+      "verified": [
+        "read actual published events and draft absence",
+        "create a private event draft",
+        "correct its end time",
+        "discard and re-read the draft as absent"
+      ],
+      "cleanup": "Private rehearsal event discarded without publication; conversation archived after evidence capture. Existing published events and website retained.",
+      "evidence": "output/sanity-workflow/connected-draft-correct-discard.txt",
+      "publishing": "Official supported publish_documents capability documented; this account rehearsal did not publish content. Plugin 0.2.6 directs supported CMS publishing through the chat after content confirmation; website exact-version approval remains separate."
     }
   }
 }
