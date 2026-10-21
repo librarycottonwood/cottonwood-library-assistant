@@ -15,17 +15,13 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs scripts/images.test.mjs scripts/retire-old-demo.test.mjs scripts/source-preview.test.mjs
-      - run: python3 scripts/source-preview-archive.test.py
+      - run: node --test scripts/release.test.mjs scripts/images.test.mjs scripts/retire-old-demo.test.mjs
       - run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
         env:
@@ -38,36 +34,14 @@ jobs:
           node --test scripts/analytics-recovery-browser.test.mjs
           npm run build --prefix connector
       - name: Save and inspect a version
-        env:
-          SOURCE_PREVIEW: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity' }}
-          SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
-          SANITY_DATASET: ${{ vars.SANITY_DATASET }}
         run: |
-          if [ "$SOURCE_PREVIEW" = 'true' ]; then
-            export LIBRARY_CONTENT_SOURCE=sanity
-            export SANITY_SNAPSHOT_PATH="$GITHUB_WORKSPACE/output/source-preview/snapshot.json"
-            node scripts/cms.mjs snapshot --out "$SANITY_SNAPSHOT_PATH"
-            pnpm build
-          fi
           version=$(node scripts/release.mjs prepare)
           node scripts/capture.mjs "$version"
-          if [ "$SOURCE_PREVIEW" = 'true' ]; then
-            node scripts/source-preview.mjs bundle "$version"
-          fi
       - uses: actions/upload-artifact@v7.0.2
-        if: success() && github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity'
-        with:
-          name: library-source-checked-preview
-          path: output/source-preview/bundle/
-          retention-days: 7
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v7.0.2
-        if: always() && !(success() && github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity')
+        if: always()
         with:
           name: library-preview-and-screenshots
-          path: |
-            output/
-            !output/source-preview/
+          path: output/
           retention-days: 7
   cms-live:
     needs: verify

@@ -130,7 +130,19 @@
     },
     "cloudSetup": {
       "chat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
-      "status": "October 20: original editor starts new tasks, but the account rejects its Edit action with HTTP 403. A private recovery environment was prepared and published; a fresh task restored its tools and checked local phone layouts. Editor follow-ups still fail in Safari with DisposableStack. Earlier hosted preview/save/undo results below are historical; the interactive editor is not ready for handoff.",
+      "status": "October 21: the original cloud editor completed a new coding task and hosted a design preview. Safari follow-up submission fails with DisposableStack, matching an open upstream Codex Web bug. Record this as an external client issue, preserve the prepared cloud environment, and verify the library's actual computer/browser before handoff. The environment Edit failure remains separately unresolved. Earlier preview/save/undo rehearsals do not establish current handoff readiness.",
+      "externalClientIssue": {
+        "verifiedOn": "2026-10-21 America/Los_Angeles",
+        "classification": "External Safari/Codex Web client compatibility bug; repository code cannot repair OpenAI's hosted interface.",
+        "upstream": "https://github.com/openai/codex/issues/55361",
+        "relatedReport": "https://github.com/openai/codex/issues/55271",
+        "upstreamState": "Both OPEN when checked October 21.",
+        "reproduction": "Safari 27.0.1 on this Mac: an initial task and Cloudflare preview succeeded; follow-up message submission failed with Can't find variable: DisposableStack, including after an origin reload.",
+        "separateIssue": "The environment Edit action also failed; its cause is not established by the Safari follow-up report.",
+        "libraryDevice": "Unknown. Jaden expects a non-Mac computer and likely Chrome; neither the device nor browser has been confirmed or tested.",
+        "decision": "Retain Chat for questions, Work/Sanity for content, and Codex with the existing cloud environment for code. The exploratory Work-to-code preview bridge was withdrawn from the draft and was never enabled.",
+        "handoffCheck": "On the library's actual device and browser, open the existing cloud environment, complete a first request and follow-up, and review a real hosted preview. Complete the remaining save/undo acceptance checks before claiming full handoff readiness. Do not claim Chrome or Edge works for this account until tested."
+      },
       "recovery": {
         "environment": "cottonwood-library-editor-recovery",
         "setupChat": "https://chatgpt.com/local/01a15cc5-f116-764a-815f-82fd4798f008?hostId=local",
@@ -307,7 +319,7 @@
         "draftSource": "78dc0f735ba731c6a1d8d711fe38fdf8999e671d",
         "limits": "The Codex Safari client remains unresolved. This record establishes draft editing/saving, not source merge, live publisher deployment or a repaired Codex client.",
         "workPreviewAccess": "The code draft did not produce a verified preview through the existing coding environment. Work created a separate Sites mockup, then reported deleting it when corrected. Asking it to use the existing environment instead opened a separate cloud-browser ChatGPT sign-in. That attempt was cancelled; no built-in Work-to-Codex handoff was established.",
-        "sourcePreviewRepair": "Draft implementation extends PR checks to build actual public Sanity content and bundles the checked static site. A separate trusted-main workflow verifies artifact/source/content pins, uploads to the existing isolated Cloudflare preview project and reports the link on the PR. Not enabled or accepted end to end yet. The actual anonymous published-content read succeeded; this adds no account, secret or paid subscription."
+        "sourcePreviewRepair": "Exploratory Work-to-code preview bridge withdrawn from the draft after clarifying that code work stays in the existing Codex cloud environment. Never merged or enabled. Its draft history is retained in Git; it is not part of the library workflow."
       }
     }
   },

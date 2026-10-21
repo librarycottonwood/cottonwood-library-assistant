@@ -8,12 +8,6 @@ CMS publication queues an immutable website preview; it does not itself make the
 
 ## Source edits
 
-In ChatGPT Work, use the connected GitHub tools to prepare an isolated source branch and pull request. The repository's checks build that exact draft with one frozen snapshot of published library content. After the successful check, the trusted `Host checked code preview` workflow uploads only its verified static files and puts the immutable link in the pull request. Read that result for the current source commit before sharing it. A saved branch or a successful local build alone is not a hosted preview. This integration must be enabled on main before it can run; check the dated setup record and actual workflow result.
-
-The preview covers the Astro website. Changes to the editor, approval service, connections or automation also need their affected runtime checks; the website link does not demonstrate those interfaces. The source preview never promotes the saved trial. Source saving and the exact CMS trial approval remain the separate steps below.
-
-When working in a prepared coding environment, the same build/capture helpers can be run directly:
-
 1. Read the request, inspect current files/status, and research what is needed. Resolve routine implementation choices independently.
 2. Make the smallest useful edit. Verify with `pnpm check` and `pnpm build`.
 3. Run `pnpm assistant:prepare`; it saves the built site under an immutable SHA-256 digest in `output/releases/`. Keep the manifest and previous release.
@@ -30,7 +24,7 @@ Every new photo, screenshot, poster or logo goes through `pnpm assistant:image -
 
 ## Working in the library's chat
 
-Use ChatGPT Work for guided content changes through the connected CMS and source drafts through the GitHub workflow above. Codex can use the prepared coding environment when available; it is not required to publish a checked source preview. Verify actual tool and workflow results rather than assuming one conversation can invoke another. Preview the changed source through the repository's workflow.
+Use Chat for questions, ChatGPT Work for content through the connected CMS, and Codex with the prepared library cloud environment for code and design changes. Preview source changes through the existing workflow above. Verify actual tool and workflow results rather than assuming a Work conversation has attached that cloud environment.
 
 The ordinary pull-request check builds local sample content. Label that evidence honestly. A sample-content screenshot is not a preview of current published Sanity records and cannot authorize an update to the saved CMS trial. For the website update, use the actual Sanity snapshot, separate authenticated review and exact checked artifact described in [CMS.md](CMS.md). If a working preview cannot be delivered in this chat, identify that unfinished step; do not redirect the volunteer into a known broken workspace or claim publication.
 
