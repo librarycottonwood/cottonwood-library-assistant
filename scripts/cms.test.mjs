@@ -10,7 +10,7 @@ test('migration preserves library facts and groups dated sessions without creati
   const snapshot=await seedSnapshot(config);
   const settings=snapshot.documents.find(doc=>doc._type==='siteSettings');
   assert.equal(settings.library.address,'3427 Main Street');
-  assert.equal(settings.library.givebutter,null);
+  assert.equal(settings.library.givebutter,undefined);
   assert.equal(settings.currentNewsletter._ref,'newsletter-current');
   const events=snapshot.documents.filter(doc=>doc._type==='event');
   assert.equal(events.length,1);
@@ -80,6 +80,7 @@ test('migration uploads actual prepared image/PDF bytes once and places their re
   assert.equal(new Set(uploads.map(item=>item.url)).size,uploads.length,'shared image uploaded once');
   assert.ok(uploads.some(item=>item.options.headers['Content-Type']==='application/pdf'));
   const settings=created.find(doc=>doc._id==='drafts.library-settings');
+  assert.ok(!Object.hasOwn(settings.library,'donationUrl'),'an unconfigured optional URL stays absent in Studio');
   assert.ok(uploads.some(item=>item.id===settings.hero.image.asset._ref));
   assert.equal(settings.currentNewsletter._weak,true);
   const newsletter=created.find(doc=>doc._id==='drafts.newsletter-current');

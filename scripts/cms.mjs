@@ -56,7 +56,7 @@ function migrated(value, field='', parentField='') {
     return {_type:'libraryImage',legacyKey:key,...rest};
   }
   const types={givebutter:parentField==='library'?'givebutterAccount':'donationWidget',action:'initiativeAction',link:'navigationLink'};
-  return {...(types[field]?{_type:types[field]}:{}),...Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined).map(([key,item])=>[key,migrated(item,key,field)]))};
+  return {...(types[field]?{_type:types[field]}:{}),...Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined && v!==null).map(([key,item])=>[key,migrated(item,key,field)]))};
 }
 export async function seedSnapshot(config,{root=process.cwd()}={}) {
   const source=await localContent(root);
