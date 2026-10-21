@@ -1,5 +1,4 @@
 """Extract only bounded, ordinary preview files; never execute artifact contents."""
-import os
 from pathlib import Path, PurePosixPath
 import stat
 import sys

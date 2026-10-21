@@ -39,7 +39,7 @@ jobs:
           npm run build --prefix connector
       - name: Save and inspect a version
         env:
-          SOURCE_PREVIEW: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity' }}
+          SOURCE_PREVIEW: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity' }}
           SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
           SANITY_DATASET: ${{ vars.SANITY_DATASET }}
         run: |
@@ -55,14 +55,14 @@ jobs:
             node scripts/source-preview.mjs bundle "$version"
           fi
       - uses: actions/upload-artifact@v7.0.2
-        if: success() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity'
+        if: success() && github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity'
         with:
           name: library-source-checked-preview
           path: output/source-preview/bundle/
           retention-days: 7
           if-no-files-found: error
       - uses: actions/upload-artifact@v7.0.2
-        if: always()
+        if: always() && !(success() && github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository && vars.LIBRARY_CONTENT_SOURCE == 'sanity')
         with:
           name: library-preview-and-screenshots
           path: |

@@ -24,7 +24,7 @@ const fail = message => {throw new Error(message);};
 
 export function checkContext(run, pr) {
   if (run.repository?.full_name !== REPOSITORY || run.head_repository?.full_name !== REPOSITORY ||
-      run.event !== 'pull_request' || run.path !== '.github/workflows/check.yml' || run.conclusion !== 'success' ||
+      run.event !== 'pull_request' || run.path !== '.github/workflows/check.yml' || run.status !== 'completed' || run.conclusion !== 'success' ||
       !sourcePattern.test(run.head_sha || '') || !Number.isSafeInteger(run.id) ||
       !Number.isSafeInteger(pr.number) || pr.number < 1 || pr.state !== 'open' ||
       pr.base?.repo?.full_name !== REPOSITORY || pr.base?.ref !== 'main' ||

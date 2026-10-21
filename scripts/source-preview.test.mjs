@@ -13,12 +13,12 @@ const source = 'a'.repeat(40);
 const config = {projectId: '2ou0xy2r', dataset: 'production'};
 const expected = {repository: repo, sourceSha: source, runId: '123', pullRequest: 32};
 const run = {id: 123, repository: {full_name: repo}, head_repository: {full_name: repo}, event: 'pull_request',
-  path: '.github/workflows/check.yml', conclusion: 'success', head_sha: source, pull_requests: [{number: 32}]};
+  path: '.github/workflows/check.yml', status: 'completed', conclusion: 'success', head_sha: source, pull_requests: [{number: 32}]};
 const pr = {number: 32, state: 'open', base: {ref: 'main', repo: {full_name: repo}}, head: {sha: source, repo: {full_name: repo}}};
 
 test('only a successful check of the current owned draft can supply a preview', () => {
   assert.deepEqual(checkContext(run, pr), expected);
-  for (const changed of [{conclusion: 'failure'}, {event: 'push'}, {head_sha: 'b'.repeat(40)},
+  for (const changed of [{conclusion: 'failure'}, {status: 'in_progress'}, {event: 'push'}, {head_sha: 'b'.repeat(40)},
     {head_repository: {full_name: 'other/repo'}}, {path: '.github/workflows/untrusted.yml'}, {pull_requests: []}]) {
     assert.throws(() => checkContext({...run, ...changed}, pr));
   }
