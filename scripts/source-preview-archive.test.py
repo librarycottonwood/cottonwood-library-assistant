@@ -1,9 +1,12 @@
 import importlib.util
 from pathlib import Path
 import stat
+import sys
 import tempfile
 import unittest
 import zipfile
+
+sys.dont_write_bytecode = True
 
 spec = importlib.util.spec_from_file_location('preview_archive', Path(__file__).with_name('source-preview-archive.py'))
 module = importlib.util.module_from_spec(spec)
