@@ -35,7 +35,7 @@ To check a migration snapshot against the actual Studio schema without an accoun
 ## Connect at the meeting
 
 1. The library created its organization/project using its permanent GitHub identity `librarycottonwood`. Keep recovery and another administrator with the library; invite Jaden separately. Do not use a developer-owned project as the permanent home. Google sign-in is not yet linked/verified.
-2. Apply for the nonprofit plan using that project ID. Approval and free quotas must be verified; do not add a card or enable paid tools as part of this setup.
+2. The nonprofit application for that project was submitted from the library Google account on October 20. Await the decision and verify free quotas; do not add a card or enable paid tools as part of this setup.
 3. Choose the dataset name and visibility. A public published dataset must contain only public website material. Keep donor/private information outside it. Draft access, write access, and exports require appropriate authorization.
 4. Copy `.env.example` to `.env.local` inside `studio/`, and fill in `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`. These are public identifiers. Never place an API token in any `SANITY_STUDIO_*` variable: those variables are embedded in the browser bundle.
 5. Import the reviewed content snapshot with the repository’s migration process. Check both singleton documents and all imported assets before enabling publication. No content is imported by `pnpm install` or `pnpm build`.
