@@ -2,7 +2,7 @@
 
 The library-owned publisher is deployed at https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/, with the real Sanity project `2ou0xy2r` / `production`, identity-only GitHub review app, scoped service connections and signed published-document webhook. The repository provider is `sanity`; see `assistant/setup-status.json`. Configuration is not proof of any website update: inspect the authenticated ledger, actual CMS workflow and hosted exact-version marker. Nonprofit approval, ChatGPT tool access and full recovery rehearsal remain separate handoff gates.
 
-This Worker receives Sanity's signed **published** changes, records an operation durably, requests a checked website preview, collects an actual human approval, and requests promotion of that exact saved release to the **isolated `cms-trial` branch only**. It does not publish to the public library domain or give a content-drafting agent production authority. Publishing in Studio saves CMS content; it does not establish that the website is updated. Authenticated draft previews are not implemented by this bridge.
+This Worker receives Sanity's signed **published** changes, records an operation durably, requests a checked website preview, collects an actual human approval, and requests promotion of that exact saved release to the **isolated `cms-trial` branch only**. This is the single saved trial website; the old source demo is retired and its address redirects here. It does not publish to the public library domain or give a content-drafting agent production authority. Publishing in Studio saves CMS content; it does not establish that the website is updated. Authenticated draft previews are not implemented by this bridge.
 
 ## Local evidence
 

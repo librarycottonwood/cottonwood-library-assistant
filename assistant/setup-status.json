@@ -100,14 +100,14 @@
     "chatgptProject": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3/project",
     "plan": "Library-owned Plus account verified in Safari",
     "projectInstructions": "Friendly library instructions saved and reopened to verify persistence",
-    "accountInstructions": "Library-wide ChatGPT preferences saved; website access marked pending",
+    "accountInstructions": "ChatGPT and Codex custom instructions rewritten around the board's role, short non-technical replies, one-step guidance, current project lookup and verified outcomes; both saved and reopened in the library account October 20. Stale service claims removed from More about you.",
     "trainingUse": "Improve the model disabled and verified false",
     "givebutter": {
       "accountId": "170378",
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -125,7 +125,7 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
@@ -159,10 +159,10 @@
         }
       },
       "maintenanceSchedules": {
-        "status": "Daily GitHub checks, failure-triggered managed-Plus repair worker and weekly cloud assistant review configured",
+        "status": "Daily GitHub checks and bounded repair worker configured; Weekly Maintenance Check exists but is paused in the library account as observed in Safari October 20.",
         "githubSchedule": "Daily 16:37 UTC; source changes also trigger checks",
         "assistantSchedule": "Monday afternoon around 14:00 America/Los_Angeles; cloud executor",
-        "automationId": "6ac5a460da40819092fe6b5e6403c3cd",
+        "automationId": "6ac6e4a661a081918e9c985036d9cf97",
         "firstScheduledRun": "2026-10-12",
         "validation": {
           "sourceSha": "4799a60bca8f904a583cfd22ad4c9e5bcb6093d1",
@@ -205,8 +205,9 @@
           "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved",
           "actualScreenshotBytes": 65509401
         },
-        "weeklyPointerPrompt": "Source 0.2.2: weekly task should use assistant/tasks/weekly-maintenance-pointer.md, which reads weekly-maintenance.md from main each run. Fundraiser line is report-only (site uses the live Givebutter goal bar). Paste the pointer into the ChatGPT task and verify a run; until then the task still holds the older full prompt.",
-        "weeklyRepairReporting": "Existing Monday cloud prompt now explicitly reports bot repairs from past seven days; saved/read back, cadence unchanged. Native manual run requested; result delivery pending verification."
+        "weeklyPointerPrompt": "Existing task reads assistant/tasks/weekly-maintenance.md from current main. Its pointer was simplified and saved October 20; paused status and schedule settings were preserved. No run or delivery is claimed.",
+        "weeklyRepairReporting": "The maintained weekly review covers verified repairs, CMS trial state, report access and one practical next step. Actual task is paused; future execution and delivery are not established by this prompt edit.",
+        "previousAutomationId": "6ac5a460da40819092fe6b5e6403c3cd"
       },
       "trialSaving": {
         "status": "Verified through library-account GitHub connector, independent remote commit verification. No shell credential helper required. Website content restored after test.",
@@ -217,7 +218,7 @@
       },
       "volunteerExperience": {
         "status": "Installed library skill automatically recognized fresh greetings, website lookup and cloud edit/preview. Fresh ordinary ChatGPT capability question immediately explains Codex handoff.",
-        "instructions": "assistant/CODEX.md; Settings → Personalization → Custom instructions → Codex",
+        "instructions": "assistant/CODEX.md is the canonical account wording; assistant/START.md is the editing workspace prompt; topic skills own their wizards. Changing service details stay in project documentation.",
         "setupChats": "Four technical setup/test chats archived; later failed voice/context tests also being archived. Environment and website retained.",
         "diagnosis": "Published diagnostic root AGENTS.md survives, but fresh task starts orchestration in /codex/browser/projectless/0007-hi and receives neither root guidance nor saved global Codex instructions initially. Shell later starts /workspace. Moving root file did not fix discovery; backend preference omission unresolved.",
         "shortPromptTest": {
@@ -228,28 +229,48 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.1.3",
+          "version": "0.2.5",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
           "workGreetingTest": "https://chatgpt.com/c/6ac5cdf2-47c0-83e8-86d1-8cb34b5ea411",
           "explicitInvocationRequiredInTests": false,
-          "releaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.3",
-          "pendingUpdate": "Source 0.2.0 splits the single skill into library-assistant plus news, events, fundraisers, newsletter, notices, social, scheduling and reports. Source 0.2.3 adds the one-time Givebutter Donate-button setup (checkout popup) and switches fundraisers to the Form widget with goal bar. Update the installed plugin with Plugin Creator, then test each wizard."
+          "sourceVersion": "0.2.5",
+          "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
+          "verifiedUpdate": "Existing library-owned plugin updated in Safari to 0.2.5 on October 20. Installed version, use-case descriptions and full library-assistant guidance read back. No new permissions or connection added."
+        },
+        "maintenanceProject": {
+          "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
+          "instructions": "assistant/projects/maintenance.md",
+          "verification": "Focused prompt saved and fully reopened in Safari October 20. Reads maintained current-main project guidance; status questions authorize read-only website checks. Accidental instruction chat archived and unfinished drafts cleared."
+        },
+        "workspacePrompt": {
+          "source": "assistant/START.md",
+          "sourceUpdated": true,
+          "accountSave": "Not completed: the existing cottonwood-library-editor Edit action returned Couldn\u2019t start editing environment twice, including after refreshing settings. Existing environment, credentials and access were preserved."
         }
       },
       "stableSavedTrial": {
+        "url": "https://cms-trial.cottonwood-library-trial-preview.pages.dev/",
+        "pictures": "https://cms-trial.cottonwood-library-trial-preview.pages.dev/_review/",
+        "workflow": "cms.yml",
+        "validationRun": "39535874197",
+        "checkedSource": "b87c6ddf1a6a367428f4268973fd39cebc9b8dec",
+        "status": "Native Studio publishing, signed webhook, exact-preview approval and actual hosted verification passed October 20. This is the sole current trial destination.",
+        "token": "Existing scoped service and hosting credentials stay in server/GitHub storage."
+      },
+      "retiredSourceDemo": {
         "url": "https://trial.cottonwood-library-trial-preview.pages.dev/",
         "pictures": "https://trial.cottonwood-library-trial-preview.pages.dev/_review/",
         "workflow": "trial.yml",
         "validationRun": "37569962832",
         "checkedSource": "ea8d61dd8325e827143df93d2f83d15c65dfe3e3",
-        "status": "Actual cloud publishing and hosted exact-source/status/pictures fetch passed; public domain unchanged",
+        "status": "Retired publishing path; old address redirects to the canonical CMS trial after the retire-old-demo.yml run verifies it.",
         "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container",
-        "latestPublishRun": "37570642969"
+        "latestPublishRun": "37570642969",
+        "retirementWorkflow": "retire-old-demo.yml"
       }
     }
   },
@@ -273,8 +294,8 @@
     "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
-    "plugin": "Repository guidance updated conditionally; installed plugin and existing scheduled task have not been released/changed by this branch.",
-    "production": "Public domain and registrar unchanged. Saved source trial and isolated cms-trial are separate; human exact-version approval remains required for CMS trial promotion.",
+    "plugin": "Installed existing Cottonwood Library plugin 0.2.5 verified in the library account. Topic wizards retained; descriptions now specify when to use each skill. ChatGPT-to-Sanity writing and full scenario rehearsals remain separate acceptance checks.",
+    "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
       "savedTrialPublish": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142724",
@@ -290,8 +311,15 @@
       "dispatch": "Fine-grained library-owned token: only this repository; Actions write, Contents read",
       "deploymentPermissions": "Current Individual Workers Editor roles, each restricted to its own CMS publisher or Analytics Worker. No legacy Workers Scripts role retained.",
       "publisherDeploy": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39524340506",
-      "status": "Configuration and authenticated empty-ledger access verified. Each preview/approval/deployment result must be checked live; /health is configuration only.",
-      "secrets": "Server/GitHub secret storage only; temporary local setup material is removed after account verification."
+      "status": "First native Studio event publication, signed webhook, checked preview, actual GitHub reviewer approval and verified CMS trial deployment passed on October 20. Current results remain per operation.",
+      "secrets": "Server/GitHub secret storage only; temporary local setup material is removed after account verification.",
+      "firstVerifiedDeployment": {
+        "operationId": "91c468ce-5313-4b69-aa0c-24df6174c456",
+        "sourceSha": "b87c6ddf1a6a367428f4268973fd39cebc9b8dec",
+        "contentDigest": "257931476f0176a0dee93066b1d2e413294eb7d1091fb47d54d8a7442a175e5f",
+        "releaseDigest": "efb48344fee3e6079ab046641cee7db950a026f22a9f1d1c891d8dc9166cf174",
+        "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39535874197"
+      }
     }
   }
 }

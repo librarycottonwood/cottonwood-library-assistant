@@ -5,8 +5,8 @@ The library owns its ChatGPT Plus, GitHub repository and Cloudflare account. Cha
 ## Volunteer entry points
 
 - Questions, writing and fundraising reports: ChatGPT Work, with Cottonwood Library and the official connected Givebutter plugin.
-- Website changes: Codex → Choose environment → **cottonwood-library-editor**. Show a checked draft before saving.
-- Saved trial: https://trial.cottonwood-library-trial-preview.pages.dev/ ; its computer/phone pictures are at `/_review/`.
+- Website content: https://cottonwood-community-library.sanity.studio/ . Publish the CMS record, then approve its checked website preview. Design/code changes use Codex → **cottonwood-library-editor** and the same checked CMS publishing path.
+- Saved trial: https://cms-trial.cottonwood-library-trial-preview.pages.dev/ ; its computer/phone pictures are at `/_review/`.
 - Weekly summary: one Monday-afternoon cloud task. Its current binding and validation are recorded in setup-status.json.
 
 The obsolete cottonwood-library-assistant saved environment was deleted on October 7. The platform's confirmation states existing tasks/running environments remain available. There is one published volunteer editor. Daily GitHub repair workers do not depend on that editor.
@@ -15,7 +15,7 @@ The obsolete cottonwood-library-assistant saved environment was deleted on Octob
 
 Canonical volunteer guidance: `plugins/cottonwood-library/skills/` — `library-assistant` (voice, routing, preview/save) plus one skill per topic: news, events, fundraisers, newsletter, notices, social, scheduling, reports. Skills hold the conversation and wizard questions; technical steps live in `assistant/content/*.md` so most changes need no plugin re-release. AGENTS.md retains repository authority and points to that guidance; START.md is only its startup entry point. The installed plugin contains a released snapshot, so changing its source does not automatically update ChatGPT. Current installed release and any unpublished changes belong in setup-status.json.
 
-Content comes from `src/content/`; shared components from `src/components/`. `assistant/WORKFLOW.md` owns editing, review, saving and undo. `assistant/MAINTENANCE.md` owns maintenance and its schedule prompt. `assistant/ANALYTICS-CONNECTOR.md` contains connector setup and test evidence.
+Content comes from the connected Sanity dataset; local `src/content/` files are migration/recovery inputs; shared components from `src/components/`. `assistant/WORKFLOW.md` owns editing, review, saving and undo. `assistant/MAINTENANCE.md` owns maintenance and its schedule prompt. `assistant/ANALYTICS-CONNECTOR.md` contains connector setup and test evidence.
 
 ## Remaining account and launch steps
 

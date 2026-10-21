@@ -1,6 +1,6 @@
 ---
 name: social
-description: Cottonwood Library social media — write or share a post for Facebook, Instagram or LinkedIn, announce an event, news, fundraiser or closure on social, queue posts in Buffer. Use with library-assistant for voice.
+description: Use when a volunteer wants to draft, share, or schedule a library announcement on Facebook, Instagram, or LinkedIn.
 ---
 
 # Social posts
@@ -26,7 +26,7 @@ Write each version yourself:
 - Instagram: a lead line, a few short lines, 3–5 local hashtags (#CottonwoodCA #ShastaCounty #CommunityLibrary). Links aren't clickable there; say "link in bio" only if they confirm it's set.
 - LinkedIn: a bit more formal; only if they ask.
 
-Get the facts from the saved website, not from memory or planning documents. Check the upcoming events and news at https://trial.cottonwood-library-trial-preview.pages.dev/librarynews/ first (or `src/content/editorial.ts` in the repository). Use: date, weekday, time, place, cost or entry rules, and the link to its page. Never fill in details from other conversations. If something isn't on the website, ask.
+Get the facts from the current website or CMS record, using the active address/provider in the project documentation. Use an actually available read tool; old chats and planning documents are not confirmed facts. Use: date, weekday, time, place, cost or entry rules, and the link to its page. Never fill in details from other conversations. If something isn't on the website, ask.
 
 Show the drafts and ask "Look good?" before creating them in Buffer.
 
@@ -34,4 +34,4 @@ Use Buffer for posting. Don't suggest or install other social media tools or plu
 
 ## Setting up Buffer (one-time)
 
-If they ask how to connect: a board member signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. The free plan is enough. Never ask for passwords.
+If they ask how to connect: a board member signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.

@@ -6,9 +6,11 @@ and anyone signed in can change them, so this folder is the source of truth.
 
 | ChatGPT task | Pasted prompt | Full instructions | Schedule | Executor |
 | --- | --- | --- | --- | --- |
-| Weekly Maintenance Check | `weekly-maintenance-pointer.md` | `weekly-maintenance.md` | Monday 14:00 America/Los_Angeles | Cloud (task 6ac5a460da40819092fe6b5e6403c3cd) |
+| Weekly Maintenance Check | `weekly-maintenance-pointer.md` | `weekly-maintenance.md` | Monday 14:00 America/Los_Angeles | Cloud (current binding and enabled/paused status in setup-status.json) |
 
-The weekly task's ChatGPT prompt is the short pointer in
+The task was observed paused in the library account on October 20. Confirm its actual enabled/paused status before promising a future run; editing its prompt does not resume it.
+
+The weekly task's maintained ChatGPT prompt is the short pointer in
 `weekly-maintenance-pointer.md`: it tells the task to open
 `weekly-maintenance.md` on main through connected GitHub and follow it. To
 change what the weekly check does, edit `weekly-maintenance.md` and merge it;

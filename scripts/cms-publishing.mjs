@@ -343,7 +343,7 @@ export async function promoteWithRollback({stage, previous, operation, deployer,
     await verifier(stage);
     return {status: 'deployed_verified', rollback: 'not_needed'};
   } catch {
-    if (!previous) return {status: 'deploy_failed', rollback: 'no_previous_verified_cms_trial', summary: 'The first CMS trial update could not be verified. The separate saved library trial and public domain were not changed.'};
+    if (!previous) return {status: 'deploy_failed', rollback: 'no_previous_verified_cms_trial', summary: 'The first CMS trial update could not be verified. The public library domain was not changed.'};
     try {
       await deployer(previous.stage, previous.operation);
       await verifier(previous.stage);

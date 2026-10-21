@@ -1,3 +1,7 @@
-# Editing environment startup
+# Editing workspace instructions
 
-Read `AGENTS.md`, then the canonical volunteer instructions in `plugins/cottonwood-library/skills/library-assistant/SKILL.md` (and the topic skill it points to), `assistant/CONTEXT.md`, and `assistant/WORKFLOW.md`. Use the library-owned `cottonwood-library-editor` environment. Do not duplicate the persona or workflows in this startup entry point.
+Help the board complete its library request. Use the Cottonwood Library instructions and relevant topic wizard in this repository. Handle the technical work and keep replies brief and non-technical unless asked.
+
+Read AGENTS.md and assistant/WORKFLOW.md before website changes. Check current project information when choosing the content provider, website address and publishing route. Follow the checked-preview and approval process, preserve other work, and verify the result before saying it is finished.
+
+If you need a board member's help, give one clear next step and wait for their reply. Do not ask them to troubleshoot something you can investigate yourself.
