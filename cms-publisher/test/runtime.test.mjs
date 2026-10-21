@@ -141,7 +141,8 @@ test('browser forms: native approval and refresh preserve their same-origin requ
       const f = fixture();
       const context = await browser.newContext({serviceWorkers: 'block'});
       try {
-        const id = await f.previewReady();
+        const id = action === 'refresh' ? await f.queued() : await f.previewReady();
+        if (action === 'refresh') assert.equal((await f.result(id, {stage: 'build_failed', sourceSha: source, documentRevision: 'rev1'})).status, 200);
         const session = await f.login(id);
         await context.addCookies([{name: '__Host-cms_review', value: session.cookie.slice('__Host-cms_review='.length),
           domain: new URL(origin).hostname, path: '/', secure: true, httpOnly: true, sameSite: 'Lax'}]);
@@ -157,8 +158,18 @@ test('browser forms: native approval and refresh preserve their same-origin requ
         });
         const page = await context.newPage();
         await page.goto(`${origin}/review/${id}`);
+        for (const viewport of [{width: 1440, height: 1000}, {width: 390, height: 844}]) {
+          await page.setViewportSize(viewport);
+          assert.equal(await page.locator('img').count(), 0);
+          if (action === 'approve') assert.equal(await page.getByRole('link', {name: 'Open website preview'}).getAttribute('href'), preview);
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+          const visible = await page.locator('body').innerText();
+          assert.ok(!visible.includes(event.documentId)); assert.ok(!visible.includes(release));
+          assert.equal(await page.locator('details').count(), action === 'refresh' ? 1 : 0);
+        }
         const response = page.waitForResponse(value => value.request().method() === 'POST' && value.url().endsWith(`/${action}`));
-        await page.getByRole('button', {name: action === 'approve' ? 'Approve this trial update' : 'Prepare a fresh preview', exact: true}).click();
+        if (action === 'refresh') await page.getByText('Need a new preview?', {exact: true}).click();
+        await page.getByRole('button', {name: action === 'approve' ? 'Save to the trial website' : 'Prepare a fresh preview', exact: true}).click();
         const submitted = await response;
         assert.deepEqual(received, [{origin, path: `/review/${id}/${action}`}]);
         assert.equal(submitted.status(), 303);
@@ -279,7 +290,7 @@ test('local runtime: OAuth requires cookie-bound one-time state and the exact li
     assert.ok(f.external.oauthRequest.get('code_verifier')); assert.equal(f.external.oauthRequest.get('redirect_uri'), origin + '/review/callback');
     assert.match(good.callback.headers.get('Set-Cookie'), /Secure; HttpOnly; SameSite=Lax/);
     const page = await f.request(`/review/${id}`, {headers: {Cookie: good.cookie}}); const html = await page.text();
-    assert.match(html, /Approve this trial update/); assert.ok(!html.includes('fixture-identity-token')); assert.match(page.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
+    assert.match(html, /Save to the trial website/); assert.ok(!html.includes('fixture-identity-token')); assert.match(page.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
   } finally {await f.mf.dispose();}
 });
 
@@ -461,3 +472,4 @@ test('local runtime: failed build/deploy summaries do not leak provider content 
     assert.equal((await monitor.json()).lastVerified, null);
   } finally {await second.mf.dispose();}
 });
+
