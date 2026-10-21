@@ -34,7 +34,7 @@ jobs:
       handled: ${{ steps.prepare.outputs.ready }}
       followup_failure: ${{ steps.prepare.outputs.followup_failure }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           persist-credentials: false
@@ -124,7 +124,7 @@ jobs:
         run: |
           python3 "$RUNNER_TEMP/upkeep/vault.py" seal "$RUNNER_TEMP/agent-auth/auth.json" "$RUNNER_TEMP/sealed/auth.enc"
           sudo rm -rf "$RUNNER_TEMP/agent-auth"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: always() && steps.auth.outcome == 'success'
         with:
           name: library-codex-auth
@@ -137,7 +137,7 @@ jobs:
         env:
           SOURCE_SHA: ${{ steps.prepare.outputs.source }}
         run: python3 "$RUNNER_TEMP/upkeep/github.py" patch "$SOURCE_SHA"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: steps.patch.outputs.patch == 'true'
         with:
           name: proposed-library-repair-unverified
@@ -148,7 +148,7 @@ jobs:
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/repo" library-upkeep bash -c \
             'bash scripts/cloud-setup.sh && bash scripts/cms-check.sh && node --test scripts/release.test.mjs && node scripts/analytics.test.mjs && npm ci --prefix connector --ignore-scripts && npm test --prefix connector && node --test scripts/analytics-recovery-browser.test.mjs && npm run build --prefix connector && version=$(node scripts/release.mjs prepare) && node scripts/capture.mjs "$version"'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: success() && steps.patch.outputs.patch == 'true'
         with:
           name: verified-library-repair
@@ -161,7 +161,7 @@ jobs:
         run: |
           printf '%s\n' "$SOURCE_SHA" > "$RUNNER_TEMP/attempt.txt"
           printf 'The library assistant investigated a website check. See the run result for whether verification succeeded.\n' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: always() && steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
         with:
           name: library-repair-attempt-${{ steps.prepare.outputs.source }}
@@ -177,14 +177,14 @@ jobs:
       pull-requests: write
       actions: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: false
       - name: Preserve trusted saving helper
         run: cp scripts/upkeep/github.py "$RUNNER_TEMP/upkeep-save.py"
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8.0.2
         with:
           name: verified-library-repair
           path: ${{ runner.temp }}/verified
@@ -239,7 +239,7 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           persist-credentials: false

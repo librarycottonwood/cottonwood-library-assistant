@@ -19,7 +19,9 @@ node --test scripts/cms-publishing.test.mjs
 
 ## Authority and configuration
 
-`wrangler.jsonc` intentionally has no account ID, project ID, dataset, origin or credentials. Use the existing library account and Workers **Free** with the SQLite Durable Object migration; do not switch to a paid plan or enable paid overages. SQLite Durable Objects are available on Workers Free. Free quota exhaustion fails the operation rather than purchasing more capacity. No Workers AI, paid queue, or paid CMS plugin is used. The existing GitHub Actions minutes/storage and ChatGPT subscription remain separate quotas; keep the GitHub spending budget at zero and artifact retention short.
+`wrangler.jsonc` identifies the existing library account, project/dataset and publisher origin; it contains no credentials. Use Workers **Free** with the SQLite Durable Object migration; do not switch to a paid plan or enable paid overages. SQLite Durable Objects are available on Workers Free. Free quota exhaustion fails the operation rather than purchasing more capacity. No Workers AI, paid queue, or paid CMS plugin is used. The existing GitHub Actions minutes/storage and ChatGPT subscription remain separate quotas; keep the GitHub spending budget at zero and artifact retention short.
+
+Create the Worker once as a library account owner, then use the current **Individual Workers Editor** role scoped only to `cottonwood-library-cms-publisher`. Do not select legacy Workers Scripts permissions or retain account-wide Worker administration for routine deployments. `CMS_PUBLISHER_DEPLOY_TOKEN` belongs in GitHub secrets. The checked-main-only deployment workflow preserves Worker secrets and verifies its hosted source/configuration; that health result does not establish end-to-end website publication.
 
 | Setting | Owner / purpose |
 | --- | --- |

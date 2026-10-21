@@ -11,9 +11,13 @@
     "@sanity/webhook": "4.0.4"
   },
   "devDependencies": {
-    "wrangler": "4.148.0",
-    "miniflare": "5.20261006.0-alpha"
+    "wrangler": "4.151.3",
+    "miniflare": "5.20261019.1-beta"
   },
-  "overrides": { "sharp": "0.35.5" },
-  "engines": { "node": ">=24 <25" }
+  "overrides": {
+    "sharp": "0.35.5"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
 }

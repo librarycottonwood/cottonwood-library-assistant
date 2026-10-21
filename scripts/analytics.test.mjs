@@ -43,13 +43,14 @@ try {
   assert.equal(view[2].page_location, host + '/');
   assert.equal(JSON.stringify(events).includes('private@example.com'), false);
   await page.locator('[data-analytics-event="catalog_quick"]').evaluate(element => {
+    if (!(element instanceof HTMLElement)) throw new Error('Expected a catalog link.');
     element.addEventListener('click', event => event.preventDefault()); element.click();
   });
   events = await queue();
   assert(events.some(entry => entry[1] === 'catalog_quick'));
   await context.addCookies([{name:'_ga',value:'test',url:host,secure:true},{name:'_ga_TEST',value:'test',url:host,secure:true}]);
   await page.locator('#privacy-choices').click();
-  await Promise.all([page.waitForNavigation(), page.locator('#statistics-deny').click()]);
+  await Promise.all([page.waitForEvent('load'), page.locator('#statistics-deny').click()]);
   await page.waitForLoadState('networkidle');
   assert.equal(googleRequests, 1, 'Withdrawal does not reload Google');
   assert.equal((await context.cookies()).filter(cookie=>cookie.name.startsWith('_ga')).length, 0);

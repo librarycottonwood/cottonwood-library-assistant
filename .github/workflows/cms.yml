@@ -66,14 +66,15 @@ jobs:
       group: library-cms-preview-${{ inputs.operation_id }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+          package-manager-cache: false
       - name: Validate trusted operation and pin the current source
         env:
           GH_TOKEN: ${{ github.token }}
@@ -108,7 +109,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/cms-artifacts.py --reserve-preview
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: library-cms-checked-preview
           path: |
@@ -139,14 +140,15 @@ jobs:
       group: library-cms-trial-publishing
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+          package-manager-cache: false
       - name: Validate the approved operation and current source
         env:
           GH_TOKEN: ${{ github.token }}
@@ -177,7 +179,7 @@ jobs:
         env:
           CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
         run: node scripts/cms-publishing.mjs callback --stage deploy_failed
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
           name: library-cms-publish-result

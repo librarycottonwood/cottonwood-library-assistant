@@ -5,7 +5,7 @@ node -e 'if (Number(process.versions.node.split(".")[0]) !== 24) throw Error("Se
 # Entirely local compilation/rehearsal. No library account or remote mutations.
 pnpm exec playwright install chromium
 pnpm cms:test
-pnpm --dir studio install --ignore-workspace --frozen-lockfile
+pnpm --dir studio install --frozen-lockfile
 pnpm --dir studio check
 pnpm --dir studio build:offline
 node --test scripts/studio-production-browser.test.mjs

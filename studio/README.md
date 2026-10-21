@@ -21,7 +21,7 @@ Ordinary editing uses Sanity’s native draft, publish, history, image, file, an
 Use Node 24 and the repository’s pnpm 11.15.1. The Studio has its own package and lockfile; it is deliberately separate from the Astro runtime.
 
 ```sh
-pnpm --dir studio install --ignore-workspace --frozen-lockfile
+pnpm --dir studio install --frozen-lockfile
 pnpm --dir studio check
 pnpm --dir studio build:offline
 ```

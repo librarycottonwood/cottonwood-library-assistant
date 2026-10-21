@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           persist-credentials: false
@@ -43,10 +43,11 @@ jobs:
               if ready:
                   f.write('source='+current+'\nrun='+str(run['id'])+'\nurl='+run['html_url']+'\n')
           PY
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         if: steps.checked.outputs.ready == 'true'
         with:
           node-version: '24'
+          package-manager-cache: false
       - name: Check whether the saved trial is already current
         id: hosted
         if: steps.checked.outputs.ready == 'true'

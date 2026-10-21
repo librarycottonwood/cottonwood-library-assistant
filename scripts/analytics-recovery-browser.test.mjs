@@ -9,7 +9,7 @@ test('real browser preserves recovery cookie and follows only the allowed Google
   const env={GOOGLE_OAUTH_CLIENT_ID:'fixture',GOOGLE_OAUTH_CLIENT_SECRET:'fixture',GOOGLE_OAUTH_TOKEN_KEY:Buffer.alloc(32,1).toString('base64'),GOOGLE_OAUTH_PUBLISHING_STATUS:'production',OAUTH_KV:{get:async k=>data.get(k),put:async(k,v)=>data.set(k,v),delete:async k=>data.delete(k)}};
   // DNS cannot resolve external hosts, even if an interception regresses.
   const browser=await launchBrowser({args:['--host-resolver-rules=MAP * ~NOTFOUND']});
-  let googleAuthorization=0,postStatus,cdp,interceptFailure;
+  let googleAuthorization=0,postStatus,cdp,interceptFailure,onPaused;
   const pending=new Set();
   try {
     const context=await browser.newContext();const page=await context.newPage();
@@ -32,10 +32,11 @@ test('real browser preserves recovery cookie and follows only the allowed Google
       }
       await cdp.send('Fetch.fulfillRequest',{requestId:event.requestId,responseCode:status,responseHeaders:Object.entries(headers).map(([name,value])=>({name,value})),body:Buffer.from(body).toString('base64')});
     };
-    cdp.on('Fetch.requestPaused',event=>{
+    onPaused=event=>{
       const task=fulfill(event).catch(error=>{interceptFailure ||= error;}).finally(()=>pending.delete(task));
       pending.add(task);
-    });
+    };
+    cdp.on('Fetch.requestPaused',onPaused);
     await page.goto(origin+'/reconnect');
     await Promise.all([page.waitForURL('https://accounts.google.com/**',{timeout:10000}),page.getByRole('button',{name:'Reconnect with Google'}).click()]);
     // URL changes at navigation start; wait for the intercepted response to
@@ -45,7 +46,7 @@ test('real browser preserves recovery cookie and follows only the allowed Google
     if(interceptFailure)throw interceptFailure;
     assert.equal(postStatus,302);assert.equal(googleAuthorization,1);
   }finally{
-    cdp?.removeAllListeners('Fetch.requestPaused');
+    if(cdp && onPaused)cdp.removeListener('Fetch.requestPaused',onPaused);
     await Promise.all([...pending]);
     await browser.close();
   }

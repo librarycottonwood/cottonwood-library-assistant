@@ -135,10 +135,12 @@ export async function importDrafts(snapshot,{token,fetcher=fetch,root=process.cw
       const filename=localImages[value.legacyKey];
       if (!filename) throw Error(`Unknown migration image ${value.legacyKey}.`);
       value.asset={_type:'reference',_ref:await upload(filename,'images')};
+      delete value.legacyKey;
     }
     if (value.legacyFileUrl && uploadAssets) {
       if (!/^\/documents\/[a-zA-Z0-9._-]+\.pdf$/.test(value.legacyFileUrl)) throw Error('Only existing library document PDFs can be migrated.');
       value.file={_type:'file',asset:{_type:'reference',_ref:await upload(path.join(root,'public',value.legacyFileUrl),'files')}};
+      delete value.legacyFileUrl;
     }
     if (value._type==='reference' && !value._ref.startsWith('image-') && !value._ref.startsWith('file-')) value._weak=true;
     for (const item of Object.values(value)) await visit(item);

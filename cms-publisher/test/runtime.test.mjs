@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {Miniflare, convertV4MiniflareOptions} from 'miniflare';
+import {Miniflare} from 'miniflare';
+import {readFileSync} from 'node:fs';
 import {encodeSignatureHeader} from '@sanity/webhook';
 import {revisionVector} from '../src/contract.mjs';
 
@@ -29,12 +30,7 @@ const event = {projectId: 'fixture1', dataset: 'rehearsal', documentId: 'event.s
 function fixture(overrides = {}) {
   const external = {requests: [], dispatches: [], revision: 'rev1', source, identity: {login: 'librarycottonwood', id: 338888442}, hosted: null, dispatchThrows: false,
     documentFails: false, omitted: null, inventory: [{_id: event.documentId, _type: 'event', _rev: 'rev1'}, {_id: 'library-settings', _type: 'siteSettings', _rev: 'settings1'}]};
-  const mf = new Miniflare(convertV4MiniflareOptions({
-    modules: true, scriptPath: 'dist/index.js', compatibilityDate: '2026-10-06',
-    compatibilityFlags: ['global_fetch_strictly_public'],
-    durableObjects: {CMS_LEDGER: {className: 'CmsLedger', useSQLite: true}},
-    bindings: {PUBLIC_ORIGIN: origin, SANITY_PROJECT_ID: 'fixture1', SANITY_DATASET: 'rehearsal', ...secrets, ...overrides},
-    outboundService: async request => {
+  const outboundService = async request => {
       const url = new URL(request.url);
       external.requests.push({url: request.url, method: request.method});
       if (url.hostname === 'fixture1.api.sanity.io' && url.pathname.startsWith('/v2026-10-01/data/doc/')) {
@@ -58,8 +54,24 @@ function fixture(overrides = {}) {
       if (url.href === 'https://api.github.com/user') return Response.json(external.identity);
       if (url.href === website + '/_review/status.json') return Response.json(external.hosted || {});
       throw new Error(`Unexpected local provider stub request: ${request.url}`);
-    },
-  }));
+  };
+  const bindings = {PUBLIC_ORIGIN: origin, SANITY_PROJECT_ID: 'fixture1', SANITY_DATASET: 'rehearsal', ...secrets, ...overrides};
+  const mf = new Miniflare({
+    telemetry: {enabled: false},
+    workers: [{
+      config: {
+        name: 'cms-publisher-test', compatibilityDate: '2026-10-06',
+        compatibilityFlags: ['global_fetch_strictly_public'],
+        manifest: {mainModule: 'index.js', modulesRoot: process.cwd(), modules: {
+          'index.js': {type: 'esm', contents: readFileSync('dist/index.js', 'utf8')},
+        }},
+        env: {...Object.fromEntries(Object.entries(bindings).map(([name, value]) => [name, {type: 'text', value}])),
+          CMS_LEDGER: {type: 'durable-object', worker: 'cms-publisher-test', exportName: 'CmsLedger'}},
+        exports: {CmsLedger: {type: 'durable-object', storage: 'sqlite'}},
+      },
+      dev: {rootPath: process.cwd(), outboundService: {type: 'fetcher', handler: outboundService}},
+    }],
+  });
   const request = (path, init) => mf.dispatchFetch(origin + path, init);
   const status = id => request('/operations/' + id, {headers: {Authorization: `Bearer ${secrets.CMS_STATUS_TOKEN}`}});
   const result = (id, body, token = secrets.CMS_WORKFLOW_TOKEN) => request('/operations/' + id + '/result', {

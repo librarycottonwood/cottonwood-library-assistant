@@ -84,6 +84,7 @@ test('migration uploads actual prepared image/PDF bytes once and places their re
   assert.equal(settings.currentNewsletter._weak,true);
   const newsletter=created.find(doc=>doc._id==='drafts.newsletter-current');
   assert.ok(uploads.some(item=>item.id===newsletter.file.asset._ref));
+  assert.ok(!JSON.stringify(created).includes('legacyKey') && !JSON.stringify(created).includes('legacyFileUrl'),'uploaded records use native assets without retaining migration fallbacks');
   assert.ok(created.every(doc=>doc._id.startsWith('drafts.')));
 });
 test('ambiguous or failed mutations never return a successful import result',async()=>{
