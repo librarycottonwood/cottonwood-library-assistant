@@ -107,7 +107,7 @@
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -125,7 +125,7 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
@@ -261,9 +261,10 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.8",
+          "sourceVersion": "0.2.9",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.8. After a full refresh, Manage showed the active version and ten enabled skills. Installed base guidance was reopened: generic greeting commentary removed, short non-technical voice retained. The 0.2.6 fresh ordinary event request stayed in chat, created a private draft and offered the website preview; its draft was discarded and chat archived. Later wording updates remove the unnecessary approval-rule explanation. Instruction-plugin updates added no permissions."
+          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.8. After a full refresh, Manage showed the active version and ten enabled skills. Installed base guidance was reopened: generic greeting commentary removed, short non-technical voice retained. The 0.2.6 fresh ordinary event request stayed in chat, created a private draft and offered the website preview; its draft was discarded and chat archived. Later wording updates remove the unnecessary approval-rule explanation. Instruction-plugin updates added no permissions.",
+          "pendingUpdate": "Source 0.2.9 adds current donation setup and Givebutter email-newsletter/signup workflows. Installed account still verified at 0.2.8; update the existing plugin after this source is accepted, then rehearse donation lookup and newsletter drafting in a fresh library chat."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -370,5 +371,29 @@
         "evidence": "output/sanity-workflow/plugin-0.2.6-fresh-wizard.txt"
       }
     }
+  },
+  "communicationsOctober21": {
+    "checkedAt": "2026-10-21 America/Los_Angeles",
+    "generalDonations": {
+      "campaign": "Support Your Local Library",
+      "campaignId": 655849,
+      "code": "R62NJU",
+      "url": "https://givebutter.com/support-your-local-library-r62nju",
+      "status": "Active; no fixed goal; automatic goal stretching off",
+      "cmsDocument": "library-settings",
+      "cmsRevision": "pEm1g3Ky8RMV9RqQGt428f",
+      "preview": "https://0a7c3423.cottonwood-library-trial-preview.pages.dev/",
+      "previewRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39644721051",
+      "verification": "Hosted desktop and 390px phone Donate clicks opened the real campaign checkout without navigation; no payment submitted. Authenticated save-to-trial approval pending."
+    },
+    "newsletter": {
+      "widget": "Library Newsletter",
+      "widgetId": "L4EVDm",
+      "configuration": "Static signup; Email channel; Simple layout; first/last names optional",
+      "sendingDomain": "cottonwoodlibrary.givebutter-mail.com",
+      "replyTo": "cottonlib@shasta.com",
+      "state": "Free domain requested; last observed setting up. Sender/branding/address, signup delivery and inbox test unfinished; no email sent."
+    },
+    "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged."
   }
 }
