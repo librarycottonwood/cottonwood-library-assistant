@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cottonwood-library",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Cottonwood Community Library assistant: news, events, fundraisers, newsletters, closure notices, social posts, scheduled checks and visitor reports, with a preview before every website save.",
   "author": {
     "name": "Cottonwood Community Library"
