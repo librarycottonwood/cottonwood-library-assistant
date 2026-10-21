@@ -5,9 +5,9 @@ description: Use when a volunteer wants to set up Donate buttons, start or end a
 
 # Fundraisers
 
-Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Technical steps (ids, how to read pasted Givebutter code, donate link): repository `assistant/content/fundraisers.md`. Read it before editing.
+Follow library-assistant for conversation and the current CMS publishing route. Technical steps (ids, how to read pasted Givebutter code, donate link): repository `assistant/content/fundraisers.md`. Read it before editing.
 
-How it works: once set up, **every Donate button on the site opens Givebutter's checkout right on our website**, so donors never leave the page. A fundraiser shows Givebutter's donation form with its live goal bar, so the total is always current and nobody updates it by hand. While a fundraiser runs, the Donate buttons give to it; when it ends, they go back to the general library donation by themselves.
+How it works: once set up, **every Donate button on the site opens Givebutter's checkout right on our website**, so donors never leave the page. A fundraiser shows Givebutter's donation form with its live goal bar, so the total is always current and nobody updates it by hand. While a fundraiser runs, the Donate buttons give to it; ending it through the checked website update returns them to general library donations. End dates are evaluated when a website version is built; do not promise a timed switch without that update.
 
 Volunteers can just paste Givebutter's code to you. Take only the ids from it (the repository file shows how) and never put the pasted code itself on the site.
 
@@ -41,7 +41,7 @@ Ask one at a time; skip what they already said.
 
    If there's no goal bar switch, the campaign has no goal yet: set one on its **Details** tab first, then come back to step 2.
    Any form of the code is fine (with the script line or just the `<givebutter-widget …>` line). If what they pasted is clearly a Goal Bar or Button (for example a `<givebutter-goal-bar>` or `<givebutter-button>` tag), or they say they copied it from that box, kindly explain: "That one is the Goal Bar (or Button). For the fundraiser we need the **Form** one, the box next to it; it shows the goal bar and the donation form together." The plain `<givebutter-widget id="…">` line looks the same for every type, so ask which box it came from if you aren't sure.
-4. "Is there an end date?" — optional. With a date, it comes down by itself afterwards.
+4. "Is there an end date?" — optional. Read the current expiry behavior in `assistant/content/fundraisers.md`; do not promise removal at that moment without a checked website update.
 5. "Any photo for it?" — optional.
 
 Write a short, heartfelt description yourself. Preview, and ask them to open the preview link and check the form and goal bar appear. Then ask to save. Only one fundraiser can be active; if one is already running, ask whether this replaces it.

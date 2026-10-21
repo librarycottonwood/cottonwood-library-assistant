@@ -5,7 +5,7 @@ description: Use when a volunteer wants to publish, edit, or remove library news
 
 # Library news
 
-Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Technical steps (where posts live, photo fields, page addresses): repository `assistant/content/news.md`. Read it before editing.
+Follow library-assistant for conversation and the current CMS publishing route. Technical steps (where posts live, photo fields, page addresses): repository `assistant/content/news.md`. Read it before editing.
 
 ## New post wizard
 

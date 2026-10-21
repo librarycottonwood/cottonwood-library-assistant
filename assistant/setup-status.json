@@ -107,7 +107,7 @@
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -125,12 +125,28 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
       "chat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
-      "status": "Replacement cottonwood-library-editor published. Fresh library-account task uploaded to library-owned Pages and fetched website/pictures successfully; 36 desktop/phone page checks passed. Saving and undo separately verified through library-owned GitHub connector.",
+      "status": "October 20: original editor starts new tasks, but the account rejects its Edit action with HTTP 403. A private recovery environment was prepared and published; a fresh task restored its tools and checked local phone layouts. Editor follow-ups still fail in Safari with DisposableStack. Earlier hosted preview/save/undo results below are historical; the interactive editor is not ready for handoff.",
+      "recovery": {
+        "environment": "cottonwood-library-editor-recovery",
+        "setupChat": "https://chatgpt.com/local/01a15cc5-f116-764a-815f-82fd4798f008?hostId=local",
+        "published": true,
+        "readyForHandoff": false,
+        "repository": "librarycottonwood/cottonwood-library-assistant",
+        "sourceSha": "9fe0bbf21e29b464824205594615fdbd791a74e2",
+        "configuration": "Focused startup guidance reads current AGENTS, START and WORKFLOW files. Pinned pnpm and writable caches live under /workspace. Private, package-manager network preset, no added secrets or environment variables.",
+        "setupChecks": "Actual setup check/build, 42 local CMS tests and desktop/phone browser checks passed. The Pages redirect runner lost XDG_CONFIG_HOME; its actual runtime cases passed directly with the writable configuration directory.",
+        "freshTask": "https://chatgpt.com/local/01a15cdb-8275-77f2-af4d-0f6e03d12022",
+        "freshTaskResult": "Ordinary request: Check our website for display problems on phones. Restored workspace checked local layouts, internal links and menus at four phone widths. It correctly reported that network restrictions prevented a live-site check. No website edits or publication.",
+        "existingEditorTest": "https://chatgpt.com/local/01a15cd4-b308-73c0-bf5e-befc76058036",
+        "existingEditorResult": "A new task checked 13 hosted pages at three phone widths. Its follow-up failed with Can't find variable: DisposableStack, including after reloading current assets and using keyboard submission.",
+        "remaining": "Both saved environments reject Edit with HTTP 403. Safari follow-up submission is unresolved; matching public Codex report remains open. Recovery network access and hosted-preview publishing are not verified. Original environment and its scoped preview credential were preserved.",
+        "upstreamIssue": "https://github.com/openai/codex/issues/55361"
+      },
       "githubConnection": "Library ChatGPT connected as librarycottonwood; owned repository selected",
       "credential": "Library-owned Cloudflare Pages Write token; api.cloudflare.com-bound network secret.",
       "freshTask": {
@@ -159,7 +175,9 @@
         }
       },
       "maintenanceSchedules": {
-        "status": "Daily GitHub checks and bounded repair worker configured; Weekly Maintenance Check exists but is paused in the library account as observed in Safari October 20.",
+        "status": "Daily GitHub checks and bounded repair worker configured; existing Weekly Maintenance Check resumed in the library account October 20. Enabled state and Monday afternoon schedule read back in Safari; next run shown in six days.",
+        "checkedAt": "2026-10-20 America/Los_Angeles",
+        "enabled": true,
         "githubSchedule": "Daily 16:37 UTC; source changes also trigger checks",
         "assistantSchedule": "Monday afternoon around 14:00 America/Los_Angeles; cloud executor",
         "automationId": "6ac6e4a661a081918e9c985036d9cf97",
@@ -170,7 +188,7 @@
           "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/37559880206",
           "scheduledTask": "Library-account scheduled cloud baseline retrieved matching exact-source report"
         },
-        "limits": "Cloud repair/save/trial publishing passed. Installed skill delivery and fresh edit/preview passed. Immediate bot-event and updated weekly notification delivery remain unverified.",
+        "limits": "Two current Run now executions posted into the existing Maintenance chat. Future clock-triggered execution and immediate bot-event notification delivery remain unverified. Earlier cloud repair/save/publishing results are historical evidence, not proof that current editor follow-ups work.",
         "usage": "Daily checks use GitHub allowance, not ChatGPT. Repairs, weekly assistant review, weekly sign-in maintenance and event notifications use shared Plus allowance. No API key, API credits or automatic reload configured.",
         "repairValidation": {
           "managedSignInRun": "37565472835",
@@ -205,8 +223,14 @@
           "guarantee": "Usage finite; source edits and repair runs also count; no automatic overage approved",
           "actualScreenshotBytes": 65509401
         },
-        "weeklyPointerPrompt": "Existing task reads assistant/tasks/weekly-maintenance.md from current main. Its pointer was simplified and saved October 20; paused status and schedule settings were preserved. No run or delivery is claimed.",
-        "weeklyRepairReporting": "The maintained weekly review covers verified repairs, CMS trial state, report access and one practical next step. Actual task is paused; future execution and delivery are not established by this prompt edit.",
+        "weeklyPointerPrompt": "Existing task reads assistant/tasks/weekly-maintenance.md from current main. Its focused pointer was saved October 20 and read back when resuming; no duplicate task was created.",
+        "weeklyRepairReporting": "Two actual Run now executions completed in the existing library-account chat. The second took 58 seconds, used GitHub and Library Analytics, checked the approved hosted trial and reported the pending preview separately, without a permission question. Future scheduled dispatch has not yet occurred.",
+        "weeklyRun": {
+          "chat": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571-maintenance/c/6ac6e474-2260-83e8-bd0f-0256173e4788",
+          "browserPermissions": "CMS trial and CMS publisher allowed for this Maintenance chat only; no all-sites grant.",
+          "visibility": "Existing Weekly Maintenance chat unarchived; Archive action read back after reload.",
+          "result": "Approved trial online, current checks passed, fresh visitor report succeeded, no new repair problems, newer preview awaiting review, no active fundraiser in published content. No website edits or publication."
+        },
         "previousAutomationId": "6ac5a460da40819092fe6b5e6403c3cd"
       },
       "trialSaving": {
@@ -229,7 +253,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.5",
+          "version": "0.2.8",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -237,9 +261,9 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.5",
+          "sourceVersion": "0.2.8",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "Existing library-owned plugin updated in Safari to 0.2.5 on October 20. Installed version, use-case descriptions and full library-assistant guidance read back. No new permissions or connection added."
+          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.8. After a full refresh, Manage showed the active version and ten enabled skills. Installed base guidance was reopened: generic greeting commentary removed, short non-technical voice retained. The 0.2.6 fresh ordinary event request stayed in chat, created a private draft and offered the website preview; its draft was discarded and chat archived. Later wording updates remove the unnecessary approval-rule explanation. Instruction-plugin updates added no permissions."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -249,7 +273,7 @@
         "workspacePrompt": {
           "source": "assistant/START.md",
           "sourceUpdated": true,
-          "accountSave": "Not completed: the existing cottonwood-library-editor Edit action returned Couldn\u2019t start editing environment twice, including after refreshing settings. Existing environment, credentials and access were preserved."
+          "accountSave": "Focused start instructions saved and read back in the private recovery environment, then published and used by a fresh task October 20. Existing editor cannot be republished through Edit (HTTP 403). Recovery is not the volunteer default: its live network access is unverified and Safari follow-ups fail; see cloudSetup.recovery."
         }
       },
       "stableSavedTrial": {
@@ -275,7 +299,7 @@
     }
   },
   "cms": {
-    "asOf": "2026-10-20 18:12 America/Los_Angeles",
+    "asOf": "2026-10-20 America/Los_Angeles",
     "implementation": "PR22 implementation and PR23/24 setup/dependency fixes merged. Native Studio, real Sanity content, publisher and signed webhook are connected. Read current service/workflow results for each publishing outcome.",
     "account": "Library signed in via GitHub as librarycottonwood; organization/project ownership and native Studio access verified. Google identity linking and backup administrator/recovery are not verified.",
     "organizationId": "oprdu6k2x",
@@ -294,7 +318,7 @@
     "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
-    "plugin": "Installed existing Cottonwood Library plugin 0.2.5 verified in the library account. Topic wizards retained; descriptions now specify when to use each skill. ChatGPT-to-Sanity writing and full scenario rehearsals remain separate acceptance checks.",
+    "plugin": "Cottonwood Library instruction plugin 0.2.8 installed and read back October 20. The separate official Sanity plugin 1.0.0 was authorized in the actual library Plus account. Actual read, private event-draft create, end-time correction and discard succeeded in normal Safari chat. A fresh ordinary request with updated instructions stayed in chat and offered the website preview; that draft was also discarded. No event was published by these rehearsals. Full ChatGPT-to-website approval/deployment and recovery remain separate acceptance checks.",
     "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
@@ -319,6 +343,31 @@
         "contentDigest": "257931476f0176a0dee93066b1d2e413294eb7d1091fb47d54d8a7442a175e5f",
         "releaseDigest": "efb48344fee3e6079ab046641cee7db950a026f22a9f1d1c891d8dc9166cf174",
         "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39535874197"
+      }
+    },
+    "chatgptConnection": {
+      "asOf": "2026-10-20 America/Los_Angeles",
+      "pluginId": "plugin_asdk_app_69ceae6d8d78819192e59f76b8e170b5",
+      "pluginVersion": "1.0.0",
+      "installed": true,
+      "identity": "librarycottonwood, GitHub sign-in",
+      "authorization": "Explicitly approved by Jaden; Sanity consent scoped the connection to librarycottonwood organization and stated seven days of access. It inherits the library identity; draft-only permissions have not been demonstrated.",
+      "rehearsalChat": "https://chatgpt.com/c/6ad85556-8c18-83e8-8f61-5d24a6a70edc",
+      "verified": [
+        "read actual published events and draft absence",
+        "create a private event draft",
+        "correct its end time",
+        "discard and re-read the draft as absent"
+      ],
+      "cleanup": "Private rehearsal event discarded without publication; conversation archived after evidence capture. Existing published events and website retained.",
+      "evidence": "output/sanity-workflow/connected-draft-correct-discard.txt",
+      "publishing": "Official supported publish_documents capability documented; this account rehearsal did not publish content. Plugin 0.2.6 directs supported CMS publishing through the chat after content confirmation; website exact-version approval remains separate.",
+      "updatedWizard": {
+        "chat": "https://chatgpt.com/c/6ad85826-2934-83e8-a0b5-87c60e276067",
+        "versionTested": "0.2.6",
+        "result": "Fresh normal request created a private draft, called it your event draft and asked about preparing the website preview without sending the volunteer to Studio. It added an unwanted explanation of the approval rule, corrected in installed version 0.2.7.",
+        "cleanup": "Draft discarded; chat archived.",
+        "evidence": "output/sanity-workflow/plugin-0.2.6-fresh-wizard.txt"
       }
     }
   }

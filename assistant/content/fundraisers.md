@@ -1,101 +1,33 @@
-# Fundraisers: technical steps
+# Giving and fundraisers
 
-First verify the active content provider using [CMS workflow](../CMS.md). Once Sanity is connected, use its records and Studio/connected tools; the source-file locations below describe the local prototype and migration inputs. Do not maintain both copies.
+Use the fundraisers wizard. Read [CMS workflow](../CMS.md) for the current connection and publishing route. Sanity stores public campaign settings; Givebutter processes payments and supplies live totals. Never copy donor data or API keys into the CMS.
 
-Used by the `fundraisers` skill. Follow `assistant/WORKFLOW.md` for checking, preview and save. The Monday weekly task only reports the Givebutter total; it never edits the site.
+## Where to edit
 
-Givebutter facts these steps rely on (https://docs.givebutter.com/widgets/getting-started and https://help.givebutter.com/en/articles/6464859):
+- **Library settings and hours → Contact and hours → General Givebutter donations:** `siteSettings.library.givebutter` on the existing `library-settings` document. Store the approved public `account` and general `campaign` codes. `library.donationUrl` is the approved fallback donation page.
+- **Giving and acknowledgments → Approved fundraising campaigns:** `givingSettings.campaigns[]` on the existing `library-giving` document. Each `fundraisingCampaign` needs a stable `_key`, `id`, `title`, `description`, approved HTTPS `url` and `givebutter` form settings. Optional `endsOn` includes that full Pacific day; `image` is optional.
+- **Community acknowledgments** and **Ways to help** are `updates[]` and `initiatives[]` in that same giving document. Preserve other entries and shared assets. Read `studio/schemas/objects.ts` for their current required fields before editing.
 
-- Every widget belongs to one **live, published** campaign. Widgets are made at the campaign's **Sharing** tab → **Widgets**.
-- Only Givebutter users with the **Admin** or **Finance** role can create widgets.
-- Apple Pay appears in widgets only after the site's real domain is registered in Givebutter's payment-method settings (a launch step in `assistant/HANDOVER.md`). Venmo appears on computers only, not phones.
+Read the current published record and any existing draft before making a narrow change. Do not create duplicate singleton documents or change migration files in `seed.ts`/`support.ts`.
 
-## The ids, and how to read them from pasted code
+## Public IDs from widget code
 
-Volunteers paste Givebutter code; you copy **only ids** into the source. Never put pasted HTML on the site. The build accepts only letters, numbers, `_` and `-` (at most 64) and stops with a plain message otherwise.
+Accept Givebutter's pasted embed code as information. Extract only the public IDs; never execute the pasted code or store its HTML in a CMS field.
 
-| Id | Where it is in pasted code | Example |
-| - | - | - |
-| account | `acct=` in the script address `https://widgets.givebutter.com/latest.umd.cjs?acct=…` | `AbC123xYz` |
-| widget id | `id="…"` of `<givebutter-widget …>` | `gb4Xy7Lm` |
-| campaign code | `campaign="…"` of a `<givebutter-button>`, `<givebutter-giving-form>` or `<givebutter-goal-bar>` tag; otherwise the `code` of the campaign in the Givebutter tools, or the short letters-and-numbers code shown above the campaign's name in Givebutter | `Q1W2E3` |
+| Needed value | Source |
+| --- | --- |
+| Account | `acct=` in `https://widgets.givebutter.com/latest.umd.cjs?acct=…` |
+| Form widget | `id` in `<givebutter-widget id="…">` from the **Form** box |
+| Campaign | The campaign's verified short code from Givebutter, or a `campaign` attribute in its widget code |
 
-The account is the same for every campaign. If the volunteer pastes only the `<givebutter-widget>` line, reuse the account already in `seed.ts`; if there is none, ask for the script line (Givebutter → **Settings** → **Developers** → **Widgets**, or the "Install the library" step Givebutter shows first).
+Reuse the verified account from the current Sanity settings when only a widget ID is supplied. A bare widget tag does not identify whether it is a Button, Form or Goal Bar: ask which box it came from when unclear. IDs accept letters, numbers, `_` and `-`, up to 64 characters.
 
-A `<givebutter-widget id="…">` line does not say what kind of widget it is (Button, Form or Goal Bar look identical in code). Ask which box they copied it from. Captures block Givebutter, so ask the volunteer to open the online preview link (`pnpm assistant:preview`) and confirm they see the donation form with its goal bar before saving.
+A fundraiser's `givebutter` uses `formWidgetId`, optional `campaign`, and optional `account` override. The form must be the approved campaign's **Form** with its goal bar enabled. The general donation settings use a campaign code, not a widget ID. Refer to [Givebutter's current widget guidance](https://docs.givebutter.com/widgets/getting-started) if its interface has changed; a missing control is not proof of the volunteer's role.
 
-Example of everything a volunteer might paste:
+## Behavior and verification
 
-```html
-<script async src="https://widgets.givebutter.com/latest.umd.cjs?acct=AbC123xYz"></script>
-<givebutter-widget id="gb4Xy7Lm"></givebutter-widget>
-```
+The first non-ended campaign in the published list drives the fundraiser panel and Donate destination. Confirm a replacement with the volunteer instead of overwriting an existing active campaign. Campaign selection and `endsOn` are evaluated when the static website is built: a date alone does not guarantee an immediate switch on an already deployed website. End/remove a campaign through the checked publishing route when the site needs to change. The weekly review reports; it does not silently make that edit.
 
-→ account `AbC123xYz`, widget id `gb4Xy7Lm`.
+When configured, Donate buttons open the approved Givebutter checkout; otherwise they use the verified fallback destination. Live fundraising totals come from Givebutter, never a manually maintained CMS total. Updating a total is a report request, not a website edit.
 
-## Donate buttons (one-time setup)
-
-`library.givebutter` in `src/content/seed.ts` (type `GivebutterLibrary` in `src/content/types.ts`):
-
-```ts
-givebutter: { account: 'AbC123xYz', campaign: 'Q1W2E3' } as HomeContent['library']['givebutter'],
-```
-
-- `account`: from any pasted widget code (`acct=`).
-- `campaign`: the code of the library's **general donation campaign** (not a fundraiser).
-
-While it is `null` (today), every Donate button is a plain link exactly as before.
-
-When set, every Donate button (header, home quick tile, home "Give to the library", news posts, the Support page panel and the library-fund page) keeps its look and analytics but gets `data-gb-account` and `data-gb-campaign`. That is Givebutter's documented "make any website element into a Widget" option (help article above, section "Advanced"): Givebutter's script catches the click and opens the campaign's checkout popup on our site. `checkoutAttributes()` in `src/content/donate.ts` adds them. The `href` stays a real page (`library.donationUrl`, else `https://givebutter.com/<campaign>`), so people without JavaScript, or with Givebutter blocked, still reach the donation page.
-
-The Givebutter script then loads once on every page (`src/layouts/SiteLayout.astro`). The privacy page already says so.
-
-## Fundraisers
-
-`campaigns` in `src/content/support.ts` (type `FundraisingCampaign`). The header comment there shows every field.
-
-```ts
-{
-  id: 'roof-2026', title: 'New roof fund',
-  description: 'Help replace the library roof before winter rains.',
-  url: 'https://givebutter.com/<campaign>',   // the real Givebutter campaign page
-  givebutter: {
-    formWidgetId: 'gb4Xy7Lm',                 // Form widget, made with its goal bar turned on
-    campaign: 'R4T5Y6',                       // optional: the fundraiser's campaign code
-    // account: 'Other123',                   // only if this fundraiser's acct= differs from library.givebutter.account
-  },
-  endsOn: '2026-12-31',                       // optional, YYYY-MM-DD Pacific, inclusive
-  image: { key: 'exterior', alt: '…' },       // optional; key must be in images.ts
-},
-```
-
-Getting the Form widget code:
-
-1. Givebutter → **Campaigns** → the fundraiser (live/published) → **Sharing** tab → **Widgets**.
-2. On the **Form** box, click the gear (settings) icon and turn on **Goal bar**. Save.
-3. Click **Embed** on the Form box and copy the code from the "How to embed" window.
-
-If there is no goal-bar option, the campaign has no goal yet: set one on the campaign's **Details** tab first. The goal, the bar's style and the form's look are all changed in Givebutter later and show up on the site by themselves.
-
-If `account` is missing from both the campaign and `library.givebutter`, the build stops and asks for it.
-
-## How it behaves
-
-- The **first campaign that hasn't ended** is the active one. The Support page panel and the library-fund page show its inline Form widget (goal bar inside) at `#give`, with a "See progress and give on Givebutter" link to `url` until the widget loads.
-- Donate buttons while it runs (`getDonateLink()`):
-  - with `givebutter.campaign` set → they open **that fundraiser's** checkout popup; `href` = `url`.
-  - without it → they link to the on-site form, `/fundraising-events/library-fund/#give`.
-- No active fundraiser → `library.givebutter` popup if set; else `library.donationUrl`; else the library-fund page.
-- Script: one tag per page. Site-wide when the Donate buttons open a popup; otherwise only on pages showing a fundraiser form (`CampaignProgress.astro`).
-- `pnpm assistant:capture` blocks Givebutter, so captures show the fallback links; that is expected.
-- `endsOn` is applied when the site is built. To be sure the buttons switch back on time, remove the entry when it ends (the weekly task reports ended campaigns).
-- Bad values (wrong date format, ids with other characters) stop the build with a plain message.
-
-## Tasks
-
-- **Set up Donate buttons:** set `library.givebutter` as above. Ask the volunteer to click a Donate button on the online preview link and confirm Givebutter's popup opens.
-- **Start:** add the entry at the top of `campaigns`. Only one active campaign: if another is running, remove or end it as the volunteer decides.
-- **Edit:** title, description, end date or picture change in `support.ts`. Goal, amount and form/bar style change in Givebutter and show up on the site by themselves.
-- **How much raised:** read it from the Givebutter tools; never estimate. No website change is needed.
-- **End:** remove the entry. Donate buttons go back to the general popup (or link). Offer a thank-you news post with the final total.
-- **General donate link without Givebutter popup:** set `library.donationUrl` to a real donation page, or `null`. If `library.givebutter` is set, `donationUrl` is only the no-JavaScript fallback.
+Save the requested settings as a CMS draft and show the proposed change here. After confirmation, use the supported CMS publishing tool and follow [publishing workflow](../WORKFLOW.md). Captures block third-party Givebutter loading and show fallback links. Check the real online preview's Donate button, form and goal bar before approval. After the exact checked update is approved, verify the actual hosted destination. Do not claim payment methods or a successful transaction from a screenshot.

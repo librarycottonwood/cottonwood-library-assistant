@@ -14,7 +14,7 @@ Follow library-assistant for voice. These are ChatGPT scheduled tasks in this li
 
 ## Before creating anything
 
-- Check existing tasks first. The Monday "Cottonwood Weekly Website Check" already reports the fundraiser total and website health. If that covers the request, say so and offer to show it instead of making a new task.
+- Check existing tasks and their actual prompts first. The library's weekly maintenance review may already cover website health and fundraising. Read its maintained pointer in `assistant/tasks/weekly-maintenance-pointer.md` and verify the installed task before making a duplicate. Do not rely on a remembered task name or schedule.
 - Create, change or pause a task only when the volunteer has authorized that action and its details. Ask for missing details before proceeding; do not ask for the same approval again.
 
 ## Schedule wizard
@@ -31,4 +31,4 @@ Create it with the scheduling tool if this chat has one. If not, walk them throu
 
 ## Change or stop
 
-Find the task by name, confirm, then change or pause it the same way. Don't delete the Monday "Cottonwood Weekly Website Check" — pausing it stops the weekly fundraiser total and website health reports. Check the actual task prompt before changing it. Its maintained prompt is the pointer in `assistant/tasks/weekly-maintenance-pointer.md`, which reads current instructions on each run. Do not assume the installed task has that pointer merely because the file exists.
+Find the actual task and confirm which one if ambiguous, then change or pause it as requested. Prefer updating the existing task to replacing it. Explain when pausing it also stops its other reports. Use the maintained pointer so future runs read current instructions. Do not assume the installed task has that pointer merely because the file exists.

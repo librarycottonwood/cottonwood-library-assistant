@@ -17,7 +17,9 @@ test('real Pages runtime redirects the old homepage, deep links, status and quer
   const cli = new URL('../node_modules/wrangler/bin/wrangler.js', import.meta.url).pathname;
   const server = spawn(process.execPath, [cli, 'pages', 'dev', stage, '--ip', '127.0.0.1', '--port', String(port),
     '--persist-to', path.join(root, 'state'), '--show-interactive-dev-session=false', '--log-level', 'error'], {
-    cwd: root, env: {PATH: process.env.PATH, HOME: process.env.HOME, WRANGLER_SEND_METRICS: 'false', CI: 'true'}, stdio: ['ignore', 'pipe', 'pipe'],
+    cwd: root, env: {PATH: process.env.PATH, HOME: process.env.HOME,
+      ...(process.env.XDG_CONFIG_HOME ? {XDG_CONFIG_HOME: process.env.XDG_CONFIG_HOME} : {}),
+      WRANGLER_SEND_METRICS: 'false', CI: 'true'}, stdio: ['ignore', 'pipe', 'pipe'],
   });
   let logs = ''; server.stdout.on('data', bytes => {logs += bytes;}); server.stderr.on('data', bytes => {logs += bytes;});
   try {

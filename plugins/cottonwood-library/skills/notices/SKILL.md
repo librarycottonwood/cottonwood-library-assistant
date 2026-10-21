@@ -5,7 +5,7 @@ description: Use when a volunteer wants to announce a closure, temporary hours, 
 
 # Notice banner
 
-Follow library-assistant for voice, Chat-vs-Codex and preview → "save it". Technical steps (banner fields, dates): repository `assistant/content/notices.md`. Read it before editing.
+Follow library-assistant for conversation and the current CMS publishing route. Technical steps (banner fields, dates): repository `assistant/content/notices.md`. Read it before editing.
 
 The banner shows across the top of every page between a start and end date, then disappears by itself.
 
