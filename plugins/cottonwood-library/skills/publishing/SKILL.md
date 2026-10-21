@@ -20,7 +20,7 @@ If the connected tools cannot do the edit, offer the actual editor as a fallback
 Read the actual CMS record and current publishing evidence. Explain the next unfinished step in one sentence:
 
 - For a private CMS draft, show its proposed content in this conversation and ask whether to prepare the website preview. After confirmation, use the available supported CMS document publishing tool, honoring write confirmations. Do not direct the volunteer to Studio for a supported operation. The current website preview does not read private drafts.
-- Publishing the CMS record queues a checked website preview. Show its real review link when ready.
+- Publishing the CMS record queues a checked website preview. When they ask to see it, give the working website preview link for that exact version. Show pictures only when requested.
 - A checked preview needs approval on its review page. Keep the request brief: “Approve this preview?” with the link.
 - After approval, verify the hosted website matches that version before saying it is updated.
 

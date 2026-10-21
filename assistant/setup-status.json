@@ -295,6 +295,17 @@
         "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container",
         "latestPublishRun": "37570642969",
         "retirementWorkflow": "retire-old-demo.yml"
+      },
+      "safariRecheck": {
+        "asOf": "2026-10-21 America/Los_Angeles",
+        "browser": "Safari 27.0.1 (22625.1.29.11.28)",
+        "codex": "First request created a design preview; follow-up submission still failed with DisposableStack after an origin reload. The original environment Edit action still failed. No browser flags or security settings were changed.",
+        "codexChat": "https://chatgpt.com/local/01a15d8a-08ea-7466-8f1f-964bbaea3039",
+        "work": "The Work toggle was verified. Ordinary code-edit requests and follow-up corrections completed in that conversation. After explicit draft-save approval, GitHub read-back confirmed four changed source/test files on a private draft branch; no main or live publisher update.",
+        "workChat": "https://chatgpt.com/c/6ad87754-c500-83e8-a4b8-540484c7031d",
+        "branch": "draft/simple-website-approval-2026-10-21",
+        "draftSource": "78dc0f735ba731c6a1d8d711fe38fdf8999e671d",
+        "limits": "The Codex Safari client remains unresolved. This record establishes draft editing/saving, not source merge, live publisher deployment or a repaired Codex client."
       }
     }
   },
@@ -368,6 +379,16 @@
         "result": "Fresh normal request created a private draft, called it your event draft and asked about preparing the website preview without sending the volunteer to Studio. It added an unwanted explanation of the approval rule, corrected in installed version 0.2.7.",
         "cleanup": "Draft discarded; chat archived.",
         "evidence": "output/sanity-workflow/plugin-0.2.6-fresh-wizard.txt"
+      },
+      "endToEndTrial": {
+        "asOf": "2026-10-21 America/Los_Angeles",
+        "mode": "ChatGPT Work in the library Safari account; not Chat-only or the Codex screen",
+        "chat": "https://chatgpt.com/c/6ad86523-8410-83e8-91d6-fe622ad33850",
+        "event": "Volunteer planning meeting; November 10, 2026, 10–11:30 a.m. Pacific",
+        "verified": "Ordinary request, required start/end questions, real CMS draft, end-time correction, checked preview, authenticated approval, trial publication, matching hosted fingerprints, and actual Safari navigation through the event list to its detail page.",
+        "operationId": "dc46f128-9cb7-49bd-8d3b-fe34225a3a7b",
+        "publishRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39563499106",
+        "scope": "Isolated CMS trial only. Recovery/restore acceptance and public launch were not tested."
       }
     }
   }
