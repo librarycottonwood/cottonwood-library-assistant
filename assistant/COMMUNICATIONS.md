@@ -26,9 +26,9 @@ Jaden chose a free Givebutter sending address with replies to `cottonlib@shasta.
 - Signup widget created: **Library Newsletter**, public widget ID `L4EVDm` (dashboard widget `107689`). Static, Email channel, Simple layout, first/last names optional.
 - Title: **Stay connected with your library**. Description: **Sign up for Cottonwood Community Library news, events, book sales and ways to help. You can unsubscribe at any time.**
 - Mailing audience: Givebutter Contacts / Engage filter **Widget Form Sign-ups → Library Newsletter**, excluding unsubscribed/suppressed contacts. Do not equate all donors or the shared contact spreadsheet with newsletter subscribers.
-- Free sending domain requested: `cottonwoodlibrary.givebutter-mail.com`, reply-to `cottonlib@shasta.com`. Verify the domain, sender, logo, postal address and inbox test before marking email ready.
-- Website signup integration is a separate unfinished step until the actual widget is embedded, tested and approved through the CMS website workflow. Its entry point should extend the existing newsletter area and be coordinated with the redesign.
-- No audience import, newsletter delivery or recurring email schedule has been authorized by this setup request. Use a board-approved issue and recipients for the first send. A test delivery needs a specifically approved inbox.
+- Free sending domain **Connected**: `cottonwoodlibrary.givebutter-mail.com`. Verified sender: **Cottonwood Community Library <newsletter@cottonwoodlibrary.givebutter-mail.com>**, reply-to `cottonlib@shasta.com`. Existing library logo, brand color `#193B32`, public website logo link and organization postal address **PO Box 1807, Cottonwood, CA 96022** are saved. Inbox delivery still needs an approved test recipient.
+- The source integration extends `/librarynews/newsletter/` using `src/components/NewsletterSignup.astro`; public provider IDs live in `src/content/newsletter-signup.json`. This integration configuration is separate from CMS newsletter issue content. The actual Givebutter form loaded locally with optional first/last names and required email. Signup submission and exact checked CMS website approval remain pending. The privacy page explains the collection and unsubscribe link.
+- No audience import, bulk newsletter delivery or recurring email schedule has been authorized by this setup request. Use a board-approved issue and recipients for the first send. A test delivery needs a specifically approved inbox.
 
 ### Volunteer requests
 

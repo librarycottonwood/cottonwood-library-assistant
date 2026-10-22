@@ -392,7 +392,9 @@
       "configuration": "Static signup; Email channel; Simple layout; first/last names optional",
       "sendingDomain": "cottonwoodlibrary.givebutter-mail.com",
       "replyTo": "cottonlib@shasta.com",
-      "state": "Free domain requested; last observed setting up. Sender/branding/address, signup delivery and inbox test unfinished; no email sent."
+      "state": "Free domain Connected; desired sender verified. Existing logo, #193B32 color, website logo link and organization PO Box address saved. Real embedded form loaded locally. Signup submission, inbox delivery, checked website approval and installed Assistant update remain pending; no email sent.",
+      "sender": "newsletter@cottonwoodlibrary.givebutter-mail.com",
+      "signupSource": "src/content/newsletter-signup.json"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged."
   }
