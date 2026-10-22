@@ -22,9 +22,11 @@ Studio dependency repairs may update only existing exact versions in
 studio/package.json and its pnpm-lock.yaml; never change forms, schema or content.
 The publishing service, its authentication, its tests and all deployment
 workflows require reviewed changes and remain outside automatic repair scope.
-The entire combined report/website connector, including formatting, protocol and
-dependencies, is outside automatic repair scope because its Worker can invoke
-the private publishing service. Connector fixes require reviewed changes.
+The entire reporting connector, including formatting, protocol and dependencies,
+remains outside automatic repair scope. Its retired publishing binding showed
+that Worker modules share runtime authority; argument filtering is not isolation.
+Removing that binding does not authorize automatic auth or deployment changes.
+Connector fixes require reviewed changes.
 Account/permission failures need guided recovery, not code repair.
 Preserve the site's
 appearance and visitor behavior. Do not upgrade packages merely because a newer
