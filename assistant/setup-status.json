@@ -411,7 +411,7 @@
       }
     }
   },
-  "communicationsOctober21": {
+  "communicationsOctober 21": {
     "checkedAt": "2026-10-21 America/Los_Angeles",
     "generalDonations": {
       "campaign": "Support Your Local Library",
@@ -423,7 +423,7 @@
       "cmsRevision": "pEm1g3Ky8RMV9RqQGt428f",
       "preview": "https://b0edf3b0.cottonwood-library-trial-preview.pages.dev/",
       "previewRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39698463728",
-      "verification": "Exact checked release 095c8809236035d62c20e38f8e5f27a7a85d90bfb09c4174bdbccd4a8affae7a approved through the authenticated page and deployed/verified by run39699898818. Hosted trial status matches operation2ca87551-2750-4229-8131-24d69ef7e53d and source32867261faa7f69e0165aee61827365a90b67c87. Real checkout tested desktop/phone; no payment."
+      "verification": "Exact checked release 095c8809236035d62c20e38f8e5f27a7a85d90bfb09c4174bdbccd4a8affae7a approved through the authenticated page and deployed/verified by run 39699898818. Hosted trial status matches operation 2ca87551-2750-4229-8131-24d69ef7e53d and source 32867261faa7f69e0165aee61827365a90b67c87. Real checkout tested desktop/phone; no payment."
     },
     "newsletter": {
       "widget": "Library Newsletter",
@@ -437,6 +437,6 @@
       "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter)"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
-    "assistant": "Installed 0.2.9: fresh donation report, newsletter draft using actual CMS/PDF/sender/audience, and unscheduled TEST ONLY Facebook draft passed. Source0.2.10 adds the preview-link/routing corrections; installation pending."
+    "assistant": "Installed 0.2.9: fresh donation report, newsletter draft using actual CMS/PDF/sender/audience, and unscheduled TEST ONLY Facebook draft passed. Source 0.2.10 adds the preview-link/routing corrections; installation pending."
   }
 }
