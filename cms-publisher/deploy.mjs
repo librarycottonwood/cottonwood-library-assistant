@@ -1,6 +1,6 @@
 // Trusted deployment job only; never run inside a content-drafting environment.
 import {execFileSync} from 'node:child_process';
-import {verifyPublisher} from './src/deployment-readiness.mjs';
+import {verifyPublisher, verifyReportingOnly} from './src/deployment-readiness.mjs';
 const sha=process.env.CHECKED_SHA;
 if(!/^[a-f0-9]{40}$/.test(sha || ''))throw Error('A checked main source commit is required.');
 const health='https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/health';
@@ -13,6 +13,7 @@ try{const current=await status();if(current.sourceSha===sha && current.status===
   console.log('This checked publisher version is already deployed.');process.exit(0);
 }}catch{}
 const invoke=(...args)=>execFileSync('npx',['--no-install','wrangler',...args],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+await verifyReportingOnly();
 const previousHealth=await status();
 const current=JSON.parse(invoke('deployments','status','--json'));
 const previous=current.versions?.length===1 && current.versions[0].percentage===100 ? current.versions[0].version_id : null;
