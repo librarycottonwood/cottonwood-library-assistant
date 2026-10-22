@@ -265,7 +265,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.9",
+          "version": "0.2.10",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -275,12 +275,15 @@
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
           "sourceVersion": "0.2.10",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "October 21: existing plugin updated in Safari by uploading the source 0.2.9 package. After full refresh, details and installed Manage both showed 0.2.9, all ten skills enabled; newsletter guidance reopened and read back. No permissions added.",
+          "verifiedUpdate": "October 21: existing plugin updated to 0.2.10 in the library Safari account. Full refresh and installed Manage showed 0.2.10 with all ten skills enabled. Base instructions reopened: donation/newsletter guidance retained, preview links preferred, design/code routed to the prepared Codex environment. No permissions added.",
           "donationRehearsal": {
             "chat": "https://chatgpt.com/c/6ad952db-8b30-83e8-9861-f985f941d8f9",
             "result": "Fresh chat read published Sanity donation settings and actual Givebutter campaign R62NJU; reported active and $0 successful donations October 1-21. No changes made. This verifies settings/reporting, not promotion of a pending website preview."
           },
-          "pendingUpdate": "Release 0.2.10 combines the donation/newsletter guidance with PR33 preview-link and Chat/Work/Codex routing corrections. Installed 0.2.9 was verified earlier today; update after this source is merged."
+          "routingRehearsal": {
+            "chat": "https://chatgpt.com/c/6ad95cad-c030-83e8-a9ca-e03fc472bb4e",
+            "result": "Fresh ordinary question correctly routed website colors to Codex and news posts to ChatGPT Work/Sanity. No changes made. Rehearsal chat archived after evidence capture."
+          }
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -373,6 +376,13 @@
         "contentDigest": "257931476f0176a0dee93066b1d2e413294eb7d1091fb47d54d8a7442a175e5f",
         "releaseDigest": "efb48344fee3e6079ab046641cee7db950a026f22a9f1d1c891d8dc9166cf174",
         "run": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39535874197"
+      },
+      "reviewInterface": {
+        "checkedAt": "2026-10-21 America/Los_Angeles",
+        "change": "PR33 merged; plain preview/save states replace visible record IDs and hashes. Expired sign-ins and failed review steps return branded HTML while approval/session/origin/CSRF checks remain enforced.",
+        "checkedCodeSource": "bb98096c117fc7bf648d6373d69934c88d47842f",
+        "deploymentRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39701839453",
+        "liveReadback": "Publisher health matched the checked source. Actual authenticated Safari review for operation 2ca87551-2750-4229-8131-24d69ef7e53d displayed Your update is saved, the preview link, and no record IDs/hashes. Signed-out live browser showed the branded sign-in page. Ready, saved and failure layouts checked locally on desktop/phone; 24 local runtime tests and exact-head CI passed."
       }
     },
     "chatgptConnection": {
@@ -411,7 +421,7 @@
       }
     }
   },
-  "communicationsOctober 21": {
+  "communicationsOctober21": {
     "checkedAt": "2026-10-21 America/Los_Angeles",
     "generalDonations": {
       "campaign": "Support Your Local Library",
@@ -437,6 +447,6 @@
       "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter)"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
-    "assistant": "Installed 0.2.9: fresh donation report, newsletter draft using actual CMS/PDF/sender/audience, and unscheduled TEST ONLY Facebook draft passed. Source 0.2.10 adds the preview-link/routing corrections; installation pending."
+    "assistant": "Installed 0.2.10 read back in Safari with ten skills enabled. Earlier actual donation report, newsletter draft and unscheduled Facebook draft passed; fresh 0.2.10 routing question correctly selected Codex for design and Work/Sanity for news. No public social or bulk email send."
   }
 }

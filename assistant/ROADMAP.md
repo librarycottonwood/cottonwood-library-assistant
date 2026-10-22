@@ -12,7 +12,7 @@ General-donation campaign **Support Your Local Library / R62NJU** is active. Its
 
 - [x] General donation checkout verified on desktop/phone, approved and saved to the CMS trial; fresh library ChatGPT read the actual campaign and dated totals.
 - [ ] Finish the unsubscribe/suppression rehearsal before a bulk send. Sender, branding, postal address, website signup, audience restriction and approved-inbox delivery have passed.
-- [ ] Give ChatGPT current donation and newsletter guidance. Release the existing instruction plugin and test actual installed behavior; do not equate a source-file edit with installation.
+- [x] Existing Assistant 0.2.10 installed and read back; actual campaign reporting, newsletter drafting, private Facebook draft and fresh Chat/Work/Codex routing rehearsed. Simplified approval service deployed and checked in Safari.
 - [ ] Preserve domain baseline and choose the separate production publishing route; keep public forwarding unchanged.
 
 ## Week of October 26: feedback, content and accessibility
