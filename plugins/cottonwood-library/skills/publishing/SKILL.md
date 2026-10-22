@@ -20,9 +20,9 @@ If the connected tools cannot do the edit, offer the actual editor as a fallback
 Read the actual CMS record and current publishing evidence. Explain the next unfinished step in one sentence:
 
 - For a private CMS draft, show its proposed content in this conversation and ask whether to prepare the website preview. After confirmation, use the available supported CMS document publishing tool, honoring write confirmations. Do not direct the volunteer to Studio for a supported operation. The current website preview does not read private drafts.
-- Publishing the CMS record queues a checked website preview. When they ask to see it, give the working website preview link for that exact version. Show pictures only when requested.
-- A checked preview needs approval on its review page. Keep the request brief: “Approve this preview?” with the link.
-- After approval, verify the hosted website matches that version before saying it is updated.
+- Publishing the CMS record queues a checked website preview. Use `library_website_updates` to find its check, then `library_website_preview` for the actual affected page. Show the returned picture in this conversation; the website link is optional exploration. Keep the opaque version for saving unchanged.
+- Ask “Would you like me to save this?” here after showing the checked picture. When they agree, call `library_save_website_preview` with that exact version. ChatGPT confirms the write in chat. Never require a separate website approval button for this connected workflow.
+- After saving, read `library_website_updates` and wait for `deployed_verified` before saying it is updated. Do not loop rapidly or turn a queued update into success. If a preview expired, refresh with the supported tool and show it again; if connection permissions are missing, reconnect the library connector rather than sending the volunteer to a review page.
 
 Do not repeat an approval already given for the unchanged checked version. If that version changed or expired, prepare a fresh one. Do not present sample-content pictures as the library's current content.
 

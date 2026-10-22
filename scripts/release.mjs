@@ -36,6 +36,15 @@ export async function prepareReview(digest) {
       if (createHash('sha256').update(bytes).digest('hex') !== evidence.pictures?.[name]) throw new Error('Review pictures changed. Capture this saved version again.');
       await writeFile(path.join(stage, '_review', `${name}.png`), bytes);
     }
+    // New captures include each checked page so the assistant can show the actual
+    // changed page in chat. Legacy releases retain their homepage pictures.
+    for (const item of evidence.evidence.filter(item => item.picture)) {
+      const {file, sha256} = item.picture;
+      if (!/^(desktop|phone)-[a-f0-9]{16}\.png$/.test(file)) throw new Error('Invalid checked page picture.');
+      const bytes = await readFile(path.join(pictures, file));
+      if (!bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])) || createHash('sha256').update(bytes).digest('hex') !== sha256) throw new Error('Checked page picture changed.');
+      await writeFile(path.join(stage, '_review', file), bytes);
+    }
     await cp(path.join(pictures, 'evidence.json'), path.join(stage, '_review/evidence.json'));
     await writeFile(path.join(stage, '_review/index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your library preview</title><style>body{font:18px system-ui;margin:2rem auto;max-width:1000px;padding:0 1rem}img{max-width:100%;height:auto;border:1px solid #ddd}.phone{max-width:390px}</style><h1>Your library preview</h1><p>Here is how your draft looks on a computer and a phone. <a href="/">Explore the draft website</a>.</p><h2>Computer</h2><img src="desktop.png" alt="Library homepage on a computer"><h2>Phone</h2><img class="phone" src="phone.png" alt="Library homepage on a phone"></html>');
     await writeFile(path.join(stage, '_review/manifest.json'), JSON.stringify({ siteDigest: digest, files: await inventory(path.join(stage, '_review')) }, null, 2));

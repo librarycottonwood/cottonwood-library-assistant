@@ -13,7 +13,7 @@ export function credentialFreeMcpCall(request, ctx) {
   }
   return {
     request: new Request(request,{headers}),
-    context: {auth:{scope:[...ctx.auth.scope]},props:{login:ctx.props.login}},
+    context: {auth:{scope:[...ctx.auth.scope],userId:ctx.auth.userId},props:{login:ctx.props.login}},
   };
 }
 // Tracked button clicks on the library website (see src/components/Analytics.astro).

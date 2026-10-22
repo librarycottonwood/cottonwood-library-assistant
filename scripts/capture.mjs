@@ -55,14 +55,16 @@ try {
         const check = await page.request.get(target.href);
         if (!check.ok()) throw new Error(`Broken internal link on ${route}: ${link}`);
       }
-      if (route === '/') {
+      {
         // Lazy illustrations can enter view after fonts settle. Wait for visible images.
         await page.evaluate(() => Promise.all(Array.from(document.images)
           .filter(img => { const box = img.getBoundingClientRect(); return box.top < innerHeight && box.bottom > 0; })
           .map(img => img.decode())));
-        await page.screenshot({ path: path.join(output, `${name}.png`), fullPage: false });
+        const filename = `${name}-${createHash('sha256').update(route).digest('hex').slice(0,16)}.png`;
+        const bytes = await page.screenshot({ path: path.join(output, filename), fullPage: false });
+        if (route === '/') await writeFile(path.join(output, `${name}.png`), bytes);
+        evidence.push({ name, viewport, route, heading, picture: {file: filename, sha256: createHash('sha256').update(bytes).digest('hex')} });
       }
-      evidence.push({ name, viewport, route, heading });
     }
     await page.close();
   }

@@ -121,3 +121,14 @@ Completed history is pruned after 90 days / 500 completed records; waiting opera
 - [Direct document reads](https://www.sanity.io/docs/http-reference/doc)
 - [Cloudflare Free Durable Objects and limits](https://developers.cloudflare.com/durable-objects/platform/pricing/)
 - [Cloudflare deployment inventory](https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/deployments/methods/list/)
+
+
+## In-chat preview and save
+
+The existing OAuth library connector now has a private service binding to the `ChatPublishing` Worker entrypoint. It exposes four tools: updates, preview, prepare-preview, and save-preview. Existing Analytics-only grants have no website authority: website reads need `website:read`, saving needs `website:save`, and both require the authenticated numeric library identity. The new tools declare their scopes and signal OAuth step-up. Consent grants only the requested scopes; no report grant is silently expanded.
+
+The preview tool returns an actual immutable checked PNG as MCP image content, with its digest/hash checked against release evidence. New captures include every checked page on desktop and phone. The volunteer sees the affected page in chat, then explicitly requests saving. The write tool uses ChatGPT's native confirmation and passes only the signed one-hour version returned with that preview. It reuses the exact same ledger approval and publish state machine as browser approval; changed content/code, incorrect pins and forged/expired versions fail closed. Repeated saves dispatch once. Queued publication must be checked to `deployed_verified` before reporting completion.
+
+No workflow, deployment, status, OAuth, or Cloudflare token is delivered to ChatGPT. No public HTTP save endpoint was added. The RPC entrypoint is accessible only to configured Worker service bindings in the library account; it trusts the connector's verified subject and checked scopes. The privileged routing and publishing modules are outside the automated Analytics repair allowlist; the repairable report handler receives neither the binding nor a write callback. The existing review website remains available for optional recovery. Runtime evidence uses provider stubs until the live library-account rehearsal is recorded.
+
+The connector and publisher deploy separately after checked main. Deploy the publisher entrypoint before updating/refreshing the connector. Reconnect the existing library report connector with the website scopes and refresh its tool list; the plugin instructions alone do not install or authorize these tools. No public-domain launch, DNS change, paid service or new API key is involved.
