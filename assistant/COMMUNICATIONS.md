@@ -43,9 +43,9 @@ Jaden chose a free Givebutter sending address with replies to `cottonlib@shasta.
 ## Acceptance to finish
 
 1. Real website Donate opens campaign `R62NJU`, with a usable fallback when scripts are blocked; desktop and phone checked. No transaction required to verify opening checkout.
-2. General campaign status and totals read correctly in a fresh library ChatGPT conversation.
+2. **Passed October 21:** fresh library ChatGPT read the actual published Sanity settings and Givebutter campaign R62NJU, reporting Active and $0 successful donations October 1-21. [Rehearsal](https://chatgpt.com/c/6ad952db-8b30-83e8-9861-f985f941d8f9). This verifies saved settings and reporting, not promotion of a pending website preview.
 3. Signup form submits to the **Library Newsletter** audience using an approved test address; unsubscribe/suppression behavior checked before a live send.
 4. Sender/domain verification, branding, postal address and test delivery pass. First newsletter is reviewed in Givebutter before sending.
-5. Fresh library chat understands website issue vs email newsletter, carries forward confirmed facts and uses only available actions. Source instructions must be released into the existing installed plugin before claiming that account behavior changed.
+5. Fresh library chat understands website issue vs email newsletter, carries forward confirmed facts and uses only available actions. Existing plugin 0.2.9 was uploaded, refreshed and verified in the library account on October 21; installed newsletter guidance was reopened. The combined email/social rehearsal remains separate.
 
 Official references: [Givebutter ChatGPT read access](https://help.givebutter.com/en/articles/16301438-how-to-connect-chatgpt-to-your-givebutter-account), [signup forms and audience filtering](https://help.givebutter.com/en/articles/9061803-how-to-embed-a-signup-form-widget-on-your-website), [Engage sending setup](https://help.givebutter.com/en/articles/5497885-how-to-connect-your-domain-to-send-emails-through-engage).

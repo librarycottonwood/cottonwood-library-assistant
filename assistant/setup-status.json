@@ -253,7 +253,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.8",
+          "version": "0.2.9",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -263,8 +263,11 @@
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
           "sourceVersion": "0.2.9",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "October 20: existing library-owned plugin updated in Safari to 0.2.8. After a full refresh, Manage showed the active version and ten enabled skills. Installed base guidance was reopened: generic greeting commentary removed, short non-technical voice retained. The 0.2.6 fresh ordinary event request stayed in chat, created a private draft and offered the website preview; its draft was discarded and chat archived. Later wording updates remove the unnecessary approval-rule explanation. Instruction-plugin updates added no permissions.",
-          "pendingUpdate": "Source 0.2.9 adds current donation setup and Givebutter email-newsletter/signup workflows. Installed account still verified at 0.2.8; update the existing plugin after this source is accepted, then rehearse donation lookup and newsletter drafting in a fresh library chat."
+          "verifiedUpdate": "October 21: existing plugin updated in Safari by uploading the source 0.2.9 package. After full refresh, details and installed Manage both showed 0.2.9, all ten skills enabled; newsletter guidance reopened and read back. No permissions added.",
+          "donationRehearsal": {
+            "chat": "https://chatgpt.com/c/6ad952db-8b30-83e8-9861-f985f941d8f9",
+            "result": "Fresh chat read published Sanity donation settings and actual Givebutter campaign R62NJU; reported active and $0 successful donations October 1-21. No changes made. This verifies settings/reporting, not promotion of a pending website preview."
+          }
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -396,6 +399,7 @@
       "sender": "newsletter@cottonwoodlibrary.givebutter-mail.com",
       "signupSource": "src/content/newsletter-signup.json"
     },
-    "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged."
+    "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
+    "assistant": "Existing plugin 0.2.9 installed and read back; fresh campaign lookup/report passed. Combined newsletter draft rehearsal pending."
   }
 }
