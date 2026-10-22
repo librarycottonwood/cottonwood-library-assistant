@@ -185,6 +185,9 @@ test('local runtime: unconfigured service fails closed before contacting a provi
   try {
     const health = await f.request('/health'); assert.equal(health.status, 200); assert.equal((await health.json()).status, 'setup_pending');
     const hook = await f.webhook(); assert.equal(hook.status, 503); assert.equal((await hook.json()).status, 'setup_pending');
+    const review = await f.request('/review/11111111-1111-4111-8111-111111111111');
+    assert.equal(review.status, 503); assert.match(review.headers.get('Content-Type'), /text\/html/);
+    const page = await review.text(); assert.match(page, /Return to your library assistant/); assert.ok(!page.includes('setup_pending'));
     assert.equal(f.external.requests.length, 0);
   } finally {await f.mf.dispose();}
 });
@@ -300,7 +303,9 @@ test('local runtime: browser approval enforces session, origin, CSRF, exact hash
     const id = await f.previewReady();
     const authBefore = await f.request(`/operations/${id}/authorization`, {headers: {Authorization: `Bearer ${secrets.CMS_WORKFLOW_TOKEN}`}}); assert.equal(authBefore.status, 409);
     const session = await f.login(id); const values = await f.form(id, session.cookie);
-    assert.equal((await f.approve(id, '', values)).status, 401);
+    const expired = await f.approve(id, '', values);
+    assert.equal(expired.status, 401); assert.match(expired.headers.get('Content-Type'), /text\/html/);
+    assert.match(await expired.text(), /Sign in to review your update/);
     // The last base64url character can differ only in ignored padding bits.
     // Change the first signature character so the decoded HMAC always changes.
     const signatureAt = session.cookie.lastIndexOf('.') + 1;
@@ -315,6 +320,19 @@ test('local runtime: browser approval enforces session, origin, CSRF, exact hash
     assert.equal(publish.mode, 'publish'); assert.equal(publish.content_digest, content); assert.equal(publish.release_digest, release); assert.equal(publish.preview_run_id, '123456');
     const authAfter = await f.request(`/operations/${id}/authorization`, {headers: {Authorization: `Bearer ${secrets.CMS_WORKFLOW_TOKEN}`}});
     assert.equal(authAfter.status, 200); const receipt = await authAfter.json(); assert.equal(receipt.approved, true); assert.equal(receipt.publicationScope, 'cms-trial-only'); assert.equal(receipt.releaseDigest, release);
+  } finally {await f.mf.dispose();}
+});
+
+test('local runtime: a rejected review form returns a friendly page without publishing', async () => {
+  const f = fixture();
+  try {
+    const id = await f.previewReady(); const session = await f.login(id);
+    const response = await f.request(`/review/${id}/approve`, {method: 'POST', headers: {
+      Cookie: session.cookie, Origin: origin, 'Content-Type': 'application/x-www-form-urlencoded',
+    }, body: 'x'.repeat(5000)});
+    assert.equal(response.status, 503); assert.match(response.headers.get('Content-Type'), /text\/html/);
+    const body = await response.text(); assert.match(body, /Return to your library assistant/);
+    assert.ok(!body.includes('check_unavailable')); assert.equal(f.external.dispatches.length, 1);
   } finally {await f.mf.dispose();}
 });
 

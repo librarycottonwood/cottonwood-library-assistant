@@ -6,6 +6,7 @@ import {html, reviewResponse} from './review-page.mjs';
 
 const json = (value, status = 200) => Response.json(value, {status, headers: {'Cache-Control': 'no-store'}});
 const setupPending = () => json({status: 'setup_pending', summary: 'The library CMS connection is waiting for account setup. Your current website has not changed.'}, 503);
+const reviewProblem = (status = 503) => html('<h1>We couldn’t finish that step</h1><p>Return to your library assistant for help checking your update.</p>', status);
 function ledger(env, pathname, body) {
   const durable = env.CMS_LEDGER.get(env.CMS_LEDGER.idFromName('library-cms-v1'));
   return durable.fetch(`https://ledger.internal${pathname}`, body === undefined ? {} : {
@@ -43,7 +44,7 @@ export default {
           sourceSha: /^[a-f0-9]{40}$/.test(env.BUILD_SOURCE_SHA || '') ? env.BUILD_SOURCE_SHA : null,
           configurationOnly: true, scope: 'Configuration only; health is not proof of live publishing.'});
       }
-      if (!ready.webhook) return setupPending();
+      if (!ready.webhook) return url.pathname.startsWith('/review/') ? reviewProblem() : setupPending();
       if (url.origin !== env.PUBLIC_ORIGIN) return json({error: 'wrong_origin'}, 400);
       if (url.pathname === '/webhooks/sanity' && request.method === 'POST') {
         const signature = request.headers.get(SIGNATURE_HEADER_NAME);
@@ -86,13 +87,13 @@ export default {
         return await ledger(env, '/reconcile');
       }
       if (url.pathname === '/review/callback' && request.method === 'GET') {
-        if (!ready.review) return setupPending();
+        if (!ready.review) return reviewProblem();
         return await callback(request, env);
       }
       const review = url.pathname.match(/^\/review\/([^/]+)(?:\/(sign-in|approve|refresh))?$/);
       if (review && operationIdPattern.test(review[1])) {
         const [, id, action] = review;
-        if (!ready.review) return setupPending();
+        if (!ready.review) return reviewProblem();
         const session = await readSession(request, env.REVIEW_SESSION_SECRET);
         if (action === 'sign-in' && request.method === 'GET') {
           const start = await ledger(env, '/oauth/start', {operationId: id});
@@ -102,17 +103,16 @@ export default {
             'Set-Cookie': setCookie('__Host-cms_oauth', state, 600), 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer'}});
         }
         if (!session) {
-          if (request.method !== 'GET') return json({error: 'library_sign_in_required'}, 401);
-          return html(`<h1>Review a library website update</h1><p>Sign in with the library GitHub account to see the checked preview and approve it.</p><p><a href="/review/${escape(id)}/sign-in">Sign in to review</a></p>`);
+          return html(`<h1>Sign in to review your update</h1><p>Use the library GitHub account to continue.</p><p><a class="button" href="/review/${escape(id)}/sign-in">Sign in to review</a></p>`, request.method === 'GET' ? 200 : 401);
         }
         if (['approve', 'refresh'].includes(action) && request.method === 'POST') {
           if (request.headers.get('Origin') !== env.PUBLIC_ORIGIN || !request.headers.get('Content-Type')?.startsWith('application/x-www-form-urlencoded')) {
-            return json({error: 'invalid_review_request'}, 403);
+            return reviewProblem(403);
           }
           const form = new URLSearchParams(await limitedBody(request, 4096));
-          if (!(await sameSecret(form.get('csrf'), session.csrf))) return json({error: 'invalid_review_request'}, 403);
+          if (!(await sameSecret(form.get('csrf'), session.csrf))) return reviewProblem(403);
           const result = await ledger(env, `/operation/${id}/${action}`, {...Object.fromEntries(form), subject: session.subject});
-          if (!result.ok) return html('<h1>This preview could not be approved</h1><p>Content, website code, or its checked version may have changed. Return to the library assistant for a fresh preview.</p>', result.status);
+          if (!result.ok) return html('<h1>Your preview needs refreshing</h1><p>Return to your library assistant for a new preview.</p>', result.status);
           const next = await result.json();
           return new Response(null, {status: 303, headers: {Location: `${env.PUBLIC_ORIGIN}/review/${next.id}`, 'Cache-Control': 'no-store'}});
         }
@@ -125,6 +125,7 @@ export default {
       }
       return json({error: 'not_found'}, 404);
     } catch {
+      if (new URL(request.url).pathname.startsWith('/review/')) return reviewProblem();
       // Provider bodies and exceptions may contain credentials; only safe summaries leave here.
       return json({status: 'check_unavailable', summary: 'The website update could not be checked. Return to the library assistant for its current status.'}, 503);
     }
