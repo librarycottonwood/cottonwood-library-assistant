@@ -21,6 +21,8 @@ Never select an older Giving Tuesday campaign as the default just because it is 
 
 ## Email newsletter setup
 
+Engage email drafts and sending: https://dashboard.givebutter.com/accounts/170378/engage/email . Sender settings: https://dashboard.givebutter.com/accounts/170378/engage/settings/senders .
+
 Jaden chose a free Givebutter sending address with replies to `cottonlib@shasta.com`; no new custom-domain mailbox or paid service was requested.
 
 - Signup widget created: **Library Newsletter**, public widget ID `L4EVDm` (dashboard widget `107689`). Static, Email channel, Simple layout, first/last names optional.
