@@ -130,7 +130,19 @@
     },
     "cloudSetup": {
       "chat": "https://chatgpt.com/local/01a113de-0008-720f-b48f-f64648182038",
-      "status": "October 20: original editor starts new tasks, but the account rejects its Edit action with HTTP 403. A private recovery environment was prepared and published; a fresh task restored its tools and checked local phone layouts. Editor follow-ups still fail in Safari with DisposableStack. Earlier hosted preview/save/undo results below are historical; the interactive editor is not ready for handoff.",
+      "status": "October 21: the original cloud editor completed a new coding task and hosted a design preview. Safari follow-up submission fails with DisposableStack, matching an open upstream Codex Web bug. Record this as an external client issue, preserve the prepared cloud environment, and verify the library's actual computer/browser before handoff. The environment Edit failure remains separately unresolved. Earlier preview/save/undo rehearsals do not establish current handoff readiness.",
+      "externalClientIssue": {
+        "verifiedOn": "2026-10-21 America/Los_Angeles",
+        "classification": "External Safari/Codex Web client compatibility bug; repository code cannot repair OpenAI's hosted interface.",
+        "upstream": "https://github.com/openai/codex/issues/55361",
+        "relatedReport": "https://github.com/openai/codex/issues/55271",
+        "upstreamState": "Both OPEN when checked October 21.",
+        "reproduction": "Safari 27.0.1 on this Mac: an initial task and Cloudflare preview succeeded; follow-up message submission failed with Can't find variable: DisposableStack, including after an origin reload.",
+        "separateIssue": "The environment Edit action also failed; its cause is not established by the Safari follow-up report.",
+        "libraryDevice": "Unknown. Jaden expects a non-Mac computer and likely Chrome; neither the device nor browser has been confirmed or tested.",
+        "decision": "Retain Chat for questions, Work/Sanity for content, and Codex with the existing cloud environment for code. The exploratory Work-to-code preview bridge was withdrawn from the draft and was never enabled.",
+        "handoffCheck": "On the library's actual device and browser, open the existing cloud environment, complete a first request and follow-up, and review a real hosted preview. Complete the remaining save/undo acceptance checks before claiming full handoff readiness. Do not claim Chrome or Edge works for this account until tested."
+      },
       "recovery": {
         "environment": "cottonwood-library-editor-recovery",
         "setupChat": "https://chatgpt.com/local/01a15cc5-f116-764a-815f-82fd4798f008?hostId=local",
@@ -261,13 +273,14 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.9",
+          "sourceVersion": "0.2.10",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
           "verifiedUpdate": "October 21: existing plugin updated in Safari by uploading the source 0.2.9 package. After full refresh, details and installed Manage both showed 0.2.9, all ten skills enabled; newsletter guidance reopened and read back. No permissions added.",
           "donationRehearsal": {
             "chat": "https://chatgpt.com/c/6ad952db-8b30-83e8-9861-f985f941d8f9",
             "result": "Fresh chat read published Sanity donation settings and actual Givebutter campaign R62NJU; reported active and $0 successful donations October 1-21. No changes made. This verifies settings/reporting, not promotion of a pending website preview."
-          }
+          },
+          "pendingUpdate": "Release 0.2.10 combines the donation/newsletter guidance with PR33 preview-link and Chat/Work/Codex routing corrections. Installed 0.2.9 was verified earlier today; update after this source is merged."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -299,6 +312,19 @@
         "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container",
         "latestPublishRun": "37570642969",
         "retirementWorkflow": "retire-old-demo.yml"
+      },
+      "safariRecheck": {
+        "asOf": "2026-10-21 America/Los_Angeles",
+        "browser": "Safari 27.0.1 (22625.1.29.11.28)",
+        "codex": "First request created a design preview; follow-up submission still failed with DisposableStack after an origin reload. The original environment Edit action still failed. No browser flags or security settings were changed.",
+        "codexChat": "https://chatgpt.com/local/01a15d8a-08ea-7466-8f1f-964bbaea3039",
+        "work": "The Work toggle was verified. Ordinary code-edit requests and follow-up corrections completed in that conversation. After explicit draft-save approval, GitHub read-back confirmed four changed source/test files on a private draft branch; no main or live publisher update.",
+        "workChat": "https://chatgpt.com/c/6ad87754-c500-83e8-a4b8-540484c7031d",
+        "branch": "draft/simple-website-approval-2026-10-21",
+        "draftSource": "78dc0f735ba731c6a1d8d711fe38fdf8999e671d",
+        "limits": "The Codex Safari client remains unresolved. This record establishes draft editing/saving, not source merge, live publisher deployment or a repaired Codex client.",
+        "workPreviewAccess": "The code draft did not produce a verified preview through the existing coding environment. Work created a separate Sites mockup, then reported deleting it when corrected. Asking it to use the existing environment instead opened a separate cloud-browser ChatGPT sign-in. That attempt was cancelled; no built-in Work-to-Codex handoff was established.",
+        "sourcePreviewRepair": "Exploratory Work-to-code preview bridge withdrawn from the draft after clarifying that code work stays in the existing Codex cloud environment. Never merged or enabled. Its draft history is retained in Git; it is not part of the library workflow."
       }
     }
   },
@@ -372,10 +398,20 @@
         "result": "Fresh normal request created a private draft, called it your event draft and asked about preparing the website preview without sending the volunteer to Studio. It added an unwanted explanation of the approval rule, corrected in installed version 0.2.7.",
         "cleanup": "Draft discarded; chat archived.",
         "evidence": "output/sanity-workflow/plugin-0.2.6-fresh-wizard.txt"
+      },
+      "endToEndTrial": {
+        "asOf": "2026-10-21 America/Los_Angeles",
+        "mode": "ChatGPT Work in the library Safari account; not Chat-only or the Codex screen",
+        "chat": "https://chatgpt.com/c/6ad86523-8410-83e8-91d6-fe622ad33850",
+        "event": "Volunteer planning meeting; November 10, 2026, 10\u201311:30 a.m. Pacific",
+        "verified": "Ordinary request, required start/end questions, real CMS draft, end-time correction, checked preview, authenticated approval, trial publication, matching hosted fingerprints, and actual Safari navigation through the event list to its detail page.",
+        "operationId": "dc46f128-9cb7-49bd-8d3b-fe34225a3a7b",
+        "publishRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39563499106",
+        "scope": "Isolated CMS trial only. Recovery/restore acceptance and public launch were not tested."
       }
     }
   },
-  "communicationsOctober21": {
+  "communicationsOctober 21": {
     "checkedAt": "2026-10-21 America/Los_Angeles",
     "generalDonations": {
       "campaign": "Support Your Local Library",
@@ -385,9 +421,9 @@
       "status": "Active; no fixed goal; automatic goal stretching off",
       "cmsDocument": "library-settings",
       "cmsRevision": "pEm1g3Ky8RMV9RqQGt428f",
-      "preview": "https://0a7c3423.cottonwood-library-trial-preview.pages.dev/",
-      "previewRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39644721051",
-      "verification": "Hosted desktop and 390px phone Donate clicks opened the real campaign checkout without navigation; no payment submitted. Authenticated save-to-trial approval pending."
+      "preview": "https://b0edf3b0.cottonwood-library-trial-preview.pages.dev/",
+      "previewRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39698463728",
+      "verification": "Exact checked release 095c8809236035d62c20e38f8e5f27a7a85d90bfb09c4174bdbccd4a8affae7a approved through the authenticated page and deployed/verified by run 39699898818. Hosted trial status matches operation 2ca87551-2750-4229-8131-24d69ef7e53d and source 32867261faa7f69e0165aee61827365a90b67c87. Real checkout tested desktop/phone; no payment."
     },
     "newsletter": {
       "widget": "Library Newsletter",
@@ -395,11 +431,12 @@
       "configuration": "Static signup; Email channel; Simple layout; first/last names optional",
       "sendingDomain": "cottonwoodlibrary.givebutter-mail.com",
       "replyTo": "cottonlib@shasta.com",
-      "state": "Free domain Connected; desired sender verified. Existing logo, #193B32 color, website logo link and organization PO Box address saved. Real embedded form loaded locally. Signup submission, inbox delivery, checked website approval and installed Assistant update remain pending; no email sent.",
+      "state": "Domain Connected, correct sender verified, branding and organization PO Box address saved. Actual signup submitted with approved inbox and Terms confirmation; sole recipient read back in newsletter widget audience. User confirmed the test email arrived. Unsubscribe-link rehearsal remains open. Typo sender removed with explicit authorization. Website integration is deployed to the saved trial.",
       "sender": "newsletter@cottonwoodlibrary.givebutter-mail.com",
-      "signupSource": "src/content/newsletter-signup.json"
+      "signupSource": "src/content/newsletter-signup.json",
+      "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter)"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
-    "assistant": "Existing plugin 0.2.9 installed and read back; fresh campaign lookup/report passed. Combined newsletter draft rehearsal pending."
+    "assistant": "Installed 0.2.9: fresh donation report, newsletter draft using actual CMS/PDF/sender/audience, and unscheduled TEST ONLY Facebook draft passed. Source 0.2.10 adds the preview-link/routing corrections; installation pending."
   }
 }
