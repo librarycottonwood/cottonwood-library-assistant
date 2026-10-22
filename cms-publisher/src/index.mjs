@@ -1,4 +1,3 @@
-export {ChatPublishing} from './chat-publishing.mjs';
 import {isValidSignature, decodeSignatureHeader, SIGNATURE_HEADER_NAME} from '@sanity/webhook';
 import {readiness, parseEvent, operationIdPattern} from './contract.mjs';
 import {authorized, limitedBody, readSession, signSession, sameSecret, cookie, setCookie, escape} from './security.mjs';
@@ -40,7 +39,7 @@ export default {
       const url = new URL(request.url);
       const ready = readiness(env);
       if (url.pathname === '/health' && request.method === 'GET') {
-        return json({service: 'Cottonwood Library CMS publishing', version: '0.2.0', chatPublishing: true,
+        return json({service: 'Cottonwood Library CMS publishing', version: '0.3.0', chatPublishing: false,
           status: ready.webhook && ready.review ? 'configured' : 'setup_pending',
           sourceSha: /^[a-f0-9]{40}$/.test(env.BUILD_SOURCE_SHA || '') ? env.BUILD_SOURCE_SHA : null,
           configurationOnly: true, scope: 'Configuration only; health is not proof of live publishing.'});
@@ -78,6 +77,10 @@ export default {
         }
         if ((!action || action === 'authorization' || action === 'context') && request.method === 'GET') return await ledger(env, `/operation/${id}${action ? '/' + action : ''}`);
         return json({error: 'method_not_allowed'}, 405);
+      }
+      if (url.pathname === '/source-release' && request.method === 'POST') {
+        if (!(await authorized(request, env.CMS_WORKFLOW_TOKEN))) return json({error: 'authorization_required'}, 401);
+        return await ledger(env, '/source-release', JSON.parse(await limitedBody(request)));
       }
       if (url.pathname === '/monitor' && request.method === 'POST') {
         if (!(await authorized(request, env.CMS_STATUS_TOKEN))) return json({error: 'authorization_required'}, 401);

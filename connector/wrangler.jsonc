@@ -8,6 +8,5 @@
   "workers_dev": true,
   "observability": {"enabled": false},
   "vars": {"GOOGLE_OAUTH_CLIENT_ID":"752467633750-bq3om43561a83qvocko763cicfahu79p.apps.googleusercontent.com","GOOGLE_OAUTH_PUBLISHING_STATUS":"production","GITHUB_CLIENT_ID":"Ov23lif1ZStX5NHKSRrk"},
-  "services": [{"binding": "CMS_PUBLISHER", "service": "cottonwood-library-cms-publisher", "entrypoint": "ChatPublishing"}],
   "kv_namespaces": [{"binding": "OAUTH_KV", "id": "9041250d025b468aa265c1a81296ff2e"}]
 }

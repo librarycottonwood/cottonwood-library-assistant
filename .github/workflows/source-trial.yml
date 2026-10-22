@@ -1,0 +1,50 @@
+name: Preview and save library PR
+on:
+  workflow_run:
+    workflows: ['Verify library website']
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+# Same lock as CMS promotions. Neither path can overwrite the other's rollback.
+concurrency:
+  group: library-cms-trial-publishing
+  cancel-in-progress: false
+jobs:
+  deliver:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Never check out PR code in this credential-bearing job.
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Validate PR artifact, preview it, and promote only an approved merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIBRARY_CONTENT_SOURCE: sanity
+          SANITY_PROJECT_ID: 2ou0xy2r
+          SANITY_DATASET: production
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+          CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
+          CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
+        run: node scripts/source-trial.mjs deliver
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: library-source-trial-result
+          path: |
+            output/source-trial-result.json
+            output/cms/publish-result.json
+          retention-days: 7
+          if-no-files-found: warn

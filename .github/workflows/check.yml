@@ -21,7 +21,7 @@ jobs:
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs scripts/images.test.mjs scripts/retire-old-demo.test.mjs
+      - run: node --test scripts/release.test.mjs scripts/source-trial.test.mjs scripts/images.test.mjs scripts/retire-old-demo.test.mjs
       - run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
         env:
@@ -43,6 +43,41 @@ jobs:
           name: library-preview-and-screenshots
           path: output/
           retention-days: 7
+  pr-preview:
+    # Public published content only; no CMS, GitHub-write or hosting secrets.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LIBRARY_CONTENT_SOURCE: sanity
+      SANITY_PROJECT_ID: 2ou0xy2r
+      SANITY_DATASET: production
+      SANITY_SNAPSHOT_PATH: ${{ github.workspace }}/output/cms/snapshot.json
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm cms:snapshot --out output/cms/snapshot.json
+      - run: pnpm check && pnpm build
+      - run: node scripts/source-trial.mjs bundle
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: library-pr-checked-preview
+          path: |
+            output/cms/operation.json
+            output/cms/snapshot.json
+            output/releases/
+            output/playwright/
+          retention-days: 7
+          if-no-files-found: error
   cms-live:
     needs: verify
     # This is separate from fixture/source checks. No account setup, imports,

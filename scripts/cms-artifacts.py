@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 REPO = 'librarycottonwood/cottonwood-library-assistant'
-NAMES = ('library-preview-and-screenshots', 'library-cms-checked-preview')
+NAMES = ('library-preview-and-screenshots', 'library-cms-checked-preview', 'library-pr-checked-preview', 'library-source-trial-result')
 
 def selection(artifacts, reserve=0):
     active = sorted((a for a in artifacts if a['name'] in NAMES and not a['expired']),

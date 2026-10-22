@@ -4,7 +4,7 @@ export const TIMEZONE = 'America/Los_Angeles';
 export class ReportError extends Error {
   constructor(code, message) { super(message); this.code = code; }
 }
-// Repairable protocol/presentation code sees no bearer token, cookies, grant
+// Protocol/presentation code sees no bearer token, cookies, grant
 // metadata or secret bindings. Authorization was enforced by the fixed wrapper.
 export function credentialFreeMcpCall(request, ctx) {
   const headers = new Headers();
@@ -13,7 +13,7 @@ export function credentialFreeMcpCall(request, ctx) {
   }
   return {
     request: new Request(request,{headers}),
-    context: {auth:{scope:[...ctx.auth.scope],userId:ctx.auth.userId},props:{login:ctx.props.login}},
+    context: {auth:{scope:[...ctx.auth.scope]},props:{login:ctx.props.login}},
   };
 }
 // Tracked button clicks on the library website (see src/components/Analytics.astro).

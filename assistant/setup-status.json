@@ -1,4 +1,24 @@
 {
+  "workflowRestorationOctober22": {
+    "status": "Prepared in an isolated PR; not merged, deployed or installed until its separate acceptance evidence is recorded.",
+    "repository": "librarycottonwood/cottonwood-library-assistant",
+    "baselineMain": "0ffcfea58a2ab8aa646f5ca80b7a53903940acf7",
+    "sourcePluginVersion": "0.2.12",
+    "lastObservedInstalledPluginVersion": "0.2.11",
+    "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact trial promotion and verification; task-owned cleanup.",
+    "detour": "Website MCP tools, scopes and service binding removed in restoration source. PR35/36 had no successful native chat preview/save acceptance. Reporting remains read-only.",
+    "publisherFailure": "Run 39710072999 failed and rolled back; its log hid the underlying failure. Source now adds bounded readiness retries, public diagnostics and rollback health verification. No blind redeploy was performed.",
+    "savedTrialBaseline": {
+      "sourceSha": "32867261faa7f69e0165aee61827365a90b67c87",
+      "releaseDigest": "095c8809236035d62c20e38f8e5f27a7a85d90bfb09c4174bdbccd4a8affae7a"
+    },
+    "remaining": [
+      "Approval and merge of restoration PR",
+      "First trusted-main preview/save and deployed Worker verification",
+      "Installed 0.2.12 and reporting-only app metadata readback",
+      "Actual library device/browser and recovery/backup rehearsal"
+    ]
+  },
   "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
   "previewProject": "cottonwood-library-preview",
@@ -273,7 +293,7 @@
           "explicitInvocationRequiredInTests": false,
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
-          "sourceVersion": "0.2.11",
+          "sourceVersion": "0.2.12",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
           "verifiedUpdate": "October 21: existing plugin updated to 0.2.11; full refresh showed the new version and its installed base instructions were reopened with in-chat preview/save guidance. Earlier verification: updated to 0.2.10 in the library Safari account. Full refresh and installed Manage showed 0.2.10 with all ten skills enabled. Base instructions reopened: donation/newsletter guidance retained, preview links preferred, design/code routed to the prepared Codex environment. No permissions added.",
           "donationRehearsal": {
@@ -283,7 +303,8 @@
           "routingRehearsal": {
             "chat": "https://chatgpt.com/c/6ad95cad-c030-83e8-a9ca-e03fc472bb4e",
             "result": "Fresh ordinary question correctly routed website colors to Codex and news posts to ChatGPT Work/Sanity. No changes made. Rehearsal chat archived after evidence capture."
-          }
+          },
+          "sourceUpdatePending": "Restoration PR requires merge, verified workflow and installed version readback."
         },
         "maintenanceProject": {
           "url": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
@@ -351,7 +372,7 @@
     "contentSource": "sanity; GitHub repository variable enabled after complete published content and webhook setup. Local seed files are migration/recovery inputs.",
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
-    "plugin": "Cottonwood Library instruction plugin 0.2.8 installed and read back October 20. The separate official Sanity plugin 1.0.0 was authorized in the actual library Plus account. Actual read, private event-draft create, end-time correction and discard succeeded in normal Safari chat. A fresh ordinary request with updated instructions stayed in chat and offered the website preview; that draft was also discarded. No event was published by these rehearsals. Full ChatGPT-to-website approval/deployment and recovery remain separate acceptance checks.",
+    "plugin": "Last observed installed instruction plugin: 0.2.11 on October 21, containing rejected website MCP guidance. Restoration source is 0.2.12; not installed by editing this file. Official Sanity connection/draft rehearsals remain as separately dated evidence below.",
     "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
@@ -385,7 +406,7 @@
         "liveReadback": "Publisher health matched the checked source. Actual authenticated Safari review for operation 2ca87551-2750-4229-8131-24d69ef7e53d displayed Your update is saved, the preview link, and no record IDs/hashes. Signed-out live browser showed the branded sign-in page. Ready, saved and failure layouts checked locally on desktop/phone; 24 local runtime tests and exact-head CI passed."
       },
       "chatIntegration": {
-        "status": "PR35 merged and both services deployed source 038d92dbf6dee1cb17e72c0eb8ea5c67c4656fb7. Instruction plugin 0.2.11 installed/read back and connector tools refreshed. Live ChatGPT reconnect requested only Analytics scope; discovery correction and real in-chat preview/save acceptance remain pending.",
+        "status": "Historical rejected detour: PR35/36 merged, 0.2.11 installed, both account rehearsals failed at reconnect. No successful native chat preview or save. Restoration source retires these tools; deployment and installed-account update are separate.",
         "chat": "https://chatgpt.com/c/6ad96c2f-457c-83e8-a50f-21b3d2ee1e50",
         "connectorName": "Library Website & Reports",
         "writeConfirmation": "Actual ChatGPT connector permission set to Allow read-only tools: reads proceed, writes ask for confirmation in chat.",

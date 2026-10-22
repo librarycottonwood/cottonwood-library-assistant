@@ -15,6 +15,8 @@ General-donation campaign **Support Your Local Library / R62NJU** is active. Its
 - [x] Existing Assistant 0.2.10 installed and read back; actual campaign reporting, newsletter drafting, private Facebook draft and fresh Chat/Work/Codex routing rehearsed. Simplified approval service deployed and checked in Safari.
 - [ ] Preserve domain baseline and choose the separate production publishing route; keep public forwarding unchanged.
 
+- [ ] Complete the October 22 PR workflow restoration: verify its first approved merge/save, then install/read back the updated instructions and reporting-only app metadata. Real-device and recovery acceptance remain separate.
+
 ## Week of October 26: feedback, content and accessibility
 
 - [ ] Other redesign chat: vibrant colors, new/approved hero direction, new photos and reviewed layouts. Review its exact current PR and integrate donation/signup settings without overwriting work.

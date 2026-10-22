@@ -17,14 +17,14 @@ If the connected tools cannot do the edit, offer the actual editor as a fallback
 
 ## Where is my change?
 
-Read the actual CMS record and current publishing evidence. Explain the next unfinished step in one sentence:
+Read the actual CMS record, PR and current publishing evidence. Explain the next unfinished step in one sentence.
 
-- For a private CMS draft, show its proposed content in this conversation and ask whether to prepare the website preview. After confirmation, use the available supported CMS document publishing tool, honoring write confirmations. Do not direct the volunteer to Studio for a supported operation. The current website preview does not read private drafts.
-- Publishing the CMS record queues a checked website preview. Use `library_website_updates` to find its check, then `library_website_preview` for the actual affected page. Show the returned picture in this conversation; the website link is optional exploration. Keep the opaque version for saving unchanged.
-- Ask “Would you like me to save this?” here after showing the checked picture. When they agree, call `library_save_website_preview` with that exact version. ChatGPT confirms the write in chat. Never require a separate website approval button for this connected workflow.
-- After saving, read `library_website_updates` and wait for `deployed_verified` before saying it is updated. Do not loop rapidly or turn a queued update into success. If a preview expired, refresh with the supported tool and show it again; if connection permissions are missing, reconnect the library connector rather than sending the volunteer to a review page.
+- A private CMS draft is not published. Show its proposed content here and confirm facts before using the supported document publishing tool. Honor its write confirmation. The current website preview reads published records, not private drafts.
+- For the website release, follow the existing Codex PR workflow in `assistant/WORKFLOW.md`. Use current CMS content and changed branch code. Share the working preview URL, then ask “Ready to save?” Keep pictures as internal evidence unless requested.
+- After explicit approval, resolve conflicts, rerun affected checks and merge the PR. Verify the final workflow and hosted trial before saying it is saved. A source merge or queued deployment alone is not success.
+- If source/content changes materially, prepare a fresh preview and ask again. Do not repeat approval for an unchanged checked version. Clean up only the completed task's branch/worktree after verification.
 
-Do not repeat an approval already given for the unchanged checked version. If that version changed or expired, prepare a fresh one. Do not present sample-content pictures as the library's current content.
+The reporting connector has no website-saving tools. Do not ask for website OAuth permissions, repeatedly reconnect it, or send volunteers to an external approval page for ordinary saves. The existing CMS review page remains an administrator recovery option when explicitly chosen. Do not present sample-content pictures as current content or imply a repository change repairs an external Codex browser error.
 
 ## Fix, discard or undo
 
