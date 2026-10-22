@@ -11,9 +11,8 @@ change website code to conceal it. Make the smallest necessary technical fix.
 Do not change public wording, hours, events, donation settings, imagery choices,
 account settings, billing, domain settings, credentials, GitHub workflows, tests,
 or safety checks. Allowed automatic repair files are src/components/**,
-src/layouts/**, src/styles/**, package.json, pnpm-lock.yaml,
-connector/package.json, connector/package-lock.json, connector/src/mcp.mjs
-and connector/src/format.mjs. Package changes may only update existing exact
+src/layouts/**, src/styles/**, package.json and pnpm-lock.yaml.
+Package changes may only update existing exact
 dependency versions, never scripts, package metadata, or new dependencies.
 Technical CMS adapter fixes may change only src/content/sanity.mjs and
 src/content/repository.ts. Preserve published-only reads, strict validation,
@@ -23,10 +22,10 @@ Studio dependency repairs may update only existing exact versions in
 studio/package.json and its pnpm-lock.yaml; never change forms, schema or content.
 The publishing service, its authentication, its tests and all deployment
 workflows require reviewed changes and remain outside automatic repair scope.
-For the Analytics connector,
-fix only protocol handling or report presentation; never change authentication,
-property selection, report request permissions, secrets, hosting configuration,
-or logging. Account/permission failures need human attention, not code repair.
+The entire combined report/website connector, including formatting, protocol and
+dependencies, is outside automatic repair scope because its Worker can invoke
+the private publishing service. Connector fixes require reviewed changes.
+Account/permission failures need guided recovery, not code repair.
 Preserve the site's
 appearance and visitor behavior. Do not upgrade packages merely because a newer
 version exists. If the necessary fix falls outside this scope, explain the issue

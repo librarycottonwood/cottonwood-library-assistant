@@ -24,9 +24,9 @@ def output(name, value):
         f.write(f'{name}={value}\n')
 
 def allowed(path):
-    # Connector authorization, credentials, request policy and publishing remain
-    # outside the repair scope. Its protocol handler receives no secret bindings.
-    return path in ('package.json', 'pnpm-lock.yaml', 'connector/package.json', 'connector/package-lock.json', 'connector/src/mcp.mjs', 'connector/src/format.mjs', 'src/content/sanity.mjs', 'src/content/repository.ts', 'studio/package.json', 'studio/pnpm-lock.yaml') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
+    # The combined connector has a private publishing service binding. Every module
+    # in that Worker shares its runtime authority, so none is auto-repairable.
+    return path in ('package.json', 'pnpm-lock.yaml', 'src/content/sanity.mjs', 'src/content/repository.ts', 'studio/package.json', 'studio/pnpm-lock.yaml') or path.startswith(('src/components/', 'src/layouts/', 'src/styles/'))
 
 mode = sys.argv[1] if __name__ == '__main__' else None
 if mode == 'prepare':

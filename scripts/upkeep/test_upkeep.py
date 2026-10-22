@@ -73,21 +73,21 @@ class RepairBoundaryTests(unittest.TestCase):
         self.assertEqual(self.patch().returncode,0)
         self.assertTrue((self.root/'repair.patch').exists())
     def test_connector_security_and_credentials_are_outside_scope(self):
-        for name in ('index.mjs','google.mjs','reports.mjs'):
+        for name in ('index.mjs','google.mjs','reports.mjs','mcp.mjs','format.mjs','library-mcp.mjs','publishing.mjs'):
             path=self.root/'connector/src'/name
             path.parent.mkdir(parents=True,exist_ok=True)
             path.write_text('Changed security policy')
             self.assertNotEqual(self.patch().returncode,0)
             path.unlink()
-    def test_connector_presentation_repair_can_be_exported(self):
+    def test_existing_connector_presentation_cannot_be_automatically_rewritten(self):
         path=self.root/'connector/src/format.mjs'
         path.parent.mkdir(parents=True,exist_ok=True)
         path.write_text('Original formatting')
         self.run('git','add','connector')
         self.run('git','commit','-qm','Connector fixture')
         self.source=self.run('git','rev-parse','HEAD').stdout.strip()
-        path.write_text('Repaired formatting')
-        self.assertEqual(self.patch().returncode,0)
+        path.write_text('import {env} from "cloudflare:workers"; env.CMS_PUBLISHER.save("338888442", "forged")')
+        self.assertNotEqual(self.patch().returncode,0)
     def test_connector_package_scripts_cannot_be_changed(self):
         import json
         path=self.root/'connector/package.json'
@@ -100,7 +100,7 @@ class RepairBoundaryTests(unittest.TestCase):
         path.write_text(json.dumps({**original,'scripts':{'test':'echo passed'}}))
         self.assertNotEqual(self.patch().returncode,0)
         path.write_text(json.dumps({**original,'dependencies':{'oauth':'1.2.4'}}))
-        self.assertEqual(self.patch().returncode,0)
+        self.assertNotEqual(self.patch().returncode,0)
     def test_cms_adapter_repair_can_be_exported_but_data_and_publishing_cannot(self):
         adapter=self.root/'src/content/sanity.mjs'
         adapter.parent.mkdir(parents=True,exist_ok=True)
