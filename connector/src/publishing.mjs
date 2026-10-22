@@ -1,10 +1,11 @@
 const schema = properties => ({type: 'object', properties, additionalProperties: false});
 const annotations = readOnlyHint => ({readOnlyHint, destructiveHint: !readOnlyHint, idempotentHint: true, openWorldHint: false});
 const makeTool = (name, title, description, inputSchema, scope, readOnly = true) => ({name, title, description, inputSchema,
-  annotations: annotations(readOnly), securitySchemes: [{type: 'oauth2', scopes: ['analytics:read', scope]}]});
+  annotations: annotations(readOnly), securitySchemes: [{type: 'oauth2', scopes: ['analytics:read', scope]}],
+  _meta: {securitySchemes: [{type: 'oauth2', scopes: ['analytics:read', scope]}]}});
 export const publishingTools = [
   makeTool('library_website_updates', 'Check library website updates', 'Read recent website preview/save status and the last verified saved website. Use to find a pending update and to verify completion after saving. Do not call a queued update saved.', schema({}), 'website:read'),
-  makeTool('library_website_preview', 'Show library website preview', 'Show the actual checked website screenshot IN CHAT before asking whether to save. Returns an image, optional exploration link, and an opaque version for saving this exact preview. Keep version and internal IDs out of volunteer prose. Use route to show the page affected by the change, from available_pages. Defaults to the homepage of the newest update; never substitute an older version when the newest is still checking. Ask for save approval in chat after showing the image.', schema({
+  makeTool('library_website_preview', 'Show library website preview', 'Show the actual checked website screenshot IN CHAT before asking whether to save. Returns an image (embed image_url in the reply if the host does not display native tool images), optional exploration link, and an opaque version for saving this exact preview. Keep version and internal IDs out of volunteer prose. Use route to show the page affected by the change, from available_pages. Defaults to the homepage of the newest update; never substitute an older version when the newest is still checking. Ask for save approval in chat after showing the image.', schema({
     update_id: {type: 'string', description: 'Optional update ID from library_website_updates; omit for the newest update.'},
     route: {type: 'string', description: 'Exact website page path, e.g. /librarynews/newsletter/. Choose from available_pages; defaults to /.'},
     view: {type: 'string', enum: ['desktop', 'phone'], description: 'Computer preview by default; phone on request.'},

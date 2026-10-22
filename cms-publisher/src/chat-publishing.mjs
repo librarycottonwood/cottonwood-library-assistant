@@ -65,7 +65,7 @@ export class ChatPublishing extends WorkerEntrypoint {
     let binary = '';
     for (let offset = 0; offset < bytes.length; offset += 8192) binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
     const result = {update_id: updateId, status: operation.status, summary: operation.summary,
-      preview_url: new URL(route, operation.previewUrl).href, view, route,
+      preview_url: new URL(route, operation.previewUrl).href, image_url: `${operation.previewUrl}_review/${filename}`, view, route,
       available_pages: (evidence.evidence || []).filter(item => item.name === view).map(item => ({route:item.route,title:item.heading})), image: {type: 'image', mimeType: 'image/png', data: btoa(binary)}};
     if (operation.status === 'review_required') result.version = await signSession({
       kind: 'chat-preview', subject, expiresAt: Date.now() + 3600000, updateId,

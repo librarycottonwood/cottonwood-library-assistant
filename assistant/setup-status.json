@@ -265,7 +265,7 @@
         "plugin": {
           "id": "Plugin_6618ebfc678081919990dac0bae0f0c6",
           "url": "https://chatgpt.com/plugins/Plugin_6618ebfc678081919990dac0bae0f0c6",
-          "version": "0.2.10",
+          "version": "0.2.11",
           "installed": true,
           "source": "plugins/cottonwood-library",
           "codexTest": "https://chatgpt.com/local/01a114a8-fbef-7501-92c7-bf9c63faa00f",
@@ -274,9 +274,8 @@
           "handoffTest": "https://chatgpt.com/c/6ac5d0c2-0fcc-83e8-a98e-ce7c4b0e5126",
           "draftTest": "https://78d676de.cottonwood-library-trial-preview.pages.dev/",
           "sourceVersion": "0.2.11",
-          "pendingUpdate": "In-chat checked page previews and authenticated exact-version saves. Source implemented; account rollout and native save rehearsal pending.",
           "previousReleaseId": "pluginrel_6ac5d07129048191bc0dd86f38a89611",
-          "verifiedUpdate": "October 21: existing plugin updated to 0.2.10 in the library Safari account. Full refresh and installed Manage showed 0.2.10 with all ten skills enabled. Base instructions reopened: donation/newsletter guidance retained, preview links preferred, design/code routed to the prepared Codex environment. No permissions added.",
+          "verifiedUpdate": "October 21: existing plugin updated to 0.2.11; full refresh showed the new version and its installed base instructions were reopened with in-chat preview/save guidance. Earlier verification: updated to 0.2.10 in the library Safari account. Full refresh and installed Manage showed 0.2.10 with all ten skills enabled. Base instructions reopened: donation/newsletter guidance retained, preview links preferred, design/code routed to the prepared Codex environment. No permissions added.",
           "donationRehearsal": {
             "chat": "https://chatgpt.com/c/6ad952db-8b30-83e8-9861-f985f941d8f9",
             "result": "Fresh chat read published Sanity donation settings and actual Givebutter campaign R62NJU; reported active and $0 successful donations October 1-21. No changes made. This verifies settings/reporting, not promotion of a pending website preview."
@@ -386,7 +385,10 @@
         "liveReadback": "Publisher health matched the checked source. Actual authenticated Safari review for operation 2ca87551-2750-4229-8131-24d69ef7e53d displayed Your update is saved, the preview link, and no record IDs/hashes. Signed-out live browser showed the branded sign-in page. Ready, saved and failure layouts checked locally on desktop/phone; 24 local runtime tests and exact-head CI passed."
       },
       "chatIntegration": {
-        "status": "Implementation prepared; deployment, installed tools/scopes and real in-chat preview/save acceptance pending.",
+        "status": "PR35 merged and both services deployed source 038d92dbf6dee1cb17e72c0eb8ea5c67c4656fb7. Instruction plugin 0.2.11 installed/read back and connector tools refreshed. Live ChatGPT reconnect requested only Analytics scope; discovery correction and real in-chat preview/save acceptance remain pending.",
+        "chat": "https://chatgpt.com/c/6ad96c2f-457c-83e8-a50f-21b3d2ee1e50",
+        "connectorName": "Library Website & Reports",
+        "writeConfirmation": "Actual ChatGPT connector permission set to Allow read-only tools: reads proceed, writes ask for confirmation in chat.",
         "connector": "https://cottonwood-library-analytics.librarycottonwood.workers.dev/mcp",
         "tools": [
           "library_website_updates",

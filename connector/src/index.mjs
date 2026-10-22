@@ -70,7 +70,7 @@ export default new OAuthProvider({
     }, env.CMS_PUBLISHER);
   }},defaultHandler,
   authorizeEndpoint:'/authorize',tokenEndpoint:'/oauth/token',clientRegistrationEndpoint:'/oauth/register',
-  scopesSupported:scopes,requiredScopes:['analytics:read'],
+  scopesSupported:scopes,requiredScopes:['analytics:read','website:read','website:save'],
   resourceMetadata:{resource:ORIGIN+'/mcp',authorization_servers:[ORIGIN]},
   clientIdMetadataDocumentEnabled:true,accessTokenTTL:3600,
   refreshTokenTTL:31536000,refreshTokenIdleTTL:31536000,

@@ -33,5 +33,5 @@ test('save uses exact opaque version and provider failures cannot leak secrets',
   const invalid=await call('library_save_website_preview',{version:'x',subject:'338888442'},ctx,{save(){throw Error('must not execute');}});assert.equal(invalid.isError,true);
 });
 test('save and prepare are declared writes for native ChatGPT confirmation',()=>{
-  for(const tool of publishingTools){assert.equal(tool.annotations.readOnlyHint,!/save_|prepare_/.test(tool.name));assert.equal(tool.securitySchemes[0].type,'oauth2');}
+  for(const tool of publishingTools){assert.equal(tool.annotations.readOnlyHint,!/save_|prepare_/.test(tool.name));assert.equal(tool.securitySchemes[0].type,'oauth2');assert.deepEqual(tool._meta.securitySchemes,tool.securitySchemes);}
 });

@@ -14,7 +14,7 @@ test('real Workers runtime enforces OAuth discovery, PKCE, consent cookies and C
     exports:{},
   },dev:{rootPath:process.cwd(),outboundService:{type:'fetcher',handler:async request=>{if(request.url==='https://github.com/login/oauth/access_token')return Response.json({access_token:'fixture-upstream-discarded'});if(request.url==='https://api.github.com/user')return Response.json({id:338888442,login:'librarycottonwood'});throw Error('Unexpected fixture provider');}}}}]});
   try {
-    const resource=await mf.dispatchFetch(origin+'/.well-known/oauth-protected-resource/mcp');assert.equal(resource.status,200);assert.deepEqual((await resource.json()).scopes_supported,['analytics:read']);
+    const resource=await mf.dispatchFetch(origin+'/.well-known/oauth-protected-resource/mcp');assert.equal(resource.status,200);assert.deepEqual((await resource.json()).scopes_supported,['analytics:read','website:read','website:save']);
     const denied=await mf.dispatchFetch(origin+'/mcp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})});assert.equal(denied.status,401);assert.match(denied.headers.get('www-authenticate'),/resource_metadata/);
     const reg=await mf.dispatchFetch(origin+'/oauth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_name:'<img src=x onerror=alert(1)>',redirect_uris:['https://chatgpt.com/connector_platform_oauth_redirect'],grant_types:['authorization_code','refresh_token'],response_types:['code'],token_endpoint_auth_method:'none'})});assert.equal(reg.status,201);
     const client=await reg.json();
