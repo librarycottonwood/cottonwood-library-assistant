@@ -1,3 +1,4 @@
+export {ChatPublishing} from './chat-publishing.mjs';
 import {isValidSignature, decodeSignatureHeader, SIGNATURE_HEADER_NAME} from '@sanity/webhook';
 import {readiness, parseEvent, operationIdPattern} from './contract.mjs';
 import {authorized, limitedBody, readSession, signSession, sameSecret, cookie, setCookie, escape} from './security.mjs';
@@ -39,7 +40,7 @@ export default {
       const url = new URL(request.url);
       const ready = readiness(env);
       if (url.pathname === '/health' && request.method === 'GET') {
-        return json({service: 'Cottonwood Library CMS publishing', version: '0.1.0',
+        return json({service: 'Cottonwood Library CMS publishing', version: '0.2.0', chatPublishing: true,
           status: ready.webhook && ready.review ? 'configured' : 'setup_pending',
           sourceSha: /^[a-f0-9]{40}$/.test(env.BUILD_SOURCE_SHA || '') ? env.BUILD_SOURCE_SHA : null,
           configurationOnly: true, scope: 'Configuration only; health is not proof of live publishing.'});

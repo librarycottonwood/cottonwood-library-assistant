@@ -38,16 +38,21 @@ export async function readSession(request, secret, now = Date.now()) {
   if (!secret) return null;
   const value = cookie(request, '__Host-cms_review');
   if (!value || value.length > 2048) return null;
+  const session = await readSigned(value, secret);
+  if (!session || session.subject !== '338888442' || session.login !== 'librarycottonwood' ||
+    !Number.isSafeInteger(session.expiresAt) || session.expiresAt <= now || session.expiresAt > now + 3600000 ||
+    !/^[a-f0-9-]{36}$/.test(session.csrf)) return null;
+  return session;
+}
+
+export async function readSigned(value, secret) {
+  if (typeof value !== 'string' || value.length > 4096 || !secret) return null;
   const [body, signature, extra] = value.split('.');
   if (!body || !signature || extra) return null;
   try {
     const valid = await crypto.subtle.verify('HMAC', await signingKey(secret, ['verify']), decode(signature), encoder.encode(body));
     if (!valid) return null;
-    const session = JSON.parse(new TextDecoder().decode(decode(body)));
-    if (session.subject !== '338888442' || session.login !== 'librarycottonwood' ||
-      !Number.isSafeInteger(session.expiresAt) || session.expiresAt <= now || session.expiresAt > now + 3600000 ||
-      !/^[a-f0-9-]{36}$/.test(session.csrf)) return null;
-    return session;
+    return JSON.parse(new TextDecoder().decode(decode(body)));
   } catch { return null; }
 }
 

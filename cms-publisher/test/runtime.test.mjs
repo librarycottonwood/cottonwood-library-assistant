@@ -30,6 +30,7 @@ const event = {projectId: 'fixture1', dataset: 'rehearsal', documentId: 'event.s
 
 function fixture(overrides = {}) {
   const external = {requests: [], dispatches: [], revision: 'rev1', source, identity: {login: 'librarycottonwood', id: 338888442}, hosted: null, dispatchThrows: false,
+    picture: new Uint8Array([137,80,78,71,13,10,26,10,1]), pictureCorrupt: false,
     documentFails: false, omitted: null, inventory: [{_id: event.documentId, _type: 'event', _rev: 'rev1'}, {_id: 'library-settings', _type: 'siteSettings', _rev: 'settings1'}]};
   const outboundService = async request => {
       const url = new URL(request.url);
@@ -53,6 +54,8 @@ function fixture(overrides = {}) {
         return Response.json({access_token: 'fixture-identity-token-discard-after-use'});
       }
       if (url.href === 'https://api.github.com/user') return Response.json(external.identity);
+      if (url.href === preview + '_review/evidence.json') return Response.json({digest:release,errors:[],pictures:{desktop:createHash('sha256').update(external.picture).digest('hex'),phone:createHash('sha256').update(external.picture).digest('hex')}});
+      if (url.href === preview + '_review/desktop.png' || url.href === preview + '_review/phone.png') return new Response(external.pictureCorrupt ? new Uint8Array([0]) : external.picture);
       if (url.href === website + '/_review/status.json') return Response.json(external.hosted || {});
       throw new Error(`Unexpected local provider stub request: ${request.url}`);
   };
@@ -71,7 +74,7 @@ function fixture(overrides = {}) {
         exports: {CmsLedger: {type: 'durable-object', storage: 'sqlite'}},
       },
       dev: {rootPath: process.cwd(), outboundService: {type: 'fetcher', handler: outboundService}},
-    }],
+    }, {config: {name:'chat-client',compatibilityDate:'2026-10-06',manifest:{mainModule:'client.js',modulesRoot:process.cwd(),modules:{'client.js':{type:'esm',contents:`export default {async fetch(request,env){const {method,args}=await request.json();try{return Response.json({result:await env.PUBLISHER[method](...args)});}catch(error){return Response.json({error:error.message});}}};`}}},env:{PUBLISHER:{type:'worker',worker:'cms-publisher-test',exportName:'ChatPublishing'}}},dev:{rootPath:process.cwd()}}],
   });
   const request = (path, init) => mf.dispatchFetch(origin + path, init);
   const status = id => request('/operations/' + id, {headers: {Authorization: `Bearer ${secrets.CMS_STATUS_TOKEN}`}});
@@ -131,7 +134,8 @@ function fixture(overrides = {}) {
     const response = await approve(id, session.cookie, values); assert.equal(response.status, 303, await response.clone().text());
     return {id, session, values};
   }
-  return {mf, external, request, status, result, webhook, queued, previewResult, previewReady, login, form, approve, approved};
+  const chat = async (method,...args) => {const worker=await mf.getWorker('chat-client');return (await worker.fetch('https://chat-client.test/',{method:'POST',body:JSON.stringify({method,args})})).json();};
+  return {chat, mf, external, request, status, result, webhook, queued, previewResult, previewReady, login, form, approve, approved};
 }
 
 test('browser forms: native approval and refresh preserve their same-origin request identity', {timeout: 60000}, async () => {
@@ -491,3 +495,33 @@ test('local runtime: failed build/deploy summaries do not leak provider content 
   } finally {await second.mf.dispose();}
 });
 
+
+
+test('chat RPC: checked screenshot, signed exact preview, stale rejection and idempotent save', async()=>{
+  const f=fixture();
+  try {
+    const id=await f.previewReady();
+    assert.equal((await f.chat('status','wrong')).error,'library_sign_in_required');
+    const preview=await f.chat('preview','338888442',id,'desktop');
+    assert.equal(preview.result.status,'review_required');
+    assert.equal(preview.result.image.type,'image');
+    assert.equal(Buffer.from(preview.result.image.data,'base64').equals(Buffer.from(f.external.picture)),true);
+    const version=preview.result.version;assert.ok(version);
+    assert.equal((await f.chat('save','338888442',version+'tamper')).error,'preview_expired_or_invalid');
+    assert.equal((await f.chat('save','338888442',version)).result.status,'publish_queued');
+    assert.equal((await f.chat('save','338888442',version)).result.status,'publish_queued');
+    assert.equal(f.external.dispatches.filter(item=>item.inputs.mode==='publish').length,1);
+    assert.equal((await f.request('/chat/save',{method:'POST',body:JSON.stringify({version})})).status,404);
+  } finally {await f.mf.dispose();}
+  const stale=fixture();
+  try {
+    const id=await stale.previewReady();
+    const {result:preview}=await stale.chat('preview','338888442',id);
+    stale.external.source='d'.repeat(40);
+    assert.equal((await stale.chat('save','338888442',preview.version)).error,'preview_superseded');
+    assert.equal(stale.external.dispatches.filter(item=>item.inputs.mode==='publish').length,0);
+  } finally {await stale.mf.dispose();}
+});
+test('chat RPC refuses a corrupt checked picture before issuing a save version',async()=>{
+  const f=fixture();try{const id=await f.previewReady();f.external.pictureCorrupt=true;assert.equal((await f.chat('preview','338888442',id)).error,'preview_pictures_unverified');}finally{await f.mf.dispose();}
+});

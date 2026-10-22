@@ -47,7 +47,9 @@ test('hosted pictures belong to the checked release and never replace its assets
     const png = Buffer.from([137,80,78,71,13,10,26,10]);
     const hash = createHash('sha256').update(png).digest('hex');
     for (const name of ['desktop', 'phone']) await writeFile(path.join(pictures, name + '.png'), png);
-    const evidence = { digest, pictures: { desktop: hash, phone: hash }, errors: [], evidence: ['desktop', 'phone'].map(name => ({ name, route: '/' })) };
+    const pageFile='desktop-0123456789abcdef.png';
+    await writeFile(path.join(pictures,pageFile),png);
+    const evidence = { digest, pictures: { desktop: hash, phone: hash }, errors: [], evidence: ['desktop', 'phone'].map(name => ({ name, route: '/', ...(name==='desktop'?{picture:{file:pageFile,sha256:hash}}:{}) })) };
     await writeFile(path.join(pictures, 'evidence.json'), JSON.stringify(evidence));
     const staged = review(digest);
     assert.equal(staged.status, 0, staged.stderr);
@@ -55,6 +57,10 @@ test('hosted pictures belong to the checked release and never replace its assets
     assert.equal(await readFile(path.join(stage, 'index.html'), 'utf8'), '<h1>The checked site</h1>');
     assert.match(await readFile(path.join(stage, '_review/index.html'), 'utf8'), /desktop.png/);
     assert.equal(JSON.parse(await readFile(path.join(stage, '_review/manifest.json'))).siteDigest, digest);
+    assert.deepEqual(await readFile(path.join(stage,'_review',pageFile)),png);
+    await writeFile(path.join(pictures,pageFile),Buffer.concat([png,Buffer.from('changed')]));
+    assert.match(review(digest).stderr,/Checked page picture changed/);
+    await writeFile(path.join(pictures,pageFile),png);
     assert.equal(run('verify', digest).status, 0, 'original saved release stays intact');
     await writeFile(path.join(pictures, 'phone.png'), Buffer.concat([png, Buffer.from('changed')]));
     assert.match(review(digest).stderr, /Review pictures changed/);
