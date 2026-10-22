@@ -7,6 +7,8 @@ description: Use when a volunteer wants to set up Donate buttons, start or end a
 
 Follow library-assistant for conversation and the current CMS publishing route. Technical steps (ids, how to read pasted Givebutter code, donate link): repository `assistant/content/fundraisers.md`. Read it before editing.
 
+Read `assistant/COMMUNICATIONS.md` for the library's current general donation campaign and verified setup. Then read the actual CMS settings and Givebutter state. Do not restart one-time setup or ask for identifiers already saved there. General donations use **Support Your Local Library**; a new fundraiser is a separate request.
+
 How it works: once set up, **every Donate button on the site opens Givebutter's checkout right on our website**, so donors never leave the page. A fundraiser shows Givebutter's donation form with its live goal bar, so the total is always current and nobody updates it by hand. While a fundraiser runs, the Donate buttons give to it; ending it through the checked website update returns them to general library donations. End dates are evaluated when a website version is built; do not promise a timed switch without that update.
 
 Volunteers can just paste Givebutter's code to you. Take only the ids from it (the repository file shows how) and never put the pasted code itself on the site.
