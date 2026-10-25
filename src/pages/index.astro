@@ -1,98 +1,186 @@
 ---
+// Homepage on the new design tokens (Figma ZHygohymNhKRQyxIhQsQ2P, frame 1001:2).
 import Image from '../components/OptimizedImage.astro';
-import SiteLayout from '../layouts/SiteLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import ContentImage from '../components/ContentImage.astro';
-import EventAgenda from '../components/EventAgenda.astro';
-import ProgramCard from '../components/ProgramCard.astro';
-import VisitPanel from '../components/VisitPanel.astro';
-import { upcomingEvents } from '../content/feeds';
+import EventCards from '../components/site/EventCards.astro';
+import fundraiserHouse from '../assets/images/fundraiser-house.png';
+import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
-import { checkoutAttributes, getDonateLink } from '../content/donate';
-const { library, hero, programs, services, serviceImage, givingImage, support } = await contentRepository.getHome();
-const events = upcomingEvents(await contentRepository.getEvents());
-const donate = await getDonateLink();
-const actions = [
-  { label: 'Upcoming events', href: '/librarynews/', tone: 'action-sun' },
-  { label: 'Kids & families', href: '/kids/', tone: 'action-meadow' },
-  { label: 'Find a book', href: library.catalogUrl, tone: 'action-gold', event: 'catalog_quick' },
-  { label: 'Donate', href: donate.href, tone: 'action-forest', event: 'donate_quick', attributes: checkoutAttributes(donate) },
-];
-const resources = services.map(service => ({ label: service.title, note: service.description, href: service.id === 'borrowing' ? library.catalogUrl : `/visit/#${service.id}`, icon: service.icon }));
+import { checkoutAttributes, DONATE_PAGE_HREF, getDonateLink } from '../content/donate';
+import type { LibraryImage } from '../content/types';
+const [home, support, allEvents, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents(), getDonateLink()]);
+const { library, hero, programs, services, givingImage } = home;
+const events = upcomingEvents(allEvents);
+const campaign = activeCampaign(support.campaigns);
 const featured = events[0]?.image ? events[0] : undefined;
-const givingPhoto = givingImage ?? support.image;
-const servicePhoto = serviceImage ?? hero.image;
+const givingPhoto = givingImage ?? home.support.image;
+// Services have no photos in the CMS yet, so each icon maps to a library photo.
+const servicePhotos: Record<string, LibraryImage> = {
+  book: { key: 'interior', alt: '' },
+  computer: { key: 'computerLab', alt: '' },
+  printer: { key: 'copyRoom', alt: '' },
+};
+const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/visit/#${service.id}`;
+const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
-<SiteLayout>
-  <section class="container pt-8 pb-20 sm:pt-10 sm:pb-28" aria-labelledby="welcome-heading">
-    <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
-      <div>
-        <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
-        <p class="mt-4 text-lg text-muted">{hero.introduction}</p>
-        <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
-      </div>
-      <div class="relative">
-        <div class="feature-shape"><Image width={1100} quality={70} image={hero.image} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
-        <a href={library.directionsUrl} data-analytics-event="directions_click" class="address-pill"><Icon name="pin" class="size-4 shrink-0" />{library.address} · Cottonwood</a>
+<BaseLayout>
+  <section class="hero" aria-labelledby="welcome-heading">
+    <div class="hero-copy">
+      {campaign && <a href={DONATE_PAGE_HREF} class="campaign-badge">
+        <Image src={campaign.image ? undefined : fundraiserHouse} image={campaign.image} alt="" width={50} height={50} class="campaign-badge-image" />
+        <span>{campaign.title}</span><Icon name="external" class="campaign-badge-arrow" />
+      </a>}
+      <h1 id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</h1>
+      <p class="hero-intro">{hero.introduction}</p>
+      <div class="hero-actions">
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="action action-accent"><Icon name="navigate" />Get directions</a>
+        <a href={library.catalogUrl} data-analytics-event="catalog_quick" class="action"><Icon name="book" />Catalog</a>
       </div>
     </div>
-
-    <nav aria-label="Library quick links" class="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {actions.map((action, column) => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
-        <span class="action-label">{action.label}</span>
-        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${column}`} />
-      </a>)}
-    </nav>
-  </section>
-
-  <section id="programs" tabindex="-1" class="container-prose section pt-0" aria-labelledby="happening-heading">
-    <div class="section-header-row">
-      <h2 id="happening-heading" class="section-heading">Coming up</h2>
-      <a href="/librarynews/" class="text-link">All events<Icon name="arrow" class="size-4" /></a>
-    </div>
-    {featured?.image && <div data-event-feature-expires={featured.endsAt} class="mb-10"><a href={featured.href} class="block" aria-label={featured.title}><ContentImage image={featured.image} variant="feature" /></a></div>}
-    <EventAgenda events={events} programs={programs} fallbackImage={hero.image} limit={3} emptyMessage="No special events are scheduled right now. Explore our regular programs." />
-  </section>
-
-  <section class="section section-tint" aria-labelledby="regular-heading">
-    <div class="container">
-      <div class="section-header-row">
-        <h2 id="regular-heading" class="section-heading">Regular programs</h2>
-        <a href="/librarynews/#regular" class="text-link">Times & details<Icon name="arrow" class="size-4" /></a>
-      </div>
-      <div class="card-grid">{programs.map(program => <ProgramCard program={program} />)}</div>
+    <div id="visit" tabindex="-1" class="hero-media">
+      <Image width={1314} quality={70} image={hero.image} alt={hero.image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading="eager" fetchpriority="high" class="hero-image" />
+      <p class="contact-pill">
+        <a href={library.directionsUrl} data-analytics-event="directions_click"><Icon name="pin" />{library.address}, Cottonwood</a>
+        <a href={library.phoneHref}><Icon name="phone" />{library.phone}</a>
+      </p>
     </div>
   </section>
 
-  <section class="container section" aria-labelledby="independent-heading">
-    <div class="giving-banner">
-      <div class="giving-copy">
-        <h2 id="independent-heading" class="section-heading">{support.title}</h2>
-        <p class="mt-5 max-w-sm text-lg text-paper/85">{support.introduction}</p>
-        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.source === 'fallback' ? 'Ways to give' : donate.label}</a>
-          <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
+  {featured?.image && <section class="featured" data-event-feature-expires={featured.endsAt} aria-labelledby="featured-heading">
+    <div class="featured-media"><Image width={1100} quality={70} image={featured.image} alt={featured.image.alt} widths={[600, 900, 1100]} sizes="(max-width: 63.99rem) 100vw, 55vw" loading="lazy" class:list={['featured-image', featured.image.fit === 'contain' && 'is-contained']} /></div>
+    <div class="featured-copy">
+      <p class="featured-date"><time datetime={featured.startsAt}>{featuredDate}</time></p>
+      <h2 id="featured-heading">{featured.title}</h2>
+      <p class="featured-summary">{featured.summary}</p>
+      <a href={featured.href} class="action action-accent action-end">Read more<Icon name="arrow" /></a>
+    </div>
+  </section>}
+
+  <section class="card-section" aria-labelledby="events-heading">
+    <h2 id="events-heading">Upcoming events</h2>
+    <EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} emptyMessage="No special events are scheduled right now. Story Time and our reading groups still meet every week." />
+    <a href="/librarynews/" class="action action-end">View all<Icon name="arrow" /></a>
+  </section>
+
+  <section class="card-section" aria-labelledby="services-heading">
+    <h2 id="services-heading">Library services</h2>
+    <ul class="service-cards">
+      {services.map(service => <li class="service-card">
+        <div class="service-media"><Image width={800} quality={70} image={servicePhotos[service.icon]} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class="service-image" /></div>
+        <div class="service-copy">
+          <h3><a href={serviceLink(service)}>{service.title}<Icon name="arrow" class="service-arrow" /></a></h3>
+          <p>{service.description}</p>
         </div>
-      </div>
-      <Image width={1100} quality={70} image={givingPhoto} alt={givingPhoto.alt} widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 600px" class="giving-photo" />
-    </div>
+      </li>)}
+    </ul>
+    <a href="/visit/" class="action action-end">Read more<Icon name="arrow" /></a>
   </section>
 
-  <section id="services" tabindex="-1" class="container section pt-0" aria-labelledby="services-heading">
-    <div class="split-equal">
-      <div class="split-media"><Image width={800} quality={70} image={servicePhoto} alt={servicePhoto.alt} widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="object-cover" /></div>
-      <div class="split-text">
-        <h2 id="services-heading" class="section-heading">Library services</h2>
-        <nav aria-label="Library services" class="mt-6 divide-y divide-line border-y border-line">
-          {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
-            <Icon name={resource.icon} class="size-6 shrink-0" />
-            <span class="flex-1"><span class="block text-lg font-semibold group-hover:underline">{resource.label}</span><span class="block text-sm text-muted">{resource.note}</span></span>
-            <Icon name="arrow" class="size-5 shrink-0" />
-          </a>)}
-        </nav>
+  <section class="community" aria-labelledby="community-heading">
+    <div class="community-media"><Image width={1314} quality={70} image={givingPhoto} alt={givingPhoto.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading="lazy" class="community-image" /></div>
+    <div class="community-copy">
+      <h2 id="community-heading">{home.support.title}</h2>
+      <p>{home.support.introduction}</p>
+      <div class="hero-actions">
+        <a href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" class="action action-accent"><Icon name="heart" />{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</a>
+        <a href="/fundraising-events/volunteer/" class="action"><Icon name="user" />Volunteer</a>
       </div>
     </div>
   </section>
+</BaseLayout>
 
-  <div class="border-t border-line"><VisitPanel /></div>
-</SiteLayout>
+<style>
+  /* Hero (1002:253): copy left, photo bleeding off the right edge. */
+  .hero {
+    display: grid; gap: var(--space-30);
+    padding: clamp(1rem, 2vw, var(--space-30)) 0 var(--section-block);
+  }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--gap-content); padding: 0 var(--page-inline); }
+  .campaign-badge {
+    display: inline-flex; align-items: center; gap: var(--gap-icon); max-width: 100%;
+    padding: var(--padding-badge-block) var(--padding-badge-end) var(--padding-badge-block) var(--space-10);
+    border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-pill);
+    color: var(--color-forest); font-family: var(--font-label); font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight);
+    text-decoration: none;
+  }
+  .campaign-badge:hover { background: var(--color-surface); }
+  .campaign-badge :global(.campaign-badge-image) { width: 1.5625rem; height: 1.5625rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0; }
+  .campaign-badge :global(.campaign-badge-arrow) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-text-muted); }
+  .hero h1 { font-size: var(--fluid-display); line-height: var(--leading-tight); }
+  .hero-intro { color: var(--color-text-muted); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: var(--gap-icon); }
+  .hero-media { position: relative; padding: 0 var(--page-inline) 2rem; }
+  .hero-media :global(.hero-image), .community-media :global(.community-image) {
+    width: 100%; aspect-ratio: 1314 / 652; object-fit: cover;
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+  }
+  .contact-pill {
+    position: absolute; bottom: 0; left: calc(var(--page-inline) + clamp(0.75rem, 2.6vw, 3.125rem)); right: var(--page-inline);
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-10) var(--space-30); width: fit-content; max-width: calc(100% - 2 * var(--page-inline));
+    padding: var(--space-16) var(--space-24);
+    border-radius: var(--radius-pill); background: var(--color-background); color: var(--color-forest);
+    font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight);
+  }
+  .contact-pill a { display: inline-flex; align-items: center; gap: var(--gap-icon); text-decoration: none; }
+  .contact-pill a:hover { text-decoration: underline; }
+  .contact-pill :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
+
+  /* Featured event (1043:2549): photo bleeding off the left edge. */
+  .featured { display: grid; gap: var(--gap-content); padding: var(--section-block) 0; }
+  .featured-media { padding: 0 var(--page-inline); }
+  .featured-media :global(.featured-image) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
+  .featured-media :global(.featured-image.is-contained) { object-fit: contain; background: var(--color-surface); }
+  .featured-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--gap-content); padding: 0 var(--page-inline); }
+  .featured-date { color: var(--color-text-muted); }
+  .featured h2, .card-section h2, .community h2 { font-size: var(--fluid-heading); line-height: var(--leading-tight); }
+  .featured-summary { color: var(--color-text-muted); font-size: var(--fluid-lead); }
+
+  /* Card sections (1002:381, 1002:336). */
+  .card-section {
+    display: flex; flex-direction: column; align-items: center; gap: var(--fluid-gap);
+    padding: var(--section-block) var(--content-inline);
+  }
+  .card-section h2 { line-height: var(--leading-relaxed); text-align: center; }
+  .card-section > :global([data-event-list]), .service-cards { width: 100%; }
+  .service-cards { display: grid; gap: var(--gap-content); margin: 0; padding: 0; list-style: none; }
+  .service-card { display: flex; flex-direction: column; gap: var(--gap-content); }
+  .service-media { overflow: hidden; height: clamp(13rem, 19vw, 22.8125rem); border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
+  .service-media :global(.service-image) { width: 100%; height: 100%; object-fit: cover; }
+  .service-copy { display: flex; flex-direction: column; gap: var(--gap-card-copy); padding: 0 var(--padding-card-inline); }
+  .service-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  .service-copy a { display: inline-flex; align-items: center; gap: var(--gap-icon); text-decoration: none; }
+  .service-copy a:hover { text-decoration: underline; }
+  .service-copy :global(.service-arrow) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-text-muted); }
+  .service-copy p { color: var(--color-text-muted); }
+
+  /* Powered by Community (1012:285): photo bleeding off the left edge. */
+  .community { display: grid; gap: var(--space-30); padding: var(--section-block) 0; }
+  .community-media { padding: 0 var(--page-inline); }
+  .community-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--gap-content); padding: 0 var(--page-inline); }
+  .community-copy > p { color: var(--color-text-muted); }
+
+  @media (min-width: 48rem) {
+    .service-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 64rem) {
+    .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: center; gap: clamp(2rem, 4.9vw, 5.875rem); padding-left: var(--page-inline); }
+    .hero-copy { padding: 0; }
+    .hero-media { padding: 0 0 2rem; }
+    .hero-media :global(.hero-image) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
+    .contact-pill { left: clamp(0.75rem, 2.6vw, 3.125rem); right: auto; max-width: calc(100% - 2rem); }
+
+    .featured { grid-template-columns: minmax(0, 1fr) minmax(0, 50.3125rem); align-items: center; }
+    .featured-media { padding: 0; }
+    .featured-media :global(.featured-image) { aspect-ratio: auto; height: clamp(24rem, 32.4vw, 38.9375rem); border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
+    .featured-copy { padding: var(--padding-feature); padding-right: var(--page-inline); }
+
+    .community { grid-template-columns: minmax(0, 1fr) minmax(0, 38.875rem); align-items: center; gap: clamp(2rem, 4.9vw, 5.875rem); padding-right: var(--page-inline); }
+    .community-media { padding: 0; }
+    .community-media :global(.community-image) { border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
+    .community-copy { padding: 0; }
+  }
+  @media (min-width: 90rem) {
+    .hero { grid-template-columns: minmax(0, 38.875rem) minmax(0, 1fr); }
+  }
+</style>

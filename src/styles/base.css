@@ -1,0 +1,98 @@
+/* Base styles for pages built on the new design tokens (BaseLayout).
+ * Token values come from /components/tokens.css (src/design-system/tokens.ts).
+ * Figma sizes are for a 1920px screen; clamp() scales them down to phones. */
+
+:root {
+  --page-inline: clamp(1.25rem, 5.2vw, var(--padding-page-inline));
+  --content-inline: clamp(1.25rem, 10.4vw, var(--padding-content-inline));
+  --section-block: clamp(3.5rem, 5.2vw, var(--padding-section-block));
+  --fluid-label: clamp(0.9375rem, 0.75rem + 0.4vw, var(--text-label));
+  --fluid-body: clamp(1.0625rem, 0.85rem + 0.55vw, var(--text-body));
+  --fluid-lead: clamp(1.1875rem, 0.95rem + 0.75vw, var(--text-lead));
+  --fluid-heading: clamp(2rem, 1.4rem + 1.6vw, var(--text-heading));
+  --fluid-display: clamp(2.625rem, 1.6rem + 2.8vw, var(--text-display));
+  --fluid-gap: clamp(1.25rem, 3vw, var(--gap-section));
+  --border-image: rgba(0, 0, 0, 0.15);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fluid-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-relaxed);
+  overflow-x: clip;
+}
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+.skip-link {
+  position: fixed; top: 0.75rem; left: 0.75rem; z-index: 100;
+  padding: var(--space-10) var(--space-20);
+  background: var(--color-surface); border-radius: var(--radius-pill);
+  font-weight: var(--weight-bold); text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Pill actions (Figma 1012:1223, 1002:73) */
+.action {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--gap-icon);
+  min-height: 2.75rem;
+  padding: calc(var(--padding-action-block) * 0.75) var(--padding-action-end) calc(var(--padding-action-block) * 0.75) var(--padding-action-start);
+  border: var(--border-thin) solid var(--color-primary-ink);
+  border-radius: var(--radius-pill);
+  background: transparent; color: var(--color-primary-ink);
+  font: inherit; font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.action svg { width: 1em; height: 1em; flex-shrink: 0; }
+.action:hover { background: var(--color-surface); }
+.action-accent { border: var(--border-strong) solid var(--color-accent); background: var(--color-accent); color: var(--color-accent-ink); }
+.action-accent:hover { background: var(--color-surface); }
+.action-primary { border: var(--border-strong) solid var(--color-primary); background: var(--color-primary); color: var(--color-surface); }
+.action-primary:hover { background: var(--color-primary-ink); border-color: var(--color-primary-ink); }
+.action-end { padding-inline: var(--padding-action-end) var(--padding-action-start); }
+
+/* Privacy link and statistics consent panel (markup in components/Analytics.astro) */
+#library-analytics > div:first-child {
+  display: flex; gap: var(--space-20);
+  padding: 0 var(--page-inline) var(--space-24);
+  font-size: var(--fluid-label);
+}
+#library-analytics button, #statistics-choice a { font: inherit; color: inherit; }
+#library-analytics > div:first-child button { padding: 0; border: 0; background: none; text-decoration: underline; cursor: pointer; }
+#statistics-choice {
+  position: fixed; right: 1rem; bottom: 1rem; left: 1rem; z-index: 60;
+  max-width: 28rem; margin-left: auto;
+  padding: var(--space-24);
+  border: var(--border-thin) solid var(--color-border); border-radius: var(--space-24);
+  background: var(--color-surface); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  font-size: 1rem;
+}
+#statistics-choice h2 { font-family: var(--font-body); font-size: 1.125rem; font-weight: var(--weight-bold); }
+#statistics-choice p { margin-top: var(--space-10); }
+#statistics-choice > div { display: flex; flex-wrap: wrap; gap: var(--space-10); margin-top: var(--space-16); }
+#statistics-choice button {
+  min-height: 2.75rem; padding: var(--space-10) var(--space-20);
+  border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
+  background: var(--color-surface); color: var(--color-primary-ink); font-weight: var(--weight-bold); cursor: pointer;
+}
+#statistics-choice button:hover { background: var(--color-background); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}

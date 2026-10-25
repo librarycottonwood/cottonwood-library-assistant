@@ -1,0 +1,45 @@
+---
+// Token-styled version of NoticeBanner for BaseLayout pages. Same data and date rules.
+import Icon from '../Icon.astro';
+import { unexpiredNotices } from '../../content/feeds';
+import type { LibraryNotice } from '../../content/types';
+interface Props { notices: LibraryNotice[]; }
+const notices = unexpiredNotices(Astro.props.notices);
+---
+{notices.length > 0 && <section aria-label="Library notices" hidden={!notices.some(notice => notice.started)} class="library-notices">
+  {notices.map(notice => <div data-notice-starts={notice.startsOn} data-notice-ends={notice.endsOn} hidden={!notice.started} class="notice">
+    <p><Icon name="calendar" class="notice-icon" /><span>{notice.message}</span></p>
+    {notice.link && <a href={notice.link.href}>{notice.link.label}<Icon name="arrow" class="notice-arrow" /></a>}
+  </div>)}
+</section>}
+{notices.length > 0 && <script is:inline>
+  // Pages are built ahead of time, so re-check dates in the visitor's browser
+  // (Pacific time): hide notices after endsOn and reveal ones once startsOn arrives.
+  (function () {
+    var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    var part = function (type) { return parts.find(function (item) { return item.type === type; }).value; };
+    var today = part('year') + '-' + part('month') + '-' + part('day');
+    var banner = document.currentScript && document.currentScript.previousElementSibling;
+    if (!banner || !banner.classList.contains('library-notices')) return;
+    var shown = 0;
+    banner.querySelectorAll('[data-notice-ends]').forEach(function (notice) {
+      var active = notice.dataset.noticeStarts <= today && today <= notice.dataset.noticeEnds;
+      notice.hidden = !active;
+      if (active) shown++;
+    });
+    banner.hidden = shown === 0;
+  })();
+</script>}
+<style>
+  .library-notices { background: var(--color-accent); color: var(--color-accent-ink); }
+  .notice {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-10) var(--space-24);
+    padding: var(--space-10) var(--page-inline);
+    font-size: var(--fluid-label); font-weight: var(--weight-bold);
+  }
+  .notice + .notice { border-top: var(--border-thin) solid rgba(59, 92, 48, 0.2); }
+  .notice p { display: flex; align-items: flex-start; gap: var(--gap-icon); }
+  .notice :global(.notice-icon) { width: 1.1em; height: 1.1em; margin-top: 0.2em; flex-shrink: 0; }
+  .notice a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 2.75rem; text-decoration: underline; }
+  .notice :global(.notice-arrow) { width: 1em; height: 1em; }
+</style>
