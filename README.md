@@ -30,7 +30,9 @@ Node 24 and pnpm 11.15.1 (pinned).
 pnpm install
 pnpm check
 pnpm build
-node --test scripts/*.test.mjs .claude/hooks/*.test.mjs
+node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs
+node scripts/analytics.test.mjs
+node --test .claude/hooks/guard.test.mjs   # Claude safety hook
 bash scripts/cms-check.sh   # Studio, CMS and publisher checks, no accounts needed
 ```
 
