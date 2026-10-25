@@ -14,16 +14,21 @@ const event = sessions[0]!;
 const { library, programs } = await contentRepository.getHome();
 const program = programs.find(program => program.id === event.programId);
 const date = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'short', timeZone: 'America/Los_Angeles' });
+const time = new Intl.DateTimeFormat('en-US', { timeStyle: 'short', timeZone: 'America/Los_Angeles' });
 ---
 <SiteLayout title={`${event.title} | ${library.name}`} description={event.summary}>
-  <PageIntro title={event.title} back={{ href: '/librarynews/', label: 'Events & news' }} />
-  <article class="container grid items-start gap-8 pb-12 lg:grid-cols-2">
-    {event.image && <ContentImage image={event.image} variant="feature" eager />}
-    <div><p class="text-lg text-muted">{event.summary}</p><p class="mt-5">{event.location ?? `${library.address}, ${library.locality}`}</p>
-      <h2 class="card-heading mt-6">When</h2>
-      <ul class="mt-3 space-y-3">{sessions.map(session => <li><time datetime={session.startsAt}>{date.format(new Date(session.startsAt))}</time>{session.endsAt && <> – <time datetime={session.endsAt}>{date.format(new Date(session.endsAt))}</time></>} Pacific</li>)}</ul>
-      {program && <a href={`/librarynews/${program.id}/`} class="text-link mt-5">About {program.title}</a>}
-      <a href={library.directionsUrl} class="button button-primary mt-6">Get directions</a>
+  <PageIntro title={event.title} description={event.summary} back={{ href: '/librarynews/', label: 'Events & news' }} width={event.image ? 'wide' : 'prose'} />
+  <section class:list={[event.image ? 'container' : 'container-prose', 'section pt-0']} aria-labelledby="event-when-heading">
+    <div class:list={[event.image && 'split-equal']}>
+      {event.image && <div class="split-media"><ContentImage image={event.image} variant="feature" eager /></div>}
+      <div class="panel flex flex-col">
+        <h2 id="event-when-heading" class="card-heading">When</h2>
+        <ul class="mt-3 list-none space-y-2 p-0 text-base">{sessions.map(session => <li><time datetime={session.startsAt}>{date.format(new Date(session.startsAt))}</time> – <time datetime={session.endsAt}>{time.format(new Date(session.endsAt))}</time> Pacific</li>)}</ul>
+        <h2 class="card-heading mt-6">Where</h2>
+        <p class="mt-3 text-base">{event.location ?? `${library.address}, ${library.locality}`}</p>
+        {program && <a href={`/librarynews/${program.id}/`} class="text-link mt-4 self-start">About {program.title}</a>}
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-6 self-start">Get directions</a>
+      </div>
     </div>
-  </article>
+  </section>
 </SiteLayout>

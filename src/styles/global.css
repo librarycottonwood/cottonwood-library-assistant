@@ -40,46 +40,87 @@
   }
 }
 
+/* Design system: see DESIGN.md. Widths, rhythm and cards live here so every page shares them. */
+:root {
+  --gutter: 1.25rem;
+  --measure: 40rem;   /* ≈ 70 characters of body text: the widest any running text may get */
+  --wide: 75rem;      /* 1200px: card grids, photos, hero, map, giving banner */
+}
+@media (min-width: 640px) { :root { --gutter: 2rem; } }
+@media (min-width: 1024px) { :root { --gutter: 2.5rem; } }
+
 @layer components {
-  .container { @apply mx-auto w-full max-w-[1312px] px-6 sm:px-10 lg:px-14; }
-  .container-editorial { @apply mx-auto w-full max-w-[1168px] px-6 sm:px-10 lg:px-14; }
-  .container-narrow { @apply mx-auto w-full max-w-[1024px] px-6 sm:px-10 lg:px-14; }
+  /* Widths */
+  .container { margin-inline: auto; width: 100%; max-width: calc(var(--wide) + 2 * var(--gutter)); padding-inline: var(--gutter); }
+  .container-prose { margin-inline: auto; width: 100%; max-width: calc(var(--measure) + 2 * var(--gutter)); padding-inline: var(--gutter); }
+  .measure { max-width: var(--measure); }
+
+  /* Vertical rhythm: one idea per section, generous space around it */
+  .section { @apply py-20 sm:py-28; }
+  .section-tint { @apply bg-meadow/50; }
+  .section-header { @apply mb-10 max-w-[var(--measure)] sm:mb-12; }
+  .section-header-row { @apply mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 sm:mb-12; }
+  .lede { @apply mt-4 text-lg text-muted; }
+  .prose-flow { @apply space-y-5 text-[1.0625rem] leading-[1.75]; }
+
+  /* Layouts: single column by default; .split only for a photo or map beside short text */
+  .split { @apply grid items-center gap-10 lg:grid-cols-2 lg:gap-16; }
+  /* A photo beside a panel: both columns the same height and top-aligned. The photo fills its
+     column (object-cover) so it always matches the panel; the panel centres its content. */
+  .split-equal { @apply grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-16; }
+  .split-media { @apply relative aspect-[1.5] overflow-hidden rounded-[4px] lg:aspect-auto lg:min-h-[22rem]; }
+  .split-media img { @apply absolute inset-0 h-full w-full; }
+  .split-equal > .panel, .split-equal > .split-text { @apply flex flex-col justify-center; }
+  .card-grid { @apply grid gap-6 md:grid-cols-2 lg:grid-cols-3; }
+
+  /* Type */
   .eyebrow { @apply text-[0.75rem] font-bold uppercase tracking-[0.16em]; }
-  .feature-shape { @apply overflow-hidden rounded-[4px] rounded-tr-[80px] sm:rounded-tr-[115px]; }
   .page-heading { @apply font-display text-[clamp(2.65rem,5.1vw,4.65rem)] leading-[1.14] tracking-[-.05em]; }
+  .section-heading { @apply font-display text-[2.125rem] leading-[1.2] tracking-[-0.035em] sm:text-[2.75rem]; }
   .card-heading { @apply font-display text-2xl leading-[1.3] tracking-[-.025em]; }
-  .section-heading { @apply font-display text-[2.25rem] leading-[1.2] tracking-[-0.035em] sm:text-[2.9rem]; }
+
+  /* Cards: one style everywhere. Same padding on every side; content flows top-down. */
+  .card { @apply flex h-full flex-col overflow-hidden rounded-[4px] border border-line bg-paper; }
+  .card-media { @apply bg-meadow; }
+  .card-media img { @apply aspect-[1.52] w-full; }
+  .card-body { @apply flex flex-1 flex-col p-6 sm:p-7; }
+  .card-title { @apply font-display text-[1.375rem] leading-[1.3] tracking-[-.02em]; }
+  .card-text { @apply mt-2 text-base text-muted; }
+  .card-action { @apply mt-auto pt-4; }
+  a.card:hover .card-title { @apply underline decoration-1 underline-offset-4; }
+  a.card:hover .card-media { filter: brightness(.97); }
+  .panel { @apply rounded-[4px] bg-meadow p-6 sm:p-8; }
+
+  /* Buttons and links */
   .button { @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-[3px] px-6 py-3 text-[0.9375rem] font-semibold transition-colors; }
   .button-primary { @apply bg-forest text-white hover:bg-forest-dark; }
-  .action-tile { @apply flex min-h-36 items-center justify-between gap-3 rounded-[4px] px-6 py-4 text-forest transition-colors hover:brightness-95; }
-  .action-label { @apply max-w-36 text-xl font-bold leading-[1.4]; overflow-wrap: normal; }
-  .action-art { width: 45%; max-width: 145px; height: 125px; object-fit: contain; }
-  .action-sun { background: #efc47b; color: #192d24; }
-  .action-tile:focus-visible { outline-width: 3px; outline-offset: 5px; }
-  .action-meadow { background: #80acd9; color: #192d24; }
-  .action-gold { background: #e98f80; color: #192d24; }
-  .action-forest { background: #9bbf75; color: #192d24; }
-  .button-concept-art { flex-shrink: 0; width: 125px; height: 112px; background-image: url('/images/button-concepts/styles.webp'); background-size: 400% 300%; background-position: calc(var(--art-column) * 100% / 3) 0%; }
-  [data-button-style="paper"] .button-concept-art { background-position-y: 50%; }
-  [data-button-style="folk"] .button-concept-art { background-position-y: 100%; }
-  .feature-card { @apply block h-full overflow-hidden rounded-[4px] bg-transparent; }
-  .feature-card-image { @apply overflow-hidden rounded-[4px] bg-meadow; }
-  .feature-card-image img { @apply aspect-[1.2] h-auto; }
-  .feature-card > div:last-child { padding-left: 0; padding-right: 0; }
-  .feature-card .card-heading { @apply text-[1.35rem]; }
-  .feature-card:hover .feature-card-image { filter: brightness(.97); }
-  .coming-up { @apply grid items-start gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-14; }
-  .coming-feature { @apply block; }
-  .program-agenda { @apply pt-2; }
-  .program-row { @apply flex items-center gap-4 border-b border-line py-5 sm:gap-5; }
-  .program-row:last-child { border-bottom: 0; }
-  .program-thumb { @apply size-22 shrink-0 rounded-[3px] bg-[#eee8d8] sm:size-28; }
-  .giving-banner { @apply grid overflow-hidden rounded-[4px] rounded-tr-[80px] bg-forest text-paper md:grid-cols-[1.05fr_1fr] sm:rounded-tr-[115px]; }
-  .giving-copy { @apply flex flex-col items-start justify-center p-7 sm:p-10 lg:p-12; }
-  .giving-photo { @apply h-full min-h-56 w-full object-cover md:min-h-96; }
-  .giving-banner :focus-visible { outline-color: var(--color-gold); }
   .button-outline { @apply border border-forest bg-transparent text-forest hover:bg-meadow; }
   .text-link { @apply inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold underline decoration-1 hover:decoration-2; }
   .footer-link { @apply flex min-h-11 items-center gap-2 py-2 text-[0.9375rem] text-muted hover:text-forest hover:underline; }
   nav a[aria-current="page"] { @apply underline decoration-2; }
+
+  /* Home */
+  .feature-shape { @apply overflow-hidden rounded-[4px] rounded-tr-[80px] sm:rounded-tr-[115px]; }
+  /* Address badge anchored to the hero photo's bottom-left corner; overhangs the frame from tablet up. */
+  .address-pill { @apply absolute bottom-3 left-3 inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-paper px-4 py-2 text-sm font-semibold text-forest shadow-[0_6px_18px_rgba(25,45,36,.18)] hover:bg-meadow sm:-bottom-5 sm:left-6 sm:text-[0.9375rem]; }
+  .action-tile { @apply flex min-h-32 items-center justify-between gap-3 rounded-[4px] px-6 py-4 text-forest transition-colors hover:brightness-95; }
+  .action-tile:focus-visible { outline-width: 3px; outline-offset: 5px; }
+  .action-label { @apply max-w-40 text-xl font-bold leading-[1.4]; overflow-wrap: normal; }
+  .action-sun { background: #efc47b; color: #192d24; }
+  .action-meadow { background: #80acd9; color: #192d24; }
+  .action-gold { background: #e98f80; color: #192d24; }
+  .action-forest { background: #9bbf75; color: #192d24; }
+  /* Paper-cutout illustrations: one sprite, one column per quick link. */
+  .button-concept-art { flex-shrink: 0; width: 125px; height: 112px; background-image: url('/images/button-concepts/styles.webp'); background-size: 400% 300%; background-position: calc(var(--art-column) * 100% / 3) 50%; }
+  .giving-banner { @apply grid overflow-hidden rounded-[4px] rounded-tr-[80px] bg-forest text-paper md:grid-cols-2 sm:rounded-tr-[115px]; }
+  .giving-copy { @apply flex flex-col items-start justify-center p-8 sm:p-12 lg:p-16; }
+  .giving-photo { @apply h-full min-h-64 w-full object-cover md:min-h-[28rem]; }
+  .giving-banner :focus-visible { outline-color: var(--color-gold); }
+
+  /* Events agenda */
+  .agenda-day { @apply grid gap-3 border-t border-line py-7 sm:grid-cols-[9.5rem_1fr] sm:gap-8; }
+  .agenda-date { @apply font-display text-[1.375rem] leading-tight tracking-[-.02em]; }
+  .agenda-item { @apply grid grid-cols-[4.5rem_1fr] items-start gap-4 sm:grid-cols-[6.5rem_1fr] sm:gap-5; }
+  .thumb { @apply aspect-square w-full rounded-[3px] bg-[#eee8d8] object-cover; }
+  .agenda-badge { @apply mt-2 inline-block rounded-[3px] bg-gold px-2 py-0.5 text-[0.8125rem] font-semibold text-forest-dark; }
 }

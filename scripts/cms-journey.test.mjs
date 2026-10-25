@@ -78,8 +78,9 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
       assert.ok(plain(html).includes('Bring one book and find another.'),`${label} should show the one canonical summary`);
       assert.ok(!html.includes('October 16–17 · 10 a.m.–2 p.m.'),`${label} must not carry the hardcoded sale promotion`);
     }
-    assert.match(events,/aria-label="April 2099 17: CMS rehearsal book swap"/);
-    assert.match(events,/aria-label="April 2099 18: CMS rehearsal book swap"/);
+    assert.match(events,/data-agenda-day="2099-04-17"/);
+    assert.match(events,/data-agenda-day="2099-04-18"/);
+    assert.match(events,/href="\/events\/cms-rehearsal-book-swap\/"/);
     assert.match(home,/href="\/events\/cms-rehearsal-book-swap\/"/);
     const article=await readFile(path.join(output,'librarynews/cms-rehearsal-report/index.html'),'utf8');
     assert.match(article,/<h2>Our rehearsal report heading<\/h2>/);

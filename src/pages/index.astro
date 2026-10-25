@@ -3,9 +3,10 @@ import Image from '../components/OptimizedImage.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Icon from '../components/Icon.astro';
 import ContentImage from '../components/ContentImage.astro';
-import EventList from '../components/EventList.astro';
-import { upcomingEvents } from '../content/feeds';
+import EventAgenda from '../components/EventAgenda.astro';
+import ProgramCard from '../components/ProgramCard.astro';
 import VisitPanel from '../components/VisitPanel.astro';
+import { upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
 import { checkoutAttributes, getDonateLink } from '../content/donate';
 const { library, hero, programs, services, serviceImage, givingImage, support } = await contentRepository.getHome();
@@ -18,82 +19,71 @@ const actions = [
   { label: 'Donate', href: donate.href, tone: 'action-forest', event: 'donate_quick', attributes: checkoutAttributes(donate) },
 ];
 const resources = services.map(service => ({ label: service.title, note: service.description, href: service.id === 'borrowing' ? library.catalogUrl : `/visit/#${service.id}`, icon: service.icon }));
+const featured = events[0]?.image ? events[0] : undefined;
+const givingPhoto = givingImage ?? support.image;
+const servicePhoto = serviceImage ?? hero.image;
 ---
 <SiteLayout>
-  <section class="container py-8 sm:py-10" aria-labelledby="welcome-heading">
+  <section class="container pt-8 pb-20 sm:pt-10 sm:pb-28" aria-labelledby="welcome-heading">
     <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
       <div>
         <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
         <p class="mt-4 text-lg text-muted">{hero.introduction}</p>
-        <p class="mt-4 text-base text-muted">{library.address} · Cottonwood</p>
         <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
       </div>
-      <div class="feature-shape"><Image width={1100} quality={70} image={hero.image} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+      <div class="relative">
+        <div class="feature-shape"><Image width={1100} quality={70} image={hero.image} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="address-pill"><Icon name="pin" class="size-4 shrink-0" />{library.address} · Cottonwood</a>
+      </div>
     </div>
-  </section>
 
-  <div class="container pb-10">
-    <nav aria-label="Library quick links" data-button-style="paper" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {actions.map(action => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
+    <nav aria-label="Library quick links" class="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {actions.map((action, column) => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
         <span class="action-label">{action.label}</span>
-        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${actions.indexOf(action)}`} />
+        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${column}`} />
       </a>)}
     </nav>
-  </div>
+  </section>
 
-  <script>
-    const style = new URLSearchParams(location.search).get('button-style');
-    if (style === 'storybook' || style === 'paper' || style === 'folk') {
-      const buttons = document.querySelector<HTMLElement>('[aria-label="Library quick links"]');
-      if (buttons) buttons.dataset.buttonStyle = style;
-    }
-  </script>
-
-  <section id="programs" tabindex="-1" class="container-editorial py-5 sm:pt-8 sm:pb-14" aria-labelledby="happening-heading">
-    <div class="mb-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+  <section id="programs" tabindex="-1" class="container-prose section pt-0" aria-labelledby="happening-heading">
+    <div class="section-header-row">
       <h2 id="happening-heading" class="section-heading">Coming up</h2>
-      <a href="/librarynews/" class="text-link">See the calendar<Icon name="arrow" class="size-4" /></a>
+      <a href="/librarynews/" class="text-link">All events<Icon name="arrow" class="size-4" /></a>
     </div>
-    <div class="coming-up">
-      <div class="coming-feature">
-        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt}><ContentImage image={events[0].image} variant="feature" /></div>}
-        <EventList events={events} limit={3} emptyMessage="No special events are scheduled right now. Explore our regular programs." />
+    {featured?.image && <div data-event-feature-expires={featured.endsAt} class="mb-10"><a href={featured.href} class="block" aria-label={featured.title}><ContentImage image={featured.image} variant="feature" /></a></div>}
+    <EventAgenda events={events} programs={programs} fallbackImage={hero.image} limit={3} emptyMessage="No special events are scheduled right now. Explore our regular programs." />
+  </section>
+
+  <section class="section section-tint" aria-labelledby="regular-heading">
+    <div class="container">
+      <div class="section-header-row">
+        <h2 id="regular-heading" class="section-heading">Regular programs</h2>
+        <a href="/librarynews/#regular" class="text-link">Times & details<Icon name="arrow" class="size-4" /></a>
       </div>
-      <div class="program-agenda">
-        <p class="eyebrow mb-2 text-muted">Gather at the library</p>
-        {programs.map(program => <a href={`/librarynews/${program.id}/`} class="program-row group">
-          <Image width={260} quality={70} image={program.image} alt={program.image.alt} widths={[160,260]} sizes="(max-width:639px) 88px, 112px" class:list={['program-thumb',program.image.fit === 'contain' ? 'object-contain p-2' : 'object-cover']} />
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold text-muted">{program.schedule}</p>
-            <h3 class="card-heading mt-1 group-hover:underline">{program.title}</h3>
-          </div>
-          <Icon name="arrow" class="size-5 shrink-0" />
-        </a>)}
-      </div>
+      <div class="card-grid">{programs.map(program => <ProgramCard program={program} />)}</div>
     </div>
   </section>
 
-  <section class="container py-7 sm:py-10" aria-labelledby="independent-heading">
+  <section class="container section" aria-labelledby="independent-heading">
     <div class="giving-banner">
       <div class="giving-copy">
-        <p class="eyebrow text-gold">Community-funded library</p>
-        <h2 id="independent-heading" class="section-heading mt-4">{support.title}</h2>
+        <h2 id="independent-heading" class="section-heading">{support.title}</h2>
         <p class="mt-5 max-w-sm text-lg text-paper/85">{support.introduction}</p>
-        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.label}</a>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.source === 'fallback' ? 'Ways to give' : donate.label}</a>
           <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
         </div>
       </div>
-      <Image width={1100} quality={70} image={givingImage ?? support.image} alt={(givingImage ?? support.image).alt} widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 50vw" class="giving-photo" />
+      <Image width={1100} quality={70} image={givingPhoto} alt={givingPhoto.alt} widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 600px" class="giving-photo" />
     </div>
   </section>
 
-  <section id="services" tabindex="-1" class="container-narrow pt-8 pb-4 sm:pt-14 sm:pb-8" aria-labelledby="services-heading">
-    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
-      <Image width={800} quality={70} image={serviceImage ?? hero.image} alt={(serviceImage ?? hero.image).alt} widths={[500,800]} sizes="(max-width:1023px) 100vw, 440px" class="aspect-[1.4] w-full rounded-[4px] object-cover" />
-      <div>
+  <section id="services" tabindex="-1" class="container section pt-0" aria-labelledby="services-heading">
+    <div class="split-equal">
+      <div class="split-media"><Image width={800} quality={70} image={servicePhoto} alt={servicePhoto.alt} widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="object-cover" /></div>
+      <div class="split-text">
         <h2 id="services-heading" class="section-heading">Library services</h2>
-        <nav aria-label="Library services" class="mt-5 divide-y divide-line">
+        <nav aria-label="Library services" class="mt-6 divide-y divide-line border-y border-line">
           {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
             <Icon name={resource.icon} class="size-6 shrink-0" />
             <span class="flex-1"><span class="block text-lg font-semibold group-hover:underline">{resource.label}</span><span class="block text-sm text-muted">{resource.note}</span></span>
@@ -104,5 +94,5 @@ const resources = services.map(service => ({ label: service.title, note: service
     </div>
   </section>
 
-  <VisitPanel />
+  <div class="border-t border-line"><VisitPanel /></div>
 </SiteLayout>

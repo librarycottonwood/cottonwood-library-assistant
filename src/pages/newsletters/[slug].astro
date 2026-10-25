@@ -1,7 +1,8 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import ContentImage from '../../components/ContentImage.astro';
+import Image from '../../components/OptimizedImage.astro';
+import Icon from '../../components/Icon.astro';
 import { contentRepository } from '../../content/repository';
 import type { LibraryNewsletter } from '../../content/types';
 export async function getStaticPaths() {
@@ -11,6 +12,10 @@ interface Props { newsletter: LibraryNewsletter; }
 const { newsletter } = Astro.props;
 ---
 <SiteLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
-  <PageIntro title={`${newsletter.issue} newsletter`} back={{ href: '/librarynews/newsletter/', label: 'Current newsletter' }} />
-  <article class="container grid items-start gap-8 pb-12 md:grid-cols-2"><ContentImage image={newsletter.cover} variant="feature" eager /><div><h2 class="card-heading">{newsletter.title}</h2><p class="mt-5 text-base text-muted">{newsletter.summary}</p><a href={newsletter.fileUrl} class="button button-primary mt-6">Read the newsletter (PDF)</a></div></article>
+  <PageIntro title={`${newsletter.issue} newsletter`} description={newsletter.summary} back={[{ href: '/librarynews/', label: 'Events & news' }, { href: '/librarynews/newsletter/', label: 'Newsletter' }]} width="prose" />
+  <article class="container-prose section pt-0">
+    <h2 class="card-heading">{newsletter.title}</h2>
+    <a href={newsletter.fileUrl} class="button button-primary mt-6">Read the newsletter (PDF)<Icon name="download" class="size-4" /></a>
+    <div class="mt-12 max-w-sm rounded-[4px] bg-[#e1d9c4] p-6 sm:p-8"><Image width={600} quality={70} image={newsletter.cover} alt={newsletter.cover.alt} widths={[350, 600]} sizes="(max-width: 639px) 80vw, 320px" class="h-auto w-full shadow-md" /></div>
+  </article>
 </SiteLayout>

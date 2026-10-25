@@ -1,33 +1,39 @@
 ---
+import Image from '../../components/OptimizedImage.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import ProgramCard from '../../components/ProgramCard.astro';
-import EventList from '../../components/EventList.astro';
-import ContentImage from '../../components/ContentImage.astro';
-import { upcomingEvents } from '../../content/feeds';
-import EventCalendar from '../../components/EventCalendar.astro';
+import EventAgenda from '../../components/EventAgenda.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { contentRepository } from '../../content/repository';
-const [{ programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
-const events = upcomingEvents(allEvents);
+const [{ programs, hero }, events, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+// "Wednesdays · 11:30 a.m." → day and time, so each regular program states both plainly.
+const when = (schedule: string) => { const [day, ...time] = schedule.split(' · '); return { day, time: time.join(' · ') }; };
 ---
-<SiteLayout title="Upcoming events & news | Cottonwood Community Library">
-  <PageIntro title="Upcoming events" />
-  <section class="container pb-10" aria-labelledby="events-heading">
-    <h2 id="events-heading" class="sr-only">Upcoming dated events</h2>
-    <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.15fr]">
-      <EventCalendar events={events} />
-      <div>
-        {events[0]?.image && <div data-event-feature-expires={events[0].endsAt}><ContentImage image={events[0].image} variant="feature" eager /></div>}
-        <EventList events={events} emptyMessage="No special events are scheduled right now. Our regular programs are below." />
-      </div>
+<SiteLayout title="Events & news | Cottonwood Community Library">
+  <PageIntro title="Events & news" width="prose" />
+  <section class="container-prose section pt-0" aria-labelledby="events-heading">
+    <h2 id="events-heading" class="section-heading section-header">Upcoming events</h2>
+    <EventAgenda events={events} programs={programs} fallbackImage={hero.image} />
+  </section>
+  <section id="regular" tabindex="-1" class="section section-tint" aria-labelledby="regular-heading">
+    <div class="container-prose">
+      <h2 id="regular-heading" class="section-heading section-header">Regular programs</h2>
+      <ul class="m-0 list-none border-b border-line p-0">
+        {programs.map(program => { const { day, time } = when(program.schedule); return <li class="agenda-day">
+          <p class="agenda-date"><span class="font-semibold">{day}</span>{time && <span class="mt-1 block font-sans text-base tracking-normal">{time}</span>}</p>
+          <div class="agenda-item">
+            <Image width={208} quality={70} image={program.image} alt="" widths={[144, 208]} sizes="(max-width: 639px) 72px, 104px" class:list={['thumb', program.image.fit === 'contain' && 'object-contain p-1.5']} loading="lazy" />
+            <div>
+              <h3 class="text-xl font-semibold leading-snug"><a href={`/librarynews/${program.id}/`} class="underline decoration-1 underline-offset-4 hover:decoration-2">{program.title}</a></h3>
+              <p class="mt-1 text-base text-muted">{program.description}</p>
+            </div>
+          </div>
+        </li>; })}
+      </ul>
     </div>
   </section>
-  <section class="container pb-12" aria-labelledby="regular-heading">
-    <h2 id="regular-heading" class="section-heading mb-6">Regular programs</h2>
-    <div class="grid gap-5 sm:grid-cols-3">{programs.map(program => <ProgramCard program={program} />)}</div>
-  </section>
-  <section id="news" tabindex="-1" class="bg-meadow/50 py-10 sm:py-12" aria-labelledby="news-heading">
-    <div class="container-narrow"><h2 id="news-heading" class="section-heading mb-6">News & stories</h2><PostFeed posts={posts} /></div>
+  <section id="news" tabindex="-1" class="container-prose section" aria-labelledby="news-heading">
+    <h2 id="news-heading" class="section-heading section-header">News</h2>
+    <PostFeed posts={posts} fallbackImage={hero.image} />
   </section>
 </SiteLayout>

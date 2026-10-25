@@ -51,7 +51,7 @@ export const homeContent = {
       schedule: 'Wednesdays · 11:30 a.m.',
       description: 'Stories, songs, a simple craft, and a healthy snack. A little midweek magic for your little ones.',
       details: 'Stories, songs, crafts and a snack for preschoolers during the school year; older children are welcome in summer. First 5 Shasta helps provide take-home books.',
-      image: { key: 'storytime', alt: 'The library’s colorful Story Time corner, with an alphabet rug and shelves of picture books.' },
+      image: { key: 'storytime', alt: 'The Story Time corner set up with rows of small wooden chairs on an alphabet rug, under a sky-blue draped ceiling with puffy clouds.' },
     },
     {
       audience: 'adults', id: 'main-street-readers', title: 'Main Street Readers',
