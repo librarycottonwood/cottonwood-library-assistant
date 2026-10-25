@@ -1,0 +1,40 @@
+---
+import ComponentLibraryLayout from '../../layouts/ComponentLibraryLayout.astro';
+import { figmaNodeURL, type TokenGroup } from '../../design-system/tokens';
+interface Props { group: TokenGroup; }
+const { group } = Astro.props;
+const code = group.tokens.map(token => `${token.name}: ${token.value};`).join('\n');
+const propertyFor = (name: string) => {
+  if (name.startsWith('--weight-')) return 'font-weight';
+  if (name.startsWith('--leading-')) return 'line-height';
+  if (group.slug === 'padding') {
+    if (name.endsWith('-block')) return 'padding-block';
+    if (name.endsWith('-inline')) return 'padding-inline';
+    if (name.endsWith('-start')) return 'padding-inline-start';
+    if (name.endsWith('-end')) return 'padding-inline-end';
+  }
+  return group.property;
+};
+---
+<ComponentLibraryLayout active={group.slug} title={group.title}>
+  <div class="page-heading"><div><p class="eyebrow">The building blocks</p><h1>{group.title}<span class="token-total">{group.tokens.length} tokens</span></h1><p class="page-description">{group.description}</p></div><a class="source-link" href={figmaNodeURL(group.tokens[0]!.node)} target="_blank" rel="noreferrer">View in Figma <span aria-hidden="true">↗</span></a></div>
+  <div class="view-tabs" role="tablist" aria-label="Token view" hidden><button id="preview-tab" type="button" role="tab" aria-selected="true" aria-controls="preview-panel">Preview</button><button id="css-tab" type="button" role="tab" aria-selected="false" aria-controls="css-panel" tabindex="-1">CSS values</button></div>
+  <div id="preview-panel" role="tabpanel" aria-labelledby="preview-tab" tabindex="0">
+    <div class:list={['token-grid', `token-grid-${group.slug}`]}>
+      {group.tokens.map(token => <article class="token-card">
+        {group.slug === 'colors' ? <div class="color-swatch" style={`background: var(${token.name})`}><span class="swatch-hex" style={`color: ${['--color-primary', '--color-primary-ink', '--color-accent-ink', '--color-forest', '--color-text', '--color-text-muted'].includes(token.name) ? 'var(--color-surface)' : 'var(--color-text)'}`}>{token.value.toUpperCase()}</span></div>
+        : group.slug === 'fonts' ? <div class="font-specimen" style={token.name.startsWith('--font-') ? `font-family: var(${token.name})` : `font-weight: var(${token.name})`}><span class="specimen-large">{token.name.startsWith('--font-') ? 'Aa' : 'Ag'}</span><span class="specimen-sentence">Your community. Your library.</span></div>
+        : group.slug === 'type-sizes' ? <div class="type-specimen" style={token.name.startsWith('--leading-') ? `line-height: var(${token.name}); font-size: var(--text-body)` : `font-size: var(${token.name}); font-family: ${['--text-heading', '--text-display'].includes(token.name) ? 'var(--font-display)' : 'var(--font-body)'}`}><span>{token.name.startsWith('--leading-') ? <>Read, play,<br />and connect.</> : 'Your library.'}</span></div>
+        : group.slug === 'spacing' ? <div class="space-specimen"><div class="space-track"><span class="space-bar" style={`width: max(1px, var(${token.name}))`}></span></div><span class="measure-label">{token.detail ?? token.value}</span></div>
+        : group.slug === 'padding' ? <div class="padding-specimen"><div class="padding-outer" style={`${propertyFor(token.name)}: var(${token.name})`}><span class="padding-inner">Content</span></div></div>
+        : group.slug === 'gaps' ? <div class="gap-specimen"><div class="gap-items" style={`gap: var(${token.name})`}><span>A</span><span>B</span><span>C</span></div></div>
+        : group.slug === 'corners' ? <div class="corner-specimen"><div style={`border-radius: var(${token.name})`}>Aa</div></div>
+        : <div class="border-specimen"><div style={`border-width: var(${token.name})`}>Outline</div></div>}
+        <div class="token-info"><div class="token-title"><h2>{token.label}</h2><button class="copy-button" type="button" data-copy={`var(${token.name})`} aria-label={`Copy ${token.name}`}>Copy</button></div><code class="token-name">{token.name}</code><p class="token-description">{token.usage}</p><div class="token-meta"><span>{token.detail ?? token.value}</span><a href={figmaNodeURL(token.node)} target="_blank" rel="noreferrer" aria-label={`View ${token.label} source in Figma`}>Figma ↗</a></div></div>
+        <div class="usage-line"><code>{propertyFor(token.name)}: var({token.name});</code></div>
+      </article>)}
+    </div>
+  </div>
+  <section id="css-panel" role="tabpanel" aria-labelledby="css-tab" tabindex="0" class="css-panel"><div class="code-heading"><h2>{group.title} tokens</h2><button class="copy-button" type="button" data-copy={`:root {\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}`} aria-label={`Copy all ${group.title.toLowerCase()} tokens`}>Copy CSS</button></div><pre><code>{`:root {\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}`}</code></pre><p>These values are generated from the same source as the <a href="/components/tokens.css">shared stylesheet</a>.</p></section>
+  <aside class="source-note"><span class="source-note-mark" aria-hidden="true">↳</span><div><h2>From the design to the website</h2><p>{group.note} Figma has no local variables yet; these names establish the shared vocabulary for the new build.</p></div></aside>
+</ComponentLibraryLayout>

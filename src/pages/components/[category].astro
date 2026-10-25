@@ -1,0 +1,9 @@
+---
+import TokenPage from '../../components/catalog/TokenPage.astro';
+import { tokenGroups } from '../../design-system/tokens';
+export function getStaticPaths() {
+  return tokenGroups.map(group => ({ params: { category: group.slug }, props: { group } }));
+}
+const { group } = Astro.props;
+---
+<TokenPage group={group} />
