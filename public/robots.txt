@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /
+Disallow: /components
+Allow: /components/tokens.css
