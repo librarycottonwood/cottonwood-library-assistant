@@ -1,0 +1,8 @@
+{
+  "request": "Replace the homepage introduction picture with the new evening photo of the library front (Sanity library-settings hero.image).",
+  "sanityAsset": "image-16f328cbd4d4d83b03bc119f5c7a556e1ac19f58-2048x1152-jpg",
+  "reviewedPreview": "https://dc450b57.cottonwood-library.pages.dev/",
+  "contentDigest": "1bf411f64cf0408eb8e9676255e0aab32bf4e7f74a1bb9763bd3e0d0caafd37c",
+  "revisionDigest": "b9fcc8190fed15bd1dd1bb84dcee65e4829cd1e7c7da9265b2936c6d89492187",
+  "approvedInChat": "2026-10-25"
+}
