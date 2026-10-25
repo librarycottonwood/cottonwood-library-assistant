@@ -24,6 +24,15 @@ const api = async (route, env=process.env) => {
   return response.json();
 };
 
+// Commit statuses let the library chat read the preview/live result with its
+// GitHub tools. Informational only; failure never blocks a verified save.
+const setStatus = async (sha, context, url, description, env) => {
+  try {
+    const response = await fetch(`https://api.github.com/repos/${REPOSITORY}/statuses/${sha}`, {method:'POST',headers:{Authorization:`Bearer ${env.GH_TOKEN}`,Accept:'application/vnd.github+json','User-Agent':'Cottonwood-PR-workflow'},body:JSON.stringify({state:'success',context,target_url:url,description}),redirect:'error',signal:AbortSignal.timeout(15000)});
+    if (!response.ok) console.warn(`Could not record the ${context} status (${response.status}).`);
+  } catch (error) {console.warn(`Could not record the ${context} status: ${error.message}`);}
+};
+
 export function checkRun(run, head) {
   if (run.path !== '.github/workflows/check.yml' || run.event !== 'pull_request' || run.status !== 'completed' || run.conclusion !== 'success' || run.head_sha !== head || run.head_repository?.full_name !== REPOSITORY || run.repository?.full_name !== REPOSITORY) fail('A successful library PR check for this exact head is required.');
 }
@@ -153,7 +162,8 @@ async function deliver(env) {
   // Upload the same immutable bytes even during first installation. No rebuild
   // after approval: the approved PR's checked artifact is the only source.
   const checked=await preview(operation,env);
-  if(mainSha)await publish(checked,pr,mainSha,env);
+  await setStatus(pr.head.sha,'Website preview',checked.previewUrl,mainSha?'Checked preview of the saved version.':'Checked preview ready. Merge only after chat approval.',env);
+  if(mainSha){await publish(checked,pr,mainSha,env);await setStatus(mainSha,'Live website',LIVE_ORIGIN,'Saved and verified on the live website.',env);}
   const result={pullRequest:pr.number,sourceSha:checked.sourceSha,releaseDigest:checked.releaseDigest,previewRunId:checked.previewRunId,previewUrl:checked.previewUrl,liveWebsite:mainSha?LIVE_ORIGIN:null};
   await writeJson('output/publish-live-result.json',result);
   if(env.GITHUB_STEP_SUMMARY)await writeFile(env.GITHUB_STEP_SUMMARY,`[Website preview](${checked.previewUrl})\n\nPR #${pr.number}; checked source ${checked.sourceSha}.\n\n${mainSha?'Live website verified: '+LIVE_ORIGIN:'Ready for review. Merge only after explicit chat approval.'}\n`,{flag:'a'});

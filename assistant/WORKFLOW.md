@@ -28,7 +28,7 @@ A PR that changes the trusted workflows is previewed by the version already on m
 
 ## Content and recovery
 
-Chat handles questions/reports; Work with the existing Sanity connection handles supported content drafting/corrections. Codex handles website source, PR previews and saves. Do not recreate the site in Sites, build a new portal or assume Work can silently attach the prepared Codex environment. If a handoff is needed, preserve the request and give the actual existing editor entry point.
+The library chat handles questions, reports and content: Sanity tools edit/publish records, and its GitHub tools run the content PR, preview, approval, merge and live check (publishing skill, “Save a content change”). Codex handles website source/code/design changes. Do not recreate the site in Sites, build a new portal or assume Work can silently attach the prepared Codex environment. If a handoff is needed, preserve the request and give the actual existing editor entry point.
 
 Publishing a Sanity record makes it publicly readable and queues the existing CMS check; it does not itself update the live website. Routine requested website saves use the PR workflow above. The existing identity-authenticated CMS review page and `cms.yml` remain recovery tools for an explicitly chosen administrator recovery, not an extra volunteer approval step. The reporting connector has no website publishing tools or scopes. Never ask volunteers to reconnect it for website editing.
 
