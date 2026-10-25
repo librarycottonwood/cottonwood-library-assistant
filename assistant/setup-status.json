@@ -5,7 +5,7 @@
     "baselineMain": "0ffcfea58a2ab8aa646f5ca80b7a53903940acf7",
     "sourcePluginVersion": "0.2.12",
     "lastObservedInstalledPluginVersion": "0.2.11",
-    "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact trial promotion and verification; task-owned cleanup.",
+    "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact live publication and verification; task-owned cleanup.",
     "detour": "Website MCP tools, scopes and service binding removed in restoration source. PR35/36 had no successful native chat preview/save acceptance. Reporting remains read-only.",
     "publisherFailure": "Run 39710072999 failed and rolled back; its log hid the underlying failure. Source now adds bounded readiness retries, public diagnostics and rollback health verification. No blind redeploy was performed.",
     "savedTrialBaseline": {
@@ -19,18 +19,26 @@
       "Actual library device/browser and recovery/backup rehearsal"
     ]
   },
+  "liveWebsite": {
+    "asOf": "2026-10-24 America/Los_Angeles",
+    "url": "https://cottonwood-library.pages.dev/",
+    "flow": "preview → live. PR and CMS previews are immutable <8hex>.cottonwood-library.pages.dev uploads; the live website is the production deployment of the same project.",
+    "account": "Library Cloudflare account e05729fd6b6fad329e31896d8b1c2da9 only. Deploy scripts refuse any other CLOUDFLARE_ACCOUNT_ID or a missing library token; no local or personal-account deploy path remains.",
+    "project": "cottonwood-library (production branch production)",
+    "workflows": "publish-live.yml (PR preview + live save), cms.yml (CMS preview + administrator recovery), live-hosting-setup.yml (one-time project creation)",
+    "domain": "cottonwoodcommunitylibrary.com is attached to this project at launch (planned November 16); see assistant/DOMAIN-LAUNCH.md.",
+    "status": "Source renamed from trial to live; first verified live save pending.",
+    "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
+    "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) is retired and awaits deletion after the live website is verified; no redirects are kept.",
+    "sourcePluginVersion": "0.2.13 (preview → live wording; must be updated in Plugin Creator before it is installed)"
+  },
   "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
-  "previewProject": "cottonwood-library-preview",
-  "demoHomepage": "https://38d0406e.cottonwood-library-preview.pages.dev",
   "original": {
-    "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3",
-    "preview": "https://56d28a2c.cottonwood-library-preview.pages.dev"
+    "digest": "f16696b9c322d823d33e3ce0c4c87d94fb919c435db274f06d61ec9d460fc3e3"
   },
   "headingDemo": {
-    "digest": "3c4ccd023488d27775440324fb807c97579a07497fcc7a2177c08eacf7afdc4a",
-    "preview": "https://fe2e5840.cottonwood-library-preview.pages.dev",
-    "pictures": "https://fe2e5840.cottonwood-library-preview.pages.dev/_review/"
+    "digest": "3c4ccd023488d27775440324fb807c97579a07497fcc7a2177c08eacf7afdc4a"
   },
   "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37411054560",
   "cloudEnvironment": "Published with friendly start instructions, updated preview helper, tested caches, API network secret and preview-project variables; fresh cloud task built and hosted a draft successfully",
@@ -42,8 +50,6 @@
   "ordinaryProjectLimit": "An ordinary project chat does not automatically attach this cloud environment. Use the cloud task entry and select the published library environment.",
   "cloudTaskRehearsal": {
     "digest": "b368d726eedd83d7632cd6f950f4b566dc4ef87d84e4aa6ce868a21085d7c50f",
-    "preview": "https://87793d76.cottonwood-library-preview.pages.dev",
-    "pictures": "https://87793d76.cottonwood-library-preview.pages.dev/_review/",
     "saved": false,
     "voice": "Fresh task stayed formal despite saved start instructions. Explicit personality in prepared demo chat produced the warm reply. Reuse that chat for the meeting; fresh-task personality still needs reliable initialization.",
     "imageDelivery": "Cloud chat did not visibly embed remote pictures; hosted pictures-page link works."
@@ -55,14 +61,12 @@
     "accountId": "410873133",
     "propertyId": "557596091",
     "measurementId": "G-HKCKJ8R4D1",
-    "preview": "https://38d0406e.cottonwood-library-preview.pages.dev",
     "dashboard": "https://analytics.google.com/analytics/web/#/a410873133p557596091/realtime/overview",
     "tracking": "Consent-gated tracking verified on hosted demo: homepage page_view, donate_quick, and privacy page_view delivered to G-HKCKJ8R4D1 with HTTP 204; query strings excluded. Automated refusal/withdrawal/cookie-removal tests passed.",
     "assistantReporting": "Not connected",
     "history": "New demo test traffic only; no existing library history",
     "handover": "Library Google account added as account Administrator and verified; Jaden retained",
     "dashboardVerification": "Oct 6 Safari realtime UI showed 8 page_view events and 1 directions_click in the inspected 30-minute report with a San Jose comparison; demo activity, not general traffic totals.",
-    "pictures": "https://38d0406e.cottonwood-library-preview.pages.dev/_review/",
     "githubVerification": "https://github.com/oobagi/cottonwood-library-assistant/actions/runs/37419680481"
   },
   "libraryAccounts": {
@@ -73,8 +77,6 @@
   },
   "themeRefresh": {
     "digest": "3b78fb9825fa51ad20c1545809e8ec73abfdab98c1b0ffca4498fea3a6718f48",
-    "preview": "https://273d2e2c.cottonwood-library-preview.pages.dev",
-    "pictures": "https://273d2e2c.cottonwood-library-preview.pages.dev/_review/",
     "contentPages": 18,
     "desktopPhoneChecks": 36,
     "responsiveWidths": [
@@ -98,21 +100,17 @@
   },
   "visualRefinement": {
     "digest": "b7be88ebc0995f035e51152a649004ad5a85230ec7654e6d80b51090df0d3834",
-    "preview": "https://bae70b30.cottonwood-library-preview.pages.dev",
-    "pictures": "https://bae70b30.cottonwood-library-preview.pages.dev/_review/",
     "sourceCommit": "b83ae5d",
     "changes": "Featured Coming up layout, photo donation banner with Make a donation, selective top-right curves, hero address, factual service copy and varied section widths",
     "checks": "36 content-page desktop/phone checks; five responsive widths; illustrations loaded before capture; live hosted map and donation destination verified"
   },
   "storyRefinement": {
     "digest": "2beb484ea603fcd743bee3398c11ec440f0f8ffeefa41d18ba5265ab60ce31e0",
-    "preview": "https://29695462.cottonwood-library-preview.pages.dev",
     "sourceCommit": "0224d6c",
     "checks": "Full narrative visible without disclosure; photo caption removed; land donation credit retained; desktop/phone and all 36 page checks passed"
   },
   "heroAlignment": {
     "digest": "123e92fe4e0722705c5a118b087a02ecb70b8d9e56071de1beb2a0fbe507c1c3",
-    "preview": "https://38d0406e.cottonwood-library-preview.pages.dev",
     "sourceCommit": "4ffe9cd",
     "checks": "Hero photo and action tile left edges match at 1024, 1280 and 1440px; all desktop/phone page checks passed"
   },
@@ -127,7 +125,7 @@
       "login": "cottonlib@shasta.com",
       "connection": "Official Givebutter plugin connected to the library ChatGPT account",
       "reportChat": "https://chatgpt.com/c/6ac58a24-19b4-83e8-9f87-3b679a9b0b6a",
-      "verification": "Oct 1\u20136 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
+      "verification": "Oct 1–6 report returned $0 / 0 successful transactions. Five campaign names, totals and statuses matched the actual admin campaign list; total raised $9,756.",
       "givingReadiness": "Support Your Local Library and Support Our Story unpublished; existing Giving Tuesday 2025 form active. No campaign published or modified."
     },
     "github": "librarycottonwood owns the transferred private repository; GitHub API verified ownership and retained oobagi write access. Local origin updated.",
@@ -145,7 +143,7 @@
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
       "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
-      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It\u2019s marked completed in Givebutter. \ud83c\udf89",
+      "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
     "cloudSetup": {
@@ -183,12 +181,10 @@
       "credential": "Library-owned Cloudflare Pages Write token; api.cloudflare.com-bound network secret.",
       "freshTask": {
         "chat": "https://chatgpt.com/local/01a113c3-d7d7-711c-a596-ad2e7382e020",
-        "preview": "https://975882e8.cottonwood-library-preview.pages.dev/",
-        "pictures": "https://975882e8.cottonwood-library-preview.pages.dev/_review/",
         "digest": "7fb29f628c6d09b08e8a2408c49ab2d3a2bfa108589296a79ac50e1289a18c7e",
         "saved": false
       },
-      "hostingOwnership": "Library-owned Cloudflare account e05729fd6b6fad329e31896d8b1c2da9; project cottonwood-library-trial-preview. New editor does not depend on Jaden preview hosting. Old environment/token still exist and are not the pilot entry point.",
+      "hostingOwnership": "Library-owned Cloudflare account e05729fd6b6fad329e31896d8b1c2da9. Live project cottonwood-library since October 24; the earlier cottonwood-library-trial-preview project is retired. Nothing depends on Jaden's personal hosting.",
       "imageDelivery": "Inline delivery paused in AGENTS/START/WORKFLOW; screenshot capture and hosted review page retained. Valid hosted HTTPS images rejected by ChatGPT; raw cloud file loading also fails. Native Library upload tool absent in tested cloud session. No support report requested or sent.",
       "hostingMigration": {
         "accountId": "e05729fd6b6fad329e31896d8b1c2da9",
@@ -323,7 +319,7 @@
         "workflow": "cms.yml",
         "validationRun": "39535874197",
         "checkedSource": "b87c6ddf1a6a367428f4268973fd39cebc9b8dec",
-        "status": "Native Studio publishing, signed webhook, exact-preview approval and actual hosted verification passed October 20. This is the sole current trial destination.",
+        "status": "Historical: verified October 20 as the former trial destination. Retired October 24 when the trial was renamed to the live website (see liveWebsite); its project awaits deletion.",
         "token": "Existing scoped service and hosting credentials stay in server/GitHub storage."
       },
       "retiredSourceDemo": {
@@ -332,10 +328,9 @@
         "workflow": "trial.yml",
         "validationRun": "37569962832",
         "checkedSource": "ea8d61dd8325e827143df93d2f83d15c65dfe3e3",
-        "status": "Retired publishing path; old address redirects to the canonical CMS trial after the retire-old-demo.yml run verifies it.",
-        "token": "Library account Pages Write in CLOUDFLARE_TRIAL_API_TOKEN; trusted publisher only, outside agent container",
-        "latestPublishRun": "37570642969",
-        "retirementWorkflow": "retire-old-demo.yml"
+        "status": "Historical retired publishing path. Its redirect machinery was removed October 24; the old project awaits deletion.",
+        "token": "Library account Pages Write token (legacy secret name CLOUDFLARE_TRIAL_API_TOKEN); trusted publisher only, outside agent container",
+        "latestPublishRun": "37570642969"
       },
       "safariRecheck": {
         "asOf": "2026-10-21 America/Los_Angeles",
@@ -373,7 +368,7 @@
     "budget": "Zero additional recurring spend; existing Plus and free provider allowances only.",
     "handoff": "assistant/CMS.md and studio/README.md. Check the current authenticated publishing report. Backup administrator, recovery/restore rehearsal, and actual ChatGPT tool/plugin/notification delivery still require library-account acceptance.",
     "plugin": "Last observed installed instruction plugin: 0.2.11 on October 21, containing rejected website MCP guidance. Restoration source is 0.2.12; not installed by editing this file. Official Sanity connection/draft rehearsals remain as separately dated evidence below.",
-    "production": "The sole trial is cms-trial. The old source-demo workflow is retired; retire-old-demo.yml verifies its redirect. Public domain and registrar unchanged; exact-version CMS approval remains required.",
+    "production": "The live website is https://cottonwood-library.pages.dev/ (library-account project cottonwood-library). Previews never change it; exact-version approval remains required for every live save.",
     "mergedSourceChecks": {
       "verification": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39516784618",
       "savedTrialPublish": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39517142724",
@@ -381,7 +376,7 @@
     },
     "publishing": {
       "origin": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev",
-      "trial": "https://cms-trial.cottonwood-library-trial-preview.pages.dev/",
+      "live": "https://cottonwood-library.pages.dev/",
       "webhookId": "mMUKrPTnjwXaQO3X",
       "webhookType": "document; published create/update/delete only; drafts and versions disabled",
       "oauthApp": "https://github.com/settings/applications/3950337",
@@ -448,7 +443,7 @@
         "asOf": "2026-10-21 America/Los_Angeles",
         "mode": "ChatGPT Work in the library Safari account; not Chat-only or the Codex screen",
         "chat": "https://chatgpt.com/c/6ad86523-8410-83e8-91d6-fe622ad33850",
-        "event": "Volunteer planning meeting; November 10, 2026, 10\u201311:30 a.m. Pacific",
+        "event": "Volunteer planning meeting; November 10, 2026, 10–11:30 a.m. Pacific",
         "verified": "Ordinary request, required start/end questions, real CMS draft, end-time correction, checked preview, authenticated approval, trial publication, matching hosted fingerprints, and actual Safari navigation through the event list to its detail page.",
         "operationId": "dc46f128-9cb7-49bd-8d3b-fe34225a3a7b",
         "publishRun": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/39563499106",

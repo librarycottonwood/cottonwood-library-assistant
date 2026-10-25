@@ -15,7 +15,6 @@
     "assistant:capture": "node scripts/capture.mjs",
     "assistant:prepare": "node scripts/release.mjs prepare",
     "assistant:verify": "node scripts/release.mjs verify",
-    "assistant:preview": "node scripts/release.mjs preview",
     "assistant:image": "node scripts/images.mjs prepare",
     "cms:seed": "node scripts/cms.mjs seed",
     "cms:snapshot": "node scripts/cms.mjs snapshot",

@@ -89,25 +89,11 @@ async function main() {
     console.log(version);
     return;
   }
-  const { dir } = await verify(digest);
+  await verify(digest);
   if (action === 'verify') { console.log(`Verified ${digest}`); return; }
-  if (action !== 'preview') throw new Error('Only prepare, verify, and preview are supported.');
-  const project = process.env.CLOUDFLARE_PREVIEW_PROJECT;
-  if (!/^[a-z0-9-]+$/.test(project ?? '') || !project.includes('preview')) {
-    throw new Error('Set a dedicated CLOUDFLARE_PREVIEW_PROJECT whose name includes preview.');
-  }
-  // Deliberately no production action or real-domain project configuration.
-  // The administrator must provision this separate project with production_branch=production.
-  const stage = await prepareReview(digest);
-  try {
-    const log = execFileSync('pnpm', ['exec', 'wrangler', 'pages', 'deploy', stage, '--project-name', project, '--branch', `draft-${digest.slice(0,12)}`], { encoding: 'utf8', cwd: dir });
-    console.log(log);
-    const urls = log.match(/https:\/\/[a-f0-9]+\.[a-z0-9-]+\.pages\.dev/g);
-    if (!urls?.length) throw new Error('The upload returned no immutable preview link. Check the deployment before sharing.');
-    const base = urls.at(-1);
-    const delivery = { digest, preview: base, pictures: `${base}/_review/`, desktop: `${base}/_review/desktop.png`, phone: `${base}/_review/phone.png` };
-    await writeFile(path.join(dir, 'preview.json'), JSON.stringify(delivery, null, 2));
-    console.log(JSON.stringify(delivery, null, 2));
-  } finally { await rm(stage, { recursive: true, force: true }); }
+  // No local upload path: previews and the live website are deployed only by the
+  // trusted library GitHub workflows on the library Cloudflare account.
+  if (action === 'preview') throw new Error('Local preview uploads are retired. Open a PR; its checked preview is uploaded by the library workflow.');
+  throw new Error('Only prepare and verify are supported.');
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) main().catch(error => { console.error(error.message); process.exitCode = 1; });

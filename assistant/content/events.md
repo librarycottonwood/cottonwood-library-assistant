@@ -20,6 +20,6 @@ Preserve document identity and existing page addresses when correcting an event.
 
 Events remain promoted until their confirmed end time, including while they are happening. Ended sessions disappear from Coming up and the events agenda without deleting the historical event page.
 
-Save edits as a CMS draft through permitted tools or the real Studio. Show the proposed event in chat. After the volunteer confirms it, use the supported CMS publishing tool to queue the preview, then follow the Codex PR preview/link and chat approval workflow to save the trial. Studio is a fallback when a required tool is unavailable. Verify the hosted result as described in [publishing workflow](../WORKFLOW.md). A private CMS draft has no website preview in the current implementation.
+Save edits as a CMS draft through permitted tools or the real Studio. Show the proposed event in chat. After the volunteer confirms it, use the supported CMS publishing tool to queue the preview, then follow the Codex PR preview/link and chat approval workflow to publish it live. Studio is a fallback when a required tool is unavailable. Verify the hosted result as described in [publishing workflow](../WORKFLOW.md). A private CMS draft has no website preview in the current implementation.
 
 Field definitions: `studio/schemas/documents.ts`, `studio/schemas/objects.ts`. Read the current schema before a tool mutation; Studio validation alone does not protect API writes.

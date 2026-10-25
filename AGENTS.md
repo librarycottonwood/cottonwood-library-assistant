@@ -10,9 +10,9 @@ Current content comes from Sanity. Use permitted tools for CMS drafts/correction
 
 Run `pnpm check`, `pnpm build`, affected tests and phone/desktop capture. Inspect browser errors, affected navigation/forms and both screenshots internally. Prepare new pictures through `pnpm assistant:image`.
 
-Share the working preview URL built from the exact PR head and actual current CMS snapshot. Ask “Ready to save?” After explicit chat approval, refresh main, handle conflicts preserving concurrent work, rerun affected checks and merge the PR. If the reviewed behavior/content changed, get a fresh preview and approval. Follow WORKFLOW.md through verified trial deployment and task-owned cleanup; do not stop at a source merge or require a separate approval website.
+Share the working preview URL built from the exact PR head and actual current CMS snapshot. Ask “Ready to save?” After explicit chat approval, refresh main, handle conflicts preserving concurrent work, rerun affected checks and merge the PR. If the reviewed behavior/content changed, get a fresh preview and approval. Follow WORKFLOW.md through verified live deployment and task-owned cleanup; do not stop at a source merge or require a separate approval website.
 
-Deploy only through the existing trusted GitHub workflows. Never give untrusted PR builds CMS-write or deployment credentials. The checked PR artifact is promoted without rebuilding, and the previous verified site is retained for rollback. The public domain remains separate from the saved CMS trial.
+Deploy only through the existing trusted GitHub workflows, which use the library Cloudflare account. Never deploy locally, run `wrangler login`, or use a personal Cloudflare account; deploy scripts refuse any account other than the library's. Never give untrusted PR builds CMS-write or deployment credentials. The checked PR artifact is promoted without rebuilding, and the previous verified site is retained for rollback. The flow is preview → live: previews are PR/CMS uploads, and the live website is https://cottonwood-library.pages.dev (the public domain is attached to it at launch).
 
 Automatic repair cannot modify authorization, connector code, publishing, workflows/tests or library facts. Preserve the narrow component/layout/style and CMS-adapter repair boundary.
 

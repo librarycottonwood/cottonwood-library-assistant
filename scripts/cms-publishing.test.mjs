@@ -5,7 +5,7 @@ import {createServer} from 'node:http';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {inputContext, checkApproval, checkPreviewRun, checkFileInventory, verifyHosted, previousStage, promoteWithRollback, checkHosting, checkTrigger, validate, revisionDigest} from './cms-publishing.mjs';
+import {inputContext, checkApproval, checkPreviewRun, checkFileInventory, verifyHosted, previousStage, promoteWithRollback, checkHosting, checkTrigger, validate, revisionDigest, deploy, ensureLiveProject} from './cms-publishing.mjs';
 import {inventory, digestOf} from './release.mjs';
 
 const source = 'a'.repeat(40), content = 'b'.repeat(64), release = 'c'.repeat(64);
@@ -16,7 +16,7 @@ const env = {CMS_MODE: 'publish', CMS_OPERATION_ID: id, CMS_DOCUMENT_ID: 'event.
   CMS_CALLBACK_URL: `${publisher}/operations/${id}/result`, CMS_PUBLISHER_ORIGIN: publisher,
   CMS_CONTENT_DIGEST: content, CMS_RELEASE_DIGEST: release, CMS_PREVIEW_RUN_ID: '123456'};
 const context = inputContext(env);
-const receipt = {approved: true, publicationScope: 'cms-trial-only', websiteUrl: 'https://cms-trial.cottonwood-library-trial-preview.pages.dev',
+const receipt = {approved: true, publicationScope: 'live-website-only', websiteUrl: 'https://cottonwood-library.pages.dev',
   operationId: id, documentId: 'event.sale', documentRevision: 'rev1', sourceSha: source, contentDigest: content, releaseDigest: release, previewRunId: '123456'};
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lL8AAAAASUVORK5CYII=', 'base64');
@@ -31,7 +31,8 @@ test('publishing inputs cannot target another callback, source or unpinned artif
 
 test('a published CMS record is not approval; every source, document, content, release and run pin matters', () => {
   assert.equal(checkApproval(context, receipt), receipt);
-  for (const changes of [{approved: false}, {publicationScope: 'public'}, {websiteUrl: 'https://cottonwoodlibrary.org'},
+  for (const changes of [{approved: false}, {publicationScope: 'public'}, {publicationScope: 'cms-trial-only'}, {websiteUrl: 'https://cottonwoodlibrary.org'},
+    {websiteUrl: 'https://cms-trial.cottonwood-library-trial-preview.pages.dev'},
     {sourceSha: 'd'.repeat(40)}, {documentRevision: 'rev2'}, {contentDigest: 'd'.repeat(64)}, {releaseDigest: 'e'.repeat(64)}, {previewRunId: '999999'}]) {
     assert.throws(() => checkApproval(context, {...receipt, ...changes}));
   }
@@ -140,9 +141,9 @@ test('real local HTTP fault injection restores the earlier exact files and verif
   } finally {await server.close(); await rm(root, {recursive: true, force: true});}
 });
 
-test('failed restoration and first-ever trial failures never claim a working rollback', async () => {
+test('failed restoration and first-ever live failures never claim a working rollback', async () => {
   const first = await promoteWithRollback({stage: 'next', previous: null, operation: {}, deployer: async () => {}, verifier: async () => {throw Error('Injected failed result');}});
-  assert.equal(first.rollback, 'no_previous_verified_cms_trial'); assert.equal(first.status, 'deploy_failed');
+  assert.equal(first.rollback, 'no_previous_verified_live'); assert.equal(first.status, 'deploy_failed');
   const broken = await promoteWithRollback({stage: 'next', previous: {stage: 'old', operation: {}}, operation: {}, deployer: async () => {}, verifier: async () => {throw Error('Injected failed restoration');}});
   assert.equal(broken.rollback, 'restoration_not_verified'); assert.equal(broken.status, 'deploy_failed');
 });
@@ -161,7 +162,7 @@ test('rollback reconstruction uses pinned immutable preview bytes and keeps chec
   await writeFile(path.join(hosted, '_review/release.json'), JSON.stringify({sourceSha: source, contentDigest: content, digest, files, reviewFiles}));
   const server = await httpFixture(hosted);
   const fetcher = (url, options) => fetch(new URL(new URL(url).pathname, server.base), options);
-  const previous = {operationId: id, sourceSha: source, contentDigest: content, releaseDigest: digest, previewRunId: '123456', previewUrl: 'https://1234abcd.cottonwood-library-trial-preview.pages.dev/'};
+  const previous = {operationId: id, sourceSha: source, contentDigest: content, releaseDigest: digest, previewRunId: '123456', previewUrl: 'https://1234abcd.cottonwood-library.pages.dev/'};
   try {
     const stage = await previousStage(previous, {root, fetcher});
     assert.equal(await readFile(path.join(stage, 'index.html'), 'utf8'), '<h1>Earlier library event</h1>');
@@ -169,69 +170,81 @@ test('rollback reconstruction uses pinned immutable preview bytes and keeps chec
     assert.equal(JSON.parse(await readFile(path.join(stage, '_review/status.json'))).digest, digest);
     await writeFile(path.join(hosted, '_review/phone.png'), 'tampered screenshot');
     await assert.rejects(previousStage(previous, {root, fetcher}), /picture changed/);
+    // A recovery pointer on the retired trial project cannot restore the live website.
+    await assert.rejects(previousStage({...previous, previewUrl: 'https://1234abcd.cottonwood-library-trial-preview.pages.dev/'}, {root, fetcher}), /invalid pins/);
   } finally {await server.close(); await rm(root, {recursive: true, force: true});}
 });
 
-test('hosting guard refuses a production branch collision, public domain, or untracked existing CMS trial', async () => {
-  const credentials = {CLOUDFLARE_ACCOUNT_ID: 'e05729fd6b6fad329e31896d8b1c2da9', CLOUDFLARE_API_TOKEN: 'local-fixture-hosting-token'};
-  const good = {success: true, result: {name: 'cottonwood-library-trial-preview', production_branch: 'production', domains: ['cottonwood-library-trial-preview.pages.dev']}};
-  await checkHosting(credentials, {fetcher: async url => Response.json(String(url).includes('/deployments?') ? {success: true, result: []} : good)});
-  for (const changes of [{production_branch: 'cms-trial'}, {domains: ['cottonwoodlibrary.org']}]) {
-    await assert.rejects(checkHosting(credentials, {fetcher: async () => Response.json({...good, result: {...good.result, ...changes}})}));
+const hostingCredentials = {CLOUDFLARE_ACCOUNT_ID: 'e05729fd6b6fad329e31896d8b1c2da9', CLOUDFLARE_API_TOKEN: 'local-fixture-hosting-token'};
+const hostingProject = {success: true, result: {name: 'cottonwood-library', production_branch: 'production', domains: ['cottonwood-library.pages.dev']}};
+const withInventory = (body, project = hostingProject) => async value => Response.json(new URL(value).pathname.endsWith('/deployments') ? body : project);
+
+test('hosting guard refuses another account, a personal login, wrong project settings or foreign domains', async () => {
+  const empty = {success: true, result: []};
+  await checkHosting(hostingCredentials, {fetcher: withInventory(empty)});
+  // The live project may carry the library's own public domain at launch.
+  await checkHosting(hostingCredentials, {fetcher: withInventory(empty, {...hostingProject, result: {...hostingProject.result, domains: ['cottonwood-library.pages.dev', 'www.cottonwoodcommunitylibrary.com']}})});
+  for (const changes of [{production_branch: 'cms-trial'}, {name: 'cottonwood-library-trial-preview'}, {domains: ['cottonwoodlibrary.org']},
+    {domains: ['cottonwood-library.pages.dev', 'cottonwoodlibrary.org']}, {domains: ['cottonwood-library-4x2.pages.dev']}, {domains: []}]) {
+    await assert.rejects(checkHosting(hostingCredentials, {fetcher: withInventory(empty, {...hostingProject, result: {...hostingProject.result, ...changes}})}), /live hosting project must be/);
   }
-  await assert.rejects(checkHosting(credentials, {requireEmptyTrial: true, fetcher: async url =>
-    Response.json(String(url).includes('/deployments?') ? {success: true, result: [{deployment_trigger: {metadata: {branch: 'cms-trial'}}}]} : good)}), /no verified recovery/);
+  for (const env of [{...hostingCredentials, CLOUDFLARE_ACCOUNT_ID: '0123456789abcdef0123456789abcdef'}, {CLOUDFLARE_ACCOUNT_ID: hostingCredentials.CLOUDFLARE_ACCOUNT_ID}]) {
+    await assert.rejects(checkHosting(env, {fetcher: async () => assert.fail('no request without the library account')}), /Refusing to deploy/);
+  }
 });
 
-const hostingCredentials = {CLOUDFLARE_ACCOUNT_ID: 'e05729fd6b6fad329e31896d8b1c2da9', CLOUDFLARE_API_TOKEN: 'local-fixture-hosting-token'};
-const hostingProject = {success: true, result: {name: 'cottonwood-library-trial-preview', production_branch: 'production', domains: ['cottonwood-library-trial-preview.pages.dev']}};
+test('deploys accept only the live production branch or this operation\'s isolated preview branch', async () => {
+  for (const branch of ['cms-trial', 'main', 'cms-draft-' + 'f'.repeat(8), 'trial']) {
+    await assert.rejects(deploy('stage', branch, {operationId: id, sourceSha: source}, hostingCredentials), /Only the live production branch/);
+  }
+  await assert.rejects(deploy('stage', 'production', {operationId: id, sourceSha: source}, {}), /Refusing to deploy/);
+});
 
-test('Pages inventory uses the page size accepted by the actual provider and is checked before preview', async () => {
+test('first live publication requires an empty authenticated production inventory', async () => {
+  await checkHosting(hostingCredentials, {requireNoLive: true, fetcher: withInventory({success: true, result: [], result_info: {page: 1, per_page: 25, total_pages: 0, total_count: 0}})});
+  // Previews do not count as a live website.
+  await assert.rejects(checkHosting(hostingCredentials, {requireNoLive: true, fetcher: withInventory({success: true, result: [{environment: 'production'}]})}), /already has a deployment/);
+  await checkHosting(hostingCredentials, {fetcher: withInventory({success: true, result: [{environment: 'production'}]})});
+});
+
+test('Pages inventory uses the page size accepted by the actual provider and the production environment', async () => {
   const requests = [];
   const fetcher = async value => {
     const url = new URL(value); requests.push(url);
     if (!url.pathname.endsWith('/deployments')) return Response.json(hostingProject);
     // Based on the account-connected probe: 100 returned 400/8000024; 25 returned 200.
     if (url.searchParams.get('per_page') !== '25') return Response.json({success: false, errors: [{code: 8000024}]}, {status: 400});
+    assert.equal(url.searchParams.get('env'), 'production');
     return Response.json({success: true, result: [], result_info: {page: 1, per_page: 25, total_pages: 0}});
   };
-  await checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true});
-  requests.length = 0;
-  await checkHosting(hostingCredentials, {fetcher});
+  await checkHosting(hostingCredentials, {fetcher, requireNoLive: true});
   assert.equal(requests.length, 2);
   await assert.rejects(checkHosting(hostingCredentials, {fetcher: async value => new URL(value).pathname.endsWith('/deployments') ?
     Response.json({success: false}, {status: 400}) : Response.json(hostingProject)}), /hosting deployment inventory request failed \(400\)/);
 });
 
-test('first publication scans every page, including a smaller provider page, before declaring the branch new', async () => {
-  const seen = [];
-  let existing = false;
-  const fetcher = async value => {
-    const url = new URL(value);
-    if (!url.pathname.endsWith('/deployments')) return Response.json(hostingProject);
-    const page = Number(url.searchParams.get('page')); seen.push(page);
-    return Response.json({success: true,
-      result: page === 1 ? Array.from({length: 20}, () => ({deployment_trigger: {metadata: {branch: 'trial'}}})) :
-        [{deployment_trigger: {metadata: {branch: existing ? 'cms-trial' : 'another-draft'}}}],
-      result_info: {page, per_page: 20, total_pages: 2}});
-  };
-  await checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true});
-  assert.deepEqual(seen, [1, 2]);
-  existing = true; seen.length = 0;
-  await assert.rejects(checkHosting(hostingCredentials, {fetcher, requireEmptyTrial: true}), /no verified recovery/);
-  assert.deepEqual(seen, [1, 2]);
+test('first live publication fails closed on inconsistent paging', async () => {
+  for (const result_info of [{page: 2, per_page: 25}, {page: 1, per_page: 0}, {page: 1, per_page: 25, total_pages: 2}, {page: 1, per_page: 25, total_count: 3}]) {
+    await assert.rejects(checkHosting(hostingCredentials, {requireNoLive: true, fetcher: withInventory({success: true, result: [], result_info})}), /Could not verify/);
+  }
+  await assert.rejects(checkHosting(hostingCredentials, {requireNoLive: true, fetcher: withInventory({success: true, result: Array.from({length: 26}, () => ({}))})}), /Could not verify/);
 });
 
-test('first publication fails closed on inconsistent paging or an inventory beyond the existing 1,000-record bound', async () => {
-  const projectOr = body => async value => Response.json(new URL(value).pathname.endsWith('/deployments') ? body : hostingProject);
-  for (const result_info of [{page: 2, per_page: 25}, {page: 1, per_page: 0}, {page: 1, per_page: 25, total_pages: 2}]) {
-    await assert.rejects(checkHosting(hostingCredentials, {requireEmptyTrial: true, fetcher: projectOr({success: true, result: [], result_info})}), /Could not verify/);
-  }
-  let pages = 0;
-  await assert.rejects(checkHosting(hostingCredentials, {requireEmptyTrial: true, fetcher: async value => {
-    if (!new URL(value).pathname.endsWith('/deployments')) return Response.json(hostingProject);
-    pages++;
-    return Response.json({success: true, result: Array.from({length: 25}, () => ({}))});
-  }}), /inventory is too large/);
-  assert.equal(pages, 40);
+test('live project setup creates only the expected library project and confirms its address', async () => {
+  const calls = [];
+  let exists = false;
+  const fetcher = async (value, options) => {
+    calls.push([options.method, new URL(value).pathname]);
+    assert.equal(options.headers.Authorization, 'Bearer local-fixture-hosting-token');
+    if (options.method === 'POST') {
+      assert.deepEqual(JSON.parse(options.body), {name: 'cottonwood-library', production_branch: 'production'});
+      exists = true; return Response.json({...hostingProject, result: {...hostingProject.result, subdomain: 'cottonwood-library.pages.dev'}});
+    }
+    return exists ? Response.json(hostingProject) : new Response('missing', {status: 404});
+  };
+  assert.deepEqual(await ensureLiveProject(hostingCredentials, {fetcher}), {created: true, name: 'cottonwood-library', liveUrl: 'https://cottonwood-library.pages.dev'});
+  assert.ok(calls.every(([, pathname]) => pathname.startsWith('/client/v4/accounts/e05729fd6b6fad329e31896d8b1c2da9/pages/projects')));
+  assert.equal((await ensureLiveProject(hostingCredentials, {fetcher})).created, false);
+  await assert.rejects(ensureLiveProject(hostingCredentials, {fetcher: async (value, options) => options.method === 'POST' ?
+    Response.json({...hostingProject, result: {...hostingProject.result, subdomain: 'cottonwood-library-4x2.pages.dev', domains: ['cottonwood-library-4x2.pages.dev']}}) : new Response('missing', {status: 404})}), /live hosting project must be/);
 });

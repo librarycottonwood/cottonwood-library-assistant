@@ -1,4 +1,4 @@
-import {REPOSITORY, WORKFLOW, TRUSTED_REF, TRIAL_ORIGIN, CONTENT_TYPES, operationIdPattern, sourcePattern, digestPattern, previewUrlValid, pinsMatch, publicOperation, parseEvent, revisionVector} from './contract.mjs';
+import {REPOSITORY, WORKFLOW, TRUSTED_REF, LIVE_ORIGIN, CONTENT_TYPES, operationIdPattern, sourcePattern, digestPattern, previewUrlValid, pinsMatch, publicOperation, parseEvent, revisionVector} from './contract.mjs';
 import {sha256, sameSecret, encode} from './security.mjs';
 
 const githubHeaders = env => ({
@@ -156,15 +156,15 @@ export class CmsLedger {
       return commit.tree.sha;
     };
     if (await tree(value.sourceSha) !== await tree(value.mergedSourceSha)) throw new CmsFault('source_tree_changed');
-    const response = await fetch(`${TRIAL_ORIGIN}/_review/status.json`, {headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual'});
+    const response = await fetch(`${LIVE_ORIGIN}/_review/status.json`, {headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual'});
     if (!response.ok) throw new CmsFault('hosted_verification_failed', 503);
     const hosted = await response.json();
     for (const key of ['sourceSha','mergedSourceSha','operationId','contentDigest','revisionDigest','previewRunId','previewUrl']) {
       if (hosted[key] !== value[key]) throw new CmsFault('hosted_verification_failed', 503);
     }
     if (hosted.digest !== value.releaseDigest) throw new CmsFault('hosted_verification_failed', 503);
-    await this.storage.put('last_verified', {...value, websiteUrl: TRIAL_ORIGIN, verifiedAt: new Date().toISOString()});
-    return json({status: 'deployed_verified', websiteUrl: TRIAL_ORIGIN});
+    await this.storage.put('last_verified', {...value, websiteUrl: LIVE_ORIGIN, verifiedAt: new Date().toISOString()});
+    return json({status: 'deployed_verified', websiteUrl: LIVE_ORIGIN});
   }
 
   async reconcile({forceFresh = false} = {}) {
@@ -187,7 +187,7 @@ export class CmsLedger {
     const verified = await this.storage.get('last_verified');
     if (!forceFresh && (verified?.mergedSourceSha || verified?.sourceSha) === sourceSha && verified.revisionDigest === fingerprint) {
       await this.storage.put('reconciliation', {fingerprint, sourceSha, revisions, operationId: verified.operationId, checkedAt: new Date().toISOString()});
-      const summary = 'This exact content and website source were already verified on the saved CMS trial.';
+      const summary = 'This exact content and website source were already verified on the live website.';
       return json({status: 'deployed_verified', changed: false, reused: true, inventoryOnly: true,
         operation: {id: verified.operationId, status: 'deployed_verified', sourceSha, contentDigest: verified.contentDigest,
           revisionDigest: fingerprint, releaseDigest: verified.releaseDigest, previewRunId: verified.previewRunId,
@@ -280,22 +280,22 @@ export class CmsLedger {
     } else if (value.stage === 'deploy_failed') {
       if (!operation.approval || !['publish_dispatching', 'publish_queued', 'publish_dispatch_uncertain'].includes(operation.status)) throw new CmsFault('invalid_transition');
       operation.status = 'deploy_failed';
-      operation.summary = 'Your approved website update could not be verified. The library assistant needs to check the saved trial website before reporting it as updated.';
+      operation.summary = 'Your approved website update could not be verified. The library assistant needs to check the live website before reporting it as updated.';
       if (value.rollback === 'restored_verified') {
         const previous = await this.storage.get('last_verified');
-        const response = await fetch(`${TRIAL_ORIGIN}/_review/status.json`, {headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual'});
+        const response = await fetch(`${LIVE_ORIGIN}/_review/status.json`, {headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual'});
         if (!response.ok) throw new CmsFault('restoration_verification_failed', 503);
         const hosted = await response.json();
         if (!previous || hosted.operationId !== previous.operationId || hosted.sourceSha !== previous.sourceSha ||
             hosted.contentDigest !== previous.contentDigest || hosted.digest !== previous.releaseDigest) throw new CmsFault('restoration_verification_failed', 503);
-        operation.summary = 'The update could not be verified. The earlier checked CMS trial website was restored and verified. Your content remains saved.';
+        operation.summary = 'The update could not be verified. The earlier checked live website was restored and verified. Your content remains saved.';
       }
     } else {
       if (!operation.approval || !['publish_dispatching', 'publish_queued', 'publish_dispatch_uncertain'].includes(operation.status) ||
-          value.websiteUrl !== TRIAL_ORIGIN || !pinsMatch(operation.approval, {...value, documentRevision: operation.event.documentRevision}, false)) {
+          value.websiteUrl !== LIVE_ORIGIN || !pinsMatch(operation.approval, {...value, documentRevision: operation.event.documentRevision}, false)) {
         throw new CmsFault('approval_required');
       }
-      const response = await fetch(`${TRIAL_ORIGIN}/_review/status.json`, {
+      const response = await fetch(`${LIVE_ORIGIN}/_review/status.json`, {
         headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual',
       });
       if (!response.ok) throw new CmsFault('hosted_verification_failed', 503);
@@ -305,12 +305,12 @@ export class CmsLedger {
         throw new CmsFault('hosted_verification_failed', 503);
       }
       operation.status = 'deployed_verified';
-      operation.verifiedUrl = TRIAL_ORIGIN;
-      operation.summary = 'This approved version is verified on the saved CMS trial website. The public library domain has not changed.';
+      operation.verifiedUrl = LIVE_ORIGIN;
+      operation.summary = 'This approved version is verified on the live website.';
       await this.storage.put('last_verified', {
         operationId: operation.id, sourceSha: operation.sourceSha,
         contentDigest: operation.contentDigest, revisionDigest: operation.revisionDigest, releaseDigest: operation.releaseDigest,
-        websiteUrl: TRIAL_ORIGIN, previewUrl: operation.previewUrl, previewRunId: operation.previewRunId,
+        websiteUrl: LIVE_ORIGIN, previewUrl: operation.previewUrl, previewRunId: operation.previewRunId,
         verifiedAt: new Date().toISOString(),
       });
     }
@@ -339,12 +339,12 @@ export class CmsLedger {
       revisionDigest: operation.revisionDigest, releaseDigest: operation.releaseDigest, previewRunId: operation.previewRunId,
     };
     operation.status = 'publish_dispatching';
-    operation.summary = 'The library approved this exact preview. Its saved trial update is starting.';
+    operation.summary = 'The library approved this exact preview. Its live website update is starting.';
     await this.save(operation);
     try {
       await dispatch(operation, 'publish', this.env);
       operation.status = 'publish_queued';
-      operation.summary = 'Your approved trial website update is being published and checked.';
+      operation.summary = 'Your approved live website update is being published and checked.';
     } catch {
       operation.status = 'publish_dispatch_uncertain';
       operation.summary = 'Your approval is saved, but publishing could not be confirmed. The library assistant will check its status before retrying.';
@@ -366,7 +366,7 @@ export class CmsLedger {
       contentDigest: operation.contentDigest, releaseDigest: operation.releaseDigest,
       revisionDigest: operation.revisionDigest,
       previewRunId: operation.previewRunId, reviewedAt: operation.approval.reviewedAt,
-      publicationScope: 'cms-trial-only', websiteUrl: TRIAL_ORIGIN,
+      publicationScope: 'live-website-only', websiteUrl: LIVE_ORIGIN,
       previousVerified: await this.storage.get('last_verified') || null,
     });
   }

@@ -6,12 +6,12 @@
   "compatibility_flags": ["global_fetch_strictly_public"],
   "workers_dev": true,
   "observability": {"enabled": false},
-  // Library-owned trial service. No custom/public library domain or paid resource.
+  // Library-owned publishing service on the library Cloudflare account. No paid resource.
   "vars": {
     "PUBLIC_ORIGIN": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev",
     "SANITY_PROJECT_ID": "2ou0xy2r",
     "SANITY_DATASET": "production",
-    "PREVIEW_HOST_SUFFIX": "cottonwood-library-trial-preview.pages.dev"
+    "PREVIEW_HOST_SUFFIX": "cottonwood-library.pages.dev"
   },
   "secrets": {"required": ["SANITY_WEBHOOK_SECRET", "GITHUB_DISPATCH_TOKEN", "CMS_WORKFLOW_TOKEN", "CMS_STATUS_TOKEN", "REVIEW_GITHUB_CLIENT_ID", "REVIEW_GITHUB_CLIENT_SECRET", "REVIEW_SESSION_SECRET"]},
   "durable_objects": {

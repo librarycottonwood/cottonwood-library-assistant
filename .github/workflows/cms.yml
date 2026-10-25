@@ -1,4 +1,4 @@
-name: Checked CMS trial publishing
+name: Checked CMS live publishing
 on:
   workflow_dispatch:
     inputs:
@@ -103,7 +103,9 @@ jobs:
           node scripts/cms-publishing.mjs build
       - name: Upload and verify the dedicated immutable preview
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+          # Library-account Pages token. CLOUDFLARE_TRIAL_API_TOKEN is the legacy secret name;
+          # once CLOUDFLARE_API_TOKEN is added with the same value, delete the legacy secret.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
         run: node scripts/cms-publishing.mjs preview
       - name: Reserve space within the existing artifact allowance
         env:
@@ -137,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     concurrency:
-      group: library-cms-trial-publishing
+      group: library-live-publishing
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
@@ -168,7 +170,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
           SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+          # Library-account Pages token. CLOUDFLARE_TRIAL_API_TOKEN is the legacy secret name;
+          # once CLOUDFLARE_API_TOKEN is added with the same value, delete the legacy secret.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
         run: node scripts/cms-publishing.mjs publish
       - name: Confirm the hosted result to the review service
         env:

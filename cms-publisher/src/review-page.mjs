@@ -29,7 +29,7 @@ export const html = (body, status = 200, extra = {}) => new Response(`<!doctype 
 
 const statusCopy = {
   review_required: ['Ready for your review', 'Look over the preview before saving your update.'],
-  deployed_verified: ['Your update is saved', 'The trial website has been updated and checked.'],
+  deployed_verified: ['Your update is saved', 'The live website has been updated and checked.'],
   publish_dispatching: ['Saving your update', 'Please check back shortly while the website is updated and checked.'],
   publish_queued: ['Saving your update', 'Please check back shortly while the website is updated and checked.'],
   publish_dispatch_uncertain: ['Checking your update', 'Return to the library assistant to check whether your update has saved.'],
@@ -48,7 +48,7 @@ export function reviewPage(operation, session, ready, env = {}) {
   const form = ready && operation.status === 'review_required' && session && previewUrl ? `<form method="post" action="/review/${escape(operation.id)}/approve">
     <input type="hidden" name="csrf" value="${escape(session.csrf)}">
     ${pins.map(key => `<input type="hidden" name="${key}" value="${escape(operation[key] || '')}">`).join('')}
-    <button type="submit">Save to the trial website</button></form>` : '';
+    <button type="submit">Save to the live website</button></form>` : '';
   const refresh = ready && session && ['build_failed', 'deploy_failed', 'connection_failed', 'preview_dispatch_uncertain', 'superseded'].includes(operation.status) ?
     `<details><summary>Need a new preview?</summary><form method="post" action="/review/${escape(operation.id)}/refresh"><input type="hidden" name="csrf" value="${escape(session.csrf)}"><p>If you made another change or this preview expired, prepare a fresh one to review.</p><button class="secondary" type="submit">Prepare a fresh preview</button></form></details>` : '';
   return `<p class="eyebrow">Website preview</p><h1>Review your website update</h1><div class="status" role="status"><strong>${heading}</strong><p>${explanation}</p></div>${preview}${form}${refresh}`;

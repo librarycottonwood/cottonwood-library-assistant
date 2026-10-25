@@ -3,6 +3,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
 import { publisherReadiness, verifyHostedSource } from './src/deployment-readiness.mjs';
+import { requireLibraryWorkerConfig } from '../scripts/library-account.mjs';
 function record(state) {
   if(process.env.GITHUB_OUTPUT)appendFileSync(process.env.GITHUB_OUTPUT,`state=${state}\n`);
 }
@@ -11,6 +12,7 @@ const sha=process.env.CHECKED_SHA;
 if(!/^[0-9a-f]{40}$/.test(sha || ''))throw Error('A checked source commit is required.');
 const blocked=publisherReadiness(process.env,()=>spawnSync(process.execPath,['check-live.mjs'],{encoding:'utf8'}));
 if(blocked){record(blocked.state);console.log(blocked.message);process.exit(0);}
+requireLibraryWorkerConfig(new URL('./wrangler.jsonc', import.meta.url).pathname);
 const invoke=(...args)=>execFileSync('npx',['--no-install','wrangler',...args],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
 const current=JSON.parse(invoke('deployments','status','--json'));
 const previous=current.versions?.length===1 && current.versions[0].percentage===100 ? current.versions[0].version_id : null;

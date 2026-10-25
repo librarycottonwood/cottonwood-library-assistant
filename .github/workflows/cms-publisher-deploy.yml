@@ -41,6 +41,7 @@ jobs:
         if: steps.ready.outputs.deploy == 'true'
         working-directory: cms-publisher
         env:
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
           CLOUDFLARE_API_TOKEN: ${{ secrets.CMS_PUBLISHER_DEPLOY_TOKEN }}
           CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
           WRANGLER_SEND_METRICS: 'false'

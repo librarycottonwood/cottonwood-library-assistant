@@ -4,7 +4,7 @@ import {checkCmsHealth} from './cms-health.mjs';
 const origin='https://cms-library.example';
 const env={CMS_PUBLISHER_ORIGIN:origin,CMS_STATUS_TOKEN:'synthetic-status-token-12345678901234567890',GITHUB_SHA:'a'.repeat(40)};
 const id='11111111-1111-4111-8111-111111111111';
-const last={operationId:id,sourceSha:'a'.repeat(40),contentDigest:'b'.repeat(64),releaseDigest:'c'.repeat(64),websiteUrl:'https://cms-trial.cottonwood-library-trial-preview.pages.dev',verifiedAt:'2026-10-20T10:00:00Z'};
+const last={operationId:id,sourceSha:'a'.repeat(40),contentDigest:'b'.repeat(64),releaseDigest:'c'.repeat(64),websiteUrl:'https://cottonwood-library.pages.dev',verifiedAt:'2026-10-20T10:00:00Z'};
 function service({record=last,reconcile='review_required',wrongHosted=false,oldFailures=false}={}){
   const calls=[];
   const fetcher=async(url,options={})=>{
@@ -33,6 +33,13 @@ test('initial account connection and pending review never claim a verified websi
   const mock=service({record:null,reconcile:'preview_queued'});
   const report=await checkCmsHealth({env,fetcher:mock.fetcher});
   assert.equal(report.result,'awaiting_first_verified_deployment');assert.equal(report.hostedVerified,false);assert.equal(mock.calls.length,2);
+});
+test('a verified record from the retired trial address is not treated as a verified live website',async()=>{
+  const mock=service({record:{...last,websiteUrl:'https://cms-trial.cottonwood-library-trial-preview.pages.dev'}});
+  const report=await checkCmsHealth({env,fetcher:mock.fetcher});
+  assert.equal(report.result,'awaiting_first_verified_deployment');assert.equal(report.hostedVerified,false);assert.equal(report.lastVerified,null);
+  assert.equal(mock.calls.length,2,'the retired address is never fetched');
+  await assert.rejects(checkCmsHealth({env,fetcher:service({record:{...last,websiteUrl:'https://unrelated.example'}}).fetcher}),/record was invalid/);
 });
 test('current failed operation needs attention but superseded failure does not replace a current pending review',async()=>{
   assert.equal((await checkCmsHealth({env,fetcher:service({reconcile:'build_failed'}).fetcher})).result,'needs_attention');
