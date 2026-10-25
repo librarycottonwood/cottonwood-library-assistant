@@ -28,10 +28,10 @@ test('check blocks raw pictures, oversized files and unused uploads', async () =
   const root = await mkdtemp(path.join(tmpdir(), 'library-site-'));
   try {
     await mkdir(path.join(root, 'src/components'), { recursive: true });
-    await mkdir(path.join(root, 'library-files/images'), { recursive: true });
-    await sharp({ create: { width: 10, height: 10, channels: 3, background: '#000' } }).jpeg().withExif({ IFD0: { Make: 'Phone' } }).toFile(path.join(root, 'library-files/images/used.jpg'));
-    await sharp({ create: { width: 10, height: 10, channels: 3, background: '#000' } }).jpeg().toFile(path.join(root, 'library-files/images/forgotten.jpg'));
-    await writeFile(path.join(root, 'src/components/A.astro'), "import p from '../../library-files/images/used.jpg';\n<img src={p.src} alt=\"\" />\n<div style=\"background:url('/x.png')\"></div>");
+    await mkdir(path.join(root, 'src/assets/images'), { recursive: true });
+    await sharp({ create: { width: 10, height: 10, channels: 3, background: '#000' } }).jpeg().withExif({ IFD0: { Make: 'Phone' } }).toFile(path.join(root, 'src/assets/images/used.jpg'));
+    await sharp({ create: { width: 10, height: 10, channels: 3, background: '#000' } }).jpeg().toFile(path.join(root, 'src/assets/images/forgotten.jpg'));
+    await writeFile(path.join(root, 'src/components/A.astro'), "import p from '../assets/images/used.jpg';\n<img src={p.src} alt=\"\" />\n<div style=\"background:url('/x.png')\"></div>");
     const problems = (await check({ root })).join('\n');
     assert.match(problems, /used\.jpg still has hidden photo details/);
     assert.match(problems, /forgotten\.jpg isn't used/);
@@ -43,9 +43,9 @@ test('check blocks raw pictures, oversized files and unused uploads', async () =
 test('CMS replacement removes only unused emitted originals and still blocks oversized referenced pictures', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'library-cms-images-'));
   try {
-    for (const dir of ['library-files/images', 'dist/_astro', 'src']) await mkdir(path.join(root, dir), {recursive: true});
+    for (const dir of ['src/assets/images', 'dist/_astro', 'src']) await mkdir(path.join(root, dir), {recursive: true});
     const photo = await sharp({create: {width: 20, height: 20, channels: 3, background: '#fff'}}).png().toBuffer();
-    for (const name of ['replaced.png', 'html.png', 'css.png', 'script.png']) await writeFile(path.join(root, 'library-files/images', name), photo);
+    for (const name of ['replaced.png', 'html.png', 'css.png', 'script.png']) await writeFile(path.join(root, 'src/assets/images', name), photo);
     await writeFile(path.join(root, 'src/registry.ts'), 'replaced.png html.png css.png script.png');
     for (const name of ['replaced.HASH.png', 'html.HASH.png', 'css.HASH.png', 'script.HASH.png', 'remote.HASH.png']) {
       await writeFile(path.join(root, 'dist/_astro', name), Buffer.alloc(LIMITS.servedBytes + 1));
@@ -54,7 +54,7 @@ test('CMS replacement removes only unused emitted originals and still blocks ove
     await writeFile(path.join(root, 'dist/_astro/style.css'), '.cover {background: url(css.HASH.png)}');
     await writeFile(path.join(root, 'dist/_astro/script.js'), 'const image = "script.HASH.png";');
     assert.deepEqual(await pruneUnusedBuiltImages({root}), ['_astro/replaced.HASH.png']);
-    assert.deepEqual(await readFile(path.join(root, 'library-files/images/replaced.png')), photo);
+    assert.deepEqual(await readFile(path.join(root, 'src/assets/images/replaced.png')), photo);
     for (const name of ['html.HASH.png', 'css.HASH.png', 'script.HASH.png', 'remote.HASH.png']) {
       assert.equal((await stat(path.join(root, 'dist/_astro', name))).size, LIMITS.servedBytes + 1);
       assert.ok((await check({root, dist: 'dist'})).some(problem => problem.includes(name)));

@@ -1,13 +1,37 @@
-# Cottonwood Library Assistant
+# Cottonwood Community Library website
 
-Private conversational website-maintenance demo, isolated from the Squarespace migration.
+The library's website (Astro, Sanity CMS, Cloudflare Pages) and the Claude Code setup that library staff use to update it.
 
-The agent instructions are in AGENTS.md. Cloud setup and preview operation are documented in assistant/WORKFLOW.md. The setup script installs the pinned dependencies, checks the site, and builds it. A saved release contains a hash-verified asset snapshot; screenshots are captured from that snapshot.
+- Live website: https://cottonwood-library.pages.dev/
+- Content editor (Sanity Studio): https://cottonwood-community-library.sanity.studio/
+- Staff guide: [docs/staff-guide.md](docs/staff-guide.md)
+- Claude rules: [CLAUDE.md](CLAUDE.md) and [.claude/](.claude/)
 
-Sanity content management is implemented but unconnected. Read [CMS setup and handoff](assistant/CMS.md), [Studio forms](studio/README.md) and [checked publishing](cms-publisher/README.md). Google sign-in, project creation and the nonprofit application wait for the library meeting. The default remains the local prototype; no account, paid service or live deployment is created by installing/building this repository. Run `bash scripts/cms-check.sh` for the account-free CMS checks.
+## Layout
 
-Production publishing is not connected. The preview project has no library domain and must be provisioned with `production` as its production branch. A separate human-controlled approval and publishing service is required before launch.
+| Path | What it is |
+| --- | --- |
+| `src/` | The website. Pages, components, content adapters, design tokens (`src/design-system/`), pictures (`src/assets/`). |
+| `public/` | Files served as-is (favicons, PDFs, robots.txt). |
+| `studio/` | Sanity Studio (the content editor's forms and schemas). |
+| `cms-publisher/` | Cloudflare Worker for Sanity webhooks, the publishing ledger and the admin recovery page. |
+| `connector/` | Cloudflare Worker: visitor-report MCP connector (ChatGPT era, see its README). |
+| `scripts/` | Build, CMS, image, release and publishing scripts plus their tests. |
+| `content-updates/latest.json` | Changed by content-only PRs so the website gets a reviewable preview. |
+| `.github/workflows/` | Checks, previews, live publishing and monitoring. The only way anything is deployed. |
+| `.claude/` | Claude Code settings, safety hooks, staff skills and scheduled-task (routine) prompts. |
+| `docs/` | Staff guide, setup checklist, design rules, domain launch plan. |
 
-Development: Node 24, pnpm 11.15.1. Run `bash scripts/cloud-setup.sh`, then `pnpm assistant:prepare` and `pnpm assistant:capture -- <digest>`.
+## Develop
 
-The private repository belongs to `librarycottonwood`. Keep account recovery and final launch authority with the library.
+Node 24 and pnpm 11.15.1 (pinned).
+
+```sh
+pnpm install
+pnpm check
+pnpm build
+node --test scripts/*.test.mjs .claude/hooks/*.test.mjs
+bash scripts/cms-check.sh   # Studio, CMS and publisher checks, no accounts needed
+```
+
+Never deploy from a computer. Previews and the live site come only from the GitHub workflows on the library's Cloudflare account.

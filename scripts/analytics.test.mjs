@@ -2,7 +2,7 @@ import { launchBrowser } from './browser.mjs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-const analytics = JSON.parse(await readFile('assistant/analytics.json', 'utf8'));
+const analytics = JSON.parse(await readFile('src/content/analytics.json', 'utf8'));
 assert.equal(analytics.websiteHost, 'cottonwood-library.pages.dev', 'Tracking must cover the library-owned live website');
 const host = 'https://' + analytics.websiteHost;
 const untrustedHost = 'https://unrelated-preview.example';

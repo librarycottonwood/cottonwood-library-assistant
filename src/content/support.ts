@@ -11,7 +11,7 @@ const { library, support } = homeContent;
  * formWidgetId is the id="…" of the <givebutter-widget> element. campaign (optional) is the
  * campaign's short code; with it, Donate buttons open this fundraiser's checkout popup, without it
  * they link to the on-site form. account (optional) is the acct=… value, only when it differs from
- * library.givebutter.account in seed.ts (see assistant/content/fundraisers.md).
+ * library.givebutter.account in seed.ts (see .claude/skills/fundraisers/SKILL.md).
  * endsOn is optional (YYYY-MM-DD, Pacific time, inclusive); after it, or once the entry is removed, Donate buttons revert on their own.
  * The image key must exist in images.ts. Example entry (copy inside campaigns: [ ]):
  *   {

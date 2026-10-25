@@ -40,7 +40,7 @@
   }
 }
 
-/* Design system: see DESIGN.md. Widths, rhythm and cards live here so every page shares them. */
+/* Design rules for these pages: see docs/design-rules.md. Widths, rhythm and cards live here so every page shares them. */
 :root {
   --gutter: 1.25rem;
   --measure: 40rem;   /* ≈ 70 characters of body text: the widest any running text may get */

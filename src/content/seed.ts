@@ -27,7 +27,7 @@ export const homeContent = {
     donationUrl: null,
     // The general donation campaign in Givebutter, e.g. { account: 'AbC123xYz', campaign: 'Q1W2E3' }.
     // null until the board supplies it; then every Donate button opens Givebutter's checkout popup
-    // (see assistant/content/fundraisers.md, "Donate buttons").
+    // (see .claude/skills/fundraisers/SKILL.md, "Donate buttons").
     givebutter: null as HomeContent['library']['givebutter'],
   },
   navigation: [

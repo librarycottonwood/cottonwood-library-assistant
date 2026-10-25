@@ -190,6 +190,6 @@ async function main() {
     const config=sanityConfig();
     await fetchSanitySnapshot(config,{token:process.env.SANITY_READ_TOKEN});
     console.log(JSON.stringify({status:'published_content_read_verified',projectId:config.projectId,dataset:config.dataset,livePublishingVerified:false}));
-  } else throw Error('Usage: cms.mjs seed|snapshot|verify|import|doctor. See assistant/CMS.md.');
+  } else throw Error('Usage: cms.mjs seed|snapshot|verify|import|doctor. See studio/README.md.');
 }
 if (process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) main().catch(error=>{console.error(error.message);process.exitCode=1;});

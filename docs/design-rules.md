@@ -1,4 +1,6 @@
-# Website design rules
+# Website design rules (current pages)
+
+These rules cover the existing pages built on `src/styles/global.css` and `SiteLayout`. Pages rebuilt on the new design tokens (`src/design-system/`, `BaseLayout`) follow the tokens instead.
 
 Short rules every page follows. The classes live in `src/styles/global.css` (`@layer components`). Calm, readable, one idea at a time.
 
@@ -38,8 +40,8 @@ Short rules every page follows. The classes live in `src/styles/global.css` (`@l
 - `.panel` (meadow background, same padding) for hours, "When/Where" and step lists.
 
 ## Content and photos
-- Words, hours, services, events, programs and their pictures come from the CMS (`assistant/CMS.md`). Pages only arrange them; never hard-code library facts in a layout.
-- Photos that belong to the page design itself (Visit entrance and service cards, Kids cards, Donate page, book drop) live in `src/content/images.ts` and must be prepared with `pnpm assistant:image`.
+- Words, hours, services, events, programs and their pictures come from the CMS (Sanity; see `studio/README.md`). Pages only arrange them; never hard-code library facts in a layout.
+- Photos that belong to the page design itself (Visit entrance and service cards, Kids cards, Donate page, book drop) live in `src/content/images.ts` and must be prepared with `pnpm image:prepare`.
 
 ## Keep
 - Colours, Lora + DM Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.

@@ -71,7 +71,7 @@ try {
   if (errors.length) throw new Error(errors.join('\n'));
   const pictures = {};
   for (const name of ['desktop', 'phone']) pictures[name] = createHash('sha256').update(await readFile(path.join(output, `${name}.png`))).digest('hex');
-  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'offline prototype; map address/directions fallback exercised; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
+  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'offline prototype; map address/directions fallback exercised; external requests blocked', rerun: `pnpm release:capture -- ${digest}`, evidence, errors }, null, 2));
   console.log(`Screenshots and checks: ${output}`);
 } finally {
   await browser?.close();

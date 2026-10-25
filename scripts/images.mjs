@@ -7,9 +7,9 @@ import { pathToFileURL } from 'node:url';
 
 export const LIMITS = { maxEdge: 2400, sourceBytes: 1_200_000, publicBytes: 150_000, servedBytes: 300_000 };
 const RASTER = /\.(png|jpe?g|webp|avif|gif)$/i;
-const SOURCES = ['library-files/images', 'library-files/logos', 'src/assets', 'public'];
+const SOURCES = ['src/assets', 'public'];
 // Pictures in these folders must be used by the site, so unused uploads don't pile up.
-const MUST_BE_USED = ['library-files/images', 'src/assets'];
+const MUST_BE_USED = ['src/assets'];
 
 async function walk(dir, match) {
   let entries;
@@ -28,7 +28,7 @@ export const slug = name => path.parse(name).name.normalize('NFKD').replace(/[̀
 // Re-encode one picture: upright, at most 2400px, no hidden metadata (camera, GPS).
 // Photos become JPEG; screenshots, logos and graphics become PNG.
 // With inPlace, the file keeps its name and format so existing references still work.
-export async function prepare(input, { outDir = 'library-files/images', name, inPlace = false } = {}) {
+export async function prepare(input, { outDir = 'src/assets/images', name, inPlace = false } = {}) {
   const meta = await sharp(input, { failOn: 'error' }).metadata();
   // Screenshots and flat graphics have few colors (low entropy); photos have many.
   const graphic = inPlace ? /\.png$/i.test(input) : meta.hasAlpha || (await sharp(input).stats()).entropy < 6.5;
@@ -100,14 +100,17 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (action === 'prepare' && rest.length) {
     const nameAt = rest.indexOf('--name');
     const name = nameAt >= 0 ? rest.splice(nameAt, 2)[1] : undefined;
+    // --out <folder>: prepare a picture elsewhere, e.g. a temporary folder before a CMS upload.
+    const outAt = rest.indexOf('--out');
+    const outDir = outAt >= 0 ? rest.splice(outAt, 2)[1] : undefined;
     const inPlace = rest.includes('--in-place');
-    for (const input of rest.filter(arg => arg !== '--in-place')) console.log(await prepare(input, { name, inPlace }));
+    for (const input of rest.filter(arg => arg !== '--in-place')) console.log(await prepare(input, { name, inPlace, ...(outDir ? { outDir } : {}) }));
   } else if (action === 'check') {
     const problems = await check({ dist: rest.includes('--dist') ? 'dist' : undefined });
-    if (problems.length) { console.error(`Picture check failed:\n- ${problems.join('\n- ')}\nFix: pnpm assistant:image -- <file> [--name new-name]`); process.exit(1); }
+    if (problems.length) { console.error(`Picture check failed:\n- ${problems.join('\n- ')}\nFix: pnpm image:prepare -- <file> [--name new-name]`); process.exit(1); }
     console.log('Picture check passed.');
   } else {
-    console.error('Usage: node scripts/images.mjs prepare <file...> [--name name] | check [--dist]');
+    console.error('Usage: node scripts/images.mjs prepare <file...> [--name name] [--out folder] | check [--dist]');
     process.exit(2);
   }
 }
