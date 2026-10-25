@@ -27,7 +27,7 @@
     "project": "cottonwood-library (production branch production)",
     "workflows": "publish-live.yml (PR preview + live save), cms.yml (CMS preview + administrator recovery), live-hosting-setup.yml (one-time project creation)",
     "domain": "cottonwoodcommunitylibrary.com is attached to this project at launch (planned November 16); see assistant/DOMAIN-LAUNCH.md.",
-    "status": "Source renamed from trial to live; first verified live save pending.",
+    "status": "First verified live save October 24: PR #40 merged as 48d30939; publish-live run 40160373342 published the exact checked PR artifact (release 6b00c9b49bd9f5d7040064c2a99329472aec56da32c60b02ada49bda57c6de35, preview https://acf77744.cottonwood-library.pages.dev/) to the production deployment and recorded it in the CMS ledger. live-hosting-setup run 40160161567 created the project on the library account. CMS preview run 40160353204 also succeeded on the new project.",
     "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
     "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) is retired and awaits deletion after the live website is verified; no redirects are kept.",
     "sourcePluginVersion": "0.2.13 (preview → live wording; must be updated in Plugin Creator before it is installed)"
