@@ -1,33 +1,34 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
-import GivingPanel from '../../components/GivingPanel.astro';
+import DonateSection from '../../components/DonateSection.astro';
 import FeatureCard from '../../components/FeatureCard.astro';
-import ContentImage from '../../components/ContentImage.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import UpdateFeed from '../../components/UpdateFeed.astro';
 import Disclosure from '../../components/Disclosure.astro';
-import Icon from '../../components/Icon.astro';
 import { contentRepository } from '../../content/repository';
 import { activeCampaign } from '../../content/feeds';
-const [{ library, support }, { campaigns, updates, initiatives }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getPosts()]);
+const [{ library, hero }, { campaigns, updates, initiatives }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getPosts()]);
 const campaign = activeCampaign(campaigns);
 const options = initiatives.filter(item => item.category === 'community');
 ---
 <SiteLayout title="Donate & support | Cottonwood Community Library" description="Your donations keep Cottonwood’s independent community library open.">
-  <PageIntro title="Your gifts keep us open" description="No county funding. No taxpayer funding. Just community." />
-  <section class="container grid items-stretch gap-6 pb-10 lg:grid-cols-2" aria-label="Financial donations">
-    <ContentImage image={support.image} variant="feature" eager />
-    <GivingPanel library={library} campaign={campaign} />
-  </section>
-  <section class="container pb-12" aria-labelledby="other-support-heading">
-    <h2 id="other-support-heading" class="section-heading mb-6">Other ways to help</h2>
-    <div class="grid gap-5 sm:grid-cols-3">{options.map(option => <FeatureCard title={option.title} note={option.label} image={option.image} href={`/fundraising-events/${option.id}/`} />)}</div>
-  </section>
-  <section id="stories" tabindex="-1" class="bg-meadow/50 py-10 sm:py-12" aria-labelledby="support-stories-heading">
-    <div class="container-narrow"><h2 id="support-stories-heading" class="section-heading mb-6">Why your support matters</h2><PostFeed posts={posts} />
-      <div class="mt-6"><Disclosure title="Community acknowledgments"><UpdateFeed updates={updates} /></Disclosure></div>
+  <PageIntro title="Your gifts keep us open" description="No county or taxpayer funding. Just neighbors." />
+  <DonateSection library={library} campaign={campaign} />
+  <section class="section section-tint" aria-labelledby="other-support-heading">
+    <div class="container">
+      <div class="section-header">
+        <h2 id="other-support-heading" class="section-heading">Other ways to help</h2>
+      </div>
+      <div class="card-grid">{options.map(option => <FeatureCard title={option.title} note={option.label} image={option.image} href={`/fundraising-events/${option.id}/`} />)}</div>
+      <p class="mt-10 text-base">Like to give your time? <a href="/fundraising-events/volunteer/" class="font-semibold underline">Volunteer at the library</a></p>
     </div>
   </section>
-  <section class="container-narrow py-8" aria-label="Helping at the library"><Disclosure title="Interested in helping at the library?"><p>Contact the director about screening and available roles. Applications are reviewed before placement.</p><a href={support.volunteerFileUrl} class="text-link mt-3">Application (PDF)<Icon name="download" class="size-4" /></a></Disclosure></section>
+  <section id="stories" tabindex="-1" class="container-prose section" aria-labelledby="support-stories-heading">
+    <div>
+      <h2 id="support-stories-heading" class="section-heading section-header">Why your support matters</h2>
+      <PostFeed posts={posts.filter(post => post.id !== 'newsletter')} fallbackImage={hero.image} />
+      <div class="mt-8 border-t border-line"><Disclosure title="Community acknowledgments"><UpdateFeed updates={updates} /></Disclosure></div>
+    </div>
+  </section>
 </SiteLayout>

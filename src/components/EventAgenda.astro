@@ -1,0 +1,97 @@
+---
+// Dated events grouped by day (Pacific time), soonest first, each with a small thumbnail.
+// Pages are built ahead of time, so the visitor's browser hides occurrences after their
+// confirmed end time and fills in "Today", "Tomorrow" and "This week" labels.
+import Image from './OptimizedImage.astro';
+import Icon from './Icon.astro';
+import type { LibraryEvent, LibraryImage, Program } from '../content/types';
+import { upcomingEvents } from '../content/feeds';
+interface Props { events: LibraryEvent[]; fallbackImage: LibraryImage; programs?: Program[]; limit?: number; emptyMessage?: string; }
+const { fallbackImage, programs = [], limit, emptyMessage = 'No special events are scheduled right now. Our regular programs are below.' } = Astro.props;
+const zone = 'America/Los_Angeles';
+const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
+const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: zone });
+const monthDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
+const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: zone });
+const clock = (value: string) => {
+  const parts = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: zone }).formatToParts(new Date(value));
+  const get = (type: string) => parts.find(part => part.type === type)?.value ?? '';
+  const minutes = get('minute');
+  return `${get('hour')}${minutes === '00' ? '' : ':' + minutes} ${get('dayPeriod').toLowerCase() === 'am' ? 'a.m.' : 'p.m.'}`;
+};
+const timeRange = (event: LibraryEvent) => `${clock(event.startsAt)}–${clock(event.endsAt)}`;
+const thumbnail = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage;
+const events = upcomingEvents(Astro.props.events);
+const days = new Map<string, LibraryEvent[]>();
+for (const event of events) {
+  const key = dayKey.format(new Date(event.startsAt));
+  days.set(key, [...(days.get(key) ?? []), event]);
+}
+let index = 0;
+---
+<div data-event-list data-event-limit={limit}>
+  <ol hidden={events.length === 0} data-event-rows class="agenda m-0 list-none border-b border-line p-0">
+    {[...days].map(([key, dayEvents]) => {
+      const date = new Date(dayEvents[0]!.startsAt);
+      return <li class="agenda-day" data-agenda-day={key}>
+        <div>
+          <p class="agenda-date"><time datetime={key}><span class="font-semibold">{weekday.format(date)}</span> · {monthDay.format(date)}</time><span class="sr-only">, {fullDay.format(date)}</span></p>
+          <p class="agenda-badge" data-relative hidden></p>
+        </div>
+        <ul class="m-0 list-none space-y-6 p-0">
+          {dayEvents.map(event => {
+            const image = thumbnail(event);
+            return <li class="agenda-item" data-event-expires={event.endsAt} hidden={index++ >= (limit ?? Infinity)}>
+              {/* Decorative: the title beside it names the event. */}
+              <Image width={208} quality={70} image={image} alt="" widths={[144, 208]} sizes="(max-width: 639px) 72px, 104px" class:list={['thumb', image.fit === 'contain' && 'object-contain p-1.5']} loading="lazy" />
+              <div>
+                <p class="text-base font-semibold"><time datetime={event.startsAt}>{timeRange(event)}</time></p>
+                <h3 class="mt-1 text-xl font-semibold leading-snug"><a href={event.href} class="underline decoration-1 underline-offset-4 hover:decoration-2">{event.title}</a></h3>
+                <p class="mt-1 text-base text-muted">{event.summary}</p>
+                {event.location && <p class="mt-1 flex items-start gap-2 text-sm text-muted"><Icon name="pin" class="mt-0.5 size-4 shrink-0" />{event.location}</p>}
+              </div>
+            </li>;
+          })}
+        </ul>
+      </li>;
+    })}
+  </ol>
+  <p data-event-empty hidden={events.length > 0} class="border-y border-line py-7 text-base text-muted">{emptyMessage}</p>
+</div>
+
+<script>
+  // The static release stays useful between CMS edits: an ended occurrence stops being
+  // promoted without changing any record or publishing a new release.
+  const zone = 'America/Los_Angeles';
+  const dayKey = (date: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  const refreshEvents = () => {
+    const now = Date.now();
+    const today = dayKey(new Date(now)), tomorrow = dayKey(new Date(now + 864e5)), week = dayKey(new Date(now + 6 * 864e5));
+    for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
+      const maximum = Number(list.dataset.eventLimit ?? Infinity);
+      let shown = 0;
+      for (const row of list.querySelectorAll<HTMLElement>('[data-event-expires]')) {
+        const active = Date.parse(row.dataset.eventExpires!) >= now && shown < maximum;
+        row.hidden = !active;
+        if (active) shown++;
+      }
+      for (const day of list.querySelectorAll<HTMLElement>('[data-agenda-day]')) {
+        day.hidden = !day.querySelector('[data-event-expires]:not([hidden])');
+        const key = day.dataset.agendaDay!;
+        const label = key === today ? 'Today' : key === tomorrow ? 'Tomorrow' : key > today && key <= week ? 'This week' : '';
+        const badge = day.querySelector<HTMLElement>('[data-relative]');
+        if (badge) { badge.textContent = label; badge.hidden = !label; }
+      }
+      const rows = list.querySelector<HTMLElement>('[data-event-rows]');
+      const empty = list.querySelector<HTMLElement>('[data-event-empty]');
+      if (rows) rows.hidden = shown === 0;
+      if (empty) empty.hidden = shown > 0;
+    }
+    for (const feature of document.querySelectorAll<HTMLElement>('[data-event-feature-expires]')) {
+      feature.hidden = Date.parse(feature.dataset.eventFeatureExpires!) < now;
+    }
+  };
+  refreshEvents();
+  window.setInterval(refreshEvents, 30000);
+  document.addEventListener('visibilitychange', refreshEvents);
+</script>

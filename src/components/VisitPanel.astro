@@ -3,14 +3,15 @@ import LibraryMap from './LibraryMap.astro';
 import Icon from './Icon.astro';
 import { contentRepository } from '../content/repository';
 const { library } = await contentRepository.getHome();
+const open = library.hours.filter(row => row.hours !== 'Closed');
 ---
-<section id="visit" tabindex="-1" class="container-editorial py-12 sm:py-16" aria-labelledby="visit-heading">
-  <div class="grid overflow-hidden rounded-[4px] bg-meadow lg:grid-cols-[.85fr_1.15fr]">
-    <div class="flex flex-col justify-center p-7 sm:p-10">
+<section id="visit" tabindex="-1" class="container section" aria-labelledby="visit-heading">
+  <div class="split">
+    <div>
       <h2 id="visit-heading" class="section-heading">Come visit</h2>
-      <p class="mt-4 text-lg">{library.address}<br />{library.locality}</p>
-      <p class="mt-5 text-base">Monday–Wednesday · 11 a.m.–5 p.m.<br />Saturday · 11 a.m.–2 p.m.</p>
-      <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-6 self-start"><Icon name="pin" class="size-5" />Get directions</a>
+      <p class="mt-5 text-lg">{library.address}<br />{library.locality}</p>
+      <p class="mt-4 text-base text-muted">{open.map((row, index) => <>{index > 0 && <br />}{row.days} · {row.hours}</>)}</p>
+      <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-7"><Icon name="pin" class="size-5" />Get directions</a>
     </div>
     <LibraryMap />
   </div>

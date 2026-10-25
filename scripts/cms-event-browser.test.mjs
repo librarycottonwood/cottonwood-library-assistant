@@ -55,32 +55,30 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         const list=page.locator('[data-event-list]').first();
         const active=()=>list.locator('[data-event-expires]:visible');
         assert.equal(await active().count(),route==='/'?3:4,`${viewportName} ${route} before expiry`);
-        assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),true);
+        if(route==='/')assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),true);
+        if(route==='/librarynews/'){
+          assert.equal(await page.locator('[data-agenda-day="2099-04-17"] [data-relative]').innerText(),'Today');
+          assert.equal(await page.locator('[data-agenda-day="2099-04-18"] [data-relative]').innerText(),'Tomorrow');
+        }
         // The normal 30-second timer removes the ended session in an open tab.
         await page.clock.fastForward(30000);
         assert.equal(await active().count(),3);
         assert.equal(await list.locator('[data-event-expires="2099-04-17T14:00:00-07:00"]').isVisible(),false);
         assert.equal(await active().filter({hasText:'Final evening event'}).count(),1,'homepage rotates the fourth occurrence into its three-item limit');
-        assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),false,'expired featured photo is no longer promoted');
-        if(route==='/librarynews/'){
-          const day=page.locator('[data-calendar-label="April 2099 17"]');
-          assert.equal(await day.locator('a').getAttribute('href'),'/events/afternoon-companion/','same-day highlight follows another still-upcoming event');
-        }
+        if(route==='/')assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),false,'expired featured photo is no longer promoted');
+        if(route==='/librarynews/')assert.equal(await page.locator('[data-agenda-day="2099-04-17"]').isVisible(),true,'a day stays listed while another of its events is upcoming');
         const advance=async when=>{await page.clock.setSystemTime(new Date(when));await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));};
         // Resuming an older/background tab refreshes against the same source dates.
         await advance('2099-04-17T23:00:01Z');assert.equal(await active().count(),2);
-        if(route==='/librarynews/'){
-          const day=page.locator('[data-calendar-label="April 2099 17"]');
-          assert.equal(await day.locator('a').isVisible(),false);assert.equal(await day.locator('[data-calendar-plain]').isVisible(),true);
-        }
+        if(route==='/librarynews/')assert.equal(await page.locator('[data-agenda-day="2099-04-17"]').isVisible(),false,'a day with only ended events is hidden');
         await advance('2099-04-18T22:00:01Z');assert.equal(await active().count(),1);
         assert.match(await active().innerText(),/Final evening event/);
-        if(route==='/librarynews/')assert.equal(await page.locator('[data-calendar-label="April 2099 18"] a').getAttribute('href'),'/events/evening-event/');
+        if(route==='/librarynews/')assert.equal(await active().locator('a').getAttribute('href'),'/events/evening-event/');
         // An event that has started stays listed until its confirmed end.
         await advance('2099-04-18T23:30:00Z');assert.equal(await active().count(),1);
         await advance('2099-04-19T00:00:01Z');assert.equal(await active().count(),0);
         assert.equal(await list.locator('[data-event-empty]').isVisible(),true);assert.match(await list.locator('[data-event-empty]').innerText(),/No special events are scheduled/);
-        if(route==='/librarynews/')assert.equal(await page.locator('[data-calendar-events]:visible').count(),0);
+        assert.equal(await list.locator('[data-agenda-day]:visible').count(),0);
         // A fresh page load also hides the same expired records immediately.
         await page.reload({waitUntil:'networkidle'});assert.equal(await active().count(),0);assert.equal(await list.locator('[data-event-empty]').isVisible(),true);
         await page.close();

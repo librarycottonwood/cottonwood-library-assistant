@@ -16,7 +16,7 @@ When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published
 
 | Edit in Studio | Used by the website |
 | --- | --- |
-| One event with confirmed sessions | Homepage coming up, calendar, event list/detail, referenced news posts |
+| One event with confirmed sessions | Homepage coming up, events agenda, event detail, referenced news posts |
 | One program | Shared recurring program descriptions and pictures; no invented dates |
 | One blog post | News feed and article, rich text, cover/gallery, event references |
 | Newsletter PDF and cover | Current issue selected in settings; old issues remain in the archive |
@@ -24,7 +24,7 @@ When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published
 | Library settings and hours | Shared contact details, map/address, navigation, page copy; phone link and hours summary derive automatically |
 | Giving and acknowledgments | Ways to help, thank-yous and approved Givebutter widget identifiers |
 
-Each confirmed event date requires both a start and an end time, with the end later than the start. Upcoming event rows, featured pictures and calendar highlights recheck the confirmed end time in the visitor's browser, including after a tab resumes. Events stay listed while they are happening and stop being promoted after they end, between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
+Each confirmed event date requires both a start and an end time, with the end later than the start. Upcoming agenda rows, day groups and featured pictures recheck the confirmed end time in the visitor's browser, including after a tab resumes. Events stay listed while they are happening and stop being promoted after they end, between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
 
 Payments, donors and live fundraising totals stay in Givebutter. Donor data, passwords, keys, private board records and personal details do not belong in public website documents. Public Sanity datasets expose published documents and original uploaded assets even when a website does not link them. The website emits resized, metadata-free images; check Sanity's treatment of **original uploads** during the live rehearsal before claiming the entire upload pipeline removes private metadata.
 
@@ -92,7 +92,7 @@ Run `bash scripts/cms-check.sh`, `pnpm check`, `pnpm build`, release safeguards,
 
 Then rehearse in the **library account**, observing the actual final website and private status:
 
-- Create one event; correct its date/time once; check every appearance, including calendar and event references.
+- Create one event; correct its date/time once; check every appearance, including the events agenda and event references.
 - Add a rich-text blog post with a real photo/gallery; verify image privacy, resizing, links and layout on phone/computer.
 - Replace the current newsletter PDF, then verify the current issue and the older archive download.
 - Publish a closure and correct hours once; confirm shared contact/hours displays agree.

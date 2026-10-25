@@ -1,11 +1,24 @@
 ---
-interface Props { title: string; eyebrow?: string; description?: string; back?: { label: string; href: string }; }
-const { title, eyebrow, description, back } = Astro.props;
+// Page title block. Top-level pages have no breadcrumb (the main navigation shows where you are).
+// Subpages pass `back` (their parent, or every ancestor in order) and get "Home / Parent / This page".
+// width: 'wide' lines up with .container sections below; 'prose' with .container-prose pages.
+interface Crumb { label: string; href: string; }
+interface Props { title: string; description?: string; meta?: string; back?: Crumb | Crumb[]; width?: 'wide' | 'prose'; }
+const { title, description, meta, back, width = 'wide' } = Astro.props;
+const trail = back ? [back].flat() : [];
 ---
-<div class="container pt-6 pb-8 sm:pt-8 sm:pb-10">
-  <nav aria-label="Breadcrumb" class="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted"><a href="/" class="hover:underline">Home</a>{back && <><span aria-hidden="true">/</span><a href={back.href} class="hover:underline">{back.label}</a></>}</nav>
-  {eyebrow && <p class="eyebrow mb-3 text-muted">{eyebrow}</p>}
-  <h1 class="page-heading">{title}</h1>
-  {description && <p class="mt-5 max-w-2xl text-lg text-muted">{description}</p>}
+<div class:list={[width === 'prose' ? 'container-prose' : 'container', 'pt-12 pb-12 sm:pt-16 sm:pb-16']}>
+  {trail.length > 0 && <nav aria-label="Breadcrumb" class="mb-8 text-sm text-muted">
+    <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0">
+      {[{ label: 'Home', href: '/' }, ...trail].map(crumb => <>
+        <li><a href={crumb.href} class="underline decoration-1 underline-offset-4 hover:text-forest">{crumb.label}</a></li>
+        <li aria-hidden="true">/</li>
+      </>)}
+      <li><span aria-current="page">{title}</span></li>
+    </ol>
+  </nav>}
+  <h1 class="page-heading max-w-[18ch]">{title}</h1>
+  {meta && <p class="mt-4 text-base text-muted">{meta}</p>}
+  {description && <p class="lede measure mt-5">{description}</p>}
   <slot />
 </div>

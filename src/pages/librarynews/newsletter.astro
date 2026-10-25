@@ -5,15 +5,17 @@ import PageIntro from '../../components/PageIntro.astro';
 import Icon from '../../components/Icon.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import { contentRepository } from '../../content/repository';
-const { newsletter, programs } = await contentRepository.getHome();
-const archives = await contentRepository.getNewsletters();
+const { newsletter } = await contentRepository.getHome();
+const archives = (await contentRepository.getNewsletters()).filter(issue => issue.id !== newsletter?.id);
 ---
 <SiteLayout title={`${newsletter?.issue ?? 'Library'} newsletter | Cottonwood Community Library`} description={newsletter?.summary}>
-  <PageIntro title={newsletter ? `${newsletter.issue} newsletter` : 'Library newsletter'} eyebrow="From the library" back={{ href: '/librarynews/', label: 'Events & news' }} />
-  {newsletter ? <article class="container-narrow grid items-start gap-10 pb-16 md:grid-cols-2">
-    <div class="rounded-[4px] bg-[#e1d9c4] p-8"><Image width={600} quality={70} image={newsletter.cover} alt={newsletter.cover.alt} widths={[350, 600]} sizes="(max-width: 767px) 80vw, 400px" class="h-auto w-full shadow-md" /></div>
-    <div><h2 class="card-heading">Inside this issue</h2><p class="mt-5 text-base text-muted">{newsletter.summary}</p><a href={newsletter.fileUrl} class="button button-primary mt-7">Read the newsletter (PDF)<Icon name="download" class="size-4" /></a><h2 class="mt-10 text-base font-semibold">Explore the programs</h2><ul class="mt-3 list-none p-0">{programs.map(program => <li><a href={`/librarynews/${program.id}/`} class="text-link">{program.title}<Icon name="arrow" class="size-4" /></a></li>)}</ul></div>
-  </article> : <p class="container pb-12 text-base text-muted">No newsletter has been published yet.</p>}
-  <NewsletterSignup />
-  {archives.length > 1 && <section class="container pb-12" aria-labelledby="archive-heading"><h2 id="archive-heading" class="card-heading">Earlier newsletters</h2><ul class="mt-4 space-y-3">{archives.filter(issue => issue.id !== newsletter?.id).map(issue => <li><a href={`/newsletters/${issue.id}/`} class="text-link">{issue.issue}</a></li>)}</ul></section>}
+  <PageIntro title={newsletter ? `${newsletter.issue} newsletter` : 'Library newsletter'} description={newsletter?.summary} back={{ href: '/librarynews/', label: 'Events & news' }} width="prose" />
+  <article class="container-prose section pt-0">
+    {newsletter ? <>
+      <a href={newsletter.fileUrl} class="button button-primary">Read the newsletter (PDF)<Icon name="download" class="size-4" /></a>
+      <div class="mt-12 max-w-sm rounded-[4px] bg-[#e1d9c4] p-6 sm:p-8"><Image width={600} quality={70} image={newsletter.cover} alt={newsletter.cover.alt} widths={[350, 600]} sizes="(max-width: 639px) 80vw, 320px" class="h-auto w-full shadow-md" /></div>
+    </> : <p class="text-base text-muted">No newsletter has been published yet.</p>}
+    <NewsletterSignup />
+    {archives.length > 0 && <section class="mt-16" aria-labelledby="archive-heading"><h2 id="archive-heading" class="card-heading">Earlier newsletters</h2><ul class="mt-4 space-y-3">{archives.map(issue => <li><a href={`/newsletters/${issue.id}/`} class="text-link">{issue.issue}</a></li>)}</ul></section>}
+  </article>
 </SiteLayout>

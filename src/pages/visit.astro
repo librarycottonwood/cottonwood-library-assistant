@@ -3,27 +3,55 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import ContentImage from '../components/ContentImage.astro';
 import Icon from '../components/Icon.astro';
+import InfoCard from '../components/InfoCard.astro';
 import Disclosure from '../components/Disclosure.astro';
 import LibraryMap from '../components/LibraryMap.astro';
 import { contentRepository } from '../content/repository';
+import type { LibraryImage } from '../content/types';
 const { library, borrowing, services, hero, serviceImage } = await contentRepository.getHome();
-
+// Services and their wording come from the CMS; the photos are part of the page layout.
+const servicePhotos: Record<string, LibraryImage> = {
+  borrowing: { key: 'newReads', alt: 'A table display of new chapter books for junior readers in front of library shelves.' },
+  computers: { key: 'computerLab', alt: 'A row of public computer stations along a long counter, with a round table and a large tree mural at the back of the room.' },
+  printing: { key: 'copyRoom', alt: 'The library’s copier near a row of windows, with a round table, a tree mural and a wall plaque nearby.' },
+};
+const serviceCards = services.map(service => ({
+  id: service.id,
+  title: service.title,
+  note: service.description,
+  image: servicePhotos[service.id] ?? serviceImage ?? hero.image,
+  action: service.id === 'borrowing' ? { label: 'Browse the catalog', href: library.catalogUrl, external: true } : { label: 'How it works', href: '#questions' },
+}));
+const bookDrop: LibraryImage = { key: 'bookDrop', alt: 'The library’s outdoor book drop, hand-painted with “BOOK DROP” and a green caterpillar.' };
+const mentionsBookDrop = (answer: string) => /book drop/i.test(answer);
+const showBookDrop = borrowing.findIndex(item => mentionsBookDrop(item.answer));
 ---
 <SiteLayout title="Visit & services | Cottonwood Community Library">
   <PageIntro title="Visit & services" />
-  <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container grid items-start gap-8 pb-10 lg:grid-cols-2">
-    <ContentImage image={serviceImage ?? hero.image} variant="feature" eager />
-    <div class="rounded-[4px] bg-meadow p-6 sm:p-8">
-      <h2 id="visit-heading" class="card-heading">{library.address}</h2>
-      <p class="mt-1 text-base text-muted">{library.locality}</p>
-      <dl class="mt-5">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-sm"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
-      <a href={library.directionsUrl} class="button button-primary mt-4"><Icon name="pin" class="size-4" />Get directions</a>
+  <section id="visit" tabindex="-1" aria-labelledby="visit-heading" class="container section pt-0">
+    <div class="split-equal">
+      <div class="split-media"><ContentImage image={{ key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California, Est. 1882” sign, with rows of bookshelves beyond.' }} variant="feature" eager /></div>
+      <div class="panel">
+        <h2 id="visit-heading" class="card-heading">{library.address}</h2>
+        <p class="mt-1 text-base text-muted">{library.locality}</p>
+        <dl class="mt-6">{library.hours.map(row => <div class="flex flex-wrap justify-between gap-x-5 gap-y-1 border-t border-forest/15 py-3 text-base"><dt>{row.days}</dt><dd class:list={['m-0', row.hours === 'Closed' ? 'text-muted' : 'font-semibold']}>{row.hours}</dd></div>)}</dl>
+        <a href={library.directionsUrl} data-analytics-event="directions_click" class="button button-primary mt-5 self-start"><Icon name="pin" class="size-4" />Get directions</a>
+      </div>
     </div>
   </section>
-  <section id="services" tabindex="-1" aria-labelledby="services-heading" class="container pb-12">
-    <h2 id="services-heading" class="section-heading mb-6">Services and resources</h2>
-    <div class="grid gap-4 sm:grid-cols-3">{services.map(service => <div id={service.id} tabindex="-1" class="rounded-[4px] border border-line p-5"><Icon name={service.icon} class="mb-4 size-7" /><h3 class="text-lg font-semibold">{service.title}</h3>{service.id === 'borrowing' ? <a href={library.catalogUrl} class="text-link mt-1">Browse the catalog</a> : null}<p class="mt-2 text-sm text-muted">{service.description}</p></div>)}</div>
-    <div class="mt-7">{borrowing.map(item => <Disclosure title={item.question}><p>{item.answer}</p></Disclosure>)}</div>
+  <section id="services" tabindex="-1" aria-labelledby="services-heading" class="section section-tint">
+    <div class="container">
+      <h2 id="services-heading" class="section-heading section-header">Services</h2>
+      <div class="card-grid">{serviceCards.map(service => <InfoCard id={service.id} title={service.title} note={service.note} image={service.image} action={service.action} />)}</div>
+    </div>
   </section>
-<section class="container pb-12" aria-label="Library location"><LibraryMap /></section>
+  <section id="questions" tabindex="-1" aria-labelledby="questions-heading" class="container-prose section">
+    <h2 id="questions-heading" class="section-heading section-header">Borrowing questions</h2>
+    <div class="border-t border-line">{borrowing.map((item, index) => <Disclosure title={item.question}><p>{item.answer}</p>{index === showBookDrop && <div class="mt-5 max-w-sm overflow-hidden rounded-[4px]"><ContentImage image={bookDrop} /></div>}</Disclosure>)}</div>
+    {showBookDrop < 0 && <figure class="m-0 mt-10 max-w-sm"><div class="overflow-hidden rounded-[4px]"><ContentImage image={bookDrop} /></div><figcaption class="mt-3 text-sm text-muted">Our outdoor book drop.</figcaption></figure>}
+  </section>
+  <section class="container-prose section pt-0" aria-labelledby="map-heading">
+    <h2 id="map-heading" class="section-heading section-header">Find us</h2>
+    <LibraryMap />
+  </section>
 </SiteLayout>

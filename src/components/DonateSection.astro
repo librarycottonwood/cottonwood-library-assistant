@@ -1,0 +1,38 @@
+---
+// The financial-gift block on the Donate page. Three states, all driven by getDonateLink():
+// 1. An active fundraiser: its title, description and Givebutter Form widget (at #give).
+// 2. library.givebutter set: one Donate button that opens Givebutter's checkout popup.
+// 3. Nothing set up yet (fallback): a calm note to call or email; no big button that goes nowhere.
+import Image from './OptimizedImage.astro';
+import Icon from './Icon.astro';
+import CampaignProgress from './CampaignProgress.astro';
+import { checkoutAttributes, getDonateLink } from '../content/donate';
+import type { HomeContent, FundraisingCampaign, LibraryImage } from '../content/types';
+interface Props { library: HomeContent['library']; campaign?: FundraisingCampaign; }
+const { library, campaign } = Astro.props;
+const donate = await getDonateLink();
+const photo: LibraryImage = campaign?.image ?? { key: 'readingNook', alt: 'A sunny reading nook inside the library, with a large window, wooden chairs and a patterned armchair.' };
+---
+<section class="container section pt-0" aria-labelledby="donate-heading">
+  <div class:list={['split', campaign && 'lg:items-start']}>
+    <Image width={1100} quality={70} image={photo} alt={photo.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 600px" loading="eager" class="feature-shape aspect-[1.4] w-full object-cover" />
+    <div class="measure">
+      <h2 id="donate-heading" class="section-heading">{campaign ? campaign.title : 'Make a gift'}</h2>
+      {campaign ? <>
+        <p class="lede">{campaign.description}</p>
+        <CampaignProgress campaign={campaign} />
+        {donate.checkout && <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-6"><Icon name="heart" class="size-5" />Donate</a>}
+      </> : donate.source === 'fallback' ? <>
+        <p class="lede">Online giving opens soon. To give today, call or email us. We’re glad to help.</p>
+        <ul class="mt-6 list-none space-y-1 p-0">
+          <li><a href={library.phoneHref} class="text-link"><Icon name="phone" class="size-5" />{library.phone}</a></li>
+          <li><a href={`mailto:${library.email}?subject=Supporting%20the%20library`} class="text-link"><Icon name="mail" class="size-5" />{library.email}</a></li>
+        </ul>
+      </> : <>
+        <p class="lede">Every gift helps keep books, programs and open doors here for Cottonwood.</p>
+        <a href={donate.href} {...checkoutAttributes(donate)} class="button button-primary mt-7"><Icon name="heart" class="size-5" />Donate{donate.external && <Icon name="external" class="size-4" />}</a>
+        <p class="mt-5 text-base text-muted">Prefer to talk? Call <a href={library.phoneHref} class="underline">{library.phone}</a>.</p>
+      </>}
+    </div>
+  </div>
+</section>
