@@ -330,3 +330,7 @@ unfinished. The publisher checks readiness first and records
 retaining the current Worker without a known-failing update/rollback. Only a
 working live reader advances to checked publishing. This is a setup/recovery gate,
 not evidence of a completed automatic repair deployment.
+
+## October 22 workflow restoration
+
+The restoration source removes the website tools/scopes, `ChatPublishing` service binding and publisher-readiness dependency added in PR35/36. This connector returns to read-only website reports; existing OAuth/report/reconnect behavior remains. Its installed app was last observed as “Library Website & Reports”; restore the accurate reporting-only name/tool catalog after deployment is verified. Do not reauthorize unrelated accounts or change “Allow read-only tools” to “Allow all.” Source edits alone are not an installed-account update. The entire connector remains outside automatic repair.

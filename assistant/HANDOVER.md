@@ -1,32 +1,33 @@
 # Library handoff
 
-The library owns its ChatGPT Plus, GitHub repository and Cloudflare account. ChatGPT's display handle is **@cottonwoodlibrary**; the GitHub username is **librarycottonwood**. Renaming the ChatGPT profile does not rename GitHub or Google.
+The library owns its ChatGPT Plus, GitHub implementation repository and library Cloudflare account. ChatGPT is **@cottonwoodlibrary**; GitHub is **librarycottonwood**. The separate redesign repository and Jaden's preview hosting account are not the maintained implementation or saved trial.
 
-## Volunteer entry points
+## Current entry points
 
-- Questions, writing and fundraising reports: ChatGPT Work, with Cottonwood Library and the official connected Givebutter plugin.
-- Website content: https://cottonwood-community-library.sanity.studio/ . Publish the CMS record, then approve its checked website preview. Design/code changes use Codex → **cottonwood-library-editor** and the same checked CMS publishing path.
-- Saved trial: https://cms-trial.cottonwood-library-trial-preview.pages.dev/ ; its computer/phone pictures are at `/_review/`.
-- Weekly summary: one Monday-afternoon cloud task. Its current binding and validation are recorded in setup-status.json.
+- Chat: questions, writing and connected reports. Analytics remains a read-only connector; Givebutter reports use the existing official plugin.
+- Work with Sanity: supported content drafting/corrections. Actual Studio: https://cottonwood-community-library.sanity.studio/ . Content remains in project `2ou0xy2r` / `production`.
+- Codex: the existing **cottonwood-library-editor** and maintained repository. Each website request gets a new worktree/branch/PR and a current-content preview URL. Ask “Ready to save?”, then handle conflicts, merge after explicit approval, verify the trial and clean up task-owned work. Details: `WORKFLOW.md`.
+- Saved trial: https://cms-trial.cottonwood-library-trial-preview.pages.dev/ . Public domain launch is separate.
+- Weekly summary: the existing Monday-afternoon cloud task; verify its actual binding and result in setup-status.json.
 
-The obsolete cottonwood-library-assistant saved environment was deleted on October 7. The platform's confirmation states existing tasks/running environments remain available. There is one published volunteer editor. Daily GitHub repair workers do not depend on that editor.
+## Restoration status — October 22
 
-## Instructions and code
+PR33 and PR34–37 were merged before restoration began. Their donation/newsletter integration, simplified recovery page, preview capture and automatic-repair restrictions remain. The rejected website-saving MCP detour is removed from restoration source; it never passed actual library-account preview/save acceptance. This source change does not update the installed plugin, reporting-app label, or active Worker by itself.
 
-Canonical volunteer guidance: `plugins/cottonwood-library/skills/` — `library-assistant` (voice, routing, preview/save) plus one skill per topic: news, events, fundraisers, newsletter, notices, social, scheduling, reports. Skills hold the conversation and wizard questions; technical steps live in `assistant/content/*.md` so most changes need no plugin re-release. AGENTS.md retains repository authority and points to that guidance; START.md is only its startup entry point. The installed plugin contains a released snapshot, so changing its source does not automatically update ChatGPT. Current installed release and any unpublished changes belong in setup-status.json.
+The restoration PR must pass local/CI checks and be previewed before approval. Its new trusted-main workflow can first run after merge; its first verified trial save, publisher/Analytics deployment, and installed instruction update must be recorded separately. Until then, installed instructions remain the last observed 0.2.11 release and the saved trial remains the approved donation/newsletter release. Do not claim deployment or installation from a ZIP or repository edit.
 
-Content comes from the connected Sanity dataset; local `src/content/` files are migration/recovery inputs; shared components from `src/components/`. `assistant/WORKFLOW.md` owns editing, review, saving and undo. `assistant/MAINTENANCE.md` owns maintenance and its schedule prompt. `assistant/ANALYTICS-CONNECTOR.md` contains connector setup and test evidence.
+The original cloud editor completed a coding request and hosted a preview. Safari follow-up submission failed with `Can't find variable: DisposableStack`; its environment Edit failure is a separate issue. A recovery environment also exists, with hosted-preview access not verified. Neither the library's actual computer nor its likely Chrome browser has been tested. Preserve the prepared environments; do not replace them or attribute the original client failure to the rejected MCP connection.
 
-## Remaining account and launch steps
+## Connected work to preserve
 
-1. Google Analytics: the secure reconnect screen is prepared at https://cottonwood-library-analytics.librarycottonwood.workers.dev/reconnect . The library must approve read-only Google access. If Donna's phone is needed, ask once and wait. Do not send codes or keys in chat. Reports are not connected until a real report succeeds.
-2. GitHub identity for the Analytics MCP: the library's existing OAuth app still needs its secret/possible email confirmation. This is separate from the already connected website GitHub plugin. Then install and test the Analytics MCP in the library account, including its weekly cloud access.
-3. Facebook: obtain board-authorized Page access and test the actual reporting connection. Do not request anyone's personal Facebook password.
-4. Domain: Squarespace registration is recovered. Transfer to a library-owned Spaceship account only after preserving DNS/forwarding and reviewing the actual annual price. No transfer, nameserver change or public-domain launch has happened.
-5. Givebutter at launch: register the library's real domain in Givebutter's payment-method settings so Apple Pay appears in the on-site checkout (it is hidden until then; Venmo shows on computers only). Whoever creates the Donate-button and fundraiser widgets needs the Givebutter **Admin** or **Finance** role. Until the board supplies the general donation campaign (`library.givebutter`), Donate buttons stay plain links; see `assistant/content/fundraisers.md`.
+General donations use **Support Your Local Library**, campaign `655849` / `R62NJU`. Newsletter signup uses **Library Newsletter**, widget `L4EVDm`. Checkout opening, signup and one expressly approved inbox delivery passed; no payment or bulk email was sent. Actual sender/audience details are in `COMMUNICATIONS.md`.
 
-Givebutter's official library connection was tested. The account uses cottonlib@shasta.com. Donation destinations still need board review before launch. Keep the board's existing email addresses; domain DNS inspection found no configured domain inbox/MX service.
+Buffer has the library Facebook channel and an unscheduled test draft. Instagram remains the board's later action. Squarespace registrar access was recovered; DNS, nameservers and forwarding remain unchanged. Keep registration at Squarespace for the documented launch plan; no transfer is implied. See `DOMAIN-LAUNCH.md` and the existing December handoff roadmap.
 
-Inline pictures remain unavailable in the library cloud chat; checked hosted pictures work. Jaden declined a support report. The six-week trial uses previews and approved source saves; launching the real library domain is separate.
+## Remaining handoff gates
 
-See setup-status.json for current tests and pending gates. Detailed historical rehearsals remain in Git history rather than conflicting append-only status sections.
+Verify the restored request → follow-up → preview → approval → merge → saved-trial sequence in the library account and on its actual device. Update/read back the installed plugin and accurate reporting-only app metadata only after the real supported workflow passes. Preserve “Allow read-only tools”; do not grant all tools.
+
+Still open: recovery/restore rehearsal, CMS records and asset backups, backup library administrator, nonprofit decision, newsletter unsubscribe/suppression rehearsal, final public content/accessibility review and the separately approved public-domain launch. No extra email, unsubscribe action, social publication, billing or DNS change is part of workflow restoration.
+
+Canonical volunteer instructions live in `plugins/cottonwood-library/skills/`; `CODEX.md` holds account wording and `START.md` the editing entry point. `setup-status.json` separates installed/deployed state from proposals and historical evidence. `MAINTENANCE.md` retains the bounded repair policy. Never overwrite another task's worktree or merge the older open design PR21 as cleanup.

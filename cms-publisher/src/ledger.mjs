@@ -1,4 +1,4 @@
-import {REPOSITORY, WORKFLOW, TRUSTED_REF, TRIAL_ORIGIN, CONTENT_TYPES, sourcePattern, digestPattern, previewUrlValid, pinsMatch, publicOperation, parseEvent, revisionVector} from './contract.mjs';
+import {REPOSITORY, WORKFLOW, TRUSTED_REF, TRIAL_ORIGIN, CONTENT_TYPES, operationIdPattern, sourcePattern, digestPattern, previewUrlValid, pinsMatch, publicOperation, parseEvent, revisionVector} from './contract.mjs';
 import {sha256, sameSecret, encode} from './security.mjs';
 
 const githubHeaders = env => ({
@@ -69,6 +69,7 @@ export class CmsLedger {
         if (url.pathname === '/oauth/finish') return await this.finishOAuth(body);
         if (url.pathname === '/monitor') return await this.monitor();
         if (url.pathname === '/reconcile') return await this.reconcile();
+        if (url.pathname === '/source-release') return await this.sourceRelease(body);
         const match = url.pathname.match(/^\/operation\/([a-f0-9-]{36})(?:\/(result|approve|authorization|context|refresh))?$/);
         if (!match) return json({error: 'not_found'}, 404);
         const operation = await this.storage.get(`operation:${match[1]}`);
@@ -139,6 +140,33 @@ export class CmsLedger {
     await this.save(operation);
   }
 
+  // Trusted workflow callback records an already verified PR deployment. It
+  // cannot dispatch a save or approve any CMS operation.
+  async sourceRelease(value) {
+    if (!value || !sourcePattern.test(value.sourceSha || '') || !sourcePattern.test(value.mergedSourceSha || '') ||
+        !operationIdPattern.test(value.operationId || '') || !digestPattern.test(value.contentDigest || '') ||
+        !digestPattern.test(value.revisionDigest || '') || !digestPattern.test(value.releaseDigest || '') ||
+        !/^[1-9][0-9]{0,19}$/.test(value.previewRunId || '') || !previewUrlValid(value.previewUrl, this.env)) throw new CmsFault('invalid_source_release');
+    if (await trustedSource(this.env) !== value.mergedSourceSha) throw new CmsFault('source_changed');
+    const tree = async sha => {
+      const response = await fetch(`https://api.github.com/repos/${REPOSITORY}/git/commits/${sha}`, {headers: githubHeaders(this.env), signal: timeout(), redirect: 'manual'});
+      if (!response.ok) throw new CmsFault('source_verification_unavailable', 503);
+      const commit = await response.json();
+      if (!sourcePattern.test(commit.tree?.sha || '')) throw new CmsFault('source_verification_unavailable', 503);
+      return commit.tree.sha;
+    };
+    if (await tree(value.sourceSha) !== await tree(value.mergedSourceSha)) throw new CmsFault('source_tree_changed');
+    const response = await fetch(`${TRIAL_ORIGIN}/_review/status.json`, {headers: {'Cache-Control': 'no-cache'}, signal: timeout(), redirect: 'manual'});
+    if (!response.ok) throw new CmsFault('hosted_verification_failed', 503);
+    const hosted = await response.json();
+    for (const key of ['sourceSha','mergedSourceSha','operationId','contentDigest','revisionDigest','previewRunId','previewUrl']) {
+      if (hosted[key] !== value[key]) throw new CmsFault('hosted_verification_failed', 503);
+    }
+    if (hosted.digest !== value.releaseDigest) throw new CmsFault('hosted_verification_failed', 503);
+    await this.storage.put('last_verified', {...value, websiteUrl: TRIAL_ORIGIN, verifiedAt: new Date().toISOString()});
+    return json({status: 'deployed_verified', websiteUrl: TRIAL_ORIGIN});
+  }
+
   async reconcile({forceFresh = false} = {}) {
     const url = new URL(`https://${this.env.SANITY_PROJECT_ID}.api.sanity.io/v2026-10-01/data/query/${this.env.SANITY_DATASET}`);
     url.search = new URLSearchParams({
@@ -156,6 +184,15 @@ export class CmsLedger {
     const fingerprint = await sha256(JSON.stringify(revisions));
     const sourceSha = await trustedSource(this.env);
     const previous = await this.storage.get('reconciliation');
+    const verified = await this.storage.get('last_verified');
+    if (!forceFresh && (verified?.mergedSourceSha || verified?.sourceSha) === sourceSha && verified.revisionDigest === fingerprint) {
+      await this.storage.put('reconciliation', {fingerprint, sourceSha, revisions, operationId: verified.operationId, checkedAt: new Date().toISOString()});
+      const summary = 'This exact content and website source were already verified on the saved CMS trial.';
+      return json({status: 'deployed_verified', changed: false, reused: true, inventoryOnly: true,
+        operation: {id: verified.operationId, status: 'deployed_verified', sourceSha, contentDigest: verified.contentDigest,
+          revisionDigest: fingerprint, releaseDigest: verified.releaseDigest, previewRunId: verified.previewRunId,
+          previewUrl: verified.previewUrl, verifiedUrl: verified.websiteUrl, deployedVerified: true, summary}, summary});
+    }
     // A webhook may already have checked or deployed this complete snapshot before
     // the first scheduled scan. Reuse that proof instead of asking for approval of
     // an identical website again. Superseded/unchecked operations are not proof.
@@ -167,15 +204,6 @@ export class CmsLedger {
         await this.storage.put('reconciliation', {fingerprint, sourceSha, revisions, operationId: checked.id, checkedAt: new Date().toISOString()});
         return json({status: checked.status, changed: false, reused: true, operation: publicOperation(checked), summary: checked.summary, inventoryOnly: true});
       }
-    }
-    const verified = await this.storage.get('last_verified');
-    if (!forceFresh && verified?.sourceSha === sourceSha && verified.revisionDigest === fingerprint) {
-      await this.storage.put('reconciliation', {fingerprint, sourceSha, revisions, operationId: verified.operationId, checkedAt: new Date().toISOString()});
-      const summary = 'This exact content and website source were already verified on the saved CMS trial.';
-      return json({status: 'deployed_verified', changed: false, reused: true, inventoryOnly: true,
-        operation: {id: verified.operationId, status: 'deployed_verified', sourceSha, contentDigest: verified.contentDigest,
-          revisionDigest: fingerprint, releaseDigest: verified.releaseDigest, previewRunId: verified.previewRunId,
-          previewUrl: verified.previewUrl, verifiedUrl: verified.websiteUrl, deployedVerified: true, summary}, summary});
     }
     if (!forceFresh && previous?.fingerprint === fingerprint && previous?.sourceSha === sourceSha) {
       const operation = await this.storage.get(`operation:${previous.operationId}`);

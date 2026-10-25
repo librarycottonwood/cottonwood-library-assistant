@@ -1,19 +1,19 @@
 import OAuthProvider, { authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import { runReport } from './google.mjs';
 import { credentialFreeMcpCall } from './reports.mjs';
-import {handleLibraryMcp} from './library-mcp.mjs';
+import { handleMcp } from './mcp.mjs';
 import { handleReconnect } from './reconnect.mjs';
 import { connectionStatus } from './recovery.mjs';
 import { userOAuthReady } from './google-user.mjs';
 const ORIGIN='https://cottonwood-library-analytics.librarycottonwood.workers.dev';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>`&#${c.charCodeAt(0)};`);
-const scopes=['analytics:read','website:read','website:save','offline_access'];
+const scopes=['analytics:read','offline_access'];
 const defaultHandler={async fetch(request,env) {
   const url=new URL(request.url);
   const oauth=env.OAUTH_PROVIDER;
   try {
     const reconnect=await handleReconnect(request,env);if(reconnect)return reconnect;
-    if (url.pathname==='/health') return Response.json({status:'ok',service:'Cottonwood Library Analytics',version:'0.3.0',publishingTools:Boolean(env.CMS_PUBLISHER),sourceSha:env.BUILD_SOURCE_SHA || null},{headers:{'Cache-Control':'no-store'}});
+    if (url.pathname==='/health') return Response.json({status:'ok',service:'Cottonwood Library Analytics',version:'0.4.0',publishingTools:false,sourceSha:env.BUILD_SOURCE_SHA || null},{headers:{'Cache-Control':'no-store'}});
     if (url.pathname==='/monitor' && request.method==='POST') {
       const presented=request.headers.get('Authorization')?.replace(/^Bearer /,'') || '';
       if (!env.MONITOR_TOKEN || presented.length!==env.MONITOR_TOKEN.length || [...presented].reduce((diff,c,i)=>diff | c.charCodeAt(0)^env.MONITOR_TOKEN.charCodeAt(i),0)!==0) return new Response('Unauthorized.',{status:401});
@@ -25,15 +25,13 @@ const defaultHandler={async fetch(request,env) {
       const original=await oauth.parseAuthRequest(request);
       const details=await oauth.describeConsent(original);
       const consent=await oauth.beginConsent(original);
-      const website=original.scope.includes('website:read');
-      const save=original.scope.includes('website:save');
       consent.headers.set('Content-Type','text/html; charset=utf-8');
-      return new Response(`<!doctype html><meta charset="utf-8"><title>Connect your library assistant</title><h1>Connect your library assistant</h1><p>Allow <strong>${escape(details.clientName)}</strong> to read the library's tracked demo website statistics: visits, popular pages, button clicks, locations, traffic sources and devices. ${website?'It can also show checked website previews in chat. ':''}${save?'When you approve saving in chat, it can save that exact checked version to the trial website. It cannot change the public domain.':'These requested permissions cannot save website updates.'} It cannot change Analytics settings.</p><p>Access goes to <strong>${escape(details.redirectHost)}</strong>. ${details.clientDomain?'Client published by '+escape(details.clientDomain):'This client registered its own name.'}</p>${details.redirectIsLoopback?'<p>This sends access to an app on your computer. Continue only if you started that app.</p>':''}<p>The connection stays signed in and renews automatically. Sign in with the library GitHub account to continue.</p><form method="post"><input type="hidden" name="handle" value="${escape(consent.handle)}"><button name="decision" value="approve">Connect library assistant</button> <button name="decision" value="deny">Cancel</button></form>`,{headers:consent.headers});
+      return new Response(`<!doctype html><meta charset="utf-8"><title>Library website reports</title><h1>Connect library website reports</h1><p>Allow <strong>${escape(details.clientName)}</strong> to read the library's tracked demo website statistics: visits, popular pages, button clicks, locations, traffic sources and devices. This connection cannot change your website or Analytics settings.</p><p>Access goes to <strong>${escape(details.redirectHost)}</strong>. ${details.clientDomain?'Client published by '+escape(details.clientDomain):'This client registered its own name.'}</p>${details.redirectIsLoopback?'<p>This sends access to an app on your computer. Continue only if you started that app.</p>':''}<p>The connection stays signed in and renews automatically. Sign in with the library GitHub account to continue.</p><form method="post"><input type="hidden" name="handle" value="${escape(consent.handle)}"><button name="decision" value="approve">Connect reports</button> <button name="decision" value="deny">Cancel</button></form>`,{headers:consent.headers});
     }
     if (url.pathname==='/authorize' && request.method==='POST') {
       const form=await request.formData();
       if (form.get('decision')!=='approve') { const denied=await oauth.denyConsent(request,String(form.get('handle')));return new Response(null,{status:302,headers:denied.headers}); }
-      const approved=await oauth.approveConsent(request,String(form.get('handle')));
+      const approved=await oauth.approveConsent(request,String(form.get('handle')),{scope:scopes});
       const verifier=crypto.randomUUID()+crypto.randomUUID();
       const {state,headers}=await oauth.beginUpstream(approved.request,{data:{verifier},headers:approved.headers});
       const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier));
@@ -53,7 +51,7 @@ const defaultHandler={async fetch(request,env) {
       const user=await identity.json();
       if (!identity.ok || user.login!=='librarycottonwood' || String(user.id)!=='338888442') return new Response('Please use the library GitHub account to connect these reports.',{status:403,headers});
       // Upstream token is discarded; renewable MCP tokens carry only the verified library identity.
-      const {redirectTo}=await oauth.completeAuthorization({request:original,userId:String(user.id),metadata:{label:'Cottonwood Library Assistant'},scope:original.scope,props:{login:user.login}});
+      const {redirectTo}=await oauth.completeAuthorization({request:original,userId:String(user.id),metadata:{label:'Library read-only Analytics'},scope:original.scope,props:{login:user.login}});
       headers.set('Location',redirectTo);return new Response(null,{status:302,headers});
     }
     if (url.pathname==='/') return new Response('Cottonwood Community Library private website reports. Connect through the library ChatGPT account.',{headers:{'Content-Type':'text/plain; charset=utf-8'}});
@@ -64,13 +62,13 @@ export default new OAuthProvider({
   apiRoute:'/mcp',apiHandler:{fetch(request,env,ctx) {
     if (!ctx.auth?.scope?.includes('analytics:read') || ctx.props?.login !== 'librarycottonwood') return new Response('Library authorization required.',{status:403});
     const safe=credentialFreeMcpCall(request,ctx);
-    return handleLibraryMcp(safe.request,safe.context,args=>runReport(args,env),()=>{
+    return handleMcp(safe.request,{},safe.context,args=>runReport(args,env),()=>{
       const yesterday=new Date(Date.now()-86400000).toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
       return connectionStatus(()=>runReport({report:'visitors',start_date:yesterday,end_date:yesterday},env),userOAuthReady(env));
-    }, env.CMS_PUBLISHER);
+    });
   }},defaultHandler,
   authorizeEndpoint:'/authorize',tokenEndpoint:'/oauth/token',clientRegistrationEndpoint:'/oauth/register',
-  scopesSupported:scopes,requiredScopes:['analytics:read','website:read','website:save'],
+  scopesSupported:scopes,requiredScopes:['analytics:read'],
   resourceMetadata:{resource:ORIGIN+'/mcp',authorization_servers:[ORIGIN]},
   clientIdMetadataDocumentEnabled:true,accessTokenTTL:3600,
   refreshTokenTTL:31536000,refreshTokenIdleTTL:31536000,

@@ -129,7 +129,7 @@ export async function verifyBundle(operation, {root = process.cwd()} = {}) {
   return {releaseDir, manifest};
 }
 
-async function recordBuild(operation, env) {
+export async function recordBuild(operation, env) {
   if (['SANITY_READ_TOKEN', 'SANITY_WRITE_TOKEN', 'CLOUDFLARE_API_TOKEN', 'CMS_WORKFLOW_TOKEN'].some(key => env[key])) fail('Do not expose connection or publishing credentials to build/capture processes.');
   const version = JSON.parse(await readFile('dist/_content/version.json', 'utf8'));
   if (version.sourceSha !== operation.sourceSha || version.contentDigest !== operation.contentDigest || version.workingTreeChanged) fail('Build did not use the clean pinned source and snapshot.');
@@ -150,7 +150,7 @@ function hostingEnvironment(env) {
   const safe = Object.fromEntries(Object.entries(env).filter(([key]) => ['PATH', 'HOME', 'TMPDIR', 'TEMP', 'TMP', 'CI', 'NODE_EXTRA_CA_CERTS', 'PNPM_HOME'].includes(key)));
   return {...safe, CLOUDFLARE_ACCOUNT_ID: ACCOUNT, CLOUDFLARE_API_TOKEN: hostingToken, WRANGLER_SEND_METRICS: 'false'};
 }
-async function deploy(stage, branch, operation, env) {
+export async function deploy(stage, branch, operation, env) {
   if (branch !== 'cms-trial' && branch !== `cms-draft-${operation.operationId}`) fail('Only isolated CMS trial branches may be deployed.');
   const log = execFileSync('pnpm', ['exec', 'wrangler', 'pages', 'deploy', stage, '--project-name', PROJECT, '--branch', branch,
     '--commit-hash', operation.sourceSha, '--commit-dirty=true', '--commit-message', 'Checked library CMS trial'], {encoding: 'utf8', env: hostingEnvironment(env)});
@@ -242,7 +242,7 @@ export async function verifyHosted(stage, base, options = {}) {
   }
 }
 
-async function waitForHosted(stage, base) {
+export async function waitForHosted(stage, base) {
   for (let attempt = 0; attempt < 8; attempt++) {
     try {await verifyHosted(stage, base); return;} catch (error) {
       if (attempt === 7) throw error;
@@ -251,7 +251,7 @@ async function waitForHosted(stage, base) {
   }
 }
 
-async function stageRelease(operation) {
+export async function stageRelease(operation) {
   await verifyBundle(operation);
   const stage = await prepareReview(operation.releaseDigest);
   const {manifest} = await verifyBundle(operation);
@@ -267,7 +267,7 @@ async function stageRelease(operation) {
   return stage;
 }
 
-async function preview(operation, env) {
+export async function preview(operation, env) {
   await checkHosting(env);
   const stage = await stageRelease(operation);
   try {
@@ -328,7 +328,7 @@ export async function previousStage(previous, {root = process.cwd(), fetcher = f
     await writeJson(path.join(stage, '_review/release.json'), metadata);
     await writeJson(path.join(stage, '_review/status.json'), {sourceSha: previous.sourceSha, contentDigest: previous.contentDigest,
       revisionDigest: previous.revisionDigest, digest: previous.releaseDigest, operationId: previous.operationId, previewRunId: previous.previewRunId,
-      previewUrl: previous.previewUrl, scope: 'Earlier checked CMS trial restored after a failed update; public domain unchanged.'});
+      previewUrl: previous.previewUrl, ...(previous.mergedSourceSha ? {mergedSourceSha: previous.mergedSourceSha} : {}), scope: 'Earlier checked CMS trial restored after a failed update; public domain unchanged.'});
     await writeFile(path.join(stage, '_review/index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Library trial restored</title><h1>The earlier checked trial website was restored</h1><p><a href="/">Open the saved website</a>. Return to the library assistant for the update status.</p><h2>Checked computer picture</h2><img style="max-width:100%" src="desktop.png" alt="Earlier checked library website on a computer"><h2>Checked phone picture</h2><img style="max-width:390px;width:100%" src="phone.png" alt="Earlier checked library website on a phone"></html>');
     await writeJson(path.join(stage, '_review/manifest.json'), {siteDigest: previous.releaseDigest,
       files: (await inventory(path.join(stage, '_review'))).filter(file => file.path !== 'manifest.json')});
