@@ -1,6 +1,6 @@
 ---
 name: publishing
-description: Use when a volunteer asks how to use Sanity, whether a content change reached the website, or needs help with a failed update, reconnecting the editor, discarding a draft, or undoing a website change.
+description: Use when a volunteer approves or asks to save a content change, asks how to use Sanity, whether a content change reached the website, or needs help with a failed update, reconnecting the editor, discarding a draft, or undoing a website change.
 ---
 
 # Library publishing help
@@ -17,13 +17,25 @@ If the connected tools cannot do the edit, offer the actual editor as a fallback
 
 ## Where is my change?
 
-Read the actual CMS record, PR and current publishing evidence. Explain the next unfinished step in one sentence.
+Read the actual CMS record, PR, its **Website preview**/**Live website** statuses and the live website. Explain the next unfinished step in one sentence.
 
 - A private CMS draft is not published. Show its proposed content here and confirm facts before using the supported document publishing tool. Honor its write confirmation. The current website preview reads published records, not private drafts.
-- For the website release, follow the existing Codex PR workflow in `assistant/WORKFLOW.md`. Use current CMS content and changed branch code. Share the working preview URL, then ask “Ready to save?” Keep pictures as internal evidence unless requested.
-- After explicit approval, resolve conflicts, rerun affected checks and merge the PR. Verify the final workflow and the live website before saying it is saved. A source merge or queued deployment alone is not success.
-- The flow is preview → live. Previews come only from that PR workflow on the library Cloudflare account; the live website is https://cottonwood-library.pages.dev. Never deploy from a computer, run `wrangler login`, or use a personal Cloudflare account.
-- If source/content changes materially, prepare a fresh preview and ask again. Do not repeat approval for an unchanged checked version. Clean up only the completed task's branch/worktree after verification.
+- For code/design changes, follow the Codex PR workflow in `assistant/WORKFLOW.md`.
+
+## Save a content change
+
+Use this after the Sanity record is published. Do every step yourself with the GitHub tools in this chat, on `librarycottonwood/cottonwood-library-assistant`. Tell the volunteer only the preview link, the question and the result.
+
+1. Create a branch from current `main` named `content/<short-request-name>`.
+2. On that branch, update `assistant/website-update.json` with `request` (one sentence), the changed Sanity document IDs/fields, and `requestedInChat` (today's date). Commit it with a short message.
+3. Open a PR into `main` titled with the request in plain words.
+4. Wait for the commit status **Website preview** on the PR's head commit (usually 5–8 minutes). Check every minute or so. Its target URL is the checked preview. If a check fails, read the job log, fix what you can and say what is wrong.
+5. Open the preview and confirm the change is there. Share the link and ask **"Ready to save?"**
+6. After a clear yes, merge the PR (merge commit). If `main` moved or a check fails, update the branch and wait for a fresh preview first.
+7. Wait for the commit status **Live website** on the merge commit, then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved.
+8. Delete the request's branch.
+
+If Sanity content changes after the preview (someone else published), the save stops with "Published content changed after preview". Update `requestedInChat` in `assistant/website-update.json` on the branch to get a fresh preview, then ask again.
 
 The reporting connector has no website-saving tools. Do not ask for website OAuth permissions, repeatedly reconnect it, or send volunteers to an external approval page for ordinary saves. The existing CMS review page remains an administrator recovery option when explicitly chosen. Do not present sample-content pictures as current content or imply a repository change repairs an external Codex browser error.
 
