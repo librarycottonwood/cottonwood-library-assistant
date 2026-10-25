@@ -21,7 +21,7 @@ jobs:
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs scripts/source-trial.test.mjs scripts/images.test.mjs scripts/retire-old-demo.test.mjs
+      - run: node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs
       - run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
         env:
@@ -67,7 +67,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm cms:snapshot --out output/cms/snapshot.json
       - run: pnpm check && pnpm build
-      - run: node scripts/source-trial.mjs bundle
+      - run: node scripts/publish-live.mjs bundle
       - uses: actions/upload-artifact@v7.0.2
         with:
           name: library-pr-checked-preview
@@ -229,7 +229,7 @@ jobs:
                   raise
           api(cms_path, 'PUT', cms_body)
           PY
-      - name: Keep source and CMS preview storage within the trial budget
+      - name: Keep source and CMS preview storage within the free artifact budget
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/cms-artifacts.py

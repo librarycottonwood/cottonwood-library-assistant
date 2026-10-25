@@ -21,7 +21,8 @@ Read the actual CMS record, PR and current publishing evidence. Explain the next
 
 - A private CMS draft is not published. Show its proposed content here and confirm facts before using the supported document publishing tool. Honor its write confirmation. The current website preview reads published records, not private drafts.
 - For the website release, follow the existing Codex PR workflow in `assistant/WORKFLOW.md`. Use current CMS content and changed branch code. Share the working preview URL, then ask “Ready to save?” Keep pictures as internal evidence unless requested.
-- After explicit approval, resolve conflicts, rerun affected checks and merge the PR. Verify the final workflow and hosted trial before saying it is saved. A source merge or queued deployment alone is not success.
+- After explicit approval, resolve conflicts, rerun affected checks and merge the PR. Verify the final workflow and the live website before saying it is saved. A source merge or queued deployment alone is not success.
+- The flow is preview → live. Previews come only from that PR workflow on the library Cloudflare account; the live website is https://cottonwood-library.pages.dev. Never deploy from a computer, run `wrangler login`, or use a personal Cloudflare account.
 - If source/content changes materially, prepare a fresh preview and ask again. Do not repeat approval for an unchanged checked version. Clean up only the completed task's branch/worktree after verification.
 
 The reporting connector has no website-saving tools. Do not ask for website OAuth permissions, repeatedly reconnect it, or send volunteers to an external approval page for ordinary saves. The existing CMS review page remains an administrator recovery option when explicitly chosen. Do not present sample-content pictures as current content or imply a repository change repairs an external Codex browser error.

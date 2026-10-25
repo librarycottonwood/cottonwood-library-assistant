@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 const script = new URL('./release.mjs', import.meta.url).pathname;
 test('reviewed assets cannot be substituted and the helper cannot publish production', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'library-release-'));
-  const run = (...args) => spawnSync(process.execPath, [script, ...args], { cwd: dir, encoding: 'utf8', env: { ...process.env, CLOUDFLARE_PREVIEW_PROJECT: '' } });
+  const run = (...args) => spawnSync(process.execPath, [script, ...args], { cwd: dir, encoding: 'utf8' });
   try {
     await mkdir(path.join(dir, 'dist'));
     await writeFile(path.join(dir, 'dist/index.html'), '<h1>Original preview</h1>');
@@ -24,7 +24,9 @@ test('reviewed assets cannot be substituted and the helper cannot publish produc
     assert.equal(await readFile(saved, 'utf8'), '<h1>Original preview</h1>');
     assert.equal(run('verify', digest).status, 0);
     assert.notEqual(run('publish', digest).status, 0);
-    assert.notEqual(run('preview', digest).status, 0);
+    const preview = run('preview', digest);
+    assert.notEqual(preview.status, 0);
+    assert.match(preview.stderr, /Local preview uploads are retired/);
     assert.notEqual(run('verify', '../escape').status, 0);
     await writeFile(saved, '<h1>Unreviewed substitution</h1>');
     const tampered = run('verify', digest);

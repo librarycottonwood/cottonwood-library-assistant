@@ -6,10 +6,15 @@ import {pathToFileURL} from 'node:url';
 import {contentDigest, readSnapshot, saveSnapshot} from './cms.mjs';
 import {sanityConfig, fetchSanitySnapshot} from '../src/content/sanity.mjs';
 import {inventory, digestOf, prepareReview} from './release.mjs';
-import {REPOSITORY, TRIAL_ORIGIN, operationIdPattern, sourcePattern, digestPattern, idPattern, revisionPattern, previewUrlValid, revisionVector} from '../cms-publisher/src/contract.mjs';
+import {requireLibraryAccount} from './library-account.mjs';
+import {REPOSITORY, LIVE_ORIGIN, LIVE_PROJECT, operationIdPattern, sourcePattern, digestPattern, idPattern, revisionPattern, previewUrlValid, revisionVector} from '../cms-publisher/src/contract.mjs';
 
-const PROJECT = 'cottonwood-library-trial-preview';
-const ACCOUNT = 'e05729fd6b6fad329e31896d8b1c2da9';
+const PROJECT = LIVE_PROJECT;
+// Production deployment of PROJECT = the live website. Every other upload is an
+// isolated preview branch on the same library-account project.
+export const LIVE_BRANCH = 'production';
+// The live project may carry only the library's own public domain (launch plan).
+export const LIVE_DOMAINS = ['cottonwoodcommunitylibrary.com', 'www.cottonwoodcommunitylibrary.com'];
 const OUTPUT = 'output/cms';
 const ARTIFACT = 'library-cms-checked-preview';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -145,55 +150,67 @@ export async function recordBuild(operation, env) {
 }
 
 function hostingEnvironment(env) {
-  if (env.CLOUDFLARE_ACCOUNT_ID !== ACCOUNT) fail('Only the library trial hosting account is supported.');
-  const hostingToken = token(env, 'CLOUDFLARE_API_TOKEN');
+  const account = requireLibraryAccount(env);
   const safe = Object.fromEntries(Object.entries(env).filter(([key]) => ['PATH', 'HOME', 'TMPDIR', 'TEMP', 'TMP', 'CI', 'NODE_EXTRA_CA_CERTS', 'PNPM_HOME'].includes(key)));
-  return {...safe, CLOUDFLARE_ACCOUNT_ID: ACCOUNT, CLOUDFLARE_API_TOKEN: hostingToken, WRANGLER_SEND_METRICS: 'false'};
+  return {...safe, CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: env.CLOUDFLARE_API_TOKEN, WRANGLER_SEND_METRICS: 'false'};
 }
 export async function deploy(stage, branch, operation, env) {
-  if (branch !== 'cms-trial' && branch !== `cms-draft-${operation.operationId}`) fail('Only isolated CMS trial branches may be deployed.');
+  if (branch !== LIVE_BRANCH && branch !== `cms-draft-${operation.operationId}`) fail('Only the live production branch or an isolated preview branch may be deployed.');
   const log = execFileSync('pnpm', ['exec', 'wrangler', 'pages', 'deploy', stage, '--project-name', PROJECT, '--branch', branch,
-    '--commit-hash', operation.sourceSha, '--commit-dirty=true', '--commit-message', 'Checked library CMS trial'], {encoding: 'utf8', env: hostingEnvironment(env)});
-  const matches = log.match(/https:\/\/[a-f0-9]{8}\.cottonwood-library-trial-preview\.pages\.dev/g);
-  if (!matches?.length) fail('The trial upload returned no immutable hosting URL.');
+    '--commit-hash', operation.sourceSha, '--commit-dirty=true', '--commit-message', branch === LIVE_BRANCH ? 'Checked library live website' : 'Checked library preview'], {encoding: 'utf8', env: hostingEnvironment(env)});
+  const matches = log.match(/https:\/\/[a-f0-9]{8}\.cottonwood-library\.pages\.dev/g);
+  if (!matches?.length) fail('The upload returned no immutable hosting URL.');
   return new URL(matches.at(-1)).href;
 }
 
-export async function checkHosting(env, {fetcher = fetch, requireEmptyTrial = false} = {}) {
-  hostingEnvironment(env);
-  const base = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/pages/projects/${PROJECT}`;
+const projectApi = (account, name) => `https://api.cloudflare.com/client/v4/accounts/${account}/pages/projects/${name}`;
+export function checkProjectSettings(project) {
+  const domains = project?.result?.domains;
+  if (!project?.success || project.result?.name !== PROJECT || project.result?.production_branch !== LIVE_BRANCH ||
+      !Array.isArray(domains) || !domains.includes(`${PROJECT}.pages.dev`) ||
+      domains.some(domain => domain !== `${PROJECT}.pages.dev` && !domain.endsWith(`.${PROJECT}.pages.dev`) && !LIVE_DOMAINS.includes(domain))) {
+    fail(`The live hosting project must be ${PROJECT}.pages.dev with production branch ${LIVE_BRANCH} and no domains other than the library's own.`);
+  }
+  return project;
+}
+
+export async function checkHosting(env, {fetcher = fetch, requireNoLive = false} = {}) {
+  const account = hostingEnvironment(env).CLOUDFLARE_ACCOUNT_ID;
+  const base = projectApi(account, PROJECT);
   const headers = {Authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`};
-  const project = await requestJson(base, {fetcher, headers, label: 'CMS hosting project request'});
-  if (!project.success || project.result?.name !== PROJECT || project.result?.production_branch !== 'production' ||
-      !Array.isArray(project.result.domains) || !project.result.domains.length ||
-      project.result.domains.some(domain => domain !== `${PROJECT}.pages.dev` && !domain.endsWith(`.${PROJECT}.pages.dev`))) {
-    fail('The isolated hosting project must use production branch production and have no custom/public library domains.');
-  }
+  checkProjectSettings(await requestJson(base, {fetcher, headers, label: 'Live hosting project request'}));
   // Exercise the inventory connection during preview too, before asking for approval.
-  // The live Pages API rejects per_page=100; 25 succeeds. Keep the same 1,000-record bound.
+  // The live Pages API rejects per_page=100; 25 succeeds.
   const pageSize = 25;
-  // A missing DNS name does not prove a branch never existed. Confirm that first
-  // publication is new through the authenticated hosting deployment inventory.
-  for (let page = 1; page <= 40; page++) {
-    const records = await requestJson(`${base}/deployments?env=preview&per_page=${pageSize}&page=${page}`, {fetcher, headers, label: 'CMS hosting deployment inventory request'});
-    const perPage = records.result_info?.per_page ?? pageSize;
-    const totalPages = records.result_info?.total_pages;
-    if (!records.success || !Array.isArray(records.result) || !Number.isInteger(perPage) || perPage < 1 || perPage > pageSize ||
-        records.result.length > perPage || (records.result_info?.page !== undefined && records.result_info.page !== page) ||
-        (totalPages !== undefined && (!Number.isInteger(totalPages) || totalPages < 0 || (!totalPages && records.result.length)))) {
-      fail('Could not verify the previous CMS trial hosting state.');
-    }
-    if (!requireEmptyTrial) return;
-    if (records.result.some(item => item.deployment_trigger?.metadata?.branch === 'cms-trial' || item.aliases?.some(alias => alias.replace(/\/$/, '') === TRIAL_ORIGIN))) {
-      fail('An existing CMS trial has no verified recovery record; reconnect it before publishing.');
-    }
-    if (totalPages !== undefined && page >= totalPages) return;
-    if (records.result.length < perPage) {
-      if (totalPages > page) fail('Could not verify the previous CMS trial hosting state.');
-      return;
-    }
+  // A missing or unreachable live address does not prove the live site never existed.
+  // Confirm a first live publication through the authenticated production inventory.
+  const records = await requestJson(`${base}/deployments?env=production&per_page=${pageSize}&page=1`, {fetcher, headers, label: 'Live hosting deployment inventory request'});
+  const info = records.result_info || {};
+  const perPage = info.per_page ?? pageSize;
+  if (!records.success || !Array.isArray(records.result) || !Number.isInteger(perPage) || perPage < 1 || perPage > pageSize ||
+      records.result.length > perPage || (info.page !== undefined && info.page !== 1) ||
+      (info.total_pages !== undefined && (!Number.isInteger(info.total_pages) || info.total_pages < 0 ||
+        (!info.total_pages && records.result.length) || (info.total_pages > 0 && !records.result.length))) ||
+      (info.total_count !== undefined && (!Number.isInteger(info.total_count) || info.total_count < records.result.length || (info.total_count && !records.result.length)))) {
+    fail('Could not verify the current live hosting state.');
   }
-  fail('The CMS trial deployment inventory is too large to confirm first publication safely.');
+  if (requireNoLive && records.result.length) fail('The live website already has a deployment with no verified recovery record; reconnect it before publishing.');
+}
+
+/** One-time setup: create the live project on the library account, or confirm it. */
+export async function ensureLiveProject(env, {fetcher = fetch} = {}) {
+  const account = hostingEnvironment(env).CLOUDFLARE_ACCOUNT_ID;
+  const headers = {Authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`};
+  let project = await requestJson(projectApi(account, PROJECT), {fetcher, headers, missing: true, label: 'Live hosting project request'});
+  let created = false;
+  if (!project) {
+    project = await requestJson(`https://api.cloudflare.com/client/v4/accounts/${account}/pages/projects`, {fetcher, headers, method: 'POST',
+      body: {name: PROJECT, production_branch: LIVE_BRANCH}, label: 'Live hosting project creation'});
+    created = true;
+  }
+  checkProjectSettings(project);
+  if (project.result.subdomain !== undefined && project.result.subdomain !== `${PROJECT}.pages.dev`) fail(`Cloudflare assigned ${project.result.subdomain}; choose another project name.`);
+  return {created, name: project.result.name, liveUrl: LIVE_ORIGIN};
 }
 
 function safeAssetPath(value) {
@@ -262,7 +279,7 @@ export async function stageRelease(operation) {
   await writeJson(path.join(stage, '_review/status.json'), {
     sourceSha: operation.sourceSha, contentDigest: operation.contentDigest, revisionDigest: operation.revisionDigest, digest: operation.releaseDigest,
     operationId: operation.operationId, previewRunId: operation.previewRunId, previewUrl: operation.previewUrl || null,
-    scope: 'Checked CMS trial website only; public library domain unchanged.',
+    scope: 'Checked library website release. Only the production deployment is the live website.',
   });
   return stage;
 }
@@ -282,17 +299,17 @@ export async function preview(operation, env) {
 }
 
 export function checkApproval(context, receipt) {
-  if (!receipt?.approved || receipt.publicationScope !== 'cms-trial-only' || receipt.websiteUrl !== TRIAL_ORIGIN ||
+  if (!receipt?.approved || receipt.publicationScope !== 'live-website-only' || receipt.websiteUrl !== LIVE_ORIGIN ||
       receipt.operationId !== context.operationId || receipt.sourceSha !== context.sourceSha || receipt.documentId !== context.documentId ||
       receipt.documentRevision !== context.documentRevision || receipt.contentDigest !== context.contentDigest || receipt.releaseDigest !== context.releaseDigest ||
-      receipt.previewRunId !== context.previewRunId || (context.revisionDigest && receipt.revisionDigest !== context.revisionDigest)) fail('A current human approval for this exact checked trial release is required.');
+      receipt.previewRunId !== context.previewRunId || (context.revisionDigest && receipt.revisionDigest !== context.revisionDigest)) fail('A current human approval for this exact checked live release is required.');
   return receipt;
 }
 
 export async function previousStage(previous, {root = process.cwd(), fetcher = fetch} = {}) {
   if (!previous) return null;
   if (!previewUrlValid(previous.previewUrl, {}) || !sourcePattern.test(previous.sourceSha || '') || !digestPattern.test(previous.contentDigest || '') ||
-      !digestPattern.test(previous.releaseDigest || '') || !operationIdPattern.test(previous.operationId || '')) fail('The previous verified trial version has invalid pins.');
+      !digestPattern.test(previous.releaseDigest || '') || !operationIdPattern.test(previous.operationId || '')) fail('The previous verified live version has invalid pins.');
   const metadata = JSON.parse(await hostedBytes(previous.previewUrl, '_review/release.json', {fetcher}));
   if (metadata.sourceSha !== previous.sourceSha || metadata.contentDigest !== previous.contentDigest || metadata.digest !== previous.releaseDigest) fail('The retained previous preview does not match the verified version.');
   checkFileInventory(metadata.files, previous.releaseDigest);
@@ -328,8 +345,8 @@ export async function previousStage(previous, {root = process.cwd(), fetcher = f
     await writeJson(path.join(stage, '_review/release.json'), metadata);
     await writeJson(path.join(stage, '_review/status.json'), {sourceSha: previous.sourceSha, contentDigest: previous.contentDigest,
       revisionDigest: previous.revisionDigest, digest: previous.releaseDigest, operationId: previous.operationId, previewRunId: previous.previewRunId,
-      previewUrl: previous.previewUrl, ...(previous.mergedSourceSha ? {mergedSourceSha: previous.mergedSourceSha} : {}), scope: 'Earlier checked CMS trial restored after a failed update; public domain unchanged.'});
-    await writeFile(path.join(stage, '_review/index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Library trial restored</title><h1>The earlier checked trial website was restored</h1><p><a href="/">Open the saved website</a>. Return to the library assistant for the update status.</p><h2>Checked computer picture</h2><img style="max-width:100%" src="desktop.png" alt="Earlier checked library website on a computer"><h2>Checked phone picture</h2><img style="max-width:390px;width:100%" src="phone.png" alt="Earlier checked library website on a phone"></html>');
+      previewUrl: previous.previewUrl, ...(previous.mergedSourceSha ? {mergedSourceSha: previous.mergedSourceSha} : {}), scope: 'Earlier checked live website restored after a failed update.'});
+    await writeFile(path.join(stage, '_review/index.html'), '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Library website restored</title><h1>The earlier checked live website was restored</h1><p><a href="/">Open the saved website</a>. Return to the library assistant for the update status.</p><h2>Checked computer picture</h2><img style="max-width:100%" src="desktop.png" alt="Earlier checked library website on a computer"><h2>Checked phone picture</h2><img style="max-width:390px;width:100%" src="phone.png" alt="Earlier checked library website on a phone"></html>');
     await writeJson(path.join(stage, '_review/manifest.json'), {siteDigest: previous.releaseDigest,
       files: (await inventory(path.join(stage, '_review'))).filter(file => file.path !== 'manifest.json')});
     return stage;
@@ -343,13 +360,13 @@ export async function promoteWithRollback({stage, previous, operation, deployer,
     await verifier(stage);
     return {status: 'deployed_verified', rollback: 'not_needed'};
   } catch {
-    if (!previous) return {status: 'deploy_failed', rollback: 'no_previous_verified_cms_trial', summary: 'The first CMS trial update could not be verified. The public library domain was not changed.'};
+    if (!previous) return {status: 'deploy_failed', rollback: 'no_previous_verified_live', summary: 'The first live website update could not be verified.'};
     try {
       await deployer(previous.stage, previous.operation);
       await verifier(previous.stage);
-      return {status: 'deploy_failed', rollback: 'restored_verified', summary: 'The update could not be verified. The earlier checked CMS trial website was restored and verified.'};
+      return {status: 'deploy_failed', rollback: 'restored_verified', summary: 'The update could not be verified. The earlier checked live website was restored and verified.'};
     } catch {
-      return {status: 'deploy_failed', rollback: 'restoration_not_verified', summary: 'The update and automatic restoration could not be verified. The saved CMS trial needs technical attention; no successful update is claimed.'};
+      return {status: 'deploy_failed', rollback: 'restoration_not_verified', summary: 'The update and automatic restoration could not be verified. The live website needs technical attention; no successful update is claimed.'};
     }
   }
 }
@@ -358,7 +375,9 @@ async function publish(operation, context, env) {
   checkPins(context, operation);
   const authorization = async () => checkApproval({...context, revisionDigest: operation.revisionDigest}, await requestJson(`${context.publisherOrigin}/operations/${context.operationId}/authorization`, {headers: workerHeaders(env)}));
   const receipt = await authorization();
-  await checkHosting(env, {requireEmptyTrial: !receipt.previousVerified});
+  // A recovery pointer recorded before the live website existed cannot restore it.
+  if (receipt.previousVerified && receipt.previousVerified.websiteUrl !== LIVE_ORIGIN) fail('The live website has no verified first release yet. Merge a reviewed PR first; its checked save sets up the live website.');
+  await checkHosting(env, {requireNoLive: !receipt.previousVerified});
   const snapshot = await fetchSanitySnapshot(sanityConfig(env), {token: env.SANITY_READ_TOKEN});
   checkTrigger(operation, snapshot);
   if (contentDigest(snapshot) !== operation.contentDigest) fail('Content changed after the approved preview. Prepare a fresh preview.');
@@ -368,12 +387,12 @@ async function publish(operation, context, env) {
     rollback = await previousStage(receipt.previousVerified);
     await authorization(); // Recheck exact approval immediately before the only mutable upload.
     const result = await promoteWithRollback({stage, previous: rollback ? {stage: rollback, operation: {...operation, ...receipt.previousVerified}} : null,
-      operation, deployer: (folder, version) => deploy(folder, 'cms-trial', version, env), verifier: folder => waitForHosted(folder, TRIAL_ORIGIN)});
+      operation, deployer: (folder, version) => deploy(folder, LIVE_BRANCH, version, env), verifier: folder => waitForHosted(folder, LIVE_ORIGIN)});
     await writeJson(`${OUTPUT}/publish-result.json`, {...result, operationId: operation.operationId, sourceSha: operation.sourceSha,
-      contentDigest: operation.contentDigest, releaseDigest: operation.releaseDigest, websiteUrl: TRIAL_ORIGIN,
-      scope: 'Actual hosted CMS trial checks; public library domain unchanged.'});
+      contentDigest: operation.contentDigest, releaseDigest: operation.releaseDigest, websiteUrl: LIVE_ORIGIN,
+      scope: 'Actual hosted live website checks.'});
     await output({publish_status: result.status, rollback_status: result.rollback});
-    if (result.status !== 'deployed_verified') fail(result.summary || 'The approved CMS trial update could not be verified.');
+    if (result.status !== 'deployed_verified') fail(result.summary || 'The approved live website update could not be verified.');
     return result;
   } finally {await rm(stage, {recursive: true, force: true}); if (rollback) await rm(rollback, {recursive: true, force: true});}
 }
@@ -410,12 +429,12 @@ async function callback(context, stage, env) {
   if (stage === 'deployed_verified') {
     const result = await jsonFile(`${OUTPUT}/publish-result.json`);
     if (result.status !== 'deployed_verified' || result.operationId !== context.operationId || result.releaseDigest !== operation.releaseDigest) fail('No verified hosted publication result exists.');
-    body.websiteUrl = TRIAL_ORIGIN;
+    body.websiteUrl = LIVE_ORIGIN;
   }
   if (stage === 'deploy_failed') {
     try {
       const result = await jsonFile(`${OUTPUT}/publish-result.json`);
-      if (result.operationId === context.operationId && ['restored_verified', 'restoration_not_verified', 'no_previous_verified_cms_trial'].includes(result.rollback)) body.rollback = result.rollback;
+      if (result.operationId === context.operationId && ['restored_verified', 'restoration_not_verified', 'no_previous_verified_live'].includes(result.rollback)) body.rollback = result.rollback;
     } catch {}
   }
   const result = await requestJson(context.callbackUrl, {method: 'POST', headers: workerHeaders(env), body});

@@ -9,9 +9,9 @@ import {randomUUID} from 'node:crypto';
 import {readSnapshot, contentDigest} from './cms.mjs';
 import {fetchSanitySnapshot, sanityConfig} from '../src/content/sanity.mjs';
 import {inventory} from './release.mjs';
-import {revisionDigest, recordBuild, verifyBundle, preview, stageRelease, previousStage, promoteWithRollback, deploy, waitForHosted, checkHosting, checkFileInventory} from './cms-publishing.mjs';
+import {revisionDigest, recordBuild, verifyBundle, preview, stageRelease, previousStage, promoteWithRollback, deploy, waitForHosted, checkHosting, checkFileInventory, LIVE_BRANCH} from './cms-publishing.mjs';
 import {verifyPublisher} from '../cms-publisher/src/deployment-readiness.mjs';
-import {REPOSITORY, TRIAL_ORIGIN, sourcePattern, operationIdPattern} from '../cms-publisher/src/contract.mjs';
+import {REPOSITORY, LIVE_ORIGIN, sourcePattern, operationIdPattern} from '../cms-publisher/src/contract.mjs';
 
 export const ARTIFACT = 'library-pr-checked-preview';
 const fail = message => {throw Error(message);};
@@ -91,31 +91,38 @@ async function publish(operation,pr,mainSha,env) {
   await verifyPublisher(mainSha,{attempts:90});
   await recheck();
   await checkHosting(env);
-  // The source save shares the existing CMS trial lock and exact-asset rollback.
-  const response=await fetch(`${TRIAL_ORIGIN}/_review/status.json`,{headers:{'Cache-Control':'no-cache'},redirect:'error',signal:AbortSignal.timeout(30000)});
-  if(!response.ok)fail('Cannot retain the current saved trial for rollback.');
-  const previous=await response.json();
-  const previousOperation={...previous,releaseDigest:previous.digest};
-  const rollback=await previousStage(previousOperation);
+  // The source save shares the CMS live-publishing lock and exact-asset rollback.
+  const response=await fetch(`${LIVE_ORIGIN}/_review/status.json`,{headers:{'Cache-Control':'no-cache'},redirect:'error',signal:AbortSignal.timeout(30000)}).catch(()=>null);
+  let previousOperation=null,rollback=null;
+  if(response?.ok){
+    const previous=await response.json();
+    previousOperation={...previous,releaseDigest:previous.digest};
+    rollback=await previousStage(previousOperation);
+  } else {
+    // First live publication only: the authenticated inventory must show that no
+    // production deployment exists. Otherwise an unreadable live site blocks saving.
+    try {await checkHosting(env,{requireNoLive:true});}
+    catch(error){fail('Cannot retain the current live website for rollback. '+error.message);}
+  }
   const stage=await stageRelease(operation);
   try {
     // Keep the preview's sourceSha and bytes; record the identical merged tree separately.
     const status=await readJson(path.join(stage,'_review/status.json'));
     await writeJson(path.join(stage,'_review/status.json'),{...status,mergedSourceSha:mainSha,pullRequest:pr.number});
     await recheck();
-    const result=await promoteWithRollback({stage,previous:{stage:rollback,operation:previousOperation},operation,
-      deployer:(folder,version)=>deploy(folder,'cms-trial',version,env),verifier:folder=>waitForHosted(folder,TRIAL_ORIGIN)});
-    await writeJson('output/cms/publish-result.json',{...result,sourceSha:operation.sourceSha,mergedSourceSha:mainSha,pullRequest:pr.number,releaseDigest:operation.releaseDigest,websiteUrl:TRIAL_ORIGIN});
+    const result=await promoteWithRollback({stage,previous:rollback?{stage:rollback,operation:previousOperation}:null,operation,
+      deployer:(folder,version)=>deploy(folder,LIVE_BRANCH,version,env),verifier:folder=>waitForHosted(folder,LIVE_ORIGIN)});
+    await writeJson('output/cms/publish-result.json',{...result,sourceSha:operation.sourceSha,mergedSourceSha:mainSha,pullRequest:pr.number,releaseDigest:operation.releaseDigest,websiteUrl:LIVE_ORIGIN});
     if(result.status!=='deployed_verified')fail(result.summary);
     // Record the verified source release in the existing CMS ledger. This endpoint
     // has no deployment capability and cannot grant approval for another release.
     const recorded=await fetch(`${env.CMS_PUBLISHER_ORIGIN}/source-release`,{method:'POST',headers:{Authorization:`Bearer ${env.CMS_WORKFLOW_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({mergedSourceSha:mainSha,sourceSha:operation.sourceSha,operationId:operation.operationId,contentDigest:operation.contentDigest,revisionDigest:operation.revisionDigest,releaseDigest:operation.releaseDigest,previewRunId:operation.previewRunId,previewUrl:operation.previewUrl}),redirect:'error',signal:AbortSignal.timeout(30000)});
-    if(!recorded.ok)fail('Trial files are verified, but the CMS release record needs reconciliation. Do not claim the full save finished.');
-  } finally {await rm(stage,{recursive:true,force:true});await rm(rollback,{recursive:true,force:true});}
+    if(!recorded.ok)fail('Live website files are verified, but the CMS release record needs reconciliation. Do not claim the full save finished.');
+  } finally {await rm(stage,{recursive:true,force:true});if(rollback)await rm(rollback,{recursive:true,force:true});}
 }
 
 async function deliver(env) {
-  if(env.GITHUB_REPOSITORY!==REPOSITORY || env.GITHUB_REF!=='refs/heads/main' || env.GITHUB_WORKFLOW_REF!==`${REPOSITORY}/.github/workflows/source-trial.yml@refs/heads/main`)fail('Hosting is restricted to the trusted main workflow.');
+  if(env.GITHUB_REPOSITORY!==REPOSITORY || env.GITHUB_REF!=='refs/heads/main' || env.GITHUB_WORKFLOW_REF!==`${REPOSITORY}/.github/workflows/publish-live.yml@refs/heads/main`)fail('Hosting is restricted to the trusted main workflow.');
   const event=await readJson(env.GITHUB_EVENT_PATH);
   const trigger=event.workflow_run;
   if(trigger?.path!=='.github/workflows/check.yml' || trigger.conclusion!=='success' || trigger.head_repository?.full_name!==REPOSITORY)fail('Untrusted verification trigger.');
@@ -130,11 +137,11 @@ async function deliver(env) {
     await mainIs(mainSha,env);
     const matches=await api(`commits/${mainSha}/pulls?per_page=100`,env);
     const candidate=matches.find(item=>item.merged_at && item.merge_commit_sha===mainSha && item.base.ref==='main');
-    if(!candidate) {console.log('No approved PR merge at this main commit. Trial unchanged.');return;}
+    if(!candidate) {console.log('No approved PR merge at this main commit. Live website unchanged.');return;}
     pr=await api(`pulls/${candidate.number}`,env);
     const runs=await api(`actions/workflows/check.yml/runs?event=pull_request&head_sha=${pr.head.sha}&per_page=100`,env);
     run=runs.workflow_runs?.find(item=>item.conclusion==='success' && item.head_sha===pr.head.sha);
-    if(!run)fail('The merged PR has no successful exact-head preview. Trial unchanged.');
+    if(!run)fail('The merged PR has no successful exact-head preview. Live website unchanged.');
   } else {console.log('This check does not request a website preview or save.');return;}
   checkRun(run,pr.head.sha);
   const operation=await download(run,env);
@@ -147,12 +154,12 @@ async function deliver(env) {
   // after approval: the approved PR's checked artifact is the only source.
   const checked=await preview(operation,env);
   if(mainSha)await publish(checked,pr,mainSha,env);
-  const result={pullRequest:pr.number,sourceSha:checked.sourceSha,releaseDigest:checked.releaseDigest,previewRunId:checked.previewRunId,previewUrl:checked.previewUrl,savedTrial:mainSha?TRIAL_ORIGIN:null};
-  await writeJson('output/source-trial-result.json',result);
-  if(env.GITHUB_STEP_SUMMARY)await writeFile(env.GITHUB_STEP_SUMMARY,`[Website preview](${checked.previewUrl})\n\nPR #${pr.number}; checked source ${checked.sourceSha}.\n\n${mainSha?'Saved trial verified: '+TRIAL_ORIGIN:'Ready for review. Merge only after explicit chat approval.'}\n`,{flag:'a'});
+  const result={pullRequest:pr.number,sourceSha:checked.sourceSha,releaseDigest:checked.releaseDigest,previewRunId:checked.previewRunId,previewUrl:checked.previewUrl,liveWebsite:mainSha?LIVE_ORIGIN:null};
+  await writeJson('output/publish-live-result.json',result);
+  if(env.GITHUB_STEP_SUMMARY)await writeFile(env.GITHUB_STEP_SUMMARY,`[Website preview](${checked.previewUrl})\n\nPR #${pr.number}; checked source ${checked.sourceSha}.\n\n${mainSha?'Live website verified: '+LIVE_ORIGIN:'Ready for review. Merge only after explicit chat approval.'}\n`,{flag:'a'});
   console.log(JSON.stringify(result,null,2));
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) {
   const action=process.argv[2];
-  (action==='bundle'?bundle(process.env):action==='deliver'?deliver(process.env):Promise.reject(Error('Use source-trial.mjs bundle|deliver.'))).catch(error=>{console.error(error.message);process.exitCode=1;});
+  (action==='bundle'?bundle(process.env):action==='deliver'?deliver(process.env):Promise.reject(Error('Use publish-live.mjs bundle|deliver.'))).catch(error=>{console.error(error.message);process.exitCode=1;});
 }

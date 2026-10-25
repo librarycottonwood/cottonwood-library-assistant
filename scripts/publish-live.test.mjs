@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkRun,checkMerge,checkContent,checkStaticFiles} from './source-trial.mjs';
+import {checkRun,checkMerge,checkContent,checkStaticFiles} from './publish-live.mjs';
 import {digestOf} from './release.mjs';
 import {contentDigest} from './cms.mjs';
 import {revisionDigest} from './cms-publishing.mjs';

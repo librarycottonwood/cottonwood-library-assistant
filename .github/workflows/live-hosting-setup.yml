@@ -1,0 +1,31 @@
+name: Set up live website hosting
+# One-time: create (or confirm) the library-account Pages project for the live
+# website. Safe to rerun; it never deploys, deletes or changes an existing project.
+on: workflow_dispatch
+permissions:
+  contents: read
+concurrency:
+  group: library-live-publishing
+  cancel-in-progress: false
+jobs:
+  setup:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Create or confirm the live Pages project on the library account
+        env:
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+          # Library-account Pages token. CLOUDFLARE_TRIAL_API_TOKEN is the legacy secret name;
+          # once CLOUDFLARE_API_TOKEN is added with the same value, delete the legacy secret.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/live-hosting.mjs

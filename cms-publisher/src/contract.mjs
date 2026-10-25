@@ -1,7 +1,10 @@
 export const REPOSITORY = 'librarycottonwood/cottonwood-library-assistant';
 export const WORKFLOW = 'cms.yml';
 export const TRUSTED_REF = 'main';
-export const TRIAL_ORIGIN = 'https://cms-trial.cottonwood-library-trial-preview.pages.dev';
+// The live website is the production deployment of this library-account Pages
+// project. Previews are immutable <8hex>.cottonwood-library.pages.dev uploads.
+export const LIVE_PROJECT = 'cottonwood-library';
+export const LIVE_ORIGIN = `https://${LIVE_PROJECT}.pages.dev`;
 export const CONTENT_TYPES = ['siteSettings', 'givingSettings', 'program', 'event', 'post', 'newsletter', 'notice', 'sanity.imageAsset', 'sanity.fileAsset'];
 export const operationIdPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 export const sourcePattern = /^[a-f0-9]{40}$/;
@@ -49,7 +52,7 @@ export function parseEvent(value, env) {
 export function previewUrlValid(value, env) {
   try {
     const url = new URL(value);
-    const suffix = env.PREVIEW_HOST_SUFFIX || 'cottonwood-library-trial-preview.pages.dev';
+    const suffix = env.PREVIEW_HOST_SUFFIX || `${LIVE_PROJECT}.pages.dev`;
     const label = url.hostname.slice(0, -(suffix.length + 1));
     return url.protocol === 'https:' && !url.username && !url.password && !url.port &&
       url.hostname === `${label}.${suffix}` && /^[a-f0-9]{8}$/.test(label) &&

@@ -15,8 +15,8 @@ execFileSync('npx', ['--no-install', 'wrangler', 'deploy', '--dry-run', '--outdi
 });
 const origin = 'https://cms-publisher.example.workers.dev';
 const source = 'a'.repeat(40), content = 'b'.repeat(64), release = 'c'.repeat(64);
-const preview = 'https://1234abcd.cottonwood-library-trial-preview.pages.dev/';
-const website = 'https://cms-trial.cottonwood-library-trial-preview.pages.dev';
+const preview = 'https://1234abcd.cottonwood-library.pages.dev/';
+const website = 'https://cottonwood-library.pages.dev';
 const secrets = {
   SANITY_WEBHOOK_SECRET: 'webhook-local-fixture-secret-'.repeat(2),
   GITHUB_DISPATCH_TOKEN: 'github-local-fixture-dispatch-token',
@@ -170,7 +170,7 @@ test('browser forms: native approval and refresh preserve their same-origin requ
         }
         const response = page.waitForResponse(value => value.request().method() === 'POST' && value.url().endsWith(`/${action}`));
         if (action === 'refresh') await page.getByText('Need a new preview?', {exact: true}).click();
-        await page.getByRole('button', {name: action === 'approve' ? 'Save to the trial website' : 'Prepare a fresh preview', exact: true}).click();
+        await page.getByRole('button', {name: action === 'approve' ? 'Save to the live website' : 'Prepare a fresh preview', exact: true}).click();
         const submitted = await response;
         assert.deepEqual(received, [{origin, path: `/review/${id}/${action}`}]);
         assert.equal(submitted.status(), 303);
@@ -294,7 +294,7 @@ test('local runtime: OAuth requires cookie-bound one-time state and the exact li
     assert.ok(f.external.oauthRequest.get('code_verifier')); assert.equal(f.external.oauthRequest.get('redirect_uri'), origin + '/review/callback');
     assert.match(good.callback.headers.get('Set-Cookie'), /Secure; HttpOnly; SameSite=Lax/);
     const page = await f.request(`/review/${id}`, {headers: {Cookie: good.cookie}}); const html = await page.text();
-    assert.match(html, /Save to the trial website/); assert.ok(!html.includes('fixture-identity-token')); assert.match(page.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
+    assert.match(html, /Save to the live website/); assert.ok(!html.includes('fixture-identity-token')); assert.match(page.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
   } finally {await f.mf.dispose();}
 });
 
@@ -320,7 +320,7 @@ test('local runtime: browser approval enforces session, origin, CSRF, exact hash
     const publish = f.external.dispatches[1].inputs;
     assert.equal(publish.mode, 'publish'); assert.equal(publish.content_digest, content); assert.equal(publish.release_digest, release); assert.equal(publish.preview_run_id, '123456');
     const authAfter = await f.request(`/operations/${id}/authorization`, {headers: {Authorization: `Bearer ${secrets.CMS_WORKFLOW_TOKEN}`}});
-    assert.equal(authAfter.status, 200); const receipt = await authAfter.json(); assert.equal(receipt.approved, true); assert.equal(receipt.publicationScope, 'cms-trial-only'); assert.equal(receipt.releaseDigest, release);
+    assert.equal(authAfter.status, 200); const receipt = await authAfter.json(); assert.equal(receipt.approved, true); assert.equal(receipt.publicationScope, 'live-website-only'); assert.equal(receipt.releaseDigest, release);
   } finally {await f.mf.dispose();}
 });
 
