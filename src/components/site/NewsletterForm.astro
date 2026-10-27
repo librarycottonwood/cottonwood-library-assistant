@@ -2,7 +2,7 @@
 /**
  * @component NewsletterForm
  * @internal
- * The library's own newsletter sign-up form (email, optional first name, Subscribe). It posts to /api/newsletter, which adds the person to the library's Givebutter mailing list; it works with or without JavaScript and offers an email link if sign-up fails.
+ * The library's own newsletter sign-up form: one email field with Subscribe inside it. It posts to /api/newsletter, which adds the person to the library's Givebutter mailing list; it works with or without JavaScript and offers an email link if sign-up fails.
  * @use Nothing on pages: SiteFooter shows it on every page.
  * @avoid A second sign-up form on the same page (the result messages use fixed ids), or Givebutter's signup widget.
  * @example
@@ -22,22 +22,17 @@ const returnPath = Astro.url.pathname;
 ---
 <form class="newsletter-form" action={NEWSLETTER_ENDPOINT} method="post" aria-labelledby={labelledBy} data-newsletter-form>
   <input type="hidden" name="return" value={returnPath} />
-  <div class="newsletter-fields">
-    <div class="newsletter-field">
-      <label for="newsletter-email">Email address</label>
-      <input id="newsletter-email" type="email" name="email" required maxlength="254" autocomplete="email" spellcheck="false" />
-    </div>
-    <div class="newsletter-field">
-      <label for="newsletter-first-name">First name <span class="newsletter-optional">(optional)</span></label>
-      <input id="newsletter-first-name" type="text" name="first_name" maxlength="100" autocomplete="given-name" />
-    </div>
+  <div class="newsletter-row">
+    <label for="newsletter-email" class="sr-only">Email address</label>
+    <input id="newsletter-email" type="email" name="email" required maxlength="254" autocomplete="email" spellcheck="false" placeholder="Your email address" />
+    <Button type="submit" variant="primary">Subscribe</Button>
   </div>
   <!-- Left empty by people; bots that fill it are ignored. -->
   <div class="sr-only" aria-hidden="true">
     <label for="newsletter-website">Leave this empty</label>
     <input id="newsletter-website" type="text" name="website" tabindex="-1" autocomplete="off" />
   </div>
-  <Button type="submit" variant="accent">Subscribe</Button>
+  <p class="newsletter-note">Unsubscribe anytime.</p>
   <div role="status">
     {newsletterStatuses.map(status => (
       <p id={`newsletter-${status}`} class="newsletter-status" data-newsletter-status={status}>
@@ -51,18 +46,31 @@ const returnPath = Astro.url.pathname;
   import '../../scripts/newsletter-form';
 </script>
 <style>
-  .newsletter-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); width: 100%; }
-  .newsletter-fields { display: flex; flex-wrap: wrap; gap: var(--space-sm); width: 100%; }
-  .newsletter-field { display: flex; flex: 1 1 14rem; flex-direction: column; gap: var(--space-xs); }
-  .newsletter-field label { font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
-  .newsletter-optional { color: var(--color-text-muted); font-weight: var(--weight-medium); }
-  .newsletter-field input {
-    width: 100%; min-height: 2.75rem;
-    padding: var(--space-xs) var(--space-sm);
-    border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
-    background: var(--color-surface); color: var(--color-text);
+  .newsletter-form { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); width: 100%; max-width: 32rem; margin-inline: auto; text-align: center; container-type: inline-size; }
+  /* One pill: the field fills it and Subscribe sits inside on the right. */
+  .newsletter-row {
+    display: flex; align-items: center; gap: var(--space-xs); width: 100%;
+    padding: 0;
+    border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-pill);
+    background: var(--color-surface);
+  }
+  .newsletter-row:focus-within { border-color: var(--color-primary); outline: var(--border-thin) solid var(--color-primary); }
+  .newsletter-row input {
+    flex: 1; min-width: 0; min-height: 2.75rem;
+    padding-inline: var(--space-sm);
+    border: 0; background: transparent; color: var(--color-text);
     font: inherit; font-size: var(--fluid-label);
   }
+  .newsletter-row input:focus { outline: none; }
+  .newsletter-row input::placeholder { color: var(--color-text-muted); }
+  /* Too narrow for both in one pill: stack them, each full width. */
+  @container (max-width: 22rem) {
+    .newsletter-row { flex-direction: column; align-items: stretch; padding: 0; border: 0; background: none; }
+    .newsletter-row:focus-within { outline: none; }
+    .newsletter-row input { border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-pill); background: var(--color-surface); }
+    .newsletter-row input:focus { outline: var(--border-thin) solid var(--color-primary); border-color: var(--color-primary); }
+  }
+  .newsletter-note { color: var(--color-text-muted); font-size: var(--fluid-label); }
   /* Result messages: shown by #newsletter-<status> after a no-JavaScript submit, or by the script (data-shown). */
   .newsletter-status { display: none; font-weight: var(--weight-semibold); }
   .newsletter-form:not([data-enhanced]) .newsletter-status:target, .newsletter-status[data-shown] { display: block; }
