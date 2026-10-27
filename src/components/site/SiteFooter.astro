@@ -57,18 +57,19 @@ const { library, navigation } = Astro.props;
   </div>
 </footer>
 <style>
+  /* min-height leaves room for the whole tree box below the top padding, as in Figma. */
   .site-footer {
     position: relative; isolation: isolate; overflow: hidden;
     display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--section-gap);
+    min-height: calc(var(--section-space) + min(41.3125rem, 35.9vw));
     padding: var(--section-space) var(--page-inset) var(--space-xl);
   }
-  /* The tree stands on the footer's bottom edge and is never taller than the footer, so its base and crown both show.
-   * translateY(3%) drops the image's transparent strip under the ground line (36 of 1207px) below the edge. */
+  /* As in Figma, the tree is cut off at the footer's bottom edge: the box (829 × 661, Figma's frame) crops the
+   * bottom 14% of the image, so the ground and roots never show and the tree runs off the page. */
   .site-footer :global(.footer-watermark) {
     position: absolute; z-index: -1; right: var(--page-inset); bottom: 0;
-    width: auto; height: 100%; max-width: 45vw;
-    object-fit: contain; object-position: right bottom;
-    transform: translateY(3%);
+    width: min(51.8125rem, 45vw); height: auto; aspect-ratio: 829 / 661;
+    object-fit: cover; object-position: center top;
     opacity: 0.06; pointer-events: none;
   }
   .footer-brand {
@@ -96,5 +97,6 @@ const { library, navigation } = Astro.props;
   }
   @media (max-width: 40rem) {
     .footer-brand { width: 100%; }
+    .site-footer :global(.footer-watermark) { width: 85vw; }
   }
 </style>

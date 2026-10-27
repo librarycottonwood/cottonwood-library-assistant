@@ -77,10 +77,12 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         // An event that has started stays listed until its confirmed end.
         await advance('2099-04-18T23:30:00Z');assert.equal(await active().count(),1);
         await advance('2099-04-19T00:00:01Z');assert.equal(await active().count(),0);
-        assert.equal(await list.locator('[data-event-empty]').isVisible(),true);assert.match(await list.locator('[data-event-empty]').innerText(),/No special events are scheduled/);
+        // The homepage fills open spots with regular programs, so it never goes empty; the events page says so.
+        if(route==='/'){assert.equal(await list.locator('[data-event-card]:visible').count(),3,'regular programs fill the homepage once events end');assert.equal(await list.locator('[data-event-empty]').isVisible(),false);}
+        else{assert.equal(await list.locator('[data-event-empty]').isVisible(),true);assert.match(await list.locator('[data-event-empty]').innerText(),/No special events are scheduled/);}
         assert.equal(await list.locator('[data-agenda-day]:visible').count(),0);
         // A fresh page load also hides the same expired records immediately.
-        await page.reload({waitUntil:'networkidle'});assert.equal(await active().count(),0);assert.equal(await list.locator('[data-event-empty]').isVisible(),true);
+        await page.reload({waitUntil:'networkidle'});assert.equal(await active().count(),0);assert.equal(await list.locator('[data-event-empty]').isVisible(),route!=='/');
         await page.close();
       }
     }

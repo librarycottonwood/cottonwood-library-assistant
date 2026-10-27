@@ -119,7 +119,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
-| [EventCards](#eventcards) | The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. |
+| [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
@@ -236,7 +236,7 @@ interface Props {
 
 ### EventCards
 
-`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
+`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo.
 
 - **Use for:** Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
 - **Don't use for:** Past events or news posts (use Grid + Card), or wrapping it in another Grid.
@@ -244,8 +244,7 @@ interface Props {
 ```ts
 interface Props {
   events: LibraryEvent[];
-  /** Photo for events with no photo of their own or of their program. */
-  fallbackImage: LibraryImage;
+  /** Regular programs. They give events their photo and fill spots no dated event takes. */
   programs?: Program[];
   /** How many cards to show. */
   limit?: number;
@@ -255,7 +254,7 @@ interface Props {
 ```
 
 ```astro
-<EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} />
+<EventCards events={events} programs={programs} limit={3} />
 ```
 
 ### Grid

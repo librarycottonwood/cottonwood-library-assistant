@@ -59,7 +59,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   </Split>}
 
   <Section title="Upcoming events" headingId="events-heading">
-    <EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} emptyMessage="No special events are scheduled right now. Story Time and our reading groups still meet every week." />
+    <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
     <Button href="/librarynews/" iconEnd="arrow">View all</Button>
   </Section>
 

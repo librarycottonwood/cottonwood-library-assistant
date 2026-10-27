@@ -1,13 +1,15 @@
 ---
 /**
  * @component EventCards
- * The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides
- * events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
+ * The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill
+ * any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end,
+ * keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
  * The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
+ * Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo.
  * @use Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
  * @avoid Past events or news posts (use Grid + Card), or wrapping it in another Grid.
  * @example
- * <EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} />
+ * <EventCards events={events} programs={programs} limit={3} />
  */
 import Card from './Card.astro';
 import Grid from './Grid.astro';
@@ -16,31 +18,39 @@ import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
 import { upcomingEvents } from '../../content/feeds';
 interface Props {
   events: LibraryEvent[];
-  /** Photo for events with no photo of their own or of their program. */
-  fallbackImage: LibraryImage;
+  /** Regular programs. They give events their photo and fill spots no dated event takes. */
   programs?: Program[];
   /** How many cards to show. */
   limit?: number;
   /** Shown when there are no upcoming events. */
   emptyMessage?: string;
 }
-const { fallbackImage, programs = [], limit = 3, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const { programs = [], limit = 3, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
 const zone = 'America/Los_Angeles';
 const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
 const shortDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
 const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: zone });
 // Enough spare cards to rotate in as earlier ones end, without shipping every future date.
 const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
-const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage;
+// Library photos for events with none of their own, picked by id so a card keeps its photo between builds.
+const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(key => ({ key, alt: '' }));
+const fallbackImage = (id: string) => fallbackImages[[...id].reduce((sum, character) => sum + character.charCodeAt(0), 0) % fallbackImages.length]!;
+const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage(event.id);
+// Programs already showing as a dated event don't get a second card.
+const fillers = programs.filter(program => !events.some(event => event.programId === program.id));
 ---
-<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length, limit)} class="event-list">
-  <Grid as="ul" columns={3} hidden={events.length === 0} data-event-rows>
-    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={image(event)} data-event-expires={event.endsAt} hidden={index >= limit}>
+<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
+  <Grid as="ul" columns={3} hidden={events.length + fillers.length === 0} data-event-rows>
+    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={image(event)} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
     </Card>)}
+    {fillers.map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/librarynews/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
+      <Badge slot="badge" surface>{program.schedule}</Badge>
+      {program.description}
+    </Card>)}
   </Grid>
-  <p data-event-empty hidden={events.length > 0} class="event-empty">{emptyMessage}</p>
+  <p data-event-empty hidden={events.length + fillers.length > 0} class="event-empty">{emptyMessage}</p>
 </div>
 <script>
   const zone = 'America/Los_Angeles';
@@ -52,8 +62,10 @@ const image = (event: LibraryEvent) => event.image ?? programs.find(program => p
     for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
       const maximum = Number(list.dataset.eventLimit ?? Infinity);
       let shown = 0;
-      for (const card of list.querySelectorAll<HTMLElement>('[data-event-expires]')) {
-        const active = Date.parse(card.dataset.eventExpires!) >= now && shown < maximum;
+      // Dated events come first, then regular programs, which never expire.
+      for (const card of list.querySelectorAll<HTMLElement>('[data-event-card]')) {
+        const expires = card.dataset.eventExpires;
+        const active = (!expires || Date.parse(expires) >= now) && shown < maximum;
         card.hidden = !active;
         if (active) shown++;
       }
