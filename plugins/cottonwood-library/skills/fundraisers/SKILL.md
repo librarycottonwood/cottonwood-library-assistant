@@ -36,13 +36,14 @@ Ask one at a time; skip what they already said.
 
 1. "What are we raising money for?"
 2. "Which Givebutter campaign is it?" — find it with the Givebutter tools (note its code), or ask for the link. If there isn't one yet, explain in one line that they create the campaign in Givebutter first, with its goal (you can walk them through it), then come back.
-3. "Please paste the **Form** widget code for it, with the goal bar turned on." Walk them through it one step at a time if needed:
-   1. In Givebutter, open the campaign → **Sharing** tab → **Widgets**.
-   2. On the **Form** box, click the gear (settings) icon and switch **Goal bar** on. Save.
-   3. Click **Embed** on the Form box, copy the code and paste it here.
+3. Get the **Form** widget code. Never send these steps all at once, and never as one long sentence. Send one step, wait until they say it's done (or send a screenshot), then send the next. Start with: "Next I need a bit of code from Givebutter so the donation form and goal bar show on our website. I'll walk you through it one click at a time. Ready?"
+   1. "Go to givebutter.com and sign in. Click **Campaigns** on the left, then click **<campaign name>**." (Use the campaign's real name.)
+   2. "Along the top of the campaign, click **Sharing**."
+   3. "On the left, click **Widgets**. You'll see a few boxes. We want the one called **Form**."
+   4. "On the **Form** box, click the little gear icon. Turn on **Goal bar**, then click **Save**." If there's no Goal bar switch, the campaign has no goal yet: "Click the **Details** tab at the top, set the goal, save, then come back to Sharing → Widgets."
+   5. "On the **Form** box, click **Embed**. A window opens with some code. Copy all of it, come back here and paste it."
 
-   If there's no goal bar switch, the campaign has no goal yet: set one on its **Details** tab first, then come back to step 2.
-   Any form of the code is fine (with the script line or just the `<givebutter-widget …>` line). If what they pasted is clearly a Goal Bar or Button (for example a `<givebutter-goal-bar>` or `<givebutter-button>` tag), or they say they copied it from that box, kindly explain: "That one is the Goal Bar (or Button). For the fundraiser we need the **Form** one, the box next to it; it shows the goal bar and the donation form together." The plain `<givebutter-widget id="…">` line looks the same for every type, so ask which box it came from if you aren't sure.
+   If they get stuck, ask what they see on the screen, or for a screenshot, and give the one next click. If a tab or button is missing, they probably need the **Admin** or **Finance** role in Givebutter; say who on the board can do this step. If they pasted code from the Goal Bar or Button box instead, say kindly: "That one is the Goal Bar (or Button). We need the **Form** box next to it, which shows the goal bar and the donation form together."
 4. "Is there an end date?" — optional. Read the current expiry behavior in `assistant/content/fundraisers.md`; do not promise removal at that moment without a checked website update.
 5. "Any photo for it?" — optional.
 
