@@ -1,13 +1,33 @@
 {
-  "request": "Remove the event Website publishing test — not a library event from the website.",
+  "request": "Update the homepage introduction, catalog and service descriptions, community support copy, and Story Time and Main Street Readers descriptions.",
   "sanityDocuments": [
     {
-      "id": "8e02e544-394f-4d04-bbc5-07a7c3892e4e",
-      "action": "unpublish",
+      "id": "library-settings",
+      "revision": "y7cA1cENaKwnT2d8lGhZkD",
       "fields": [
-        "published document"
+        "hero.introduction",
+        "services[id==\"borrowing\"].title",
+        "services[id==\"borrowing\"].description",
+        "services[id==\"computers\"].description",
+        "services[id==\"printing\"].description",
+        "support.title",
+        "support.introduction"
+      ]
+    },
+    {
+      "id": "program-story-time",
+      "revision": "y7cA1cENaKwnT2d8lGhZkD",
+      "fields": [
+        "description"
+      ]
+    },
+    {
+      "id": "program-main-street-readers",
+      "revision": "y7cA1cENaKwnT2d8lGhZkD",
+      "fields": [
+        "description"
       ]
     }
   ],
-  "requestedInChat": "2026-10-25"
+  "requestedInChat": "2026-10-27"
 }
