@@ -78,20 +78,23 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
   /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */
   .site-header {
     position: sticky; top: 0; z-index: 50;
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm);
-    padding: var(--space-sm) var(--page-inset);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-xs);
+    padding: var(--space-xs) var(--page-inset);
     border-bottom: var(--border-thin) solid transparent;
     background: var(--color-background);
     transition: border-color 0.15s;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
-  .brand { display: flex; align-items: center; gap: var(--space-sm); text-decoration-line: none; flex: 0 1 31.25rem; }
-  .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
-  .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  /* Below desktop the logo, wordmark, Donate and menu share one row. The brand takes the space Donate and the menu
+   * leave; it is a container so the wordmark hides when that space is too narrow for it (screens under about 380px). */
+  .brand { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; flex: 1 1 0; container: brand / inline-size; text-decoration-line: none; }
+  .brand :global(.brand-logo) { width: 2.75rem; flex-shrink: 0; }
+  .brand-name { font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight); white-space: nowrap; }
+  @container brand (width < 9rem) { .brand-name { display: none; } }
   .site-nav { display: none; gap: var(--space-md); font-weight: var(--weight-semibold); }
   .site-nav a, .mobile-nav a { text-decoration-line: none; }
   .site-nav a:hover, .site-nav a[aria-current='page'] { text-decoration-line: underline; }
-  .header-actions { display: flex; flex: 0 1 31.25rem; justify-content: flex-end; align-items: center; gap: var(--space-xs); }
+  .header-actions { display: flex; flex: 0 0 auto; justify-content: flex-end; align-items: center; gap: var(--space-xs); }
   .menu-toggle {
     display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
     border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
@@ -104,11 +107,14 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
   .mobile-nav :global(.mobile-external) { width: 1em; height: 1em; }
 
   @media (min-width: 48rem) {
-    .hours-strip { padding-block: var(--space-sm); }
+    .hours-strip, .site-header { padding-block: var(--space-sm); }
+    .site-header, .brand { gap: var(--space-sm); }
+    .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
+    .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); }
   }
   @media (min-width: 90rem) {
     .site-header { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--space-md); }
-    .brand { justify-self: start; }
+    .brand { justify-self: start; container-type: normal; }
     .header-actions { justify-self: end; }
     .site-nav { display: flex; }
     .menu-toggle, .mobile-nav { display: none; }
