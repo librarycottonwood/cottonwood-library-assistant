@@ -31,6 +31,7 @@ Usually a library staff member or board volunteer, not a developer. Jaden (the o
 | Layout, design, code | `src/`. New design tokens: `src/design-system/tokens.ts`, `BaseLayout.astro`. Old pages: `SiteLayout.astro` + `docs/design-rules.md` |
 | Building new-design pages (tokens + components, with use/don't-use notes) | `docs/design-system.md` (generated; read it first, or use the `build-page` skill) |
 | Library facts (donation campaign, newsletter, social, contacts) | `docs/library-facts.md` |
+| Newsletter sign-up form → Givebutter | `functions/api/newsletter.ts` (Cloudflare Pages Function, secret `GIVEBUTTER_API_KEY` in the Pages project), forms in `src/components/site/NewsletterForm.astro` and `src/components/NewsletterSignup.astro` |
 | Publishing pipeline | `.github/workflows/check.yml` (checks + PR preview build) and `publish-live.yml` (preview upload, then live publish after merge) |
 | Staff wizards | `.claude/skills/` |
 | Scheduled checks | `.claude/routines/` |

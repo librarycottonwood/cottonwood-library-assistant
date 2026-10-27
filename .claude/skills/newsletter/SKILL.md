@@ -36,4 +36,4 @@ Don't set up a recurring email schedule or send to all contacts from a general r
 
 ## Sign-up problems
 
-The sign-up form is Givebutter widget `L4EVDm` on `/librarynews/newsletter/`. Check that page on the live site, then give one next step. Don't create another mailing service.
+The sign-up form is the website's own form (in the footer, and on `/librarynews/newsletter/`). It adds people to Givebutter tagged **Library Newsletter**. If someone sees "sign-up isn't working", the usual cause is the Givebutter key missing or expired: a board admin follows "Newsletter sign-up key" in `docs/setup-checklist.md`. Never ask for or handle the key yourself. Check the page on the live site, then give one next step. Don't create another mailing service.

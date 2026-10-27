@@ -30,6 +30,16 @@ Moving the library from ChatGPT to Claude Code. Do these in order. Keep ChatGPT 
 - [ ] **Sanity**: connect and sign in with the library's Sanity account (editor role is enough).
 - [ ] **Buffer**: connect (Facebook page linked in Buffer; Instagram later).
 - [ ] **Givebutter**: no Claude connector known yet; totals are read in Givebutter for now.
+
+## 4b. Newsletter sign-up key (board admin, once)
+
+The website's own newsletter form sends sign-ups to Givebutter with an API key. Until the key is added, the form shows "Sorry, sign-up isn't working right now" with a link to email the library.
+
+- [ ] In Givebutter (Admin role): **Settings → Integrations → API Keys → Create New API Key**, named `Library website newsletter`. Copy it once; don't paste it into chat, GitHub or any file.
+- [ ] In Cloudflare (library account): **Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Add**. Type **Secret**, name `GIVEBUTTER_API_KEY`, paste the key, environment **Production** (add it to **Preview** too if previews should be able to subscribe real people). Save.
+- [ ] It applies from the next website save (publish). Then sign up on the live site with a test address and check that the contact appears in Givebutter with the **Library Newsletter** tag and email subscription on.
+- [ ] In Givebutter Engage, make the newsletter audience **tag = Library Newsletter** (keep the old *Widget form sign-ups → Library Newsletter* people too), excluding unsubscribed.
+- To replace a leaked or old key: create a new one, replace the Cloudflare secret, then delete the old key in Givebutter.
 - [ ] **Visitor reports**: decide whether to keep the `connector/` Worker as a Claude custom connector (see `connector/README.md`) or use Google Analytics directly.
 
 ## 5. Scheduled tasks (signed in as the library account)

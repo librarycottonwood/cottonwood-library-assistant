@@ -1,0 +1,70 @@
+---
+/**
+ * @component NewsletterForm
+ * @internal
+ * The library's own newsletter sign-up form (email, optional first name, Subscribe). It posts to /api/newsletter, which adds the person to the library's Givebutter mailing list; it works with or without JavaScript and offers an email link if sign-up fails.
+ * @use Nothing on pages: SiteFooter shows it on every page.
+ * @avoid A second sign-up form on the same page (the result messages use fixed ids), or Givebutter's signup widget.
+ * @example
+ * <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
+ */
+import Button from './Button.astro';
+import { NEWSLETTER_ENDPOINT, newsletterMailto, newsletterMessages, newsletterStatuses } from '../../content/newsletter';
+interface Props {
+  /** The library's email address, for the fallback link when sign-up fails. */
+  email: string;
+  /** id of the heading that names the form. */
+  labelledBy?: string;
+}
+const { email, labelledBy } = Astro.props;
+// Without JavaScript the server sends the visitor back to this page.
+const returnPath = Astro.url.pathname;
+---
+<form class="newsletter-form" action={NEWSLETTER_ENDPOINT} method="post" aria-labelledby={labelledBy} data-newsletter-form>
+  <input type="hidden" name="return" value={returnPath} />
+  <div class="newsletter-fields">
+    <div class="newsletter-field">
+      <label for="newsletter-email">Email address</label>
+      <input id="newsletter-email" type="email" name="email" required maxlength="254" autocomplete="email" spellcheck="false" />
+    </div>
+    <div class="newsletter-field">
+      <label for="newsletter-first-name">First name <span class="newsletter-optional">(optional)</span></label>
+      <input id="newsletter-first-name" type="text" name="first_name" maxlength="100" autocomplete="given-name" />
+    </div>
+  </div>
+  <!-- Left empty by people; bots that fill it are ignored. -->
+  <div class="sr-only" aria-hidden="true">
+    <label for="newsletter-website">Leave this empty</label>
+    <input id="newsletter-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+  <Button type="submit" variant="accent">Subscribe</Button>
+  <div role="status">
+    {newsletterStatuses.map(status => (
+      <p id={`newsletter-${status}`} class="newsletter-status" data-newsletter-status={status}>
+        {newsletterMessages[status]}
+        {status === 'error' && <> Please <a href={newsletterMailto(email)}>email the library</a> to join.</>}
+      </p>
+    ))}
+  </div>
+</form>
+<script>
+  import '../../scripts/newsletter-form';
+</script>
+<style>
+  .newsletter-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); width: 100%; }
+  .newsletter-fields { display: flex; flex-wrap: wrap; gap: var(--space-sm); width: 100%; }
+  .newsletter-field { display: flex; flex: 1 1 14rem; flex-direction: column; gap: var(--space-xs); }
+  .newsletter-field label { font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  .newsletter-optional { color: var(--color-text-muted); font-weight: var(--weight-medium); }
+  .newsletter-field input {
+    width: 100%; min-height: 2.75rem;
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
+    background: var(--color-surface); color: var(--color-text);
+    font: inherit; font-size: var(--fluid-label);
+  }
+  /* Result messages: shown by #newsletter-<status> after a no-JavaScript submit, or by the script (data-shown). */
+  .newsletter-status { display: none; font-weight: var(--weight-semibold); }
+  .newsletter-form:not([data-enhanced]) .newsletter-status:target, .newsletter-status[data-shown] { display: block; }
+  .newsletter-status a { text-decoration-line: underline; }
+</style>

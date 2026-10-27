@@ -15,23 +15,15 @@ import Section from './Section.astro';
 import Text from './Text.astro';
 import InstagramIcon from '../InstagramIcon.astro';
 import FacebookIcon from '../FacebookIcon.astro';
-import signup from '../../content/newsletter-signup.json';
-import { checkGivebutterId } from '../../content/feeds';
-import { givebutterScriptSrc, sitewideGivebutterAccount } from '../../content/donate';
+import NewsletterForm from './NewsletterForm.astro';
 import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
 const { library, navigation } = Astro.props;
-checkGivebutterId(signup.account, 'newsletter signup account');
-checkGivebutterId(signup.widgetId, 'newsletter signup widget');
-// BaseLayout already loads Givebutter's script when Donate buttons use it.
-const signupScript = await sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(signup.account);
 ---
 <Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
   <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
-  <givebutter-widget id={signup.widgetId} account={signup.account} class="newsletter-widget"></givebutter-widget>
-  <Text size="label">Sign-up is handled by Givebutter. If the form doesn't load, <a href={`mailto:${library.email}?subject=Library%20newsletter`}>email the library</a>.</Text>
+  <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
 </Section>
-{signupScript && <script is:inline async src={signupScript}></script>}
 <footer class="site-footer">
   <Image src={logo} alt="" width={700} widths={[400, 700]} sizes="700px" loading="lazy" class="footer-watermark" />
   <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
@@ -65,8 +57,6 @@ const signupScript = await sitewideGivebutterAccount() ? undefined : givebutterS
   </div>
 </footer>
 <style>
-  .newsletter-widget { display: block; width: 100%; }
-
   .site-footer {
     position: relative; isolation: isolate; overflow: hidden;
     display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--section-gap);

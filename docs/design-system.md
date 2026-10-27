@@ -442,6 +442,7 @@ interface Props {
 
 Pages never place these; they are listed so you know they exist.
 
+- **NewsletterForm** (`src/components/site/NewsletterForm.astro`): The library's own newsletter sign-up form (email, optional first name, Subscribe). It posts to /api/newsletter, which adds the person to the library's Givebutter mailing list; it works with or without JavaScript and offers an email link if sign-up fails. Don't: A second sign-up form on the same page (the result messages use fixed ids), or Givebutter's signup widget.
 - **SiteFooter** (`src/components/site/SiteFooter.astro`): Newsletter sign-up, then the footer with links, contact details, social icons and the Privacy links. Don't: Adding another newsletter form or contact block to a page.
 - **SiteHeader** (`src/components/site/SiteHeader.astro`): Opening-hours strip, then the header bar (logo, main navigation, Donate button, phone menu), which sticks to the top while the strip scrolls away. Don't: Adding a second header or navigation to a page.
 - **SiteNotices** (`src/components/site/SiteNotices.astro`): Green bar of current notices (closures, schedule changes) above the header, from the Sanity notice records. Don't: Hard-coding announcements into a page.
