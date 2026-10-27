@@ -1,23 +1,39 @@
-# New website foundations
+# New website design system
 
-`tokens.ts` is the single source for the new build's design tokens. It generates
-the shared `/components/tokens.css` stylesheet and the `/components` directory.
-Import `FoundationStyles.astro` into new layouts to load the tokens and self-hosted
-Bree Serif and Mona Sans fonts. Use `var(--token-name)` in components.
+Pages built on `BaseLayout` use only the tokens and components described here.
+The agent-readable reference is [`docs/design-system.md`](../../docs/design-system.md);
+it is generated, so edit the sources below and run `pnpm design:docs`.
 
-Source: [Cottonwood Figma redesign](https://www.figma.com/design/ZHygohymNhKRQyxIhQsQ2P/Untitled?node-id=1001-2),
-inspected October 21, 2026. Each token links to its source node.
+| Source | What it holds |
+| --- | --- |
+| `tokens.ts` | Every token with its value and usage notes (`useFor`, `avoid`, `example`). Generates `/components/tokens.css`, the `/components` catalog and the token half of the reference. |
+| `src/components/site/*.astro`, `src/layouts/BaseLayout.astro` | Components. The `/** @component … */` block at the top of each file is its usage note (purpose, `@use`, `@avoid`, `@example`); `component-docs.ts` reads it for the catalog and the reference. |
+| `src/styles/base.css` | Element defaults, fluid type sizes (`--fluid-*`), and the `data-gap` rules behind every `gap` prop. |
 
-The file has no local variable collections or text styles. Values were extracted
-from the desktop homepage and named here. Padding and gaps alias the common
-spacing scale. Font sizes use rems based on a 16px root, preserving browser text
-scaling. Original desktop measurements are preserved; responsive page sizing is
-future component work.
+## Spacing
 
-The one-off 94px hero gap and distributed header measurements (822px/1018px)
-are intentionally excluded from the reusable scale. SF Pro is used for icon
-glyphs in Figma and is not a web text font. No icon system is implemented yet.
+Five steps: `--space-xs` 10px, `--space-sm` 20px, `--space-md` 30px, `--space-lg` 60px,
+`--space-xl` 100px (rems on a 16px root). There are no padding or gap tokens:
+components own their padding and gaps, and layout props (`gap`) accept only
+`xs | sm | md | lg | xl` (the `Space` type in `tokens.ts`).
 
-The directory's compact documentation layout lives in `catalog.css`, separate
-from the new site's tokens. Its specimen panels use the actual shared values.
-The old prototype's `global.css` is independent of this foundation.
+Responsive spacing does not use fluid values. `--page-inset`, `--section-space` and
+`--section-gap` step between the five values at fixed breakpoints, and
+`--width-content` (1520px) reproduces the design's 200px side margins at 1920px.
+Type sizes stay fluid.
+
+`pnpm check` runs `scripts/design-system.mjs check`, which fails when the reference
+is stale, when a component lacks a usage block, or when a new-system file uses raw
+px/rem/em (or clamp/calc) spacing, a spacing token outside the five steps, a deleted
+token, Tailwind spacing classes, or (in pages) any spacing declaration at all.
+Old pages (`SiteLayout` + `global.css`) are not checked.
+
+## Source
+
+Values come from the [Cottonwood Figma redesign](https://www.figma.com/design/ZHygohymNhKRQyxIhQsQ2P/Untitled?node-id=1001-2),
+inspected October 21, 2026. The homepage follows the five-step scale rather than
+matching every Figma measurement (approved by Jaden). SF Pro appears in Figma only as
+icon glyphs and is not a web font; icons come from Lucide via `Icon.astro`.
+
+The `/components` catalog uses its own plain stylesheet (`catalog.css`). It is
+`noindex` and disallowed in `robots.txt`.
