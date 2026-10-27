@@ -1,9 +1,12 @@
 ---
+// Plain reference layout for /components (noindex; robots.txt also disallows it).
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
-import { figmaFile, tokenGroups } from '../design-system/tokens';
+import { tokenGroups } from '../design-system/tokens';
+import { componentAnchor, componentDocs } from '../design-system/catalog';
 import '../styles/catalog.css';
 interface Props { active: string; title: string; }
 const { active, title } = Astro.props;
+const groupHref = (slug: string) => slug === 'colors' ? '/components/' : `/components/${slug}/`;
 ---
 <!doctype html>
 <html lang="en">
@@ -11,71 +14,19 @@ const { active, title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="description" content="The shared design foundations for the new Cottonwood Community Library website." />
-    <title>{title} · Cottonwood component library</title>
+    <title>{title} · Cottonwood design system</title>
     <FoundationStyles />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <aside class="sidebar">
-      <a class="brand" href="/components"><span class="brand-mark" aria-hidden="true">c.</span><span>Cottonwood<span class="brand-caption">Component library</span></span></a>
-      <div class="sidebar-rule"></div>
-      <nav aria-label="Component library">
-        <p class="nav-heading">Foundations <span>01</span></p>
-        {tokenGroups.map((group, index) => <a class:list={['nav-link', { 'is-active': active === group.slug }]} href={group.slug === 'colors' ? '/components' : `/components/${group.slug}`} aria-current={active === group.slug ? 'page' : undefined}><span class="nav-symbol" aria-hidden="true">{['◐', 'Aa', 'Tt', '↔', '⊡', '⋮', '◜', '□'][index]}</span>{group.title}<span class="nav-count">{group.tokens.length}</span></a>)}
-        <p class="nav-heading component-heading">Components <span>02</span></p>
-        <p class="sidebar-empty">We’re starting with the foundations.<br />Components will live here as we build.</p>
-      </nav>
-      <div class="sidebar-bottom"><span class="status-dot"></span> New website · In progress<a href={figmaFile} target="_blank" rel="noreferrer">Open Figma <span aria-hidden="true">↗</span></a></div>
-    </aside>
-    <div class="workspace">
-      <header class="topbar"><span>Library <span class="breadcrumb-slash">/</span> Foundations <span class="breadcrumb-slash">/</span> <strong>{title}</strong></span><a href="/components/tokens.css" target="_blank">Token stylesheet <span aria-hidden="true">↗</span></a></header>
-      <main id="main" tabindex="-1"><slot /></main>
-      <footer class="catalog-footer"><span>Cottonwood Community Library</span><span>A shared foundation for everything we build.</span></footer>
-    </div>
-    <p id="copy-status" role="status" class="copy-status"></p>
-    <script>
-      document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(button => {
-        button.addEventListener('click', async () => {
-          const value = button.dataset.copy;
-          const status = document.getElementById('copy-status');
-          if (!value || !status) return;
-          try {
-            await navigator.clipboard.writeText(value);
-            status.textContent = `Copied ${value}`;
-          } catch {
-            status.textContent = `Copy unavailable. Select the visible code to copy it.`;
-          }
-        });
-      });
-      const tabs = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
-      const activate = (tab: HTMLButtonElement) => {
-        tabs.forEach(item => {
-          const selected = item === tab;
-          item.setAttribute('aria-selected', String(selected));
-          item.tabIndex = selected ? 0 : -1;
-          const panel = document.getElementById(item.getAttribute('aria-controls') ?? '');
-          if (panel) panel.hidden = !selected;
-        });
-      };
-      if (tabs[0]) {
-        document.querySelector<HTMLElement>('[role="tablist"]')?.removeAttribute('hidden');
-        activate(tabs[0]);
-      }
-      tabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => activate(tab));
-        tab.addEventListener('keydown', event => {
-          let next: number;
-          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
-          else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
-          else if (event.key === 'Home') next = 0;
-          else if (event.key === 'End') next = tabs.length - 1;
-          else return;
-          event.preventDefault();
-          const target = tabs[next];
-          if (target) { activate(target); target.focus(); }
-        });
-      });
-    </script>
+    <nav class="catalog-nav" aria-label="Design system">
+      <p class="catalog-title">Design system</p>
+      <h2>Tokens</h2>
+      <ul>{tokenGroups.map(group => <li><a href={groupHref(group.slug)} aria-current={active === group.slug ? 'page' : undefined}>{group.title}</a></li>)}</ul>
+      <h2>Components</h2>
+      <ul>{componentDocs.map(doc => <li><a href={`/components/ui/#${componentAnchor(doc.name)}`}>{doc.name}</a></li>)}</ul>
+      <p><a href="/components/tokens.css">tokens.css</a></p>
+    </nav>
+    <main id="main" tabindex="-1"><slot /></main>
   </body>
 </html>
