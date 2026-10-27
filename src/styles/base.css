@@ -55,14 +55,8 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 [data-gap='lg'] { gap: var(--space-lg); }
 [data-gap='xl'] { gap: var(--space-xl); }
 
-/* Privacy link and statistics consent panel (markup in components/Analytics.astro) */
-#library-analytics > div:first-child {
-  display: flex; gap: var(--space-sm);
-  padding: 0 var(--page-inset) var(--space-sm);
-  font-size: var(--fluid-label);
-}
+/* Statistics consent panel (markup in components/Analytics.astro). The Privacy links sit in SiteFooter. */
 #library-analytics button, #statistics-choice a { font: inherit; color: inherit; }
-#library-analytics > div:first-child button { padding: 0; border: 0; background: none; text-decoration-line: underline; cursor: pointer; }
 #statistics-choice {
   position: fixed; right: var(--space-sm); bottom: var(--space-sm); left: var(--space-sm); z-index: 60;
   max-width: 28rem; margin-left: auto;

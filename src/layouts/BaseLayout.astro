@@ -51,7 +51,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <SiteHeader library={content.library} navigation={content.navigation} />
     <main id="main" tabindex="-1"><slot /></main>
     <SiteFooter library={content.library} navigation={content.navigation} />
-    <Analytics />
+    <Analytics privacyLinks={false} />
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}
   </body>
 </html>

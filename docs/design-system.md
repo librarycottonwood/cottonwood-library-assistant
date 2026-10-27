@@ -118,8 +118,8 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [BaseLayout](#baselayout) | The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
-| [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
-| [EventCards](#eventcards) | The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. |
+| [Card](#card) | Photo card with a linked title and a short description. Use inside a Grid. |
+| [EventCards](#eventcards) | The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
@@ -208,21 +208,19 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 
 ### Card
 
-`src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
+`src/components/site/Card.astro` — Photo card with a linked title and a short description. Use inside a Grid.
 
-- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop.
+- **Don't use for:** A single highlighted item (use Split), text without a photo, or anything with more than two short sentences.
 
 ```ts
 interface Props {
   title: string;
-  /** Makes the whole card one link (the title is the link text). */
+  /** Where the title links to. */
   href?: string;
   image: LibraryImage;
   /** Use "li" when the parent Grid is as="ul". */
   as?: 'article' | 'li' | 'div';
-  /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
-  layout?: 'stacked' | 'adaptive';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -236,10 +234,10 @@ interface Props {
 
 ### EventCards
 
-`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
+`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
 
 - **Use for:** Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
-- **Don't use for:** Past events or news posts (use Grid + Card), or wrapping it in another Grid.
+- **Don't use for:** Past events or news posts (use Grid + Card), or a single featured event (use Split).
 
 ```ts
 interface Props {
@@ -442,6 +440,6 @@ interface Props {
 
 Pages never place these; they are listed so you know they exist.
 
-- **SiteFooter** (`src/components/site/SiteFooter.astro`): Newsletter sign-up, then the footer with links, contact details and social icons. Don't: Adding another newsletter form or contact block to a page.
+- **SiteFooter** (`src/components/site/SiteFooter.astro`): Newsletter sign-up, then the footer with links, contact details, social icons and the Privacy links. Don't: Adding another newsletter form or contact block to a page.
 - **SiteHeader** (`src/components/site/SiteHeader.astro`): Opening-hours strip, logo, main navigation, Donate button and the phone menu. Don't: Adding a second header or navigation to a page.
 - **SiteNotices** (`src/components/site/SiteNotices.astro`): Green bar of current notices (closures, schedule changes) above the header, from the Sanity notice records. Don't: Hard-coding announcements into a page.

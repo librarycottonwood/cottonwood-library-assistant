@@ -2,7 +2,7 @@
 /**
  * @component SiteFooter
  * @internal
- * Newsletter sign-up, then the footer with links, contact details and social icons.
+ * Newsletter sign-up, then the footer with links, contact details, social icons and the Privacy links.
  * @use Nothing on pages: BaseLayout adds it to every page.
  * @avoid Adding another newsletter form or contact block to a page.
  * @example
@@ -57,6 +57,11 @@ const signupScript = await sitewideGivebutterAccount() ? undefined : givebutterS
       <a href={library.instagramUrl} aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="social-icon" /></a>
       <span class="social-pending" title="Facebook link coming soon"><FacebookIcon class="social-icon" /><span class="sr-only">Facebook (link coming soon)</span></span>
     </div>
+    <p class="footer-legal">
+      <a href="/privacy/">Privacy</a>
+      <!-- Analytics.astro shows this button (by id) on the live site and opens the statistics choice. -->
+      <button id="privacy-choices" type="button" hidden>Privacy choices</button>
+    </p>
   </div>
 </footer>
 <style>
@@ -67,9 +72,14 @@ const signupScript = await sitewideGivebutterAccount() ? undefined : givebutterS
     display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--section-gap);
     padding: var(--section-space) var(--page-inset) var(--space-xl);
   }
+  /* The tree stands on the footer's bottom edge and is never taller than the footer, so its base and crown both show.
+   * translateY(3%) drops the image's transparent strip under the ground line (36 of 1207px) below the edge. */
   .site-footer :global(.footer-watermark) {
-    position: absolute; z-index: -1; right: var(--page-inset); bottom: calc(-1 * var(--space-xl));
-    width: min(43.75rem, 45vw); opacity: 0.06; pointer-events: none;
+    position: absolute; z-index: -1; right: var(--page-inset); bottom: 0;
+    width: auto; height: 100%; max-width: 45vw;
+    object-fit: contain; object-position: right bottom;
+    transform: translateY(3%);
+    opacity: 0.06; pointer-events: none;
   }
   .footer-brand {
     display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); width: 14.0625rem;
@@ -87,6 +97,13 @@ const signupScript = await sitewideGivebutterAccount() ? undefined : givebutterS
   .social a { justify-content: flex-start; }
   .social :global(.social-icon) { width: 1.875rem; height: 1.875rem; }
   .social-pending { opacity: 0.6; }
+  .footer-legal { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--color-text-muted); font-size: var(--fluid-label); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
+  .footer-legal a, .footer-legal button { text-decoration-line: underline; }
+  .footer-legal a:hover, .footer-legal button:hover { color: var(--color-text); }
+  .footer-legal button {
+    padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
+    text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);
+  }
   @media (max-width: 40rem) {
     .footer-brand { width: 100%; }
   }
