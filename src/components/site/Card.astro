@@ -1,9 +1,9 @@
 ---
 /**
  * @component Card
- * Photo card with a linked title and a short description. Use inside a Grid.
- * @use A set of similar things: events, services, programs, news posts. Three per row on desktop.
- * @avoid A single highlighted item (use Split), text without a photo, or anything with more than two short sentences.
+ * Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
+ * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
+ * @avoid A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
  * @example
  * <Grid as="ul" columns={3}>
  *   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
@@ -14,29 +14,35 @@ import IconLink from './IconLink.astro';
 import type { LibraryImage } from '../../content/types';
 interface Props {
   title: string;
-  /** Where the title links to. */
+  /** Makes the whole card one link (the title is the link text). */
   href?: string;
   image: LibraryImage;
   /** Use "li" when the parent Grid is as="ul". */
   as?: 'article' | 'li' | 'div';
+  /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
+  layout?: 'stacked' | 'adaptive';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image, as: Tag = 'article', ...attributes } = Astro.props;
+const { title, href, image, as: Tag = 'article', layout = 'stacked', ...attributes } = Astro.props;
 const hasBadge = Astro.slots.has('badge');
 ---
-<Tag class="card" {...attributes}>
-  <div class:list={['card-media', { 'has-badge': hasBadge }]}>
-    <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
-    {hasBadge && <div class="card-badge"><slot name="badge" /></div>}
-  </div>
-  <div class="card-copy">
-    <h3>{href ? <IconLink href={href} iconEnd="arrow">{title}</IconLink> : title}</h3>
-    <p><slot /></p>
+<Tag class:list={['card', { 'card-adaptive': layout === 'adaptive' }]} {...attributes}>
+  <div class="card-body">
+    <div class:list={['card-media', { 'has-badge': hasBadge }]}>
+      <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
+      {hasBadge && <div class="card-badge"><slot name="badge" /></div>}
+    </div>
+    <div class="card-copy">
+      <h3>{href ? <IconLink href={href} iconEnd="arrow">{title}</IconLink> : title}</h3>
+      <p><slot /></p>
+    </div>
   </div>
 </Tag>
 <style>
-  .card { display: flex; flex-direction: column; gap: var(--space-md); }
+  /* Stretched link: the title link's ::after covers the whole card, so the card has exactly one link. */
+  .card { position: relative; }
+  .card-body { display: flex; flex-direction: column; gap: var(--space-md); height: 100%; }
   .card-media {
     position: relative; overflow: hidden;
     height: clamp(13rem, 19vw, 22.8125rem);
@@ -49,4 +55,18 @@ const hasBadge = Astro.slots.has('badge');
   .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
   .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
   .card-copy p { color: var(--color-text-muted); }
+
+  /* IconLink already underlines on hover; hovering anywhere on the card hovers the link. */
+  .card-copy h3 :global(.icon-link)::after { content: ''; position: absolute; z-index: 1; inset: 0; border-radius: var(--radius-image); }
+  .card-copy h3 :global(.icon-link:focus-visible) { outline: none; text-decoration-line: underline; }
+  .card-copy h3 :global(.icon-link:focus-visible)::after { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+  /* Adaptive: photo beside the text when the card itself is wide (a container query, so it follows the card's real width). */
+  .card-adaptive { container: card / inline-size; }
+  @container card (min-width: 48rem) {
+    .card-body { flex-direction: row; align-items: center; gap: var(--space-lg); }
+    .card-media { flex: 1 1 0; height: auto; aspect-ratio: 16 / 9; }
+    .card-copy { flex: 1 1 0; padding: 0 var(--space-md) 0 0; }
+    .card-copy h3 { font-size: var(--fluid-lead); }
+  }
 </style>

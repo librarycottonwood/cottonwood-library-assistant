@@ -3,8 +3,9 @@
  * @component EventCards
  * The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides
  * events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
+ * The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
  * @use Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
- * @avoid Past events or news posts (use Grid + Card), or a single featured event (use Split).
+ * @avoid Past events or news posts (use Grid + Card), or wrapping it in another Grid.
  * @example
  * <EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} />
  */
@@ -32,9 +33,9 @@ const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long
 const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
 const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage;
 ---
-<div data-event-list data-event-limit={limit} class="event-list">
+<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length, limit)} class="event-list">
   <Grid as="ul" columns={3} hidden={events.length === 0} data-event-rows>
-    {events.map((event, index) => <Card as="li" title={event.title} href={event.href} image={image(event)} data-event-expires={event.endsAt} hidden={index >= limit}>
+    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={image(event)} data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
     </Card>)}
@@ -65,6 +66,7 @@ const image = (event: LibraryEvent) => event.image ?? programs.find(program => p
       }
       const rows = list.querySelector<HTMLElement>('[data-event-rows]');
       const empty = list.querySelector<HTMLElement>('[data-event-empty]');
+      list.dataset.eventCount = String(shown);
       if (rows) rows.hidden = shown === 0;
       if (empty) empty.hidden = shown > 0;
     }
@@ -78,5 +80,14 @@ const image = (event: LibraryEvent) => event.image ?? programs.find(program => p
 </script>
 <style>
   .event-list { width: 100%; }
+  /* data-event-count is set at build time and updated in the browser as events end. */
+  @media (min-width: 48rem) {
+    /* One event: a single full-width card, which Card's adaptive layout turns into photo-beside-text. */
+    .event-list[data-event-count='1'] :global(.grid) { grid-template-columns: minmax(0, 1fr); }
+    /* Two events: same card width as the 3-up grid, centered (6 tracks, each card spans 2, the first starts at track 2). */
+    .event-list[data-event-count='2'] :global(.grid) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .event-list[data-event-count='2'] :global(.card) { grid-column: span 2; }
+    .event-list[data-event-count='2'] :global(.card:nth-child(1 of :not([hidden]))) { grid-column: 2 / span 2; }
+  }
   .event-empty { color: var(--color-text-muted); text-align: center; }
 </style>
