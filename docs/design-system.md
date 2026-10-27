@@ -443,5 +443,5 @@ interface Props {
 Pages never place these; they are listed so you know they exist.
 
 - **SiteFooter** (`src/components/site/SiteFooter.astro`): Newsletter sign-up, then the footer with links, contact details, social icons and the Privacy links. Don't: Adding another newsletter form or contact block to a page.
-- **SiteHeader** (`src/components/site/SiteHeader.astro`): Opening-hours strip, logo, main navigation, Donate button and the phone menu. Don't: Adding a second header or navigation to a page.
+- **SiteHeader** (`src/components/site/SiteHeader.astro`): Opening-hours strip, then the header bar (logo, main navigation, Donate button, phone menu), which sticks to the top while the strip scrolls away. Don't: Adding a second header or navigation to a page.
 - **SiteNotices** (`src/components/site/SiteNotices.astro`): Green bar of current notices (closures, schedule changes) above the header, from the Sanity notice records. Don't: Hard-coding announcements into a page.

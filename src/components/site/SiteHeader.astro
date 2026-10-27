@@ -2,7 +2,7 @@
 /**
  * @component SiteHeader
  * @internal
- * Opening-hours strip, logo, main navigation, Donate button and the phone menu.
+ * Opening-hours strip, then the header bar (logo, main navigation, Donate button, phone menu), which sticks to the top while the strip scrolls away.
  * @use Nothing on pages: BaseLayout adds it to every page.
  * @avoid Adding a second header or navigation to a page.
  * @example
@@ -44,6 +44,15 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
   </nav>
 </header>
 <script>
+  // Sticky header: a line under it only once the hours strip has scrolled away, and anchor
+  // targets (#give, #visit…) land below it. The header height is measured, so it isn't a spacing value.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const strip = document.querySelector<HTMLElement>('.hours-strip');
+  if (header) {
+    const root = document.documentElement;
+    new ResizeObserver(() => { root.style.scrollPaddingTop = `${header.offsetHeight}px`; }).observe(header);
+    if (strip) new IntersectionObserver(([entry]) => { header.toggleAttribute('data-stuck', !entry!.isIntersecting); }).observe(strip);
+  }
   const toggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
   const menu = document.querySelector<HTMLElement>('#site-mobile-nav');
   if (toggle && menu) {
@@ -66,11 +75,16 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
   .hours-strip p { display: flex; align-items: center; gap: var(--space-xs); }
   .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-icon-muted); }
 
+  /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */
   .site-header {
+    position: sticky; top: 0; z-index: 50;
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm);
     padding: var(--space-sm) var(--page-inset);
+    border-bottom: var(--border-thin) solid transparent;
     background: var(--color-background);
+    transition: border-color 0.15s;
   }
+  .site-header[data-stuck] { border-bottom-color: var(--color-border); }
   .brand { display: flex; align-items: center; gap: var(--space-sm); text-decoration-line: none; flex: 0 1 31.25rem; }
   .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
   .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
