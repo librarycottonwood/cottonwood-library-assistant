@@ -1,0 +1,37 @@
+---
+/**
+ * @component Stack
+ * Puts children in a column (or a row) with one of the 5 gaps between them.
+ * @use Heading + text + buttons, a row of buttons, any simple list of blocks.
+ * @avoid Columns of cards (use Grid), or adding space with empty elements or margins.
+ * @example
+ * <Stack gap="md" align="start">
+ *   <Heading size="heading">Keep your library open.</Heading>
+ *   <Text tone="muted">Donations help cover day-to-day operations.</Text>
+ * </Stack>
+ */
+import type { Space } from '../../design-system/tokens';
+interface Props {
+  /** Space between children. */
+  gap?: Space;
+  direction?: 'column' | 'row';
+  /** Cross-axis alignment. "stretch" makes column children full width. */
+  align?: 'start' | 'center' | 'end' | 'stretch';
+  /** Rows only: let children wrap to the next line. */
+  wrap?: boolean;
+  as?: 'div' | 'ul' | 'ol' | 'nav' | 'p';
+  id?: string;
+}
+const { gap = 'md', direction = 'column', align = 'stretch', wrap = false, as: Tag = 'div', id } = Astro.props;
+---
+<Tag id={id} data-gap={gap} class:list={['stack', `stack-${direction}`, `align-${align}`, { 'stack-wrap': wrap }]}><slot /></Tag>
+<style>
+  .stack { display: flex; margin: 0; padding: 0; list-style: none; }
+  .stack-column { flex-direction: column; }
+  .stack-row { flex-direction: row; align-items: center; }
+  .stack-wrap { flex-wrap: wrap; }
+  .align-start { align-items: flex-start; }
+  .align-center { align-items: center; }
+  .align-end { align-items: flex-end; }
+  .align-stretch.stack-column { align-items: stretch; }
+</style>

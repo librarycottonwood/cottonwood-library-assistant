@@ -1,0 +1,52 @@
+---
+/**
+ * @component Card
+ * Photo card with a linked title and a short description. Use inside a Grid.
+ * @use A set of similar things: events, services, programs, news posts. Three per row on desktop.
+ * @avoid A single highlighted item (use Split), text without a photo, or anything with more than two short sentences.
+ * @example
+ * <Grid as="ul" columns={3}>
+ *   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
+ * </Grid>
+ */
+import Image from '../OptimizedImage.astro';
+import IconLink from './IconLink.astro';
+import type { LibraryImage } from '../../content/types';
+interface Props {
+  title: string;
+  /** Where the title links to. */
+  href?: string;
+  image: LibraryImage;
+  /** Use "li" when the parent Grid is as="ul". */
+  as?: 'article' | 'li' | 'div';
+  hidden?: boolean;
+  [data: `data-${string}`]: string | undefined;
+}
+const { title, href, image, as: Tag = 'article', ...attributes } = Astro.props;
+const hasBadge = Astro.slots.has('badge');
+---
+<Tag class="card" {...attributes}>
+  <div class:list={['card-media', { 'has-badge': hasBadge }]}>
+    <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
+    {hasBadge && <div class="card-badge"><slot name="badge" /></div>}
+  </div>
+  <div class="card-copy">
+    <h3>{href ? <IconLink href={href} iconEnd="arrow">{title}</IconLink> : title}</h3>
+    <p><slot /></p>
+  </div>
+</Tag>
+<style>
+  .card { display: flex; flex-direction: column; gap: var(--space-md); }
+  .card-media {
+    position: relative; overflow: hidden;
+    height: clamp(13rem, 19vw, 22.8125rem);
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+  }
+  .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
+  .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; }
+  .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
+  .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); }
+  .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
+  .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  .card-copy p { color: var(--color-text-muted); }
+</style>

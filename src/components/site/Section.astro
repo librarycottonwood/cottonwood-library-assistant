@@ -1,0 +1,45 @@
+---
+/**
+ * @component Section
+ * One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below.
+ * @use Every top-level block of a page that isn't a photo-beside-text block (use Split for those).
+ * @avoid Nesting Sections, or wrapping a Split in a Section. Inside a Section use Stack and Grid.
+ * @example
+ * <Section title="Library services" headingId="services-heading">
+ *   <Grid as="ul" columns={3}>…</Grid>
+ *   <Button href="/visit/" iconEnd="arrow">Read more</Button>
+ * </Section>
+ */
+import Heading from './Heading.astro';
+import type { Space } from '../../design-system/tokens';
+interface Props {
+  /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
+  title?: string;
+  /** id for the heading; the section is labelled by it. */
+  headingId?: string;
+  /** center: heading and items centered (default). start: left-aligned. */
+  align?: 'center' | 'start';
+  /** content: up to 1520px (default). copy: a 622px reading column. */
+  width?: 'content' | 'copy';
+  /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
+  gap?: Space;
+  id?: string;
+}
+const { title, headingId, align = 'center', width = 'content', gap, id } = Astro.props;
+---
+<section id={id} aria-labelledby={headingId} class="section">
+  <div data-gap={gap} class:list={['section-inner', `align-${align}`, `width-${width}`]}>
+    {title && <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>}
+    <slot />
+  </div>
+</section>
+<style>
+  .section { padding: var(--section-space) var(--page-inset); }
+  .section-inner { display: flex; flex-direction: column; margin-inline: auto; }
+  .section-inner:not([data-gap]) { gap: var(--section-gap); }
+  .width-content { max-width: var(--width-content); }
+  .width-copy { max-width: var(--width-copy); }
+  .align-center { align-items: center; }
+  .align-center > :global(:is(h2, p)) { text-align: center; }
+  .align-start { align-items: flex-start; }
+</style>

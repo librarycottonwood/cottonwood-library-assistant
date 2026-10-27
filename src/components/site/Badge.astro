@@ -1,0 +1,45 @@
+---
+/**
+ * @component Badge
+ * Small pill label: a date, a status, or a short link to a campaign.
+ * @use Short labels of one to five words: event dates, "Fundraiser", a campaign link above the hero heading.
+ * @avoid Actions people should click first (use Button), sentences, or lists of tags.
+ * @example
+ * <Badge href="/fundraising-events/" iconEnd="external">
+ *   <Image slot="start" image={campaign.image} alt="" width={50} height={50} />
+ *   {campaign.title}
+ * </Badge>
+ */
+import type { ComponentProps } from 'astro/types';
+import Icon from '../Icon.astro';
+type IconName = ComponentProps<typeof Icon>['name'];
+interface Props {
+  /** Makes the badge a link. */
+  href?: string;
+  /** Render as <time> with this datetime instead of span. */
+  datetime?: string;
+  /** White fill, for badges on top of photos. */
+  surface?: boolean;
+  /** Muted icon after the label. */
+  iconEnd?: IconName;
+  [data: `data-${string}`]: string | undefined;
+}
+const { href, datetime, surface = false, iconEnd, ...attributes } = Astro.props;
+const Tag = href ? 'a' : datetime ? 'time' : 'span';
+const hasStart = Astro.slots.has('start');
+---
+<Tag href={href} datetime={datetime} class:list={['badge', { 'badge-surface': surface, 'badge-link': href, 'has-start': hasStart }]} {...attributes}><slot /><slot name="start" />{iconEnd && <Icon name={iconEnd} class="badge-icon" />}</Tag>
+<style>
+  .badge {
+    display: inline-flex; align-items: center; gap: var(--space-xs); max-width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-pill);
+    color: var(--color-forest); font-family: var(--font-body); font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight);
+    text-decoration: none;
+  }
+  .has-start { padding-inline-start: var(--space-xs); }
+  .badge > :global(img) { order: -1; width: 1.5625rem; height: 1.5625rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0; }
+  .badge-surface { background: var(--color-surface); }
+  .badge-link:hover { background: var(--color-surface); }
+  .badge :global(.badge-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-text-muted); }
+</style>

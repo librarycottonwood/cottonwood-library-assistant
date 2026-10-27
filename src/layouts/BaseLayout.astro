@@ -1,6 +1,14 @@
 ---
-// Layout for pages built on the new design tokens (Figma ZHygohymNhKRQyxIhQsQ2P).
-// Older pages still use SiteLayout + global.css until they are rebuilt.
+/**
+ * @component BaseLayout
+ * The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link.
+ * @use Wrapping every new page. Put Splits and Sections directly inside it.
+ * @avoid Old pages that still use SiteLayout + global.css; don't mix the two systems on one page.
+ * @example
+ * <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
+ *   <Section title="Visit us" headingId="visit-heading">…</Section>
+ * </BaseLayout>
+ */
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
 import Analytics from '../components/Analytics.astro';
 import SiteNotices from '../components/site/SiteNotices.astro';
@@ -9,7 +17,12 @@ import SiteFooter from '../components/site/SiteFooter.astro';
 import { contentRepository } from '../content/repository';
 import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
 import '../styles/base.css';
-interface Props { title?: string; description?: string; }
+interface Props {
+  /** Browser tab and search title. */
+  title?: string;
+  /** One-sentence page summary for search results. */
+  description?: string;
+}
 const {
   title = 'Cottonwood Community Library | Your community, your library',
   description = 'Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.',

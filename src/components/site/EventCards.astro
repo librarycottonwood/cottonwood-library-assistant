@@ -1,12 +1,28 @@
 ---
-// Upcoming event cards (Figma 1002:381). Pages are built ahead of time, so the visitor's
-// browser hides occurrences after their end time, keeps `limit` cards showing, and
-// fills in "Today", "Tomorrow" and "This Friday" badges.
-import Image from '../OptimizedImage.astro';
-import Icon from '../Icon.astro';
+/**
+ * @component EventCards
+ * The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides
+ * events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
+ * @use Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
+ * @avoid Past events or news posts (use Grid + Card), or a single featured event (use Split).
+ * @example
+ * <EventCards events={events} programs={programs} fallbackImage={hero.image} limit={3} />
+ */
+import Card from './Card.astro';
+import Grid from './Grid.astro';
+import Badge from './Badge.astro';
 import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
 import { upcomingEvents } from '../../content/feeds';
-interface Props { events: LibraryEvent[]; fallbackImage: LibraryImage; programs?: Program[]; limit?: number; emptyMessage?: string; }
+interface Props {
+  events: LibraryEvent[];
+  /** Photo for events with no photo of their own or of their program. */
+  fallbackImage: LibraryImage;
+  programs?: Program[];
+  /** How many cards to show. */
+  limit?: number;
+  /** Shown when there are no upcoming events. */
+  emptyMessage?: string;
+}
 const { fallbackImage, programs = [], limit = 3, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
 const zone = 'America/Los_Angeles';
 const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
@@ -17,21 +33,12 @@ const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
 const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage;
 ---
 <div data-event-list data-event-limit={limit} class="event-list">
-  <ul hidden={events.length === 0} data-event-rows class="event-cards">
-    {events.map((event, index) => {
-      const picture = image(event);
-      return <li class="event-card" data-event-expires={event.endsAt} hidden={index >= limit}>
-        <div class="event-media">
-          <Image width={800} quality={70} image={picture} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['event-image', picture.fit === 'contain' && 'is-contained']} />
-          <time class="event-badge" datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></time>
-        </div>
-        <div class="event-copy">
-          <h3><a href={event.href}>{event.title}<Icon name="arrow" class="event-arrow" /></a></h3>
-          <p>{event.summary}</p>
-        </div>
-      </li>;
-    })}
-  </ul>
+  <Grid as="ul" columns={3} hidden={events.length === 0} data-event-rows>
+    {events.map((event, index) => <Card as="li" title={event.title} href={event.href} image={image(event)} data-event-expires={event.endsAt} hidden={index >= limit}>
+      <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
+      {event.summary}
+    </Card>)}
+  </Grid>
   <p data-event-empty hidden={events.length > 0} class="event-empty">{emptyMessage}</p>
 </div>
 <script>
@@ -70,29 +77,6 @@ const image = (event: LibraryEvent) => event.image ?? programs.find(program => p
   document.addEventListener('visibilitychange', refreshEvents);
 </script>
 <style>
-  .event-cards { display: grid; gap: var(--gap-content); margin: 0; padding: 0; list-style: none; }
-  @media (min-width: 48rem) { .event-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  .event-card { display: flex; flex-direction: column; gap: var(--gap-content); }
-  .event-media {
-    position: relative; overflow: hidden;
-    height: clamp(13rem, 19vw, 22.8125rem);
-    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
-  }
-  .event-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
-  .event-media :global(.event-image) { width: 100%; height: 100%; object-fit: cover; }
-  .event-media :global(.event-image.is-contained) { object-fit: contain; background: var(--color-surface); }
-  .event-badge {
-    position: absolute; z-index: 1; top: var(--space-16); left: var(--space-16);
-    padding: var(--padding-badge-block) var(--padding-badge-end);
-    border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-pill);
-    background: var(--color-surface); color: var(--color-forest);
-    font-family: var(--font-body); font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight);
-  }
-  .event-copy { display: flex; flex-direction: column; gap: var(--gap-card-copy); padding: 0 var(--padding-card-inline); }
-  .event-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
-  .event-copy a { display: inline-flex; align-items: center; gap: var(--gap-icon); text-decoration: none; }
-  .event-copy a:hover { text-decoration: underline; }
-  .event-copy :global(.event-arrow) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-text-muted); }
-  .event-copy p { color: var(--color-text-muted); }
+  .event-list { width: 100%; }
   .event-empty { color: var(--color-text-muted); text-align: center; }
 </style>
