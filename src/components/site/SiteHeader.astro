@@ -83,14 +83,23 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
     border-bottom: var(--border-thin) solid transparent;
     background: var(--color-background);
     transition: border-color 0.15s;
+    container: site-header / inline-size;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
   /* Below desktop the logo, wordmark, Donate and menu share one row. The brand takes the space Donate and the menu
    * leave; it is a container so the wordmark hides when that space is too narrow for it (screens under about 380px). */
-  .brand { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; flex: 1 1 0; container: brand / inline-size; text-decoration-line: none; }
+  .brand { display: flex; align-items: center; gap: var(--space-xs); min-width: 2.75rem; flex: 1 1 0; container: brand / inline-size; text-decoration-line: none; }
   .brand :global(.brand-logo) { width: 2.75rem; flex-shrink: 0; }
   .brand-name { font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight); white-space: nowrap; }
   @container brand (width < 9rem) { .brand-name { display: none; } }
+  /* Very narrow or zoomed-in phones: Donate keeps its heart and drops the word (still read out as "Donate"),
+   * so the logo, Donate and menu stay on one row. */
+  @container site-header (width < 15rem) {
+    .header-actions :global(.button) { font-size: 0; gap: 0; width: 2.75rem; padding: 0; }
+    .header-actions :global(.button svg) { width: 1.25rem; height: 1.25rem; }
+    .brand { min-width: 2.25rem; }
+    .brand :global(.brand-logo) { width: 2.25rem; }
+  }
   .site-nav { display: none; gap: var(--space-md); font-weight: var(--weight-semibold); }
   .site-nav a, .mobile-nav a { text-decoration-line: none; }
   .site-nav a:hover, .site-nav a[aria-current='page'] { text-decoration-line: underline; }

@@ -76,7 +76,7 @@ const { library, navigation } = Astro.props;
     font-weight: var(--weight-bold); line-height: var(--leading-tight); text-align: center; text-decoration-line: none;
   }
   .footer-brand :global(.footer-logo) { width: clamp(6rem, 8.5vw, 10.1875rem); }
-  .footer-column { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .footer-column { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; overflow-wrap: anywhere; }
   .footer-column h2 { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
   .footer-column ul { display: flex; flex-direction: column; gap: var(--space-sm); margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
   .footer-column a { text-decoration-line: none; }
