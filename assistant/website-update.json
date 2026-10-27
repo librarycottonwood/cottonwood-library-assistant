@@ -1,5 +1,5 @@
 {
-  "request": "Use the supplied library exterior photo for the homepage \"Powered by Community\" section.",
+  "request": "Save the supplied library exterior photo for the homepage \"Powered by Community\" section with the current published website content.",
   "sanityDocuments": [
     {
       "id": "library-settings",
@@ -10,5 +10,5 @@
     }
   ],
   "requestedInChat": "2026-10-27",
-  "previewRefreshedAt": "2026-10-27T21:52:19.803Z"
+  "previewRefreshedAt": "2026-10-27T22:03:16.151Z"
 }
