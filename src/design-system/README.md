@@ -3,7 +3,7 @@
 `tokens.ts` is the single source for the new build's design tokens. It generates
 the shared `/components/tokens.css` stylesheet and the `/components` directory.
 Import `FoundationStyles.astro` into new layouts to load the tokens and self-hosted
-Bree Serif, Mona Sans, and Inter fonts. Use `var(--token-name)` in components.
+Bree Serif and Mona Sans fonts. Use `var(--token-name)` in components.
 
 Source: [Cottonwood Figma redesign](https://www.figma.com/design/ZHygohymNhKRQyxIhQsQ2P/Untitled?node-id=1001-2),
 inspected October 21, 2026. Each token links to its source node.

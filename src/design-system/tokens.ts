@@ -47,8 +47,7 @@ export const tokenGroups: TokenGroup[] = [
     note: 'Fonts are self-hosted. SF Pro appears in Figma as icon glyphs, so it is not included as a website text font.',
     tokens: [
       token('font-display', 'Bree Serif', "'Bree Serif', Georgia, serif", 'Page titles and section headings.', '1002:54', 'Regular · 400'),
-      token('font-body', 'Mona Sans', "'Mona Sans Variable', 'Mona Sans', sans-serif", 'Body copy, navigation, links, and actions.', '1002:55', 'Medium · 500 / Semibold · 600 / Bold · 700'),
-      token('font-label', 'Inter', "'Inter', sans-serif", 'Small announcements, dates, and opening hours.', '1012:1144', 'Medium · 500 / Bold · 700'),
+      token('font-body', 'Mona Sans', "'Mona Sans Variable', 'Mona Sans', sans-serif", 'Body copy, navigation, links, actions, dates, and labels.', '1002:55', 'Medium · 500 / Semibold · 600 / Bold · 700'),
       token('weight-regular', 'Regular weight', '400', 'Bree Serif headings.', '1002:54'),
       token('weight-medium', 'Medium weight', '500', 'Body text and opening hours.', '1002:55'),
       token('weight-semibold', 'Semibold weight', '600', 'Navigation and footer links.', '1002:169'),
