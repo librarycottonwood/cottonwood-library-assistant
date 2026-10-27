@@ -25,7 +25,14 @@ Ask one at a time; skip anything they already told you.
 
 1. "What are we raising money for?"
 2. "Which Givebutter campaign is it?" If none exists yet: they create it in Givebutter first, with a goal, then come back.
-3. "Please paste the **Form** widget code, with the goal bar turned on." If needed, walk them through: Givebutter → open the campaign → **Sharing** → **Widgets** → on the **Form** box click the gear, switch **Goal bar** on, save → **Embed** → copy and paste here. No goal bar switch means the campaign has no goal yet (set it on the **Details** tab). If they pasted a Goal Bar or Button widget, kindly ask for the Form one.
+3. Get the **Form** widget code. Never send these steps all at once, and never as one long sentence. Send one step, wait until they say it's done (or send a screenshot), then send the next. Start with: "Next I need a bit of code from Givebutter so the donation form and goal bar show on our website. I'll walk you through it one click at a time. Ready?"
+   1. "Go to givebutter.com and sign in. Click **Campaigns** on the left, then click **<campaign name>**." (Use the campaign's real name.)
+   2. "Along the top of the campaign, click **Sharing**."
+   3. "On the left, click **Widgets**. You'll see a few boxes. We want the one called **Form**."
+   4. "On the **Form** box, click the little gear icon. Turn on **Goal bar**, then click **Save**." If there's no Goal bar switch, the campaign has no goal yet: "Click the **Details** tab at the top, set the goal, save, then come back to Sharing → Widgets."
+   5. "On the **Form** box, click **Embed**. A window opens with some code. Copy all of it, come back here and paste it."
+
+   If they get stuck, ask what they see on the screen, or for a screenshot, and give the one next click. If a tab or button is missing, they probably need the **Admin** or **Finance** role in Givebutter; say who on the board can do this step. If they pasted code from the Goal Bar or Button box instead, say kindly: "That one is the Goal Bar (or Button). We need the **Form** box next to it, which shows the goal bar and the donation form together."
 4. "Is there an end date?" Optional. The site switches back when a new version is built after that date, not at midnight exactly.
 5. "Any photo for it?" Optional. Check it against `website-save` → "Picture shape and dead zones".
 
