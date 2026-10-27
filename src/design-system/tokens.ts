@@ -1,143 +1,143 @@
-/** New-site foundations, extracted from the supplied Figma design on 2026-10-21. */
-export const figmaFile = 'https://www.figma.com/design/ZHygohymNhKRQyxIhQsQ2P/Untitled';
+/**
+ * Design tokens for pages built on BaseLayout. This file is the single source:
+ * it generates /components/tokens.css, the /components catalog and docs/design-system.md
+ * (`pnpm design:docs`). Every token says what it is for, what it is not for, and shows an example.
+ * Rems assume a 16px root.
+ */
+
+/** A media-query step: from `minWidth` up, the token takes `value` (always one of the 5 spacing steps). */
+export interface TokenStep {
+  minWidth: string;
+  value: string;
+}
 
 export interface Token {
   name: string;
   label: string;
   value: string;
-  usage: string;
-  node: string;
+  /** Pixel equivalent or weights, shown next to the value. */
   detail?: string;
+  /** What to use it for. */
+  useFor: string;
+  /** What not to use it for, and what to use instead. */
+  avoid: string;
+  /** One short CSS or component example. */
+  example: string;
+  /** Responsive steps. Spacing aliases only ever step between the 5 spacing values. */
+  steps?: TokenStep[];
 }
 
 export interface TokenGroup {
   slug: string;
   title: string;
-  description: string;
+  /** CSS property the catalog uses for its previews. */
   property: string;
+  /** One plain rule for the group. */
   note: string;
   tokens: Token[];
 }
 
-const token = (name: string, label: string, value: string, usage: string, node: string, detail?: string): Token =>
-  ({ name: `--${name}`, label, value, usage, node, detail });
+/** The only spacing steps. Component `gap` props accept exactly these names. */
+export const spaceSteps = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+export type Space = typeof spaceSteps[number];
+
+/** Media-query widths used by components (CSS can't read custom properties in media queries). */
+export const breakpoints = { tablet: '48rem', split: '64rem', desktop: '90rem', wide: '100rem' } as const;
+
+type TokenInit = Omit<Token, 'name'> & { name: string };
+const token = ({ name, ...rest }: TokenInit): Token => ({ name: `--${name}`, ...rest });
 
 export const tokenGroups: TokenGroup[] = [
   {
     slug: 'colors', title: 'Colors', property: 'color',
-    description: 'A little indigo. A little green. A familiar place to land.',
-    note: 'Exact colors from the redesign. Names describe their role; no extra shades have been invented.',
+    note: 'Use the role names below. Do not add new colors or shades.',
     tokens: [
-      token('color-primary', 'Indigo', '#4956a7', 'Primary actions and the opening-hours strip.', '1006:228'),
-      token('color-primary-ink', 'Deep indigo', '#1b2040', 'Outlined actions and their labels.', '1002:73'),
-      token('color-accent', 'Pale green', '#beedae', 'Supporting actions, including directions and donations.', '1012:1223'),
-      token('color-accent-ink', 'Leaf green', '#3b5c30', 'Text on pale-green actions.', '1012:1225'),
-      token('color-forest', 'Forest', '#152d25', 'Announcement labels and contact details.', '1012:1144'),
-      token('color-background', 'Paper', '#f7f8ff', 'The main page background.', '1001:2'),
-      token('color-surface', 'White', '#ffffff', 'Light surfaces and text on indigo.', '1012:623'),
-      token('color-text', 'Black', '#000000', 'Headings and primary text.', '1002:54'),
-      token('color-text-muted', 'Graphite', '#525252', 'Supporting text and secondary icons.', '1002:55'),
-      token('color-border', 'Soft gray', '#d9d9d9', 'Subtle outlines around badges.', '1012:1143'),
-      token('color-icon-muted', 'Silver', '#c1c1c1', 'The muted clock icon on the indigo strip.', '1002:51'),
+      token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate) and the opening-hours strip.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
+      token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
+      token({ name: 'color-accent', label: 'Pale green', value: '#beedae', useFor: 'Supporting actions (directions, donations) and the notices bar.', avoid: 'Text color; it fails contrast on paper.', example: '<Button variant="accent">' }),
+      token({ name: 'color-accent-ink', label: 'Leaf green', value: '#3b5c30', useFor: 'Text and icons on pale-green backgrounds.', avoid: 'Text on paper or white (use --color-text).', example: 'color: var(--color-accent-ink);' }),
+      token({ name: 'color-forest', label: 'Forest', value: '#152d25', useFor: 'Badge labels and contact details.', avoid: 'Backgrounds or long paragraphs.', example: 'color: var(--color-forest);' }),
+      token({ name: 'color-background', label: 'Paper', value: '#f7f8ff', useFor: 'The page background.', avoid: 'Cards that must stand out from the page (use --color-surface).', example: 'background: var(--color-background);' }),
+      token({ name: 'color-surface', label: 'White', value: '#ffffff', useFor: 'Raised surfaces, badges on photos, and text on indigo.', avoid: 'The page background.', example: 'background: var(--color-surface);' }),
+      token({ name: 'color-text', label: 'Black', value: '#000000', useFor: 'Headings and primary text.', avoid: 'Secondary or supporting copy (use --color-text-muted).', example: '<Text>' }),
+      token({ name: 'color-text-muted', label: 'Graphite', value: '#525252', useFor: 'Supporting text, dates and secondary icons.', avoid: 'Headings, or text under 16px on colored backgrounds.', example: '<Text tone="muted">' }),
+      token({ name: 'color-border', label: 'Soft gray', value: '#d9d9d9', useFor: 'Subtle outlines around badges and dividers.', avoid: 'Text or icons; it is too light to read.', example: 'border: var(--border-thin) solid var(--color-border);' }),
+      token({ name: 'color-icon-muted', label: 'Silver', value: '#c1c1c1', useFor: 'Muted icons on the indigo strip.', avoid: 'Anything on a light background.', example: 'color: var(--color-icon-muted);' }),
     ],
   },
   {
     slug: 'fonts', title: 'Fonts', property: 'font-family',
-    description: 'Friendly headings. Clear, comfortable reading.',
-    note: 'Fonts are self-hosted. SF Pro appears in Figma as icon glyphs, so it is not included as a website text font.',
+    note: 'Two self-hosted families. Headings use Bree Serif; everything else uses Mona Sans.',
     tokens: [
-      token('font-display', 'Bree Serif', "'Bree Serif', Georgia, serif", 'Page titles and section headings.', '1002:54', 'Regular · 400'),
-      token('font-body', 'Mona Sans', "'Mona Sans Variable', 'Mona Sans', sans-serif", 'Body copy, navigation, links, actions, dates, and labels.', '1002:55', 'Medium · 500 / Semibold · 600 / Bold · 700'),
-      token('weight-regular', 'Regular weight', '400', 'Bree Serif headings.', '1002:54'),
-      token('weight-medium', 'Medium weight', '500', 'Body text and opening hours.', '1002:55'),
-      token('weight-semibold', 'Semibold weight', '600', 'Navigation and footer links.', '1002:169'),
-      token('weight-bold', 'Bold weight', '700', 'Actions, card titles, and announcements.', '1012:1225'),
+      token({ name: 'font-display', label: 'Bree Serif', value: "'Bree Serif', Georgia, serif", detail: 'Regular · 400', useFor: 'Page titles and section headings.', avoid: 'Body copy, buttons, labels or card titles.', example: '<Heading size="display">' }),
+      token({ name: 'font-body', label: 'Mona Sans', value: "'Mona Sans Variable', 'Mona Sans', sans-serif", detail: 'Medium 500 / Semibold 600 / Bold 700', useFor: 'Body copy, navigation, links, buttons, dates and labels.', avoid: 'Page and section headings (use --font-display).', example: 'font-family: var(--font-body);' }),
+      token({ name: 'weight-regular', label: 'Regular weight', value: '400', useFor: 'Bree Serif headings.', avoid: 'Mona Sans text; it is lighter than the design.', example: 'font-weight: var(--weight-regular);' }),
+      token({ name: 'weight-medium', label: 'Medium weight', value: '500', useFor: 'Body text and opening hours.', avoid: 'Buttons and card titles (use bold).', example: 'font-weight: var(--weight-medium);' }),
+      token({ name: 'weight-semibold', label: 'Semibold weight', value: '600', useFor: 'Navigation and footer links.', avoid: 'Paragraphs.', example: 'font-weight: var(--weight-semibold);' }),
+      token({ name: 'weight-bold', label: 'Bold weight', value: '700', useFor: 'Buttons, card titles and badges.', avoid: 'Whole paragraphs or Bree Serif headings.', example: 'font-weight: var(--weight-bold);' }),
     ],
   },
   {
     slug: 'type-sizes', title: 'Type sizes', property: 'font-size',
-    description: 'A small type scale with a clear sense of hierarchy.',
-    note: 'These are the original desktop sizes from the 1920px Figma frames. Responsive sizing can be added when we build the page layouts.',
+    note: 'Desktop sizes from the 1920px design. base.css scales them down on phones (--fluid-*); Heading and Text pick the right one.',
     tokens: [
-      token('text-label', 'Label', '1.25rem', 'Announcements, dates, and opening hours.', '1012:1144', '20px'),
-      token('text-body', 'Body', '1.5rem', 'Body copy, card titles, navigation, and actions.', '1002:55', '24px'),
-      token('text-lead', 'Lead', '1.875rem', 'Larger introductory copy and the wordmark.', '1043:2556', '30px'),
-      token('text-heading', 'Heading', '3.125rem', 'Section headings.', '1002:337', '50px'),
-      token('text-display', 'Display', '4.375rem', 'The main page heading.', '1002:54', '70px'),
-      token('leading-tight', 'Tight line height', '1', 'Hero headings, compact labels, and wordmarks.', '1002:54'),
-      token('leading-relaxed', 'Relaxed line height', '1.5', 'Body copy, actions, and section headings.', '1002:55'),
+      token({ name: 'text-label', label: 'Label', value: '1.25rem', detail: '20px', useFor: 'Badges, dates, notices and opening hours.', avoid: 'Paragraphs people need to read.', example: '<Text size="label">' }),
+      token({ name: 'text-body', label: 'Body', value: '1.5rem', detail: '24px', useFor: 'Body copy, card titles, navigation and buttons.', avoid: 'Headings.', example: '<Text>' }),
+      token({ name: 'text-lead', label: 'Lead', value: '1.875rem', detail: '30px', useFor: 'A short introduction under a heading, and the wordmark.', avoid: 'More than two sentences.', example: '<Text size="lead">' }),
+      token({ name: 'text-heading', label: 'Heading', value: '3.125rem', detail: '50px', useFor: 'Section headings (h2).', avoid: 'Card titles (use <Heading size="title">).', example: '<Heading size="heading">' }),
+      token({ name: 'text-display', label: 'Display', value: '4.375rem', detail: '70px', useFor: 'The one main page heading (h1).', avoid: 'More than once per page.', example: '<Heading level={1} size="display">' }),
+      token({ name: 'leading-tight', label: 'Tight line height', value: '1', useFor: 'Big headings, badges and the wordmark.', avoid: 'Paragraphs; lines would touch.', example: 'line-height: var(--leading-tight);' }),
+      token({ name: 'leading-relaxed', label: 'Relaxed line height', value: '1.5', useFor: 'Body copy, buttons and centered section headings.', avoid: 'Display headings.', example: 'line-height: var(--leading-relaxed);' }),
     ],
   },
   {
     slug: 'spacing', title: 'Spacing', property: 'margin',
-    description: 'One shared scale for the space inside and between things.',
-    note: 'Values come from repeated Figma padding and gaps. The one-off 94px gap and large distributed header gaps are layout measurements, not shared tokens.',
+    note: 'Five steps, nothing in between. Components apply them; pages choose a step only through a gap prop (xs, sm, md, lg, xl).',
     tokens: [
-      token('space-0', 'None', '0px', 'Flush edges and stacked text.', '1043:2553'),
-      token('space-10', '10', '0.625rem', 'Icons, labels, and closely related items.', '1002:77', '10px'),
-      token('space-16', '16', '1rem', 'Compact padding and small groups.', '1002:233', '16px'),
-      token('space-20', '20', '1.25rem', 'Card text and related content.', '1002:343', '20px'),
-      token('space-24', '24', '1.5rem', 'Action insets and footer groups.', '1002:171', '24px'),
-      token('space-30', '30', '1.875rem', 'Card gutters and content stacks.', '1002:65', '30px'),
-      token('space-50', '50', '3.125rem', 'Feature-panel insets.', '1043:2551', '50px'),
-      token('space-60', '60', '3.75rem', 'Desktop navigation spacing.', '1002:30', '60px'),
-      token('space-100', '100', '6.25rem', 'Section rhythm and outer page insets.', '1002:336', '100px'),
-      token('space-200', '200', '12.5rem', 'Desktop content-section insets.', '1002:336', '200px'),
+      token({ name: 'space-xs', label: 'XS', value: '0.625rem', detail: '10px', useFor: 'Icon + label, buttons side by side, badge padding.', avoid: 'Space between unrelated groups.', example: '<Stack direction="row" gap="xs">' }),
+      token({ name: 'space-sm', label: 'SM', value: '1.25rem', detail: '20px', useFor: 'Card title + description, button padding, footer link lists.', avoid: 'Space between page sections.', example: '<Stack gap="sm">' }),
+      token({ name: 'space-md', label: 'MD', value: '1.875rem', detail: '30px', useFor: 'Card gutters, heading + text + actions stacks.', avoid: 'Tight icon + label pairs.', example: '<Grid columns={3} gap="md">' }),
+      token({ name: 'space-lg', label: 'LG', value: '3.75rem', detail: '60px', useFor: 'Between big groups inside a section; page edges on tablets.', avoid: 'Inside cards or buttons.', example: '<Stack gap="lg">' }),
+      token({ name: 'space-xl', label: 'XL', value: '6.25rem', detail: '100px', useFor: 'Section rhythm and page edges on wide screens.', avoid: 'Anything inside a section; it splits content apart.', example: 'padding-block: var(--space-xl);' }),
     ],
   },
   {
-    slug: 'padding', title: 'Padding', property: 'padding',
-    description: 'Breathing room inside actions, cards, and sections.',
-    note: 'Semantic names reuse the spacing scale. Start and end values preserve the asymmetric icon-button padding in the design.',
+    slug: 'layout', title: 'Layout', property: 'max-width',
+    note: 'Widths cap content. The three responsive spacing aliases step between the 5 spacing values at fixed breakpoints; they never produce other values.',
     tokens: [
-      token('padding-badge-block', 'Badge · vertical', 'var(--space-10)', 'Space above and below badge content.', '1012:1143', '10px'),
-      token('padding-badge-end', 'Badge · end', 'var(--space-16)', 'Space after badge content; its start is 10px.', '1012:1143', '16px'),
-      token('padding-action-block', 'Action · vertical', 'var(--space-16)', 'Space above and below action content.', '1012:1223', '16px'),
-      token('padding-action-start', 'Action · start', 'var(--space-20)', 'Space before the leading action icon.', '1012:1223', '20px'),
-      token('padding-action-end', 'Action · end', 'var(--space-24)', 'Space after the action label.', '1012:1223', '24px'),
-      token('padding-card-inline', 'Card · horizontal', 'var(--space-30)', 'Left and right insets around card text.', '1002:343', '30px'),
-      token('padding-feature', 'Feature panel', 'var(--space-50)', 'Insets inside large feature panels.', '1043:2551', '50px'),
-      token('padding-section-block', 'Section · vertical', 'var(--space-100)', 'Desktop space above and below sections.', '1002:336', '100px'),
-      token('padding-page-inline', 'Page · horizontal', 'var(--space-100)', 'Desktop header and outer page insets.', '1006:228', '100px'),
-      token('padding-content-inline', 'Content · horizontal', 'var(--space-200)', 'Desktop insets for card-grid sections.', '1002:336', '200px'),
-    ],
-  },
-  {
-    slug: 'gaps', title: 'Gaps', property: 'gap',
-    description: 'Keep related things close, and give bigger groups room.',
-    note: 'Gap tokens reference the same spacing scale as padding. The examples scroll horizontally when the full gap needs more room.',
-    tokens: [
-      token('gap-none', 'Flush', 'var(--space-0)', 'Stacked date and heading.', '1043:2553', '0px'),
-      token('gap-icon', 'Icon + label', 'var(--space-10)', 'Icons and labels, or adjacent actions.', '1002:77', '10px'),
-      token('gap-compact', 'Compact group', 'var(--space-16)', 'Small groups in the footer.', '1002:233', '16px'),
-      token('gap-card-copy', 'Card copy', 'var(--space-20)', 'Card titles and descriptions.', '1002:343', '20px'),
-      token('gap-links', 'Link group', 'var(--space-24)', 'Groups of footer links.', '1002:171', '24px'),
-      token('gap-content', 'Content stack', 'var(--space-30)', 'Hero content, cards, and columns.', '1002:65', '30px'),
-      token('gap-navigation', 'Navigation', 'var(--space-60)', 'Desktop navigation links.', '1002:30', '60px'),
-      token('gap-section', 'Section', 'var(--space-100)', 'Major section content groups.', '1002:336', '100px'),
+      token({ name: 'width-content', label: 'Content width', value: '95rem', detail: '1520px', useFor: 'Max width of section content (card grids). At 1920px this leaves the design’s 200px margins.', avoid: 'Text columns (use --width-copy).', example: '<Section width="content">' }),
+      token({ name: 'width-copy', label: 'Copy width', value: '38.875rem', detail: '622px', useFor: 'Readable text columns: hero copy, newsletter, split sections.', avoid: 'Card grids.', example: '<Section width="copy">' }),
+      token({ name: 'page-inset', label: 'Page inset', value: 'var(--space-sm)', detail: '20 → 60 → 100px', useFor: 'Left and right space at the page edge. Section, Split, header and footer apply it.', avoid: 'Spacing inside content; pages never need it directly.', example: 'padding-inline: var(--page-inset);', steps: [{ minWidth: '48rem', value: 'var(--space-lg)' }, { minWidth: '100rem', value: 'var(--space-xl)' }] }),
+      token({ name: 'section-space', label: 'Section space', value: 'var(--space-lg)', detail: '60 → 100px', useFor: 'Space above and below each page section. Section and Split apply it.', avoid: 'Gaps inside a section (use --section-gap).', example: 'padding-block: var(--section-space);', steps: [{ minWidth: '100rem', value: 'var(--space-xl)' }] }),
+      token({ name: 'section-gap', label: 'Section gap', value: 'var(--space-sm)', detail: '20 → 30 → 60px', useFor: 'Space between a section’s heading, content and action. Section applies it by default.', avoid: 'Space inside cards or between buttons.', example: 'gap: var(--section-gap);', steps: [{ minWidth: '48rem', value: 'var(--space-md)' }, { minWidth: '100rem', value: 'var(--space-lg)' }] }),
     ],
   },
   {
     slug: 'corners', title: 'Corners', property: 'border-radius',
-    description: 'Three shapes. A simple, consistent visual language.',
-    note: 'The design uses square corners, 35px image corners, and 100px rounded actions. The values below preserve those choices.',
+    note: 'Three shapes only.',
     tokens: [
-      token('radius-none', 'Square', '0px', 'Sections and unrounded content.', '1001:2'),
-      token('radius-image', 'Soft', '2.1875rem', 'Photos and service-card image containers.', '1002:340', '35px'),
-      token('radius-pill', 'Pill', '6.25rem', 'Actions, badges, and contact strips.', '1012:1223', '100px'),
+      token({ name: 'radius-none', label: 'Square', value: '0px', useFor: 'Sections, strips and edges where a photo bleeds off the page.', avoid: 'Photos inside the page (use --radius-image).', example: 'border-radius: var(--radius-none);' }),
+      token({ name: 'radius-image', label: 'Soft', value: '2.1875rem', detail: '35px', useFor: 'Photos, image containers and floating panels.', avoid: 'Buttons and badges (use --radius-pill).', example: 'border-radius: var(--radius-image);' }),
+      token({ name: 'radius-pill', label: 'Pill', value: '6.25rem', detail: '100px', useFor: 'Buttons, badges and contact strips.', avoid: 'Photos or large panels.', example: '<Button> / <Badge>' }),
     ],
   },
   {
     slug: 'borders', title: 'Borders', property: 'border-width',
-    description: 'Quiet outlines that give controls and labels definition.',
-    note: 'Use with a solid border style and a color token. These widths come from the outlined catalog action and filled directions action.',
+    note: 'Use with a solid style and a color token.',
     tokens: [
-      token('border-thin', 'Thin', '1px', 'Outlined actions and announcement badges.', '1002:73'),
-      token('border-strong', 'Strong', '2px', 'Filled-action outlines.', '1012:1223'),
+      token({ name: 'border-thin', label: 'Thin', value: '1px', useFor: 'Outlined buttons, badges and photo edges.', avoid: 'Focus outlines (base.css handles focus).', example: 'border: var(--border-thin) solid var(--color-border);' }),
+      token({ name: 'border-strong', label: 'Strong', value: '2px', useFor: 'Filled buttons, so they match outlined ones in size.', avoid: 'Decorative frames.', example: 'border: var(--border-strong) solid var(--color-primary);' }),
     ],
   },
 ];
 
-export const tokensCSS = `/* Cottonwood new-site tokens. Source: ${figmaFile} */\n:root {\n${tokenGroups.map(group => `  /* ${group.title} */\n${group.tokens.map(t => `  ${t.name}: ${t.value};`).join('\n')}`).join('\n\n')}\n}\n`;
+/** Every spacing custom property a component may use in margin, padding, gap or inset. */
+export const spacingTokenNames = tokenGroups.flatMap(group => group.tokens)
+  .filter(t => t.name.startsWith('--space-') || t.steps)
+  .map(t => t.name);
 
-export const figmaNodeURL = (node: string) => `${figmaFile}?node-id=${node.replace(':', '-')}`;
+const allTokens = tokenGroups.flatMap(group => group.tokens);
+const stepWidths = [...new Set(allTokens.flatMap(t => t.steps?.map(step => step.minWidth) ?? []))]
+  .sort((a, b) => parseFloat(a) - parseFloat(b));
+
+export const tokensCSS = `/* Cottonwood new-site tokens. Generated from src/design-system/tokens.ts. */\n:root {\n${tokenGroups.map(group => `  /* ${group.title} */\n${group.tokens.map(t => `  ${t.name}: ${t.value};`).join('\n')}`).join('\n\n')}\n}\n${stepWidths.map(width => `@media (min-width: ${width}) {\n  :root {\n${allTokens.filter(t => t.steps?.some(step => step.minWidth === width)).map(t => `    ${t.name}: ${t.steps!.find(step => step.minWidth === width)!.value};`).join('\n')}\n  }\n}\n`).join('')}`;

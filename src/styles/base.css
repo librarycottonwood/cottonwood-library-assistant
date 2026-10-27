@@ -1,17 +1,16 @@
 /* Base styles for pages built on the new design tokens (BaseLayout).
  * Token values come from /components/tokens.css (src/design-system/tokens.ts).
- * Figma sizes are for a 1920px screen; clamp() scales them down to phones. */
+ * Spacing here and in src/components/site/* is checked by scripts/design-system.mjs. */
 
 :root {
-  --page-inline: clamp(1.25rem, 5.2vw, var(--padding-page-inline));
-  --content-inline: clamp(1.25rem, 10.4vw, var(--padding-content-inline));
-  --section-block: clamp(3.5rem, 5.2vw, var(--padding-section-block));
+  /* Type sizes scale down on phones. Spacing does not use fluid values:
+   * --page-inset, --section-space and --section-gap step between the 5
+   * spacing values (see tokens.ts). */
   --fluid-label: clamp(0.9375rem, 0.75rem + 0.4vw, var(--text-label));
   --fluid-body: clamp(1.0625rem, 0.85rem + 0.55vw, var(--text-body));
   --fluid-lead: clamp(1.1875rem, 0.95rem + 0.75vw, var(--text-lead));
   --fluid-heading: clamp(2rem, 1.4rem + 1.6vw, var(--text-heading));
   --fluid-display: clamp(2.625rem, 1.6rem + 2.8vw, var(--text-display));
-  --fluid-gap: clamp(1.25rem, 3vw, var(--gap-section));
   --border-image: rgba(0, 0, 0, 0.15);
   color-scheme: light;
 }
@@ -38,56 +37,43 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 
 .skip-link {
-  position: fixed; top: 0.75rem; left: 0.75rem; z-index: 100;
-  padding: var(--space-10) var(--space-20);
+  position: fixed; top: var(--space-xs); left: var(--space-xs); z-index: 100;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--color-surface); border-radius: var(--radius-pill);
   font-weight: var(--weight-bold); text-decoration: none;
   transform: translateY(-200%);
 }
 .skip-link:focus { transform: none; }
-.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Pill actions (Figma 1012:1223, 1002:73) */
-.action {
-  display: inline-flex; align-items: center; justify-content: center; gap: var(--gap-icon);
-  min-height: 2.75rem;
-  padding: calc(var(--padding-action-block) * 0.75) var(--padding-action-end) calc(var(--padding-action-block) * 0.75) var(--padding-action-start);
-  border: var(--border-thin) solid var(--color-primary-ink);
-  border-radius: var(--radius-pill);
-  background: transparent; color: var(--color-primary-ink);
-  font: inherit; font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
-  text-decoration: none; white-space: nowrap; cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-.action svg { width: 1em; height: 1em; flex-shrink: 0; }
-.action:hover { background: var(--color-surface); }
-.action-accent { border: var(--border-strong) solid var(--color-accent); background: var(--color-accent); color: var(--color-accent-ink); }
-.action-accent:hover { background: var(--color-surface); }
-.action-primary { border: var(--border-strong) solid var(--color-primary); background: var(--color-primary); color: var(--color-surface); }
-.action-primary:hover { background: var(--color-primary-ink); border-color: var(--color-primary-ink); }
-.action-end { padding-inline: var(--padding-action-end) var(--padding-action-start); }
+/* Gap props on Stack, Grid and Section (gap="xs" … gap="xl") render as data-gap. */
+[data-gap='xs'] { gap: var(--space-xs); }
+[data-gap='sm'] { gap: var(--space-sm); }
+[data-gap='md'] { gap: var(--space-md); }
+[data-gap='lg'] { gap: var(--space-lg); }
+[data-gap='xl'] { gap: var(--space-xl); }
 
 /* Privacy link and statistics consent panel (markup in components/Analytics.astro) */
 #library-analytics > div:first-child {
-  display: flex; gap: var(--space-20);
-  padding: 0 var(--page-inline) var(--space-24);
+  display: flex; gap: var(--space-sm);
+  padding: 0 var(--page-inset) var(--space-sm);
   font-size: var(--fluid-label);
 }
 #library-analytics button, #statistics-choice a { font: inherit; color: inherit; }
 #library-analytics > div:first-child button { padding: 0; border: 0; background: none; text-decoration: underline; cursor: pointer; }
 #statistics-choice {
-  position: fixed; right: 1rem; bottom: 1rem; left: 1rem; z-index: 60;
+  position: fixed; right: var(--space-sm); bottom: var(--space-sm); left: var(--space-sm); z-index: 60;
   max-width: 28rem; margin-left: auto;
-  padding: var(--space-24);
-  border: var(--border-thin) solid var(--color-border); border-radius: var(--space-24);
+  padding: var(--space-sm);
+  border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-image);
   background: var(--color-surface); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   font-size: 1rem;
 }
 #statistics-choice h2 { font-family: var(--font-body); font-size: 1.125rem; font-weight: var(--weight-bold); }
-#statistics-choice p { margin-top: var(--space-10); }
-#statistics-choice > div { display: flex; flex-wrap: wrap; gap: var(--space-10); margin-top: var(--space-16); }
+#statistics-choice p { margin-top: var(--space-xs); }
+#statistics-choice > div { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-sm); }
 #statistics-choice button {
-  min-height: 2.75rem; padding: var(--space-10) var(--space-20);
+  min-height: 2.75rem; padding: var(--space-xs) var(--space-sm);
   border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
   background: var(--color-surface); color: var(--color-primary-ink); font-weight: var(--weight-bold); cursor: pointer;
 }
