@@ -1,31 +1,11 @@
 {
-  "request": "Update the homepage introduction, catalog and service descriptions, community support copy, and Story Time and Main Street Readers descriptions.",
+  "request": "Use the supplied library exterior photo for the homepage \"Powered by Community\" section.",
   "sanityDocuments": [
     {
       "id": "library-settings",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
+      "revision": "RoqR5QrUXbLpFrNxOzpMEn",
       "fields": [
-        "hero.introduction",
-        "services[id==\"borrowing\"].title",
-        "services[id==\"borrowing\"].description",
-        "services[id==\"computers\"].description",
-        "services[id==\"printing\"].description",
-        "support.title",
-        "support.introduction"
-      ]
-    },
-    {
-      "id": "program-story-time",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
-      "fields": [
-        "description"
-      ]
-    },
-    {
-      "id": "program-main-street-readers",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
-      "fields": [
-        "description"
+        "givingImage"
       ]
     }
   ],
