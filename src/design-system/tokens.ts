@@ -123,10 +123,12 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'borders', title: 'Borders', property: 'border-width',
-    note: 'Use with a solid style and a color token.',
+    note: 'Use with a solid style and a color token. The underline tokens set how thick link underlines are and how far below the text they sit.',
     tokens: [
       token({ name: 'border-thin', label: 'Thin', value: '1px', useFor: 'Outlined buttons, badges and photo edges.', avoid: 'Focus outlines (base.css handles focus).', example: 'border: var(--border-thin) solid var(--color-border);' }),
       token({ name: 'border-strong', label: 'Strong', value: '2px', useFor: 'Filled buttons, so they match outlined ones in size.', avoid: 'Decorative frames.', example: 'border: var(--border-strong) solid var(--color-primary);' }),
+      token({ name: 'underline-thickness', label: 'Underline', value: '0.08em', detail: 'about 2px on body text', useFor: 'Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it).', avoid: 'Borders, dividers or focus outlines (use --border-thin / base.css).', example: 'text-decoration-thickness: var(--underline-thickness);' }),
+      token({ name: 'underline-offset', label: 'Underline gap', value: '0.25em', useFor: 'Space between a link’s text and its underline, so the thicker line clears letters like g and y.', avoid: 'Spacing between elements (use the spacing steps).', example: 'text-underline-offset: var(--underline-offset);' }),
     ],
   },
 ];

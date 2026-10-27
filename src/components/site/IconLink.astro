@@ -21,8 +21,8 @@ const { icon, iconEnd, ...attributes } = Astro.props;
 ---
 <a class="icon-link" {...attributes}>{icon && <Icon name={icon} />}<slot />{iconEnd && <Icon name={iconEnd} class="icon-end" />}</a>
 <style>
-  .icon-link { display: inline-flex; align-items: center; gap: var(--space-xs); text-decoration: none; }
-  .icon-link:hover { text-decoration: underline; }
+  .icon-link { display: inline-flex; align-items: center; gap: var(--space-xs); text-decoration-line: none; }
+  .icon-link:hover { text-decoration-line: underline; }
   .icon-link :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
   .icon-link :global(.icon-end) { color: var(--color-text-muted); }
 </style>

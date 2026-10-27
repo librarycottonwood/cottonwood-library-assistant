@@ -31,7 +31,9 @@ body {
 }
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
-a { color: inherit; }
+/* Every link underline (always-on or on hover) uses the same weight and gap. Components turn underlines
+ * on and off with text-decoration-line; the text-decoration shorthand would reset the thickness. */
+a { color: inherit; text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset); }
 h1, h2, h3, p { margin: 0; }
 h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
@@ -40,7 +42,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
   position: fixed; top: var(--space-xs); left: var(--space-xs); z-index: 100;
   padding: var(--space-xs) var(--space-sm);
   background: var(--color-surface); border-radius: var(--radius-pill);
-  font-weight: var(--weight-bold); text-decoration: none;
+  font-weight: var(--weight-bold); text-decoration-line: none;
   transform: translateY(-200%);
 }
 .skip-link:focus { transform: none; }
@@ -60,7 +62,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
   font-size: var(--fluid-label);
 }
 #library-analytics button, #statistics-choice a { font: inherit; color: inherit; }
-#library-analytics > div:first-child button { padding: 0; border: 0; background: none; text-decoration: underline; cursor: pointer; }
+#library-analytics > div:first-child button { padding: 0; border: 0; background: none; text-decoration-line: underline; cursor: pointer; }
 #statistics-choice {
   position: fixed; right: var(--space-sm); bottom: var(--space-sm); left: var(--space-sm); z-index: 60;
   max-width: 28rem; margin-left: auto;

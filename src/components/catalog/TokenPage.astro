@@ -14,7 +14,11 @@ const preview = (token: Token) => {
     case 'spacing': return { kind: 'bar', style: `width: ${v}` };
     case 'layout': return { kind: 'bar', style: token.steps ? `width: ${v}` : `width: calc(${v} / 4)` };
     case 'corners': return { kind: 'box', style: `border-radius: ${v}` };
-    default: return { kind: 'box', style: `border: ${v} solid var(--color-primary-ink)` };
+    default: return token.name === '--underline-thickness'
+      ? { kind: 'text', style: `text-decoration: underline; text-decoration-thickness: ${v}; text-underline-offset: var(--underline-offset)`, text: 'Visit the library' }
+      : token.name === '--underline-offset'
+        ? { kind: 'text', style: `text-decoration: underline; text-decoration-thickness: var(--underline-thickness); text-underline-offset: ${v}`, text: 'Visit the library' }
+        : { kind: 'box', style: `border: ${v} solid var(--color-primary-ink)` };
   }
 };
 ---

@@ -71,12 +71,12 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
     padding: var(--space-sm) var(--page-inset);
     background: var(--color-background);
   }
-  .brand { display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; flex: 0 1 31.25rem; }
+  .brand { display: flex; align-items: center; gap: var(--space-sm); text-decoration-line: none; flex: 0 1 31.25rem; }
   .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
   .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
   .site-nav { display: none; gap: var(--space-md); font-weight: var(--weight-semibold); }
-  .site-nav a, .mobile-nav a { text-decoration: none; }
-  .site-nav a:hover, .site-nav a[aria-current='page'] { text-decoration: underline; text-underline-offset: 0.3em; }
+  .site-nav a, .mobile-nav a { text-decoration-line: none; }
+  .site-nav a:hover, .site-nav a[aria-current='page'] { text-decoration-line: underline; }
   .header-actions { display: flex; flex: 0 1 31.25rem; justify-content: flex-end; align-items: center; gap: var(--space-xs); }
   .menu-toggle {
     display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;

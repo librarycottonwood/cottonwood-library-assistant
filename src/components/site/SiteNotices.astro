@@ -49,6 +49,6 @@ const notices = unexpiredNotices(Astro.props.notices);
   .notice p { display: flex; align-items: flex-start; gap: var(--space-xs); }
   /* 1lh tall box centers the icon on the first line of text. */
   .notice :global(.notice-icon) { width: 1.1em; height: 1lh; flex-shrink: 0; }
-  .notice a { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; text-decoration: underline; }
+  .notice a { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; text-decoration-line: underline; }
   .notice :global(.notice-arrow) { width: 1em; height: 1em; }
 </style>

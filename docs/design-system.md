@@ -100,12 +100,14 @@ Three shapes only.
 
 ### Borders
 
-Use with a solid style and a color token.
+Use with a solid style and a color token. The underline tokens set how thick link underlines are and how far below the text they sit.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--border-thin` | `1px` | Outlined buttons, badges and photo edges. | Focus outlines (base.css handles focus). | `border: var(--border-thin) solid var(--color-border);` |
 | `--border-strong` | `2px` | Filled buttons, so they match outlined ones in size. | Decorative frames. | `border: var(--border-strong) solid var(--color-primary);` |
+| `--underline-thickness` | `0.08em` (about 2px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
+| `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
 ## Components
 
@@ -116,8 +118,8 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [BaseLayout](#baselayout) | The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
-| [Card](#card) | Photo card with a linked title and a short description. Use inside a Grid. |
-| [EventCards](#eventcards) | The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". |
+| [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
+| [EventCards](#eventcards) | The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
@@ -206,19 +208,21 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 
 ### Card
 
-`src/components/site/Card.astro` — Photo card with a linked title and a short description. Use inside a Grid.
+`src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
-- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop.
-- **Don't use for:** A single highlighted item (use Split), text without a photo, or anything with more than two short sentences.
+- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
 
 ```ts
 interface Props {
   title: string;
-  /** Where the title links to. */
+  /** Makes the whole card one link (the title is the link text). */
   href?: string;
   image: LibraryImage;
   /** Use "li" when the parent Grid is as="ul". */
   as?: 'article' | 'li' | 'div';
+  /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
+  layout?: 'stacked' | 'adaptive';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -232,10 +236,10 @@ interface Props {
 
 ### EventCards
 
-`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
+`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
 
 - **Use for:** Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
-- **Don't use for:** Past events or news posts (use Grid + Card), or a single featured event (use Split).
+- **Don't use for:** Past events or news posts (use Grid + Card), or wrapping it in another Grid.
 
 ```ts
 interface Props {
