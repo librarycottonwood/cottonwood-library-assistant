@@ -1,31 +1,15 @@
 {
-  "request": "Update the homepage introduction, catalog and service descriptions, community support copy, and Story Time and Main Street Readers descriptions.",
+  "request": "Add the Under One Roof online auction on November 14, 2026, from 12:00 a.m. to 11:59 p.m. Pacific, with the November 9 library drop-off deadline.",
   "sanityDocuments": [
     {
-      "id": "library-settings",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
+      "id": "e0598479-e086-450f-a57a-84821d544b4f",
+      "revision": "y7cA1cENaKwnT2d8lIH8Vk",
       "fields": [
-        "hero.introduction",
-        "services[id==\"borrowing\"].title",
-        "services[id==\"borrowing\"].description",
-        "services[id==\"computers\"].description",
-        "services[id==\"printing\"].description",
-        "support.title",
-        "support.introduction"
-      ]
-    },
-    {
-      "id": "program-story-time",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
-      "fields": [
-        "description"
-      ]
-    },
-    {
-      "id": "program-main-street-readers",
-      "revision": "y7cA1cENaKwnT2d8lGhZkD",
-      "fields": [
-        "description"
+        "title",
+        "slug",
+        "summary",
+        "sessions",
+        "location"
       ]
     }
   ],
