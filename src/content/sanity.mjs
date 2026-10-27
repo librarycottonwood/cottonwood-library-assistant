@@ -103,7 +103,9 @@ export function validateSanitySnapshot(snapshot, expected) {
       if (![width,height].every(size => Number.isInteger(size) && size > 0 && size <= 50000)) fail(`${at} needs real image dimensions`);
       const match = /^image-([A-Za-z0-9]+)-(\d+)x(\d+)-(jpg|jpeg|png|webp|avif)$/.exec(asset._id);
       if (!match || Number(match[2]) !== width || Number(match[3]) !== height || new URL(url).pathname.split('/').pop() !== `${match[1]}-${width}x${height}.${match[4]}`) fail(`${at} image URL, id, and dimensions disagree`);
-      return { ...base, url, width, height };
+      // Uploaded pictures are shown by shape, so nobody has to choose: landscape fills the frame,
+      // portrait or square (posters, logos, covers) shows whole. A saved fit from an older picture is ignored.
+      return { ...base, fit: width >= 1.2 * height ? 'cover' : 'contain', url, width, height };
     }
     if (!LEGACY_IMAGES.has(value.legacyKey)) fail(`${at} needs an uploaded image or known migration legacyKey`);
     return { ...base, key: value.legacyKey };

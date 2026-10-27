@@ -34,7 +34,7 @@ The website crops pictures to fit, and puts things on top of some of them. Check
 - **Top-left corner:** event cards put the date or schedule badge there (a white pill, as wide as half the card for "Third Thursday · 1 p.m."), and shade the top third dark so the badge stands out. Keep text and faces out of the top-left (the left half of the top quarter), and don't make the top a plain white or very light band, because the shade turns it muddy grey.
 - **Fill to the edges:** no white borders or margins, and the background should run to every edge.
 - **Flyers and posters** (portrait, text-heavy) look bad here: they shrink, get white bars on the sides, and the top goes grey behind the badge. Don't use a flyer as the website picture. Use a photo, or make a landscape version that follows the rules above, and put the flyer's details (date, time, price) in the summary. The original flyer is still fine for social posts.
-- Set `fit: contain` only when nothing may be cut off (a logo, a newsletter cover). Everything else uses the default `cover`.
+- Never set `fit`. The website picks it from the picture's shape: landscape fills the frame, portrait or square shows whole.
 - If a picture breaks these rules, say what will happen in one plain sentence ("the title would be hidden behind the date"), and offer to crop it or make a version that fits.
 
 ## 2. Branch and pull request
