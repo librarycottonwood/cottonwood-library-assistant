@@ -17,7 +17,7 @@ Ask one at a time; skip anything they already told you.
 4. "What time does it end?" Required. Then repeat the date, weekday and time range together ("Saturday, November 14, 10 a.m. to 2 p.m.?") so mistakes get caught.
 5. "Anything people should know?" Cost, sign-up, what to bring, which door. Optional.
 6. "Does it repeat, or just this once?" Ask only if unclear. Add only the dates they confirm; never invent future dates.
-7. "Any photo or flyer?" Optional.
+7. "Any photo or flyer?" Optional. Check it against `website-save` → "Picture shape and dead zones". A portrait flyer makes a poor card picture; offer a photo or a landscape version instead.
 
 Write a short one-line summary yourself. Show it, get a yes, save it. Afterwards, offer a news or social post only if it would help.
 

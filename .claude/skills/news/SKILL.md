@@ -12,7 +12,7 @@ Posts are Sanity `post` records. Save every change with the `website-save` skill
 Ask one at a time; skip anything they already told you.
 
 1. "What's the news?" Let them tell it in their own words, even rough notes.
-2. "Any photos to add?" Optional. Ask who or what is in a photo only if you need it for the description.
+2. "Any photos to add?" Optional. The cover photo follows `website-save` → "Picture shape and dead zones". Ask who or what is in a photo only if you need it for the description.
 3. "Should it go on Facebook too?" Note the answer; after saving, use the `social` skill.
 
 Then write it: a clear title, a one-line summary, two or three short paragraphs. Use today's date unless they say otherwise. Don't invent quotes, names, numbers or dates. Show the draft and get a yes on the facts, then save it with `website-save`.

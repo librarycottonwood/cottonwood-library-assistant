@@ -25,6 +25,18 @@ Use the Sanity connector with `projectId: 2ou0xy2r`, `dataset: production`.
 3. Use the returned asset ID as `{"_type": "image", "asset": {"_type": "reference", "_ref": "image-..."}, "alt": "..."}`. Every photo needs real alt text.
 4. If the upload can't reach the file, say so and offer the editor (Studio) as a fallback. Never pretend a photo was uploaded.
 
+#### Picture shape and dead zones
+
+The website crops pictures to fit, and puts things on top of some of them. Check every picture before using it, and follow these rules when making or generating one (an event graphic, a fundraiser banner):
+
+- **Shape:** landscape, about 3:2, at least 1600px wide. Cards crop to roughly 3:2 on computers, 16:9 when one card fills the row, and wider still on phones. The featured block under the homepage hero is 16:9.
+- **Safe middle:** keep faces, titles and anything people must read in the middle: the center 70% of the width and the center 60% of the height. The edges, especially top and bottom, can be cut off.
+- **Top-left corner:** event cards put the date or schedule badge there (a white pill, as wide as half the card for "Third Thursday · 1 p.m."), and shade the top third dark so the badge stands out. Keep text and faces out of the top-left (the left half of the top quarter), and don't make the top a plain white or very light band, because the shade turns it muddy grey.
+- **Fill to the edges:** no white borders or margins, and the background should run to every edge.
+- **Flyers and posters** (portrait, text-heavy) look bad here: they shrink, get white bars on the sides, and the top goes grey behind the badge. Don't use a flyer as the website picture. Use a photo, or make a landscape version that follows the rules above, and put the flyer's details (date, time, price) in the summary. The original flyer is still fine for social posts.
+- Set `fit: contain` only when nothing may be cut off (a logo, a newsletter cover). Everything else uses the default `cover`.
+- If a picture breaks these rules, say what will happen in one plain sentence ("the title would be hidden behind the date"), and offer to crop it or make a version that fits.
+
 ## 2. Branch and pull request
 
 ```sh

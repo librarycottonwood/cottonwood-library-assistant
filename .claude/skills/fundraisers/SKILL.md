@@ -27,7 +27,7 @@ Ask one at a time; skip anything they already told you.
 2. "Which Givebutter campaign is it?" If none exists yet: they create it in Givebutter first, with a goal, then come back.
 3. "Please paste the **Form** widget code, with the goal bar turned on." If needed, walk them through: Givebutter → open the campaign → **Sharing** → **Widgets** → on the **Form** box click the gear, switch **Goal bar** on, save → **Embed** → copy and paste here. No goal bar switch means the campaign has no goal yet (set it on the **Details** tab). If they pasted a Goal Bar or Button widget, kindly ask for the Form one.
 4. "Is there an end date?" Optional. The site switches back when a new version is built after that date, not at midnight exactly.
-5. "Any photo for it?" Optional.
+5. "Any photo for it?" Optional. Check it against `website-save` → "Picture shape and dead zones".
 
 Write a short, heartfelt description yourself. Only one fundraiser can be active; if one is running, ask whether this replaces it. Save, and ask them to check the form and goal bar on the preview before saying yes.
 
