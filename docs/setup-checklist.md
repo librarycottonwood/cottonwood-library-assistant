@@ -1,6 +1,24 @@
-# Claude Code setup checklist (Tuesday meeting)
+# Claude Code setup checklist
 
 Moving the library from ChatGPT to Claude Code. Do these in order. Keep ChatGPT working until the last step.
+
+**Public launch and AI Expo: Tuesday, November 3, 2026** (replaces the earlier November 16 plan).
+
+## Status (checked October 27, 2026)
+
+Done:
+- Givebutter API key created (account 170378, named `Library website newsletter`; the name is only a nickname, the key has full account access).
+- Saved as the encrypted Cloudflare secret `GIVEBUTTER_API_KEY` in project `cottonwood-library`, **Production** only, and confirmed after a reload. Preview has no key.
+- Roof fundraiser found in Givebutter: **Under One Roof**, campaign code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Active. Form widget ID `jwyYlq`.
+
+Still open before launch:
+- [ ] **Deploy and test the newsletter.** The key only works after the next deployment. Then sign up with an approved test address (see 4b). Nobody has tested it yet.
+- [ ] **Roof fundraiser on the website** (see 4c). Turn the goal bar on in its Form widget first; it was off.
+- [ ] **Auction dates.** Givebutter's auction (unpublished) says Nov 2, 1:00 a.m. to Nov 5, 9:00 a.m.; Donna's letter and the website calendar say Saturday, Nov 14. Confirm with the library which is right before anyone changes either.
+- [ ] **Domain.** Confirm access to the Squarespace domain and keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
+- [ ] **Claude nonprofit/Team setup** (sections 1 to 3).
+- [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
+- [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
 
 ## 1. Accounts
 
@@ -29,17 +47,31 @@ Moving the library from ChatGPT to Claude Code. Do these in order. Keep ChatGPT 
 
 - [ ] **Sanity**: connect and sign in with the library's Sanity account (editor role is enough).
 - [ ] **Buffer**: connect (Facebook page linked in Buffer; Instagram later).
-- [ ] **Givebutter**: no Claude connector known yet; totals are read in Givebutter for now.
+- [ ] **Givebutter**: Givebutter's AI connector is read-only (totals, campaigns, contacts). Creating or editing campaigns needs the API key and a skill that isn't built yet.
 
 ## 4b. Newsletter sign-up key (board admin, once)
 
 The website's own newsletter form sends sign-ups to Givebutter with an API key. Until the key is added, the form shows "Sorry, sign-up isn't working right now" with a link to email the library.
 
-- [ ] In Givebutter (Admin role): **Settings → Integrations → API Keys → Create New API Key**, named `Library website newsletter`. Copy it once; don't paste it into chat, GitHub or any file.
-- [ ] In Cloudflare (library account): **Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Add**. Type **Secret**, name `GIVEBUTTER_API_KEY`, paste the key, environment **Production** (add it to **Preview** too if previews should be able to subscribe real people). Save.
-- [ ] It applies from the next website save (publish). Then sign up on the live site with a test address and check that the contact appears in Givebutter with the **Library Newsletter** tag and email subscription on.
+- [x] In Givebutter (Admin role): **Settings → Integrations → API Keys → Create New API Key**, named `Library website newsletter`. Copy it once; don't paste it into chat, GitHub or any file. *(Done October 27.)*
+- [x] In Cloudflare (library account): **Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Add**. Type **Secret**, name `GIVEBUTTER_API_KEY`, paste the key, environment **Production** (add it to **Preview** too if previews should be able to subscribe real people). Save. *(Done October 27, Production only.)*
+- [ ] It applies from the next website save (publish), and the form itself ships with the `claude/fresh-setup` merge. Then sign up on the live site with a test address and check that the contact appears in Givebutter with the **Library Newsletter** tag and email subscription on.
 - [ ] In Givebutter Engage, make the newsletter audience **tag = Library Newsletter** (keep the old *Widget form sign-ups → Library Newsletter* people too), excluding unsubscribed.
 - To replace a leaked or old key: create a new one, replace the Cloudflare secret, then delete the old key in Givebutter.
+
+## 4c. Roof fundraiser on the website
+
+- [ ] In Givebutter, open **Under One Roof** → **Sharing** → **Widgets** → gear on the **Form** box → turn **Goal bar** on → **Save**. (Widget `jwyYlq` had it off.)
+- [ ] Add it to Sanity `library-giving` → `campaigns[]` with the `fundraisers` skill: title, short description, `url` https://givebutter.com/c/underoneroof, `givebutter.formWidgetId` `jwyYlq`, `givebutter.campaign` `CUDTG7`. The homepage badge and every Donate button then switch to it.
+- [ ] Check the preview: badge above the homepage heading, Donate popup opens the roof campaign, goal bar shows on the Donate page.
+
+## 4d. Picture generation
+
+- [ ] OpenAI API account for the library (separate from ChatGPT Plus), small prepaid balance, key saved as a secret only.
+- [ ] Build the picture skill (follows `website-save` → "Picture shape and dead zones") and test it with one event picture.
+
+## 4e. Visitor reports
+
 - [ ] **Visitor reports**: decide whether to keep the `connector/` Worker as a Claude custom connector (see `connector/README.md`) or use Google Analytics directly.
 
 ## 5. Scheduled tasks (signed in as the library account)
