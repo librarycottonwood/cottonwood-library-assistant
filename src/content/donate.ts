@@ -7,7 +7,8 @@ import type { FundraisingCampaign, GivebutterLibrary } from './types';
 export interface GivebutterCheckout { account: string; campaign: string; }
 
 export interface DonateLink {
-  /** Always a real destination, used when JavaScript is off or Givebutter's script is blocked. */
+  /** Always a real destination, used when JavaScript is off or Givebutter's script is blocked. With a popup
+   * `checkout` it is our own Donate page, so hovering a Donate button never shows an outside address. */
   href: string;
   label: string;
   campaignTitle?: string;
@@ -52,12 +53,13 @@ export async function getDonateLink(now = Date.now()): Promise<DonateLink> {
     const account = await campaignAccount(campaign);
     const label = `Give to ${campaign.title}`;
     const code = campaign.givebutter.campaign;
-    // With the fundraiser's campaign code the popup opens its checkout; without it, send people to the on-site form.
-    if (code) return { href: campaign.url, label, campaignTitle: campaign.title, source: 'campaign', checkout: { account, campaign: code }, external: false };
+    // With the fundraiser's campaign code the popup opens its checkout; either way the link itself goes to the on-site form.
+    if (code) return { href: FUNDRAISER_FORM_HREF, label, campaignTitle: campaign.title, source: 'campaign', checkout: { account, campaign: code }, external: false };
     return { href: FUNDRAISER_FORM_HREF, label, campaignTitle: campaign.title, source: 'campaign', external: false };
   }
   const { donationUrl } = settings;
-  if (library) return { href: donationUrl ?? `https://givebutter.com/${library.campaign}`, label: 'Give to the library', source: 'library', checkout: { account: library.account, campaign: library.campaign }, external: false };
+  // The popup opens Givebutter's checkout; the link itself goes to the Donate page (its gift section and phone number).
+  if (library) return { href: DONATE_PAGE_HREF, label: 'Give to the library', source: 'library', checkout: { account: library.account, campaign: library.campaign }, external: false };
   if (donationUrl) return { href: donationUrl, label: 'Give to the library', source: 'library', external: true };
   return { href: DONATE_PAGE_HREF, label: 'Make a donation', source: 'fallback', external: false };
 }
