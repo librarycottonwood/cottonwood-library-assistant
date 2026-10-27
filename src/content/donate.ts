@@ -7,8 +7,8 @@ import type { FundraisingCampaign, GivebutterLibrary } from './types';
 export interface GivebutterCheckout { account: string; campaign: string; }
 
 export interface DonateLink {
-  /** Always a real destination, used when JavaScript is off or Givebutter's script is blocked. With a popup
-   * `checkout` it is our own Donate page, so hovering a Donate button never shows an outside address. */
+  /** Always a real destination, used when JavaScript is off, Givebutter's script hasn't loaded yet, or a content
+   * blocker stops it. It is the Givebutter page itself, so a click always reaches a working donation form. */
   href: string;
   label: string;
   campaignTitle?: string;
@@ -53,13 +53,14 @@ export async function getDonateLink(now = Date.now()): Promise<DonateLink> {
     const account = await campaignAccount(campaign);
     const label = `Give to ${campaign.title}`;
     const code = campaign.givebutter.campaign;
-    // With the fundraiser's campaign code the popup opens its checkout; either way the link itself goes to the on-site form.
-    if (code) return { href: FUNDRAISER_FORM_HREF, label, campaignTitle: campaign.title, source: 'campaign', checkout: { account, campaign: code }, external: false };
+    // With the fundraiser's campaign code the popup opens its checkout; without the popup the link goes to the campaign's Givebutter page.
+    if (code) return { href: campaign.url, label, campaignTitle: campaign.title, source: 'campaign', checkout: { account, campaign: code }, external: false };
     return { href: FUNDRAISER_FORM_HREF, label, campaignTitle: campaign.title, source: 'campaign', external: false };
   }
   const { donationUrl } = settings;
-  // The popup opens Givebutter's checkout; the link itself goes to the Donate page (its gift section and phone number).
-  if (library) return { href: DONATE_PAGE_HREF, label: 'Give to the library', source: 'library', checkout: { account: library.account, campaign: library.campaign }, external: false };
+  // The popup opens Givebutter's checkout. Without it, the link goes to the Givebutter page (as the old site did);
+  // our own Donate page would only show another Donate button that needs the same popup.
+  if (library) return { href: donationUrl ?? DONATE_PAGE_HREF, label: 'Give to the library', source: 'library', checkout: { account: library.account, campaign: library.campaign }, external: false };
   if (donationUrl) return { href: donationUrl, label: 'Give to the library', source: 'library', external: true };
   return { href: DONATE_PAGE_HREF, label: 'Make a donation', source: 'fallback', external: false };
 }
