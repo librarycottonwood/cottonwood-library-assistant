@@ -148,7 +148,6 @@ async function call(fetcher: Fetcher, key: string, path: string, method: string,
   });
 }
 const readJson = async (response: Response): Promise<any> => { try { return await response.json(); } catch { return undefined; } };
-const contactOf = (body: any) => (body && typeof body === 'object' && body.data && !Array.isArray(body.data) ? body.data : body);
 
 /** Create (or, through Givebutter's deduplication, match) the contact. Never logs the email address or the key. */
 export async function subscribe(submission: Pick<Submission, 'email' | 'firstName'>, key: string, fetcher: Fetcher = fetch): Promise<Result> {
@@ -156,16 +155,14 @@ export async function subscribe(submission: Pick<Submission, 'email' | 'firstNam
   try { response = await call(fetcher, key, '/contacts', 'POST', buildContact(submission)); }
   catch (error) { console.error('Givebutter could not be reached:', (error as Error).name); return { status: 'error', reason: 'unreachable' }; }
 
-  if (response.ok) {
-    const contact = contactOf(await readJson(response));
-    // A matched contact who once unsubscribed keeps that setting on create; they just asked again, so opt them back in.
-    if (contact?.id && contact.is_email_subscribed === false) await optIn(fetcher, key, contact.id);
-    return { status: 'subscribed', reason: 'ok' };
-  }
+  // A matched contact who once unsubscribed keeps that setting: anyone can type any email here, so this form
+  // never turns email back on for an existing contact. They can rejoin through Givebutter or by emailing the library.
+  if (response.ok) return { status: 'subscribed', reason: 'ok' };
   const body = await readJson(response);
   if (response.status === 409 || (response.status === 422 && emailAlreadyUsed(body))) {
-    await updateExisting(submission.email, key, fetcher);
-    return { status: 'already', reason: 'existing_contact' };
+    await tagExisting(submission.email, key, fetcher);
+    // Same answer as a new sign-up, so the form can't be used to find out who is already a library contact.
+    return { status: 'subscribed', reason: 'existing_contact' };
   }
   if (response.status === 422 && Object.keys(body?.errors ?? {}).some(name => /email/i.test(name))) return { status: 'invalid', reason: 'invalid_email' };
   if (response.status === 401 || response.status === 403) console.error(`Givebutter refused the API key (${response.status}). Check GIVEBUTTER_API_KEY in the Cloudflare Pages settings.`);
@@ -178,8 +175,8 @@ function emailAlreadyUsed(body: any): boolean {
     /email/i.test(name) && (Array.isArray(messages) ? messages : [messages]).some(message => /taken|exist|already|duplicate/i.test(String(message))));
 }
 
-/** Existing contact: add the tag (keeps their other tags) and turn email on. Failures are logged, not shown. */
-async function updateExisting(email: string, key: string, fetcher: Fetcher) {
+/** Existing contact: add the tag (keeps their other tags). Their email setting is left alone. Failures are logged, not shown. */
+async function tagExisting(email: string, key: string, fetcher: Fetcher) {
   try {
     const found = await call(fetcher, key, `/contacts?email=${encodeURIComponent(email)}`, 'GET');
     if (!found.ok) return console.error(`Givebutter contact lookup failed (${found.status}).`);
@@ -191,14 +188,5 @@ async function updateExisting(email: string, key: string, fetcher: Fetcher) {
     if (!contact?.id) return console.error('Givebutter returned no contact with that email.');
     const tagged = await call(fetcher, key, `/contacts/${encodeURIComponent(contact.id)}/tags/add`, 'POST', { tags: [NEWSLETTER_TAG] });
     if (!tagged.ok) console.error(`Givebutter tag request failed (${tagged.status}).`);
-    if (contact.is_email_subscribed !== true) await optIn(fetcher, key, contact.id);
-  } catch (error) { console.error('Updating the existing Givebutter contact failed:', (error as Error).name); }
-}
-
-async function optIn(fetcher: Fetcher, key: string, id: string | number) {
-  try {
-    // Only email_opt_in is sent: fields left out, tags included, stay as they are.
-    const updated = await call(fetcher, key, `/contacts/${encodeURIComponent(id)}`, 'PUT', { email_opt_in: true });
-    if (!updated.ok) console.error(`Givebutter email opt-in failed (${updated.status}).`);
-  } catch (error) { console.error('Givebutter email opt-in failed:', (error as Error).name); }
+  } catch (error) { console.error('Tagging the existing Givebutter contact failed:', (error as Error).name); }
 }

@@ -6,3 +6,7 @@ output/
 .env*
 !.env.example
 .DS_Store
+
+# Local Cloudflare secrets and state (wrangler pages dev reads GIVEBUTTER_API_KEY from .dev.vars)
+.dev.vars
+.wrangler/

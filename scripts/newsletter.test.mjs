@@ -123,40 +123,38 @@ test('creates the contact with the secret key, subscribed and tagged', async () 
     body: {first_name: 'Ada', primary_email: 'reader@example.org', email_subscription: true, tags: ['Library Newsletter']}}]);
 });
 
-test('a matched contact who had unsubscribed is opted back in without touching their tags', async () => {
+test('a matched contact who had unsubscribed is never opted back in by the public form', async () => {
   const {fetcher, calls} = givebutter(reply(200, {data: {id: 7, is_email_subscribed: false}}), reply(200, {id: 7}));
   const response = await handleNewsletter(post({email: 'reader@example.org'}), env, {fetcher});
   assert.equal((await response.json()).status, 'subscribed');
-  assert.deepEqual(calls[1], {url: 'https://api.givebutter.com/v1/contacts/7', method: 'PUT', auth: 'Bearer test-key', body: {email_opt_in: true}});
+  assert.equal(calls.length, 1, 'only the create call; no PUT turning email back on');
 });
 
-test('an email Givebutter already has is "already on the list": tag added (not replaced) and email turned on', async () => {
+test('an email Givebutter already has: tag added (not replaced), email setting untouched, same answer as a new sign-up', async () => {
   const {fetcher, calls} = givebutter(
     reply(422, {message: 'The given data was invalid.', errors: {primary_email: ['The primary email has already been taken.']}}),
     reply(200, {data: [{id: 55, primary_email: 'Reader@Example.org', is_email_subscribed: false}]}),
     reply(200, {}),
-    reply(200, {}),
   );
   const response = await handleNewsletter(post({email: 'reader@example.org'}), env, {fetcher});
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), {ok: true, status: 'already', reason: 'existing_contact'});
+  assert.deepEqual(await response.json(), {ok: true, status: 'subscribed', reason: 'existing_contact'});
   assert.deepEqual(calls.slice(1).map(({url, method, body}) => ({url, method, body})), [
     {url: 'https://api.givebutter.com/v1/contacts?email=reader%40example.org', method: 'GET', body: undefined},
     {url: 'https://api.givebutter.com/v1/contacts/55/tags/add', method: 'POST', body: {tags: ['Library Newsletter']}},
-    {url: 'https://api.givebutter.com/v1/contacts/55', method: 'PUT', body: {email_opt_in: true}},
   ]);
   // tags/sync and a PUT with tags would replace the contact's other tags.
   assert.ok(!calls.some(call => call.url.endsWith('/tags/sync') || (call.method === 'PUT' && 'tags' in call.body)));
 });
 
-test('"already on the list" is still shown when the existing contact cannot be updated', async t => {
+test('an existing contact still gets the normal answer when it cannot be tagged', async t => {
   silence(t);
   const conflict = givebutter(reply(409, {message: 'Conflict'}), reply(200, {data: [{id: 9, primary_email: 'someone-else@example.org'}]}));
-  assert.equal((await (await handleNewsletter(post({email: 'reader@example.org'}), env, conflict)).json()).status, 'already');
+  assert.equal((await (await handleNewsletter(post({email: 'reader@example.org'}), env, conflict)).json()).status, 'subscribed');
   assert.equal(conflict.calls.length, 2, 'never edits a contact whose email does not match');
   resetRateLimit();
   const lookupFails = givebutter(reply(409, {}), reply(500, {}));
-  assert.equal((await (await handleNewsletter(post({email: 'reader@example.org'}), env, lookupFails)).json()).status, 'already');
+  assert.equal((await (await handleNewsletter(post({email: 'reader@example.org'}), env, lookupFails)).json()).status, 'subscribed');
 });
 
 test('Givebutter problems become the error message; a rejected email becomes "check your email"', async t => {
