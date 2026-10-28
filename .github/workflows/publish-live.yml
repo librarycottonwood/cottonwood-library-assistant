@@ -5,18 +5,48 @@ on:
     types: [completed]
 permissions:
   contents: read
-  actions: read
-  pull-requests: read
-  statuses: write
-# Same lock as CMS promotions. Neither path can overwrite the other's rollback.
-concurrency:
-  group: library-live-publishing
-  cancel-in-progress: false
 jobs:
-  deliver:
-    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository
+  route:
+    # Decides what this check result asks for, before any lock or hosting secret.
+    # Scheduled checks, superseded heads and direct pushes stop here.
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+      statuses: write
+    outputs:
+      action: ${{ steps.route.outputs.action }}
+      pr: ${{ steps.route.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/publish-live.mjs route
+  preview:
+    needs: route
+    if: needs.route.outputs.action == 'preview'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+      statuses: write
+    # One preview at a time per PR; a newer head replaces an older one.
+    concurrency:
+      group: library-preview-pr-${{ needs.route.outputs.pr }}
+      cancel-in-progress: true
     steps:
       # Never check out PR code in this credential-bearing job.
       - uses: actions/checkout@v7.0.1
@@ -29,8 +59,68 @@ jobs:
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Validate PR artifact, preview it, and publish only an approved merge live
+      - name: Validate PR artifact, preview it and list what it would put live
         env:
+          LIBRARY_DELIVER: preview
+          GH_TOKEN: ${{ github.token }}
+          LIBRARY_CONTENT_SOURCE: sanity
+          SANITY_PROJECT_ID: 2ou0xy2r
+          SANITY_DATASET: production
+          CLOUDFLARE_ACCOUNT_ID: e05729fd6b6fad329e31896d8b1c2da9
+          # Library-account Pages token. CLOUDFLARE_TRIAL_API_TOKEN is the legacy secret name;
+          # once CLOUDFLARE_API_TOKEN is added with the same value, delete the legacy secret.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+        run: node scripts/publish-live.mjs deliver
+      - name: Record a failed preview if the step above could not
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ ! -f output/status-preview ]; then
+            gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" -f state=failure -f context='Website preview' -f target_url="$RUN_URL" \
+              -f description='No preview: the preview step failed before it finished. Push again or ask an administrator.'
+          fi
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: library-publish-live-result
+          path: |
+            output/publish-live-result.json
+            output/content-changes.json
+          retention-days: 7
+          if-no-files-found: warn
+  publish:
+    needs: route
+    if: needs.route.outputs.action == 'publish'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+      statuses: write
+    # Same lock as CMS promotions. Neither path can overwrite the other's rollback.
+    # Only real live saves take it, so previews and scheduled checks never queue here.
+    concurrency:
+      group: library-live-publishing
+      cancel-in-progress: false
+    steps:
+      # Never check out PR code in this credential-bearing job.
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm install --global pnpm@11.15.1
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Recheck the approved merge and publish its checked artifact live
+        env:
+          LIBRARY_DELIVER: publish
           GH_TOKEN: ${{ github.token }}
           LIBRARY_CONTENT_SOURCE: sanity
           SANITY_PROJECT_ID: 2ou0xy2r
@@ -42,12 +132,24 @@ jobs:
           CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
           CMS_WORKFLOW_TOKEN: ${{ secrets.CMS_WORKFLOW_TOKEN }}
         run: node scripts/publish-live.mjs deliver
+      - name: Record a failed save if the step above could not
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ ! -f output/status-live ]; then
+            gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" -f state=failure -f context='Live website' -f target_url="$RUN_URL" \
+              -f description='Not saved: the publish step stopped before it finished. Check the live site, then make a refresh save.'
+          fi
       - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
           name: library-publish-live-result
           path: |
             output/publish-live-result.json
+            output/content-changes.json
             output/cms/publish-result.json
           retention-days: 7
           if-no-files-found: warn

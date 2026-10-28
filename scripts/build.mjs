@@ -4,6 +4,7 @@ import path from 'node:path';
 import { sanityConfig, fetchSanitySnapshot } from '../src/content/sanity.mjs';
 import { readSnapshot, saveSnapshot, contentDigest } from './cms.mjs';
 import { check as checkImages, pruneUnusedBuiltImages } from './images.mjs';
+import { revisionList } from './content-changes.mjs';
 
 const mode=process.env.LIBRARY_CONTENT_SOURCE??'local';
 if (!['local','sanity'].includes(mode)) throw Error('LIBRARY_CONTENT_SOURCE must be local or sanity.');
@@ -33,6 +34,8 @@ if (snapshot) {
   } catch {}
   await mkdir(path.join(outputDirectory,'_content'),{recursive:true});
   await writeFile(path.join(outputDirectory,'_content/version.json'),JSON.stringify({provider:'sanity',contentDigest:contentDigest(snapshot),sourceSha,workingTreeChanged})+'\n');
+  // Lets the next save list exactly which documents differ from this live version.
+  await writeFile(path.join(outputDirectory,'_content/revisions.json'),JSON.stringify({schemaVersion:1,contentDigest:contentDigest(snapshot),documents:revisionList(snapshot)})+'\n');
 }
 await pruneUnusedBuiltImages({dist:relativeOutput});
 const problems=await checkImages({dist:relativeOutput});
