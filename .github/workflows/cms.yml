@@ -62,6 +62,7 @@ jobs:
     permissions:
       contents: read
       actions: write
+      pull-requests: read
     concurrency:
       group: library-cms-preview-${{ inputs.operation_id }}
       cancel-in-progress: false

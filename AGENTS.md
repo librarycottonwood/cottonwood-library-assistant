@@ -8,7 +8,9 @@ Use the maintained `librarycottonwood/cottonwood-library-assistant` repository. 
 
 Current content comes from Sanity. Use permitted tools for CMS drafts/corrections/publication and preserve unrelated records; do not overwrite live content with seed files. Layout/code changes belong on the request's branch.
 
-Content-only requests are finished entirely in the library chat: Sanity tools publish the record, then the chat's GitHub tools open a `content/*` PR that updates `assistant/website-update.json`, read its **Website preview** commit status, ask “Ready to save?”, merge and confirm the **Live website** status (publishing skill, “Save a content change”). Volunteers never sign in to Sanity, GitHub or Codex.
+Content-only requests are finished entirely in the library chat: Sanity tools publish the record, then the chat's GitHub tools open a `content/*` PR that adds its own new file `content-updates/<YYYY-MM-DD>-<short-name>.json` (never edit `assistant/website-update.json`; it is kept only for older saves), read its **Website preview** commit status, ask “Ready to save?”, merge and confirm the **Live website** status (publishing skill, “Save a content change”). Volunteers never sign in to Sanity, GitHub or Codex.
+
+Before asking “Ready to save?”, read the PR comment “What this save puts on the live website”. If it lists other changes that will also go live (published in Sanity but not part of this save), tell the volunteer “This save will also put these other changes live: …” and ask before merging. If **Live website** fails after a merge, the website is unchanged: follow “When a merged save does not go live” in the publishing skill (usually a fresh `content/refresh-*` save). Save PRs idle for 14 days are closed automatically; their Sanity changes stay published.
 
 Run `pnpm check`, `pnpm build`, affected tests and phone/desktop capture. Inspect browser errors, affected navigation/forms and both screenshots internally. Prepare new pictures through `pnpm assistant:image`.
 
