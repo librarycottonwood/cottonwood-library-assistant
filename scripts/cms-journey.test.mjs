@@ -123,7 +123,7 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
     const invalidFile=path.join(folder,'invalid.json');await writeFile(invalidFile,JSON.stringify(invalid));
     const rejected=runBuild({...environment,SANITY_SNAPSHOT_PATH:invalidFile});
     assert.notEqual(rejected.status,0,'unsafe CMS publication must fail');
-    assert.match(rejected.log,/navigation.href/);
+    assert.match(rejected.log,/navigation\[0\]\.href/);
     assert.equal(digest(await readFile(path.join(output,'index.html'))),retained,'last verified website must survive invalid content');
     const missing=runBuild({...environment,SANITY_PROJECT_ID:'',SANITY_SNAPSHOT_PATH:''});
     assert.notEqual(missing.status,0,'Sanity mode with no configuration must fail');assert.match(missing.log,/SANITY_PROJECT_ID/);

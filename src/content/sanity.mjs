@@ -1,45 +1,73 @@
 /** Public content boundary shared by the Astro adapter and controlled publisher.
  * Snapshot files contain the exact published documents used by one build. No credentials.
+ *
+ * Small, unambiguous mistakes (stray spaces, phone links typed with punctuation, free-text
+ * identifiers, blank list entries, indented bullets, a hand-typed wrong UTC offset) are corrected
+ * here with a warning instead of blocking every build. Unsafe or unclear content still fails, with a
+ * message naming the document and the field so staff know exactly what to fix.
  */
+import { SLUG_PATTERN, normalizeDay, normalizeIdentifier, normalizeInstant, normalizeLink, normalizePhone } from './rules.mjs';
 export const SANITY_API_VERSION = '2026-10-01';
 export const SANITY_DOCUMENT_TYPES = ['siteSettings', 'givingSettings', 'program', 'event', 'post', 'newsletter', 'notice', 'sanity.imageAsset', 'sanity.fileAsset'];
 export const SANITY_QUERY = '*[!(_id in path("drafts.**")) && !(_id in path("versions.**")) && _type in ["siteSettings","givingSettings","program","event","post","newsletter","notice","sanity.imageAsset","sanity.fileAsset"]]';
 const LEGACY_IMAGES = new Set(['exterior','computerLab','storytime','books','interior','newsletter','watercolor','mainStreetReaders','bookClub','bookDonation','bookSale','childrensBookSale','holidayMarket','firstFive','communityFoundation','founders']);
-const fail = message => { throw new Error(`Sanity content: ${message}`); };
-const object = (value, at) => value && typeof value === 'object' && !Array.isArray(value) ? value : fail(`${at} must be an object`);
-const array = (value, at) => Array.isArray(value) && value.length <= 10000 ? value : fail(`${at} must be an array with at most 10000 entries`);
-const text = (value, at, allowEmpty = false) => typeof value === 'string' && (allowEmpty || value.trim()) && value.length <= 200000 && !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value) ? value : fail(`${at} must be plain text`);
-const optionalText = (value, at) => value == null || value === '' ? undefined : text(value, at);
-const oneOf = (value, values, at) => values.includes(value) ? value : fail(`${at} is not supported`);
-const slug = (value, at) => typeof value === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) && value.length <= 96 ? value : fail(`${at} must be a lowercase URL slug`);
-const id = (value, at) => typeof value === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(value) ? value : fail(`${at} must be a plain identifier`);
-const unique = (items, key, at) => { const seen = new Set(); for (const item of items) { if (seen.has(item[key])) fail(`${at} has duplicate ${key}: ${item[key]}`); seen.add(item[key]); } return items; };
-export function safeHref(value, at = 'link') {
-  const link = text(value, at);
-  if (/[\s\\\u007f]/.test(link) || /%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(link)) fail(`${at} contains unsafe characters`);
-  if (/^\/(?!\/)/.test(link) && !link.includes('..')) return link;
-  if (/^#[a-zA-Z0-9_-]+$/.test(link)) return link;
-  if (/^mailto:[^?@]+@[^?@]+(?:\?[^\r\n]*)?$/.test(link) || /^tel:\+?[\d()-]+$/.test(link)) return link;
-  let url; try { url = new URL(link); } catch { fail(`${at} must be a local link or HTTPS URL`); }
-  if (url.protocol !== 'https:' || url.username || url.password || !url.hostname.includes('.')) fail(`${at} must be a local link or HTTPS URL`);
-  return link;
+const PREFIX = 'Sanity content: ';
+const fail = message => { throw new Error(`${PREFIX}${message}`); };
+
+// A field location: `label` is what staff see in Studio, `path` is the stored field name.
+const field = (label, path) => ({ label, path });
+const sub = (at, label, key) => ({ label: `${at.label} › ${label}`, path: `${at.path}.${key}` });
+const item = (at, index) => ({ label: `${at.label} › item ${index + 1}`, path: `${at.path}[${index}]` });
+const where = at => typeof at === 'string' ? at : `${at.label} (${at.path})`;
+const problem = (at, message) => fail(`${where(at)}: ${message}`);
+
+const object = (value, at) => value && typeof value === 'object' && !Array.isArray(value) ? value : problem(at, 'This is missing or is not a group of fields.');
+const array = (value, at) => Array.isArray(value) && value.length <= 10000 ? value : problem(at, 'This list is missing or has more than 10000 entries.');
+const plain = value => typeof value === 'string' && value.length <= 200000 && !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value);
+/** Trimmed plain text. Span text inside rich text keeps its spaces (`keepSpaces`) because words join across spans. */
+function text(value, at, { allowEmpty = false, keepSpaces = false } = {}) {
+  if (value == null || (typeof value === 'string' && !value.trim() && !allowEmpty)) problem(at, 'This field is empty. Fill it in.');
+  if (!plain(value)) problem(at, 'This must be plain text (no hidden control characters, under 200,000 characters).');
+  return keepSpaces ? value : value.trim();
 }
-const httpsHref = (value, at) => { const link = safeHref(value, at); if (!link.startsWith('https://')) fail(`${at} must use HTTPS`); return link; };
-function day(value, at) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || !Number.isFinite(Date.parse(`${value}T12:00:00Z`)) || !new Date(`${value}T12:00:00Z`).toISOString().startsWith(value)) fail(`${at} must be a real YYYY-MM-DD date`);
-  return value;
+const oneOf = (value, values, at) => values.includes(typeof value === 'string' ? value.trim() : value) ? value.trim() : problem(at, `This is ${value == null || value === '' ? 'empty' : JSON.stringify(value)}, which is not supported. Choose one of: ${values.join(', ')}.`);
+const id = (value, at) => typeof value === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(value.trim()) ? value.trim() : problem(at, `${JSON.stringify(value ?? '')} must be a plain identifier: letters, numbers, - or _ only, up to 64 characters.`);
+const day = (value, at) => { const result = normalizeDay(value); return result.ok ? result.value : problem(at, result.reason); };
+function unique(items, key, at, describe = value => `${key} "${value}"`) {
+  const seen = new Set();
+  for (const entry of items) { if (seen.has(entry[key])) fail(`${where(at)}: duplicate ${describe(entry[key])}. Each entry needs its own.`); seen.add(entry[key]); }
+  return items;
 }
-function instant(value, at) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(value) || !Number.isFinite(Date.parse(value))) fail(`${at} must include a valid date, time, and timezone`);
-  day(value.slice(0, 10), at);
-  return value;
+export function safeHref(value, at = 'link', warn) {
+  const result = normalizeLink(value);
+  if (!result.ok) problem(at, result.reason);
+  if (result.note && warn) warn(`${where(at)}: ${result.note}`);
+  return result.value;
+}
+const httpsHref = (value, at, warn) => { const link = safeHref(value, at, warn); if (!link.startsWith('https://')) problem(at, `The link ${JSON.stringify(link)} must be a full https:// address.`); return link; };
+const documentLabels = { siteSettings: 'Library settings', givingSettings: 'Giving and acknowledgments', event: 'event', post: 'blog post', program: 'regular program', newsletter: 'newsletter', notice: 'notice' };
+function documentLabel(doc) {
+  const name = typeof doc.title === 'string' && doc.title.trim() ? doc.title.trim() : typeof doc.message === 'string' && doc.message.trim() ? doc.message.trim().slice(0, 60) : '';
+  const kind = documentLabels[doc._type] ?? doc._type;
+  return `${doc._type === 'siteSettings' || doc._type === 'givingSettings' ? kind : `the ${kind}${name ? ` "${name}"` : ''}`} (document ${doc._id})`;
+}
+
+let printed = new Set();
+const defaultWarn = message => { if (printed.size > 1000) printed = new Set(); if (!printed.has(message)) { printed.add(message); console.warn(`Sanity content warning: ${message}`); } };
+
+/** Pacific wall-clock time is what staff mean; see normalizeInstant in rules.mjs. */
+function instant(value, at, warn) {
+  const result = normalizeInstant(value);
+  if (!result.ok) problem(at, result.reason);
+  if (result.note) warn(`${where(at)}: ${result.note}`);
+  return result.value;
 }
 // Sanity stores datetimes in UTC; publication labels follow the library's local
 // calendar day, including the differing UTC offsets on either side of DST.
-function publicationDay(value) {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return day(value, 'post.publishedAt');
-  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(instant(value, 'post.publishedAt')));
-  const part = type => parts.find(item => item.type === type).value;
+function publicationDay(value, at, warn) {
+  if (typeof value === 'string' && /^\s*\d{4}-\d{2}-\d{2}\s*$/.test(value)) return day(value, at);
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(instant(value, at, warn)));
+  const part = type => parts.find(entry => entry.type === type).value;
   return `${part('year')}-${part('month')}-${part('day')}`;
 }
 export function sanityConfig(env = process.env) {
@@ -51,7 +79,7 @@ export function sanityConfig(env = process.env) {
   return { projectId, dataset, apiVersion: SANITY_API_VERSION };
 }
 /** Fetch one published-only snapshot directly from the API, never the stale CDN. */
-export async function fetchSanitySnapshot(config, { fetch: fetcher = globalThis.fetch, token } = {}) {
+export async function fetchSanitySnapshot(config, { fetch: fetcher = globalThis.fetch, token, warn } = {}) {
   const url = new URL(`https://${config.projectId}.api.sanity.io/v${SANITY_API_VERSION}/data/query/${config.dataset}`);
   url.searchParams.set('query', SANITY_QUERY);
   url.searchParams.set('perspective', 'published');
@@ -62,146 +90,212 @@ export async function fetchSanitySnapshot(config, { fetch: fetcher = globalThis.
   let body; try { body = JSON.parse(raw); } catch { fail('published content response is not JSON'); }
   if (body.error || !Array.isArray(body.result)) fail('published content response has no result');
   const snapshot = { schemaVersion: 1, projectId: config.projectId, dataset: config.dataset, documents: body.result };
-  validateSanitySnapshot(snapshot, config);
+  validateSanitySnapshot(snapshot, config, { warn });
   return snapshot;
 }
-export function validateSanitySnapshot(snapshot, expected) {
-  object(snapshot, 'snapshot');
+/** Validates and normalizes one snapshot. Corrections are reported through `warn` (default: console.warn,
+ * each message once per process) and returned as `warnings`. */
+export function validateSanitySnapshot(snapshot, expected, { warn: report = defaultWarn } = {}) {
+  const warnings = [];
+  let current = '';
+  const warn = message => { const full = `In ${current}: ${message}`; warnings.push(full); report(full); };
+  /** Run `build` for one document; any failure is reported as "In <document>: <field> ...". */
+  function within(doc, build) {
+    const previous = current; current = documentLabel(doc);
+    try { return build(); } catch (error) {
+      if (error instanceof Error && error.message.startsWith(PREFIX) && !error.message.startsWith(`${PREFIX}In `)) throw new Error(`${PREFIX}In ${current}: ${error.message.slice(PREFIX.length)}`, { cause: error });
+      throw error;
+    } finally { current = previous; }
+  }
+  if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) fail('snapshot must be an object');
   if (snapshot.schemaVersion !== 1) fail('snapshot schemaVersion must be 1');
   const config = sanityConfig({ SANITY_PROJECT_ID: snapshot.projectId, SANITY_DATASET: snapshot.dataset });
   if (expected && (config.projectId !== expected.projectId || config.dataset !== expected.dataset)) fail('snapshot belongs to a different project or dataset');
   const docs = unique(array(snapshot.documents, 'documents').map(doc => {
-    object(doc, 'document'); text(doc._id, 'document._id');
+    if (!doc || typeof doc !== 'object' || Array.isArray(doc)) fail('every document must be an object');
+    if (typeof doc._id !== 'string' || !doc._id.trim()) fail('every document needs an _id');
     if (doc._id.startsWith('drafts.') || doc._id.startsWith('versions.')) fail(`unpublished document ${doc._id} is forbidden`);
-    oneOf(doc._type, SANITY_DOCUMENT_TYPES, `document ${doc._id} type`);
-    if (doc._rev != null) text(doc._rev, 'document._rev');
+    if (!SANITY_DOCUMENT_TYPES.includes(doc._type)) fail(`document ${doc._id} type ${JSON.stringify(doc._type)} is not supported`);
+    if (doc._rev != null && !plain(doc._rev)) fail(`document ${doc._id} has an invalid _rev`);
     return doc;
   }), '_id', 'documents');
   const byId = new Map(docs.map(doc => [doc._id, doc]));
+  const kinds = { program: 'regular program', event: 'event', newsletter: 'newsletter', 'sanity.imageAsset': 'uploaded picture', 'sanity.fileAsset': 'uploaded file' };
   function reference(value, type, at) {
     const ref = object(value, at)._ref;
-    text(ref, `${at}._ref`);
+    if (typeof ref !== 'string' || !ref) problem(at, 'This reference is empty. Choose an item or remove it.');
     const target = byId.get(ref);
-    if (!target || target._type !== type) fail(`${at} references a missing published ${type}`);
+    if (!target || target._type !== type) problem(at, `This references a missing published ${type} (${ref}). Publish that ${kinds[type] ?? type}, or remove or change this reference.`);
     return target;
   }
+  /** A document slug or a free-text identifier. Valid values are kept exactly; anything else is slugified with a warning. */
+  function slug(value, at) {
+    if (typeof value === 'string' && SLUG_PATTERN.test(value) && value.length <= 96) return value;
+    const result = normalizeIdentifier(value);
+    if (!result.ok) problem(at, result.reason);
+    if (result.note) warn(`${where(at)}: ${result.note}`);
+    return result.value;
+  }
   function cdnAsset(asset, kind, at) {
-    const url = httpsHref(asset.url, `${at}.url`);
+    const url = httpsHref(asset.url, sub(at, 'file address', 'url'));
     const parsed = new URL(url);
     const prefix = `/${kind}/${config.projectId}/${config.dataset}/`;
-    if (parsed.hostname !== 'cdn.sanity.io' || parsed.port || parsed.search || parsed.hash || !parsed.pathname.startsWith(prefix) || parsed.pathname.slice(prefix.length).includes('/') || !/^[A-Za-z0-9_-]+\.[a-z0-9]+$/.test(parsed.pathname.slice(prefix.length))) fail(`${at} must use this project's Sanity CDN`);
+    if (parsed.hostname !== 'cdn.sanity.io' || parsed.port || parsed.search || parsed.hash || !parsed.pathname.startsWith(prefix) || parsed.pathname.slice(prefix.length).includes('/') || !/^[A-Za-z0-9_-]+\.[a-z0-9]+$/.test(parsed.pathname.slice(prefix.length))) problem(at, "This must use this project's Sanity CDN. Upload the file in Studio instead of linking to it.");
     return url;
   }
   function image(value, at) {
     object(value, at);
-    const base = { alt: text(value.alt, `${at}.alt`), ...(value.caption ? { caption: text(value.caption, `${at}.caption`) } : {}), ...(value.fit ? { fit: oneOf(value.fit, ['cover','contain'], `${at}.fit`) } : {}) };
+    const base = { alt: text(value.alt, sub(at, 'Picture description', 'alt')), ...(value.caption && String(value.caption).trim() ? { caption: text(value.caption, sub(at, 'Caption', 'caption')) } : {}), ...(value.fit ? { fit: oneOf(value.fit, ['cover','contain'], sub(at, 'Picture display', 'fit')) } : {}) };
     if (value.asset) {
-      const asset = reference(value.asset, 'sanity.imageAsset', `${at}.asset`);
+      const asset = reference(value.asset, 'sanity.imageAsset', sub(at, 'uploaded picture', 'asset'));
       const url = cdnAsset(asset, 'images', at);
-      const dimensions = object(object(asset.metadata, `${at}.metadata`).dimensions, `${at}.dimensions`);
+      const dimensions = object(object(asset.metadata, sub(at, 'picture metadata', 'asset.metadata')).dimensions, sub(at, 'picture size', 'asset.metadata.dimensions'));
       const { width, height } = dimensions;
-      if (![width,height].every(size => Number.isInteger(size) && size > 0 && size <= 50000)) fail(`${at} needs real image dimensions`);
+      if (![width,height].every(size => Number.isInteger(size) && size > 0 && size <= 50000)) problem(at, 'This picture needs real image dimensions. Re-upload the picture.');
       const match = /^image-([A-Za-z0-9]+)-(\d+)x(\d+)-(jpg|jpeg|png|webp|avif)$/.exec(asset._id);
-      if (!match || Number(match[2]) !== width || Number(match[3]) !== height || new URL(url).pathname.split('/').pop() !== `${match[1]}-${width}x${height}.${match[4]}`) fail(`${at} image URL, id, and dimensions disagree`);
+      if (!match || Number(match[2]) !== width || Number(match[3]) !== height || new URL(url).pathname.split('/').pop() !== `${match[1]}-${width}x${height}.${match[4]}`) problem(at, 'The image URL, id, and dimensions disagree. Re-upload the picture.');
       return { ...base, url, width, height };
     }
-    if (!LEGACY_IMAGES.has(value.legacyKey)) fail(`${at} needs an uploaded image or known migration legacyKey`);
+    if (!LEGACY_IMAGES.has(value.legacyKey)) problem(at, 'This needs an uploaded picture (or a known migration legacyKey).');
     return { ...base, key: value.legacyKey };
   }
   function file(value, legacy, at) {
     if (value) {
-      const asset = reference(object(value, at).asset, 'sanity.fileAsset', `${at}.asset`);
-      if (asset.mimeType !== 'application/pdf' || !/^file-[A-Za-z0-9]+-pdf$/.test(asset._id)) fail(`${at} must be a PDF`);
+      const asset = reference(object(value, at).asset, 'sanity.fileAsset', sub(at, 'uploaded file', 'asset'));
+      if (asset.mimeType !== 'application/pdf' || !/^file-[A-Za-z0-9]+-pdf$/.test(asset._id)) problem(at, 'This must be a PDF. Upload the newsletter as a PDF file.');
       const url = cdnAsset(asset, 'files', at);
-      if (new URL(url).pathname.split('/').pop() !== `${asset._id.slice(5,-4)}.pdf`) fail(`${at} file URL and id disagree`);
+      if (new URL(url).pathname.split('/').pop() !== `${asset._id.slice(5,-4)}.pdf`) problem(at, 'The file URL and id disagree. Re-upload the PDF.');
       return url;
     }
-    const link = safeHref(legacy, at);
-    if (!/^\/documents\/[a-zA-Z0-9_-]+\.pdf$/.test(link)) fail(`${at} migration fallback must be a local PDF`);
+    const link = safeHref(legacy, field('Imported PDF address', 'legacyFileUrl'), warn);
+    if (!/^\/documents\/[a-zA-Z0-9_-]+\.pdf$/.test(link)) problem(at, 'This needs an uploaded PDF (the migration fallback must be a local /documents/ PDF).');
     return link;
   }
-  const strings = (value, at) => array(value, at).map((item, index) => text(item, `${at}[${index}]`));
-  const withImage = (value, at) => ({ image: image(value.image, `${at}.image`), ...(value.gallery ? { gallery: array(value.gallery, `${at}.gallery`).map((item,index) => image(item, `${at}.gallery[${index}]`)) } : {}) });
-  const singleton = (key, type) => { const doc = byId.get(key); if (!doc || doc._type !== type) fail(`required ${type} singleton ${key} is missing`); if (docs.filter(item => item._type === type).length !== 1) fail(`only ${key} may be ${type}`); return doc; };
+  /** Lists of paragraphs or steps: blank entries are left off rather than failing the build. */
+  const strings = (value, at) => array(value, at).flatMap((entry, index) => {
+    if (entry == null || (typeof entry === 'string' && !entry.trim())) { warn(`${where(item(at, index))}: This entry is empty and was left off the website. Delete the empty entry to remove this message.`); return []; }
+    return [text(entry, item(at, index))];
+  });
+  const withImage = (value, at) => ({ image: image(value.image, sub(at, 'Picture', 'image')), ...(value.gallery ? { gallery: array(value.gallery, sub(at, 'More pictures', 'gallery')).map((entry,index) => image(entry, item(sub(at, 'More pictures', 'gallery'), index))) } : {}) });
+  const singleton = (key, type) => { const doc = byId.get(key); if (!doc || doc._type !== type) fail(`required ${type} singleton ${key} is missing`); if (docs.filter(entry => entry._type === type).length !== 1) fail(`only ${key} may be ${type}`); return doc; };
   const settings = singleton('library-settings', 'siteSettings');
   const giving = singleton('library-giving', 'givingSettings');
-  const l = object(settings.library, 'settings.library');
-  const email = text(l.email, 'library.email'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail('library.email must be an email address');
-  const phone = text(l.phone, 'library.phone');
-  const phoneDigits = phone.replace(/[^0-9]/g, '');
-  if (!/^(?:1)?[0-9]{10}$/.test(phoneDigits)) fail('library.phone must be a US phone number');
-  const hours = array(l.hours,'library.hours').map(row => ({ days: text(row.days,'hours.days'), hours: text(row.hours,'hours.hours') }));
-  const hoursSummary = hours.filter(row => !/^closed$/i.test(row.hours.trim())).map(row => `${row.days} ${row.hours}`).join(' · ') || 'Closed';
-  const library = {
-    name: text(l.name, 'library.name'), phone, phoneHref: `tel:+${phoneDigits.length === 10 ? '1' : ''}${phoneDigits}`, email,
-    address: text(l.address,'library.address'), locality: text(l.locality,'library.locality'), mailingAddress: text(l.mailingAddress,'library.mailingAddress'),
-    timezone: oneOf(l.timezone,['America/Los_Angeles'],'library.timezone'), hoursSummary, hours,
-    catalogUrl: httpsHref(l.catalogUrl,'library.catalogUrl'), directionsUrl: httpsHref(l.directionsUrl,'library.directionsUrl'), instagramUrl: httpsHref(l.instagramUrl,'library.instagramUrl'),
-    donationUrl: l.donationUrl ? httpsHref(l.donationUrl,'library.donationUrl') : null,
-    givebutter: l.givebutter ? { account: id(l.givebutter.account,'library.givebutter.account'), campaign: id(l.givebutter.campaign,'library.givebutter.campaign') } : null,
-  };
-  const programs = unique(docs.filter(doc => doc._type === 'program').sort((a,b) => (a.orderRank ?? 0) - (b.orderRank ?? 0) || String(a.title).localeCompare(String(b.title)) || a._id.localeCompare(b._id)).map(doc => ({
-    id: slug(doc.slug?.current,'program.slug'), title: text(doc.title,'program.title'), audience: oneOf(doc.audience,['children','adults'],'program.audience'), schedule: text(doc.schedule,'program.schedule'), description: text(doc.description,'program.description'), details: text(doc.details,'program.details'), image: image(doc.image,'program.image'),
-  })), 'id', 'programs');
-  const newsletters = unique(docs.filter(doc => doc._type === 'newsletter').map(doc => ({ id: slug(doc.slug?.current ?? doc._id.replace(/^newsletter-/, ''),'newsletter.slug'), issue: text(doc.issue,'newsletter.issue'), title: text(doc.title,'newsletter.title'), summary: text(doc.summary,'newsletter.summary'), fileUrl: file(doc.file,doc.legacyFileUrl,'newsletter.file'), cover: image(doc.cover,'newsletter.cover') })), 'id', 'newsletters');
-  const current = settings.currentNewsletter ? reference(settings.currentNewsletter,'newsletter','settings.currentNewsletter') : undefined;
-  const currentNewsletter = current ? newsletters.find(item => item.id === (current.slug?.current ?? current._id.replace(/^newsletter-/, ''))) : null;
-  const h = object(settings.hero,'settings.hero');
-  const headings = strings(h.heading,'hero.heading'); if (headings.length !== 2) fail('hero.heading needs two lines');
-  const st = object(settings.story,'settings.story'), su = object(settings.support,'settings.support');
-  const home = {
-    library, navigation: array(settings.navigation,'settings.navigation').map(item => ({ label: text(item.label,'navigation.label'), href: safeHref(item.href,'navigation.href') })),
-    hero: { eyebrow: text(h.eyebrow,'hero.eyebrow'), heading: headings, introduction: text(h.introduction,'hero.introduction'), image: image(h.image,'hero.image') }, programs,
-    ...(settings.serviceImage ? { serviceImage: image(settings.serviceImage, 'settings.serviceImage') } : {}),
-    ...(settings.givingImage ? { givingImage: image(settings.givingImage, 'settings.givingImage') } : {}),
-    services: unique(array(settings.services,'settings.services').map(item => ({ id: slug(item.id,'service.id'), title: text(item.title,'service.title'), description: text(item.description,'service.description'), icon: oneOf(item.icon,['book','computer','printer'],'service.icon') })), 'id', 'services'),
-    borrowing: array(settings.borrowing,'settings.borrowing').map(item => ({ question: text(item.question,'borrowing.question'), answer: text(item.answer,'borrowing.answer') })), newsletter: currentNewsletter,
-    story: { heading: text(st.heading,'story.heading'), paragraphs: strings(st.paragraphs,'story.paragraphs'), image: image(st.image,'story.image') },
-    support: { title: text(su.title,'support.title'), introduction: text(su.introduction,'support.introduction'), image: image(su.image,'support.image'), volunteerFileUrl: safeHref(su.volunteerFileUrl,'support.volunteerFileUrl'), materials: text(su.materials,'support.materials'), bookSale: text(su.bookSale,'support.bookSale'), wowPoints: text(su.wowPoints,'support.wowPoints') },
-  };
-  const support = {
-    updates: unique(array(giving.updates,'giving.updates').map(item => ({ id: slug(item.id,'update.id'), title: text(item.title,'update.title'), body: text(item.body,'update.body'), category: text(item.category,'update.category'), ...withImage(item,'update'), href: safeHref(item.href,'update.href'), linkLabel: text(item.linkLabel,'update.linkLabel') })), 'id', 'updates'),
-    initiatives: unique(array(giving.initiatives,'giving.initiatives').map(item => ({ id: slug(item.id,'initiative.id'), title: text(item.title,'initiative.title'), category: oneOf(item.category,['giving','volunteering','community'],'initiative.category'), label: text(item.label,'initiative.label'), summary: text(item.summary,'initiative.summary'), ...withImage(item,'initiative'), paragraphs: strings(item.paragraphs,'initiative.paragraphs'), steps: strings(item.steps,'initiative.steps'), action: { label: text(item.action?.label,'initiative.action.label'), href: safeHref(item.action?.href,'initiative.action.href'), ...(item.action?.download === true ? { download: true } : {}) } })), 'id', 'initiatives'),
-    campaigns: unique(array(giving.campaigns,'giving.campaigns').map(item => {
-      const gb = object(item.givebutter,'campaign.givebutter');
-      return { id: slug(item.id,'campaign.id'), title: text(item.title,'campaign.title'), description: text(item.description,'campaign.description'), url: httpsHref(item.url,'campaign.url'), givebutter: { formWidgetId: id(gb.formWidgetId,'campaign.formWidgetId'), ...(gb.account ? { account: id(gb.account,'campaign.account') } : {}), ...(gb.campaign ? { campaign: id(gb.campaign,'campaign.code') } : {}) }, ...(item.endsOn ? { endsOn: day(item.endsOn,'campaign.endsOn') } : {}), ...(item.image ? { image: image(item.image,'campaign.image') } : {}) };
-    }), 'id', 'campaigns'),
-  };
+
+  const programs = unique(docs.filter(doc => doc._type === 'program').sort((a,b) => (a.orderRank ?? 0) - (b.orderRank ?? 0) || String(a.title).localeCompare(String(b.title)) || a._id.localeCompare(b._id)).map(doc => within(doc, () => ({
+    id: slug(doc.slug?.current, field('Page address', 'slug')), title: text(doc.title, field('Program name', 'title')), audience: oneOf(doc.audience, ['children','adults'], field('Audience', 'audience')), schedule: text(doc.schedule, field('Regular schedule', 'schedule')), description: text(doc.description, field('Short description', 'description')), details: text(doc.details, field('More information', 'details')), image: image(doc.image, field('Picture', 'image')),
+  }))), 'id', 'regular programs', value => `page address "${value}"`);
+  const newsletterId = doc => slug(doc.slug?.current ?? doc._id.replace(/^newsletter-/, ''), field('Page address', 'slug'));
+  const newsletters = unique(docs.filter(doc => doc._type === 'newsletter').map(doc => within(doc, () => ({ id: newsletterId(doc), issue: text(doc.issue, field('Issue', 'issue')), title: text(doc.title, field('Title', 'title')), summary: text(doc.summary, field('Short description', 'summary')), fileUrl: file(doc.file, doc.legacyFileUrl, field('Newsletter PDF', 'file')), cover: image(doc.cover, field('Cover picture', 'cover')) }))), 'id', 'newsletters', value => `page address "${value}"`);
+
+  const home = within(settings, () => {
+    const currentRef = settings.currentNewsletter ? reference(settings.currentNewsletter, 'newsletter', field('Current newsletter', 'currentNewsletter')) : undefined;
+    const currentId = currentRef ? within(currentRef, () => newsletterId(currentRef)) : undefined;
+    const lAt = field('Library contact and hours', 'library');
+    const l = object(settings.library, lAt);
+    const email = text(l.email, sub(lAt, 'Email', 'email')); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) problem(sub(lAt, 'Email', 'email'), `${JSON.stringify(email)} must be an email address such as cottonlib@shasta.com.`);
+    const phoneAt = sub(lAt, 'Phone number', 'phone');
+    const phone = text(l.phone, phoneAt);
+    const phoneLink = normalizePhone(phone, { requireUS: true });
+    if (!phoneLink.ok) problem(phoneAt, phoneLink.reason);
+    const hoursAt = sub(lAt, 'Opening hours', 'hours');
+    const hours = array(l.hours, hoursAt).map((row, index) => ({ days: text(row?.days, sub(item(hoursAt, index), 'Day or days', 'days')), hours: text(row?.hours, sub(item(hoursAt, index), 'Hours', 'hours')) }));
+    const hoursSummary = hours.filter(row => !/^closed$/i.test(row.hours)).map(row => `${row.days} ${row.hours}`).join(' · ') || 'Closed';
+    const gb = l.givebutter ? object(l.givebutter, sub(lAt, 'General Givebutter donations', 'givebutter')) : null;
+    const library = {
+      name: text(l.name, sub(lAt, 'Library name', 'name')), phone, phoneHref: phoneLink.value, email,
+      address: text(l.address, sub(lAt, 'Street address', 'address')), locality: text(l.locality, sub(lAt, 'City, state and ZIP', 'locality')), mailingAddress: text(l.mailingAddress, sub(lAt, 'Mailing address', 'mailingAddress')),
+      timezone: oneOf(l.timezone, ['America/Los_Angeles'], sub(lAt, 'Library timezone', 'timezone')), hoursSummary, hours,
+      catalogUrl: httpsHref(l.catalogUrl, sub(lAt, 'Catalog address', 'catalogUrl'), warn), directionsUrl: httpsHref(l.directionsUrl, sub(lAt, 'Directions address', 'directionsUrl'), warn), instagramUrl: httpsHref(l.instagramUrl, sub(lAt, 'Instagram address', 'instagramUrl'), warn),
+      donationUrl: l.donationUrl && String(l.donationUrl).trim() ? httpsHref(l.donationUrl, sub(lAt, 'Approved donation page', 'donationUrl'), warn) : null,
+      givebutter: gb ? { account: id(gb.account, sub(lAt, 'Givebutter account ID', 'givebutter.account')), campaign: id(gb.campaign, sub(lAt, 'General donation campaign code', 'givebutter.campaign')) } : null,
+    };
+    const hAt = field('Homepage introduction', 'hero');
+    const h = object(settings.hero, hAt);
+    const headings = strings(h.heading, sub(hAt, 'Heading lines', 'heading')); if (headings.length !== 2) problem(sub(hAt, 'Heading lines', 'heading'), `The homepage heading needs exactly two lines (found ${headings.length}).`);
+    const stAt = field('Library story', 'story'), suAt = field('Supporting the library', 'support');
+    const st = object(settings.story, stAt), su = object(settings.support, suAt);
+    const navAt = field('Main navigation', 'navigation'), servicesAt = field('Library services', 'services'), borrowingAt = field('Borrowing and computer information', 'borrowing');
+    return {
+      library, navigation: array(settings.navigation, navAt).map((entry, index) => ({ label: text(entry?.label, sub(item(navAt, index), 'Label', 'label')), href: safeHref(entry?.href, sub(item(navAt, index), 'Destination', 'href'), warn) })),
+      hero: { eyebrow: text(h.eyebrow, sub(hAt, 'Small introductory line', 'eyebrow')), heading: headings, introduction: text(h.introduction, sub(hAt, 'Introduction', 'introduction')), image: image(h.image, sub(hAt, 'Picture', 'image')) }, programs,
+      ...(settings.serviceImage ? { serviceImage: image(settings.serviceImage, field('Services picture', 'serviceImage')) } : {}),
+      ...(settings.givingImage ? { givingImage: image(settings.givingImage, field('Giving picture', 'givingImage')) } : {}),
+      services: unique(array(settings.services, servicesAt).map((entry, index) => { const at = item(servicesAt, index); return { id: slug(entry?.id, sub(at, 'Service identifier', 'id')), title: text(entry?.title, sub(at, 'Title', 'title')), description: text(entry?.description, sub(at, 'Short description', 'description')), icon: oneOf(entry?.icon, ['book','computer','printer'], sub(at, 'Service symbol', 'icon')) }; }), 'id', servicesAt, value => `identifier "${value}"`),
+      borrowing: array(settings.borrowing, borrowingAt).map((entry, index) => ({ question: text(entry?.question, sub(item(borrowingAt, index), 'Question', 'question')), answer: text(entry?.answer, sub(item(borrowingAt, index), 'Answer', 'answer')) })),
+      newsletter: currentId ? newsletters.find(entry => entry.id === currentId) : null,
+      story: { heading: text(st.heading, sub(stAt, 'Heading', 'heading')), paragraphs: strings(st.paragraphs, sub(stAt, 'Story paragraphs', 'paragraphs')), image: image(st.image, sub(stAt, 'Picture', 'image')) },
+      support: { title: text(su.title, sub(suAt, 'Heading', 'title')), introduction: text(su.introduction, sub(suAt, 'Introduction', 'introduction')), image: image(su.image, sub(suAt, 'Picture', 'image')), volunteerFileUrl: safeHref(su.volunteerFileUrl, sub(suAt, 'Volunteer application PDF', 'volunteerFileUrl'), warn), materials: text(su.materials, sub(suAt, 'Donating books and DVDs', 'materials')), bookSale: text(su.bookSale, sub(suAt, 'Ongoing book sales', 'bookSale')), wowPoints: text(su.wowPoints, sub(suAt, 'WOW points', 'wowPoints')) },
+    };
+  });
+  const support = within(giving, () => {
+    const updatesAt = field('Community acknowledgments', 'updates'), initiativesAt = field('Ways to help', 'initiatives'), campaignsAt = field('Approved fundraising campaigns', 'campaigns');
+    return {
+      updates: unique(array(giving.updates, updatesAt).map((entry, index) => { const at = item(updatesAt, index); return { id: slug(entry?.id, sub(at, 'Identifier', 'id')), title: text(entry?.title, sub(at, 'Title', 'title')), body: text(entry?.body, sub(at, 'Thank-you text', 'body')), category: text(entry?.category, sub(at, 'Category', 'category')), ...withImage(entry ?? {}, at), href: safeHref(entry?.href, sub(at, 'Destination', 'href'), warn), linkLabel: text(entry?.linkLabel, sub(at, 'Link label', 'linkLabel')) }; }), 'id', updatesAt, value => `identifier "${value}"`),
+      initiatives: unique(array(giving.initiatives, initiativesAt).map((entry, index) => { const at = item(initiativesAt, index); const actionAt = sub(at, 'Action link', 'action'); return { id: slug(entry?.id, sub(at, 'Identifier', 'id')), title: text(entry?.title, sub(at, 'Title', 'title')), category: oneOf(entry?.category, ['giving','volunteering','community'], sub(at, 'Kind', 'category')), label: text(entry?.label, sub(at, 'Short label', 'label')), summary: text(entry?.summary, sub(at, 'Short description', 'summary')), ...withImage(entry ?? {}, at), paragraphs: strings(entry?.paragraphs, sub(at, 'Details', 'paragraphs')), steps: strings(entry?.steps, sub(at, 'How to help', 'steps')), action: { label: text(entry?.action?.label, sub(actionAt, 'Link label', 'label')), href: safeHref(entry?.action?.href, sub(actionAt, 'Destination', 'href'), warn), ...(entry?.action?.download === true ? { download: true } : {}) } }; }), 'id', initiativesAt, value => `identifier "${value}"`),
+      campaigns: unique(array(giving.campaigns, campaignsAt).map((entry, index) => {
+        const at = item(campaignsAt, index), gbAt = sub(at, 'Givebutter form', 'givebutter');
+        const gb = object(entry?.givebutter, gbAt);
+        return { id: slug(entry?.id, sub(at, 'Identifier', 'id')), title: text(entry?.title, sub(at, 'Title', 'title')), description: text(entry?.description, sub(at, 'Short description', 'description')), url: httpsHref(entry?.url, sub(at, 'Approved donation page', 'url'), warn), givebutter: { formWidgetId: id(gb.formWidgetId, sub(gbAt, 'Form widget ID', 'formWidgetId')), ...(gb.account && String(gb.account).trim() ? { account: id(gb.account, sub(gbAt, 'Account ID override', 'account')) } : {}), ...(gb.campaign && String(gb.campaign).trim() ? { campaign: id(gb.campaign, sub(gbAt, 'Campaign code', 'campaign')) } : {}) }, ...(entry?.endsOn ? { endsOn: day(entry.endsOn, sub(at, 'Last day to show', 'endsOn')) } : {}), ...(entry?.image ? { image: image(entry.image, sub(at, 'Campaign picture', 'image')) } : {}) };
+      }), 'id', campaignsAt, value => `identifier "${value}"`),
+    };
+  });
   function richText(value) {
-    return array(value,'post.body').map(block => {
-      object(block,'post.body block'); oneOf(block._type,['block'],'post.body block type');
-      const markDefs = array(block.markDefs ?? [],'post.body markDefs').map(mark => ({ _key: text(mark._key,'link key'), _type: oneOf(mark._type,['link'],'annotation'), href: safeHref(mark.href,'post.body link') }));
+    const bodyAt = field('Post text', 'body');
+    let parentList;
+    return array(value, bodyAt).map((block, index) => {
+      const at = item(bodyAt, index);
+      object(block, at); oneOf(block._type, ['block'], sub(at, 'block type', '_type'));
+      const markDefs = array(block.markDefs ?? [], sub(at, 'links', 'markDefs')).map((mark, markIndex) => ({ _key: text(mark?._key, sub(item(sub(at, 'links', 'markDefs'), markIndex), 'key', '_key')), _type: oneOf(mark?._type, ['link'], sub(item(sub(at, 'links', 'markDefs'), markIndex), 'kind', '_type')), href: safeHref(mark?.href, sub(item(sub(at, 'links', 'markDefs'), markIndex), 'Link address', 'href'), warn) }));
       const known = new Set(['strong','em','underline','strike-through','code',...markDefs.map(mark => mark._key)]);
-      const children = array(block.children,'post.body children').map(child => ({ _key: text(child._key,'span key'), _type: oneOf(child._type,['span'],'span type'), text: text(child.text,'span text',true), marks: array(child.marks ?? [],'span marks').map(mark => known.has(mark) ? mark : fail('unsupported text mark')) }));
-      return { _key: text(block._key,'block key'), _type: 'block', style: oneOf(block.style ?? 'normal',['normal','h2','h3','blockquote'],'block style'), children, markDefs, ...(block.listItem ? { listItem: oneOf(block.listItem,['bullet','number'],'list type'), level: block.level === 1 || block.level == null ? 1 : fail('nested lists are not supported') } : {}) };
+      const children = array(block.children, sub(at, 'text', 'children')).map((child, childIndex) => { const childAt = item(sub(at, 'text', 'children'), childIndex); return { _key: text(child?._key, sub(childAt, 'key', '_key')), _type: oneOf(child?._type, ['span'], sub(childAt, 'kind', '_type')), text: text(child?.text, childAt, { allowEmpty: true, keepSpaces: true }), marks: array(child?.marks ?? [], sub(childAt, 'formatting', 'marks')).map(mark => known.has(mark) ? mark : problem(sub(childAt, 'formatting', 'marks'), `This text uses formatting ${JSON.stringify(mark)} that the website doesn't support (or a link that was deleted). Remove that formatting.`)) }; });
+      let list = {};
+      if (block.listItem) {
+        let listItem = oneOf(block.listItem, ['bullet','number'], sub(at, 'list type', 'listItem'));
+        const level = block.level == null ? 1 : block.level;
+        if (!Number.isInteger(level) || level < 1) problem(sub(at, 'list level', 'level'), 'The list level must be a whole number of 1 or more.');
+        // The website shows one list level. Indented items join their parent list instead of failing the build.
+        if (level > 1) { if (parentList) listItem = parentList; warn(`${where(at)}: This is an indented list item; the website shows it as part of the main list. Remove the indent (Shift+Tab) to remove this message.`); }
+        else parentList = listItem;
+        list = { listItem, level: 1 };
+      } else parentList = undefined;
+      return { _key: text(block._key, sub(at, 'key', '_key')), _type: 'block', style: oneOf(block.style ?? 'normal', ['normal','h2','h3','blockquote'], sub(at, 'text style', 'style')), children, markDefs, ...list };
     });
   }
   const eventDocuments = docs.filter(doc => doc._type === 'event');
-  unique(eventDocuments.map(doc => ({ slug: slug(doc.slug?.current, 'event.slug') })), 'slug', 'events');
-  const events = unique(eventDocuments.flatMap(doc => {
-    const eventSlug = slug(doc.slug?.current,'event.slug');
-    if (doc.href) safeHref(doc.href,'event.href');
-    const program = doc.program ? reference(doc.program,'program','event.program') : undefined;
-    const sessions = unique(array(doc.sessions,'event.sessions').map(session => {
-      const start = instant(session.startsAt,'event.startsAt');
-      const end = instant(session.endsAt,'event.endsAt');
-      if (Date.parse(end) <= Date.parse(start)) fail('event end time must be later than its start time');
-      return { _key: id(session._key,'session._key'), startsAt: start, endsAt: end };
-    }), '_key', 'sessions');
-    if (!sessions.length) fail('event requires at least one session');
-    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title: text(doc.title,'event.title'), summary: text(doc.summary,'event.summary'), href: `/events/${eventSlug}/`, startsAt: session.startsAt, endsAt: session.endsAt, ...(doc.image ? { image: image(doc.image,'event.image') } : {}), ...(doc.location ? { location: text(doc.location,'event.location') } : {}), ...(program ? { programId: slug(program.slug?.current,'event.program.slug') } : {}) }));
-  }), 'id', 'events');
-  const posts = unique(docs.filter(doc => doc._type === 'post').map(doc => {
-    const postSlug = slug(doc.slug?.current,'post.slug');
+  const eventSlugs = eventDocuments.map(doc => within(doc, () => ({ slug: slug(doc.slug?.current, field('Page address', 'slug')), title: doc.title })));
+  unique(eventSlugs, 'slug', 'events', value => `page address "${value}" (${eventSlugs.filter(entry => entry.slug === value).map(entry => JSON.stringify(entry.title)).join(' and ')})`);
+  const events = unique(eventDocuments.flatMap((doc, docIndex) => within(doc, () => {
+    const eventSlug = eventSlugs[docIndex].slug;
+    if (doc.href) safeHref(doc.href, field('Optional destination link', 'href'), warn);
+    const program = doc.program ? reference(doc.program, 'program', field('Related regular program', 'program')) : undefined;
+    const sessionsAt = field('Confirmed dates', 'sessions');
+    const sessions = unique(array(doc.sessions, sessionsAt).map((session, index) => {
+      const at = item(sessionsAt, index);
+      const start = instant(session?.startsAt, sub(at, 'Starts (Pacific time)', 'startsAt'), warn);
+      const end = instant(session?.endsAt, sub(at, 'Ends (Pacific time)', 'endsAt'), warn);
+      if (Date.parse(end) <= Date.parse(start)) problem(at, 'The event end time must be later than its start time. Fix the start or end of this date.');
+      return { _key: id(session._key, sub(at, 'key', '_key')), startsAt: start, endsAt: end };
+    }), '_key', sessionsAt);
+    if (!sessions.length) problem(sessionsAt, 'The event requires at least one session. Add a confirmed date.');
+    const title = text(doc.title, field('Event name', 'title')), summary = text(doc.summary, field('Short description', 'summary'));
+    const eventImage = doc.image ? image(doc.image, field('Event picture', 'image')) : undefined;
+    const location = doc.location && String(doc.location).trim() ? text(doc.location, field('Location', 'location')) : undefined;
+    const programId = program ? within(program, () => slug(program.slug?.current, field('Page address', 'slug'))) : undefined;
+    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title, summary, href: `/events/${eventSlug}/`, startsAt: session.startsAt, endsAt: session.endsAt, ...(eventImage ? { image: eventImage } : {}), ...(location ? { location } : {}), ...(programId ? { programId } : {}) }));
+  })), 'id', 'events');
+  const posts = unique(docs.filter(doc => doc._type === 'post').map(doc => within(doc, () => {
+    const postSlug = slug(doc.slug?.current, field('Page address', 'slug'));
     const body = richText(doc.body ?? []);
-    const publishedAt = doc.publishedAt ? publicationDay(doc.publishedAt) : null;
-    return { id: postSlug, title: text(doc.title,'post.title'), publishedAt, ...(doc.dateLabel ? { dateLabel: text(doc.dateLabel,'post.dateLabel') } : {}), category: text(doc.category,'post.category'), summary: text(doc.summary,'post.summary'), href: `/librarynews/${postSlug}/`, paragraphs: body.filter(block => !block.listItem).map(block => block.children.map(child => child.text).join('')), body, ...(doc.image ? { image: image(doc.image,'post.image') } : {}), ...(doc.gallery ? { gallery: array(doc.gallery,'post.gallery').map((item,index) => image(item,`post.gallery[${index}]`)) } : {}), ...(doc.externalUrl ? { externalUrl: httpsHref(doc.externalUrl,'post.externalUrl') } : {}), ...(doc.sourceLabel ? { sourceLabel: text(doc.sourceLabel,'post.sourceLabel') } : {}), eventIds: array(doc.eventRefs ?? [],'post.eventRefs').map(ref => reference(ref,'event','post.eventRefs')._id) };
-  }), 'id', 'posts');
-  const occupied = new Set(['newsletter', ...programs.map(item => item.id)]);
-  for (const post of posts) { if (occupied.has(post.id)) fail(`post slug ${post.id} conflicts with an existing route`); occupied.add(post.id); }
-  const notices = unique(docs.filter(doc => doc._type === 'notice').map(doc => {
-    const startsOn = day(doc.startsOn,'notice.startsOn'), endsOn = day(doc.endsOn,'notice.endsOn'); if (endsOn < startsOn) fail('notice ends before it starts');
-    return { id: slug(doc.slug?.current ?? doc.id ?? doc._id,'notice.slug'), message: text(doc.message,'notice.message'), startsOn, endsOn, ...(doc.link ? { link: { label: text(doc.link.label,'notice.link.label'), href: safeHref(doc.link.href,'notice.link.href') } } : {}) };
-  }), 'id', 'notices');
-  return { home, support, events, posts, notices, newsletters };
+    const publishedAt = doc.publishedAt ? publicationDay(doc.publishedAt, field('Article date', 'publishedAt'), warn) : null;
+    return { id: postSlug, title: text(doc.title, field('Title', 'title')), publishedAt, ...(doc.dateLabel && String(doc.dateLabel).trim() ? { dateLabel: text(doc.dateLabel, field('Alternative date label', 'dateLabel')) } : {}), category: text(doc.category, field('Category', 'category')), summary: text(doc.summary, field('Short description', 'summary')), href: `/librarynews/${postSlug}/`, paragraphs: body.filter(block => !block.listItem).map(block => block.children.map(child => child.text).join('')), body, ...(doc.image ? { image: image(doc.image, field('Cover picture', 'image')) } : {}), ...(doc.gallery ? { gallery: array(doc.gallery, field('More pictures', 'gallery')).map((entry,index) => image(entry, item(field('More pictures', 'gallery'), index))) } : {}), ...(doc.externalUrl ? { externalUrl: httpsHref(doc.externalUrl, field('Original article link', 'externalUrl'), warn) } : {}), ...(doc.sourceLabel && String(doc.sourceLabel).trim() ? { sourceLabel: text(doc.sourceLabel, field('Original publisher', 'sourceLabel')) } : {}), eventIds: array(doc.eventRefs ?? [], field('Related events', 'eventRefs')).map((ref, index) => reference(ref, 'event', item(field('Related events', 'eventRefs'), index))._id) };
+  })), 'id', 'blog posts', value => `page address "${value}"`);
+  const occupied = new Set(['newsletter', ...programs.map(entry => entry.id)]);
+  for (const post of posts) { if (occupied.has(post.id)) fail(`blog post "${post.title}" uses the page address "${post.id}", which conflicts with an existing route (a regular program or the newsletter page). Choose a different page address.`); occupied.add(post.id); }
+  const notices = unique(docs.filter(doc => doc._type === 'notice').map(doc => within(doc, () => {
+    const startsOn = day(doc.startsOn, field('First day to show', 'startsOn')), endsOn = day(doc.endsOn, field('Last day to show', 'endsOn'));
+    if (endsOn < startsOn) problem(field('Last day to show', 'endsOn'), `The notice ends (${endsOn}) before it starts (${startsOn}). Fix one of the dates.`);
+    const linkAt = field('Optional link', 'link');
+    return { id: slug(doc.slug?.current ?? doc.id ?? doc._id, field('Page address', 'slug')), message: text(doc.message, field('Banner message', 'message')), startsOn, endsOn, ...(doc.link ? { link: { label: text(doc.link.label, sub(linkAt, 'Label', 'label')), href: safeHref(doc.link.href, sub(linkAt, 'Destination', 'href'), warn) } } : {}) };
+  })), 'id', 'notices');
+  return { home, support, events, posts, notices, newsletters, warnings };
 }
