@@ -39,6 +39,8 @@ try {
       // Same for an active fundraiser: an empty Givebutter library leaves the widget undefined,
       // so the "See progress and give on Givebutter" fallback link is what gets checked.
       if (url.hostname === 'widgets.givebutter.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
+      // Turnstile's spam check only runs on the real site; an empty script keeps the form usable.
+      if (url.hostname === 'challenges.cloudflare.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
       return url.origin === base ? route.continue() : route.abort();
     });
     for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {
