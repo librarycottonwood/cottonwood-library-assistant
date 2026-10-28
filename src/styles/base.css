@@ -1,0 +1,82 @@
+/* Base styles for pages built on the new design tokens (BaseLayout).
+ * Token values come from /components/tokens.css (src/design-system/tokens.ts).
+ * Spacing here and in src/components/site/* is checked by scripts/design-system.mjs. */
+
+:root {
+  /* Type sizes scale down on phones. Spacing does not use fluid values:
+   * --page-inset, --section-space and --section-gap step between the 5
+   * spacing values (see tokens.ts). */
+  --fluid-label: clamp(0.9375rem, 0.75rem + 0.4vw, var(--text-label));
+  --fluid-body: clamp(1.0625rem, 0.85rem + 0.55vw, var(--text-body));
+  --fluid-lead: clamp(1.1875rem, 0.95rem + 0.75vw, var(--text-lead));
+  --fluid-heading: clamp(2rem, 1.4rem + 1.6vw, var(--text-heading));
+  /* Capped at 13vw on very narrow or zoomed-in screens so "community." still fits (the cap is on the middle
+   * value too, because 1.6rem grows with the visitor's text size). */
+  --fluid-display: clamp(min(2.625rem, 13vw), min(1.6rem + 2.8vw, 13vw), var(--text-display));
+  --border-image: rgba(0, 0, 0, 0.15);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fluid-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-relaxed);
+  overflow-x: clip;
+}
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+/* Every link underline (always-on or on hover) uses the same weight and gap. Components turn underlines
+ * on and off with text-decoration-line; the text-decoration shorthand would reset the thickness. */
+a { color: inherit; text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset); }
+h1, h2, h3, p { margin: 0; }
+h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+.skip-link {
+  position: fixed; top: var(--space-xs); left: var(--space-xs); z-index: 100;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface); border-radius: var(--radius-pill);
+  font-weight: var(--weight-bold); text-decoration-line: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Gap props on Stack, Grid and Section (gap="xs" … gap="xl") render as data-gap. */
+[data-gap='xs'] { gap: var(--space-xs); }
+[data-gap='sm'] { gap: var(--space-sm); }
+[data-gap='md'] { gap: var(--space-md); }
+[data-gap='lg'] { gap: var(--space-lg); }
+[data-gap='xl'] { gap: var(--space-xl); }
+
+/* Statistics consent panel (markup in components/Analytics.astro). The Privacy links sit in SiteFooter. */
+#library-analytics button, #statistics-choice a { font: inherit; color: inherit; }
+#statistics-choice {
+  position: fixed; right: var(--space-sm); bottom: var(--space-sm); left: var(--space-sm); z-index: 60;
+  max-width: 28rem; margin-left: auto;
+  padding: var(--space-sm);
+  border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-image);
+  background: var(--color-surface); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  font-size: 1rem;
+}
+#statistics-choice h2 { font-family: var(--font-body); font-size: 1.125rem; font-weight: var(--weight-bold); }
+#statistics-choice p { margin-top: var(--space-xs); }
+#statistics-choice > div { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-sm); }
+#statistics-choice button {
+  min-height: 2.75rem; padding: var(--space-xs) var(--space-sm);
+  border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
+  background: var(--color-surface); color: var(--color-primary-ink); font-weight: var(--weight-bold); cursor: pointer;
+}
+#statistics-choice button:hover { background: var(--color-background); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}

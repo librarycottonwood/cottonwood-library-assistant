@@ -1,0 +1,60 @@
+---
+/**
+ * @component SiteNotices
+ * @internal
+ * Green bar of current notices (closures, schedule changes) above the header, from the Sanity notice records.
+ * @use Nothing on pages: BaseLayout adds it. To show a notice, publish a notice in Sanity (notices skill).
+ * @avoid Hard-coding announcements into a page.
+ * @example
+ * <SiteNotices notices={notices} />
+ */
+import Icon from '../Icon.astro';
+import { unexpiredNotices } from '../../content/feeds';
+import type { LibraryNotice } from '../../content/types';
+interface Props { notices: LibraryNotice[]; }
+const notices = unexpiredNotices(Astro.props.notices);
+---
+{notices.length > 0 && <section aria-label="Library notices" hidden={!notices.some(notice => notice.started)} class="library-notices">
+  {notices.map(notice => <div data-notice-starts={notice.startsOn} data-notice-ends={notice.endsOn} hidden={!notice.started} class="notice">
+    <p><Icon name="calendar" class="notice-icon" /><span>{notice.message}</span></p>
+    {notice.link && <a href={notice.link.href}>{notice.link.label}<Icon name="arrow" class="notice-arrow" /></a>}
+  </div>)}
+</section>}
+{notices.length > 0 && <script is:inline>
+  // Pages are built ahead of time, so re-check dates in the visitor's browser
+  // (Pacific time): hide notices after endsOn and reveal ones once startsOn arrives.
+  // Re-checked every minute and when the tab comes back, so a page left open overnight (a kiosk) stays right.
+  (function () {
+    var banner = document.currentScript && document.currentScript.previousElementSibling;
+    if (!banner || !banner.classList.contains('library-notices')) return;
+    var refresh = function () {
+      var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+      var part = function (type) { return parts.find(function (item) { return item.type === type; }).value; };
+      var today = part('year') + '-' + part('month') + '-' + part('day');
+      var shown = 0;
+      banner.querySelectorAll('[data-notice-ends]').forEach(function (notice) {
+        var active = notice.dataset.noticeStarts <= today && today <= notice.dataset.noticeEnds;
+        notice.hidden = !active;
+        if (active) shown++;
+      });
+      banner.hidden = shown === 0;
+    };
+    refresh();
+    window.setInterval(refresh, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
+  })();
+</script>}
+<style>
+  .library-notices { background: var(--color-accent); color: var(--color-accent-ink); }
+  .notice {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-xs) var(--space-sm);
+    padding: var(--space-xs) var(--page-inset);
+    font-size: var(--fluid-label); font-weight: var(--weight-bold);
+  }
+  .notice + .notice { border-top: var(--border-thin) solid rgba(59, 92, 48, 0.2); }
+  .notice p { display: flex; align-items: flex-start; gap: var(--space-xs); }
+  /* 1lh tall box centers the icon on the first line of text. */
+  .notice :global(.notice-icon) { width: 1.1em; height: 1lh; flex-shrink: 0; }
+  .notice a { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; text-decoration-line: underline; }
+  .notice :global(.notice-arrow) { width: 1em; height: 1em; }
+</style>

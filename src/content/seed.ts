@@ -27,7 +27,7 @@ export const homeContent = {
     donationUrl: null,
     // The general donation campaign in Givebutter, e.g. { account: 'AbC123xYz', campaign: 'Q1W2E3' }.
     // null until the board supplies it; then every Donate button opens Givebutter's checkout popup
-    // (see assistant/content/fundraisers.md, "Donate buttons").
+    // (see .claude/skills/fundraisers/SKILL.md, "Donate buttons").
     givebutter: null as HomeContent['library']['givebutter'],
   },
   navigation: [
@@ -40,7 +40,7 @@ export const homeContent = {
   hero: {
     eyebrow: 'Rooted in Cottonwood · Open to you',
     heading: ['Your community.', 'Your library.'],
-    introduction: 'Come read, play and connect.',
+    introduction: 'Come read, play, and connect!',
     image: { key: 'exterior', alt: 'Cottonwood Community Library on Main Street, decorated with flags and red, white, and blue bunting.', caption: 'A little library with a big heart, right here on Main Street.' },
   },
   serviceImage: { key: 'computerLab', alt: 'Public computer workstations inside Cottonwood Community Library.' },
@@ -49,14 +49,14 @@ export const homeContent = {
     {
       audience: 'children', id: 'story-time', title: 'Story Time',
       schedule: 'Wednesdays · 11:30 a.m.',
-      description: 'Stories, songs, a simple craft, and a healthy snack. A little midweek magic for your little ones.',
+      description: 'Read, sing, dance, and enjoy some snacks!',
       details: 'Stories, songs, crafts and a snack for preschoolers during the school year; older children are welcome in summer. First 5 Shasta helps provide take-home books.',
       image: { key: 'storytime', alt: 'The Story Time corner set up with rows of small wooden chairs on an alphabet rug, under a sky-blue draped ceiling with puffy clouds.' },
     },
     {
       audience: 'adults', id: 'main-street-readers', title: 'Main Street Readers',
       schedule: 'Third Tuesday · 2:30 p.m.',
-      description: 'Come talk about what you’ve been reading. No assigned book, no homework—just a shared love of stories.',
+      description: 'Meet and discuss the books that you are reading.',
       details: 'This informal group meets at the library to share recent reads and recommendations. Bring your thoughts about a book you loved—or one you wish you hadn’t picked up.',
       image: { key: 'mainStreetReaders', alt: 'Main Street Readers artwork with a streetlamp and an open book. Books, friends, community; every page connects us.', fit: 'contain' },
     },
@@ -69,9 +69,9 @@ export const homeContent = {
     },
   ],
   services: [
-    { id: 'borrowing', title: 'Library catalog', description: 'Browse our collection.', icon: 'book' },
-    { id: 'computers', title: 'Computers & Wi-Fi', description: 'Public computers and Wi-Fi.', icon: 'computer' },
-    { id: 'printing', title: 'Printing & copying', description: 'Black-and-white: 20¢ per page. Color copies: $1.', icon: 'printer' },
+    { id: 'borrowing', title: 'Library Catalog', description: 'Browse our collection of books and other materials to find your next read.', icon: 'book' },
+    { id: 'computers', title: 'Computers & Wi-Fi', description: 'Use a library computer or connect your own device to Wi-Fi during your visit.', icon: 'computer' },
+    { id: 'printing', title: 'Printing & copying', description: 'Print documents or make copies at the library. Ask staff for help and pricing.', icon: 'printer' },
   ],
   borrowing: [
     { question: 'How do I borrow books?', answer: 'If you’re 18 or older, bring photo ID and proof of residence to the front desk. Family accounts let other household members, including minors, borrow under the primary account holder’s name. We don’t issue physical library cards—just tell a volunteer your account name. New patrons may borrow 3 items, increasing to 10 after the first successful return.' },
@@ -93,8 +93,8 @@ export const homeContent = {
     image: { key: 'founders', alt: 'The library’s founders plaque honoring Dr. James and Mary Reifert.', caption: 'Dr. James and Mary Reifert donated the land for the library.' },
   },
   support: {
-    title: 'Keep your library open.',
-    introduction: 'No county or taxpayer funding. Donations help cover day-to-day operations.',
+    title: 'Powered by Community',
+    introduction: 'The Cottonwood Community Library is funded only through the generosity and fundraising abilities of the community. Thank you for supporting your local library!',
     image: { key: 'watercolor', alt: 'Watercolor of Cottonwood Community Library, with its red roof, American flag and garden.' },
     volunteerFileUrl: '/documents/cottonwood-library-volunteer-application.pdf',
     materials: 'We welcome gently used books and unblemished DVDs. Please bring materials to library personnel. We can’t accept damaged books, dictionaries, encyclopedias, textbooks, or used workbooks.',

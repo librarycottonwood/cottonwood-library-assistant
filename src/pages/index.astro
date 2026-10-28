@@ -1,98 +1,81 @@
 ---
+// Homepage, built only from src/components/site (see docs/design-system.md).
 import Image from '../components/OptimizedImage.astro';
-import SiteLayout from '../layouts/SiteLayout.astro';
-import Icon from '../components/Icon.astro';
-import ContentImage from '../components/ContentImage.astro';
-import EventAgenda from '../components/EventAgenda.astro';
-import ProgramCard from '../components/ProgramCard.astro';
-import VisitPanel from '../components/VisitPanel.astro';
-import { upcomingEvents } from '../content/feeds';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Badge from '../components/site/Badge.astro';
+import Button from '../components/site/Button.astro';
+import Card from '../components/site/Card.astro';
+import EventCards from '../components/site/EventCards.astro';
+import Grid from '../components/site/Grid.astro';
+import Heading from '../components/site/Heading.astro';
+import IconLink from '../components/site/IconLink.astro';
+import Section from '../components/site/Section.astro';
+import Split from '../components/site/Split.astro';
+import Stack from '../components/site/Stack.astro';
+import Text from '../components/site/Text.astro';
+import fundraiserHouse from '../assets/images/fundraiser-house.png';
+import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
-import { checkoutAttributes, getDonateLink } from '../content/donate';
-const { library, hero, programs, services, serviceImage, givingImage, support } = await contentRepository.getHome();
-const events = upcomingEvents(await contentRepository.getEvents());
-const donate = await getDonateLink();
-const actions = [
-  { label: 'Upcoming events', href: '/librarynews/', tone: 'action-sun' },
-  { label: 'Kids & families', href: '/kids/', tone: 'action-meadow' },
-  { label: 'Find a book', href: library.catalogUrl, tone: 'action-gold', event: 'catalog_quick' },
-  { label: 'Donate', href: donate.href, tone: 'action-forest', event: 'donate_quick', attributes: checkoutAttributes(donate) },
-];
-const resources = services.map(service => ({ label: service.title, note: service.description, href: service.id === 'borrowing' ? library.catalogUrl : `/visit/#${service.id}`, icon: service.icon }));
+import { checkoutAttributes, DONATE_PAGE_HREF, getDonateLink } from '../content/donate';
+import type { LibraryImage } from '../content/types';
+const [home, support, allEvents, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents(), getDonateLink()]);
+const { library, hero, programs, services, givingImage } = home;
+const events = upcomingEvents(allEvents);
+const campaign = activeCampaign(support.campaigns);
 const featured = events[0]?.image ? events[0] : undefined;
-const givingPhoto = givingImage ?? support.image;
-const servicePhoto = serviceImage ?? hero.image;
+const givingPhoto = givingImage ?? home.support.image;
+// Services have no photos in the CMS yet, so each icon maps to a library photo.
+const servicePhotos: Record<string, LibraryImage> = {
+  book: { key: 'interior', alt: '' },
+  computer: { key: 'computerLab', alt: '' },
+  printer: { key: 'copyRoom', alt: '' },
+};
+const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/visit/#${service.id}`;
+const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
-<SiteLayout>
-  <section class="container pt-8 pb-20 sm:pt-10 sm:pb-28" aria-labelledby="welcome-heading">
-    <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-4">
-      <div>
-        <h1 id="welcome-heading" class="page-heading">{hero.heading[0]}<br /><em class="font-normal">{hero.heading[1]}</em></h1>
-        <p class="mt-4 text-lg text-muted">{hero.introduction}</p>
-        <a href="#visit" class="button button-primary mt-5"><Icon name="pin" class="size-5" />Get directions</a>
-      </div>
-      <div class="relative">
-        <div class="feature-shape"><Image width={1100} quality={70} image={hero.image} alt={hero.image.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 50vw" loading="eager" fetchpriority="high" class="aspect-[1.45] w-full object-cover object-left" /></div>
-        <a href={library.directionsUrl} data-analytics-event="directions_click" class="address-pill"><Icon name="pin" class="size-4 shrink-0" />{library.address} · Cottonwood</a>
-      </div>
-    </div>
+<BaseLayout>
+  <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
+    {campaign && <Badge href={DONATE_PAGE_HREF} iconEnd="external" data-campaign-only data-campaign-ends={campaign.endsOn}>
+      <Image slot="start" src={campaign.image ? undefined : fundraiserHouse} image={campaign.image} alt="" width={50} height={50} />
+      {campaign.title}
+    </Badge>}
+    <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
+    <Text tone="muted">{hero.introduction}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
+      <Button href={library.catalogUrl} data-analytics-event="catalog_quick" icon="book">Catalog</Button>
+    </Stack>
+    <Fragment slot="caption">
+      <IconLink href={library.directionsUrl} data-analytics-event="directions_click" icon="pin">{library.address}, Cottonwood</IconLink>
+      <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
+    </Fragment>
+  </Split>
 
-    <nav aria-label="Library quick links" class="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {actions.map((action, column) => <a href={action.href} {...('attributes' in action ? action.attributes : {})} data-analytics-event={action.event} class:list={['action-tile', action.tone]}>
-        <span class="action-label">{action.label}</span>
-        <span aria-hidden="true" class="button-concept-art" style={`--art-column: ${column}`} />
-      </a>)}
-    </nav>
-  </section>
+  {featured?.image && <Split media="start" image={featured.image} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+    <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
+    <Heading id="featured-heading">{featured.title}</Heading>
+    <Text tone="muted" size="lead">{featured.summary}</Text>
+    <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
+  </Split>}
 
-  <section id="programs" tabindex="-1" class="container-prose section pt-0" aria-labelledby="happening-heading">
-    <div class="section-header-row">
-      <h2 id="happening-heading" class="section-heading">Coming up</h2>
-      <a href="/librarynews/" class="text-link">All events<Icon name="arrow" class="size-4" /></a>
-    </div>
-    {featured?.image && <div data-event-feature-expires={featured.endsAt} class="mb-10"><a href={featured.href} class="block" aria-label={featured.title}><ContentImage image={featured.image} variant="feature" /></a></div>}
-    <EventAgenda events={events} programs={programs} fallbackImage={hero.image} limit={3} emptyMessage="No special events are scheduled right now. Explore our regular programs." />
-  </section>
+  <Section title="Upcoming events" headingId="events-heading">
+    <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
+    <Button href="/librarynews/" iconEnd="arrow">View all</Button>
+  </Section>
 
-  <section class="section section-tint" aria-labelledby="regular-heading">
-    <div class="container">
-      <div class="section-header-row">
-        <h2 id="regular-heading" class="section-heading">Regular programs</h2>
-        <a href="/librarynews/#regular" class="text-link">Times & details<Icon name="arrow" class="size-4" /></a>
-      </div>
-      <div class="card-grid">{programs.map(program => <ProgramCard program={program} />)}</div>
-    </div>
-  </section>
+  <Section title="Library services" headingId="services-heading">
+    <Grid as="ul" columns={3}>
+      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!}>{service.description}</Card>)}
+    </Grid>
+    <Button href="/visit/" iconEnd="arrow">Read more</Button>
+  </Section>
 
-  <section class="container section" aria-labelledby="independent-heading">
-    <div class="giving-banner">
-      <div class="giving-copy">
-        <h2 id="independent-heading" class="section-heading">{support.title}</h2>
-        <p class="mt-5 max-w-sm text-lg text-paper/85">{support.introduction}</p>
-        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <a href={donate.href} {...checkoutAttributes(donate)} class="button bg-gold text-forest hover:bg-paper"><Icon name="heart" class="size-5" />{donate.source === 'fallback' ? 'Ways to give' : donate.label}</a>
-          <a href="/fundraising-events/volunteer/" class="text-link text-paper">Volunteer<Icon name="arrow" class="size-4" /></a>
-        </div>
-      </div>
-      <Image width={1100} quality={70} image={givingPhoto} alt={givingPhoto.alt} widths={[500,800,1100]} sizes="(max-width:767px) 100vw, 600px" class="giving-photo" />
-    </div>
-  </section>
-
-  <section id="services" tabindex="-1" class="container section pt-0" aria-labelledby="services-heading">
-    <div class="split-equal">
-      <div class="split-media"><Image width={800} quality={70} image={servicePhoto} alt={servicePhoto.alt} widths={[500,800]} sizes="(max-width:1023px) 100vw, 600px" class="object-cover" /></div>
-      <div class="split-text">
-        <h2 id="services-heading" class="section-heading">Library services</h2>
-        <nav aria-label="Library services" class="mt-6 divide-y divide-line border-y border-line">
-          {resources.map(resource => <a href={resource.href} class="group flex items-center gap-4 py-5">
-            <Icon name={resource.icon} class="size-6 shrink-0" />
-            <span class="flex-1"><span class="block text-lg font-semibold group-hover:underline">{resource.label}</span><span class="block text-sm text-muted">{resource.note}</span></span>
-            <Icon name="arrow" class="size-5 shrink-0" />
-          </a>)}
-        </nav>
-      </div>
-    </div>
-  </section>
-
-  <div class="border-t border-line"><VisitPanel /></div>
-</SiteLayout>
+  <Split media="start" image={givingPhoto} headingId="community-heading">
+    <Heading id="community-heading">{home.support.title}</Heading>
+    <Text tone="muted">{home.support.introduction}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href="/fundraising-events/volunteer/" icon="user">Volunteer</Button>
+    </Stack>
+  </Split>
+</BaseLayout>

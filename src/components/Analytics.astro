@@ -1,11 +1,16 @@
 ---
-import analytics from '../../assistant/analytics.json';
+import analytics from '../content/analytics.json';
+interface Props {
+  /** Render the Privacy / Privacy choices row. BaseLayout passes false because SiteFooter shows them (keep id="privacy-choices"). */
+  privacyLinks?: boolean;
+}
+const { privacyLinks = true } = Astro.props;
 ---
 <div id="library-analytics" data-measurement={analytics.measurementId} data-host={analytics.websiteHost}>
-  <div class="container flex gap-5 pb-6 text-sm">
+  {privacyLinks && <div class="container flex gap-5 pb-6 text-sm">
     <a href="/privacy/" class="underline">Privacy</a>
     <button id="privacy-choices" type="button" class="underline" hidden>Privacy choices</button>
-  </div>
+  </div>}
   <section id="statistics-choice" aria-labelledby="statistics-title" class="fixed right-4 bottom-4 left-4 z-[60] rounded-xl border border-line bg-paper p-5 shadow-lg sm:right-6 sm:left-auto sm:max-w-md" hidden>
     <h2 id="statistics-title" class="font-semibold">Help us improve this website?</h2>
     <p class="mt-2 text-sm">Allow Google Analytics cookies to measure visits and selected button clicks. You can change your choice anytime. <a href="/privacy/" class="underline">About privacy</a></p>
@@ -46,7 +51,7 @@ import analytics from '../../assistant/analytics.json';
     window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('consent', 'update', { analytics_storage: 'granted' });
     window.gtag('js', new Date());
-    window.gtag('config', measurement, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_flags: 'SameSite=Lax;Secure', page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), debug_mode: true });
+    window.gtag('config', measurement, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_flags: 'SameSite=Lax;Secure', page_location: location.origin + location.pathname, page_referrer: cleanReferrer() });
     window.gtag('event', 'page_view', { page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), page_title: document.title });
     const script = document.createElement('script');
     script.async = true;

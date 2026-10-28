@@ -1,0 +1,11 @@
+---
+// Cloudflare Turnstile bot check for the newsletter forms. Shows nothing until a site key is set in
+// src/content/newsletter-signup.json (and the server only checks once TURNSTILE_SECRET_KEY is set).
+// Most visitors never see it; a suspicious one gets a single checkbox.
+import signup from '../content/newsletter-signup.json';
+const siteKey = signup.turnstileSiteKey;
+---
+{siteKey && <>
+  <div class="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-size="flexible"></div>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</>}

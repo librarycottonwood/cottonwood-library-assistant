@@ -1,0 +1,44 @@
+---
+import ComponentLibraryLayout from '../../layouts/ComponentLibraryLayout.astro';
+import type { Token, TokenGroup } from '../../design-system/tokens';
+interface Props { group: TokenGroup; }
+const { group } = Astro.props;
+const preview = (token: Token) => {
+  const v = `var(${token.name})`;
+  switch (group.slug) {
+    case 'colors': return { kind: 'swatch', style: `background: ${v}` };
+    case 'fonts': return { kind: 'text', style: token.name.startsWith('--font-') ? `font-family: ${v}` : `font-weight: ${v}`, text: 'Your library.' };
+    case 'type-sizes': return token.name.startsWith('--leading-')
+      ? { kind: 'text', style: `line-height: ${v}`, text: 'Read, play and connect. Read, play and connect.' }
+      : { kind: 'text', style: `font-size: ${v}`, text: 'Your library.' };
+    case 'spacing': return { kind: 'bar', style: `width: ${v}` };
+    case 'layout': return { kind: 'bar', style: token.steps ? `width: ${v}` : `width: calc(${v} / 4)` };
+    case 'corners': return { kind: 'box', style: `border-radius: ${v}` };
+    default: return token.name === '--underline-thickness'
+      ? { kind: 'text', style: `text-decoration: underline; text-decoration-thickness: ${v}; text-underline-offset: var(--underline-offset)`, text: 'Visit the library' }
+      : token.name === '--underline-offset'
+        ? { kind: 'text', style: `text-decoration: underline; text-decoration-thickness: var(--underline-thickness); text-underline-offset: ${v}`, text: 'Visit the library' }
+        : { kind: 'box', style: `border: ${v} solid var(--color-primary-ink)` };
+  }
+};
+---
+<ComponentLibraryLayout active={group.slug} title={group.title}>
+  <h1>{group.title}</h1>
+  <p class="lede">{group.note}</p>
+  {group.slug === 'layout' && <p class="lede">Width bars are drawn at 1/4 scale. Inset and gap bars show the value at your current window width.</p>}
+  {group.tokens.map(token => {
+    const p = preview(token);
+    return <article class="entry" id={token.name.slice(2)}>
+      <div class:list={['preview', `preview-${p.kind}`]}>{p.kind === 'text' ? <span style={p.style}>{p.text}</span> : <span style={p.style}></span>}</div>
+      <div>
+        <h2>{token.label} <code>{token.name}</code></h2>
+        <p class="value"><code>{token.value}</code>{token.detail && <> · {token.detail}</>}{token.steps?.map(step => <> · <code>{step.value}</code> from {step.minWidth}</>)}</p>
+        <dl>
+          <dt>Use for</dt><dd>{token.useFor}</dd>
+          <dt>Don't use for</dt><dd>{token.avoid}</dd>
+          <dt>Example</dt><dd><code>{token.example}</code></dd>
+        </dl>
+      </div>
+    </article>;
+  })}
+</ComponentLibraryLayout>

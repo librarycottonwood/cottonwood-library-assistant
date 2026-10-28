@@ -1,0 +1,25 @@
+---
+/**
+ * @component Text
+ * A paragraph (or inline text) in one of the body sizes and tones.
+ * @use Introductions, descriptions, dates, small print.
+ * @avoid Headings (use Heading) or text inside Button, Badge and Card, which style their own text.
+ * @example
+ * <Text tone="muted" size="lead">{featured.summary}</Text>
+ */
+interface Props {
+  /** muted: graphite, for supporting text. */
+  tone?: 'default' | 'muted';
+  /** label: 20px. body: 24px (default). lead: 30px. All scale down on phones. */
+  size?: 'label' | 'body' | 'lead';
+  as?: 'p' | 'span' | 'div';
+}
+const { tone = 'default', size = 'body', as: Tag = 'p' } = Astro.props;
+---
+<Tag class:list={['text', `text-${size}`, { muted: tone === 'muted' }]}><slot /></Tag>
+<style>
+  .text { margin: 0; }
+  .text-label { font-size: var(--fluid-label); }
+  .text-lead { font-size: var(--fluid-lead); }
+  .muted { color: var(--color-text-muted); }
+</style>

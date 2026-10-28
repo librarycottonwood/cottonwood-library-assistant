@@ -1,0 +1,22 @@
+---
+import ComponentLibraryLayout from '../../layouts/ComponentLibraryLayout.astro';
+import { componentAnchor, componentDocs } from '../../design-system/catalog';
+---
+<ComponentLibraryLayout active="ui" title="Components">
+  <h1>Components</h1>
+  <p class="lede">Pages are built only from these. Components set their own padding and gaps; layout props take xs, sm, md, lg or xl. Notes come from the usage block at the top of each file.</p>
+  {componentDocs.map(doc => <article class="entry entry-component" id={componentAnchor(doc.name)}>
+    <div>
+      <h2>{doc.name} <code>{doc.file}</code></h2>
+      {doc.internal && <p class="value">Added by BaseLayout. Pages don't place it.</p>}
+      <p>{doc.purpose}</p>
+      <dl>
+        <dt>Use for</dt><dd>{doc.useFor}</dd>
+        <dt>Don't use for</dt><dd>{doc.avoid}</dd>
+      </dl>
+      {doc.props && <><h3>Props</h3><pre><code>{doc.props}</code></pre></>}
+      <h3>Example</h3>
+      <pre><code>{doc.example}</code></pre>
+    </div>
+  </article>)}
+</ComponentLibraryLayout>

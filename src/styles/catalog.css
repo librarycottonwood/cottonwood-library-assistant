@@ -1,0 +1,49 @@
+/* Plain layout for the /components reference. Site tokens come from tokens.css. */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+a { color: var(--color-primary); }
+h1, h2, h3, p, dl, dd { margin: 0; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; }
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 8px; top: 8px; padding: 8px; background: var(--color-surface); }
+
+.catalog-nav { position: fixed; inset: 0 auto 0 0; width: 220px; overflow-y: auto; padding: 24px 20px; border-right: 1px solid var(--color-border); }
+.catalog-title { font-weight: var(--weight-bold); margin-bottom: 20px; }
+.catalog-nav h2 { margin: 16px 0 6px; font-size: 12px; font-weight: var(--weight-bold); text-transform: uppercase; color: var(--color-text-muted); }
+.catalog-nav ul { margin: 0; padding: 0; list-style: none; }
+.catalog-nav li a { display: block; padding: 3px 0; color: var(--color-text); text-decoration: none; }
+.catalog-nav a:hover { text-decoration: underline; }
+.catalog-nav a[aria-current='page'] { font-weight: var(--weight-bold); color: var(--color-primary); }
+.catalog-nav > p:last-child { margin-top: 20px; }
+
+main { margin-left: 220px; max-width: 1100px; padding: 32px 40px 64px; }
+main > h1 { font-family: var(--font-display); font-weight: var(--weight-regular); font-size: 36px; line-height: 1.2; }
+.lede { margin-top: 8px; color: var(--color-text-muted); max-width: 70ch; }
+
+.entry { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--color-border); }
+.entry:first-of-type { margin-top: 16px; border-top: 1px solid var(--color-border); }
+.entry-component { grid-template-columns: minmax(0, 1fr); }
+.entry h2 { font-size: 17px; font-weight: var(--weight-bold); }
+.entry h2 code { margin-left: 8px; font-weight: var(--weight-medium); color: var(--color-text-muted); }
+.entry h3 { margin-top: 12px; font-size: 13px; font-weight: var(--weight-bold); }
+.entry > div > p { margin-top: 6px; }
+.value { color: var(--color-text-muted); font-size: 14px; }
+dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 4px 12px; margin-top: 12px; }
+dt { font-weight: var(--weight-bold); }
+pre { margin: 6px 0 0; padding: 12px; overflow-x: auto; background: var(--color-background); border: 1px solid var(--color-border); }
+
+.preview { min-height: 72px; display: flex; align-items: center; overflow: hidden; }
+.preview-swatch span { width: 100%; height: 72px; border: 1px solid var(--color-border); }
+.preview-text span { color: var(--color-text); }
+.preview-bar span { display: block; height: 16px; max-width: 100%; background: var(--color-primary); }
+.preview-box span { width: 96px; height: 72px; background: var(--color-accent); }
+
+@media (max-width: 760px) {
+  .catalog-nav { position: static; width: auto; border-right: 0; border-bottom: 1px solid var(--color-border); }
+  .catalog-nav ul { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  main { margin-left: 0; padding: 24px 20px 48px; }
+  .entry { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  dl { grid-template-columns: minmax(0, 1fr); }
+  dd + dt { margin-top: 6px; }
+}

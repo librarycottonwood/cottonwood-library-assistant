@@ -1,0 +1,109 @@
+---
+/**
+ * @component EventCards
+ * The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill
+ * any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end,
+ * keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
+ * The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
+ * Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo.
+ * @use Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
+ * @avoid Past events or news posts (use Grid + Card), or wrapping it in another Grid.
+ * @example
+ * <EventCards events={events} programs={programs} limit={3} />
+ */
+import Card from './Card.astro';
+import Grid from './Grid.astro';
+import Badge from './Badge.astro';
+import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
+import { upcomingEvents } from '../../content/feeds';
+interface Props {
+  events: LibraryEvent[];
+  /** Regular programs. They give events their photo and fill spots no dated event takes. */
+  programs?: Program[];
+  /** How many cards to show. */
+  limit?: number;
+  /** Shown when there are no upcoming events. */
+  emptyMessage?: string;
+}
+const { programs = [], limit = 3, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const zone = 'America/Los_Angeles';
+const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
+const shortDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
+const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: zone });
+// Enough spare cards to rotate in as earlier ones end, without shipping every future date.
+const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
+// Library photos for events with none of their own, picked by id so a card keeps its photo between builds.
+const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(key => ({ key, alt: '' }));
+const fallbackImage = (id: string) => fallbackImages[[...id].reduce((sum, character) => sum + character.charCodeAt(0), 0) % fallbackImages.length]!;
+const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage(event.id);
+// Programs already showing as a dated event don't get a second card.
+const fillers = programs.filter(program => !events.some(event => event.programId === program.id));
+---
+<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
+  <Grid as="ul" columns={3} hidden={events.length + fillers.length === 0} data-event-rows>
+    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={image(event)} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
+      <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
+      {event.summary}
+    </Card>)}
+    {fillers.map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/librarynews/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
+      <Badge slot="badge" surface>{program.schedule}</Badge>
+      {program.description}
+    </Card>)}
+  </Grid>
+  <p data-event-empty hidden={events.length + fillers.length > 0} class="event-empty">{emptyMessage}</p>
+</div>
+<script>
+  const zone = 'America/Los_Angeles';
+  const dayKey = (date: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  const weekday = (key: string) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long' }).format(new Date(`${key}T12:00:00Z`));
+  // Day maths on the date text, so a daylight-saving change can't skip or repeat a day.
+  const addDays = (key: string, days: number) => new Date(Date.parse(`${key}T12:00:00Z`) + days * 864e5).toISOString().slice(0, 10);
+  const refreshEvents = () => {
+    const now = Date.now();
+    const today = dayKey(new Date(now)), tomorrow = addDays(today, 1);
+    // "This Tuesday" only up to this Saturday; later dates keep their full label.
+    const week = addDays(today, 6 - new Date(`${today}T12:00:00Z`).getUTCDay());
+    for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
+      const maximum = Number(list.dataset.eventLimit ?? Infinity);
+      let shown = 0;
+      // Dated events come first, then regular programs, which never expire.
+      for (const card of list.querySelectorAll<HTMLElement>('[data-event-card]')) {
+        const expires = card.dataset.eventExpires;
+        const active = (!expires || Date.parse(expires) >= now) && shown < maximum;
+        card.hidden = !active;
+        if (active) shown++;
+      }
+      for (const badge of list.querySelectorAll<HTMLElement>('[data-event-day]')) {
+        const key = badge.dataset.eventDay!;
+        const label = key === today ? 'Today' : key === tomorrow ? 'Tomorrow' : key > today && key <= week ? `This ${weekday(key)}` : '';
+        const visible = badge.firstChild;
+        if (label && visible?.nodeType === Node.TEXT_NODE) { badge.dataset.dateLabel ??= visible.textContent ?? ''; visible.textContent = label; }
+        else if (!label && visible?.nodeType === Node.TEXT_NODE && badge.dataset.dateLabel) visible.textContent = badge.dataset.dateLabel;
+      }
+      const rows = list.querySelector<HTMLElement>('[data-event-rows]');
+      const empty = list.querySelector<HTMLElement>('[data-event-empty]');
+      list.dataset.eventCount = String(shown);
+      if (rows) rows.hidden = shown === 0;
+      if (empty) empty.hidden = shown > 0;
+    }
+    for (const feature of document.querySelectorAll<HTMLElement>('[data-event-feature-expires]')) {
+      feature.hidden = Date.parse(feature.dataset.eventFeatureExpires!) < now;
+    }
+  };
+  refreshEvents();
+  window.setInterval(refreshEvents, 30000);
+  document.addEventListener('visibilitychange', refreshEvents);
+</script>
+<style>
+  .event-list { width: 100%; }
+  /* data-event-count is set at build time and updated in the browser as events end. */
+  @media (min-width: 48rem) {
+    /* One event: a single full-width card, which Card's adaptive layout turns into photo-beside-text. */
+    .event-list[data-event-count='1'] :global(.grid) { grid-template-columns: minmax(0, 1fr); }
+    /* Two events: same card width as the 3-up grid, centered (6 tracks, each card spans 2, the first starts at track 2). */
+    .event-list[data-event-count='2'] :global(.grid) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .event-list[data-event-count='2'] :global(.card) { grid-column: span 2; }
+    .event-list[data-event-count='2'] :global(.card:nth-child(1 of :not([hidden]))) { grid-column: 2 / span 2; }
+  }
+  .event-empty { color: var(--color-text-muted); text-align: center; }
+</style>

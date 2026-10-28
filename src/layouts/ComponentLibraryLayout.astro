@@ -1,0 +1,32 @@
+---
+// Plain reference layout for /components (noindex; robots.txt also disallows it).
+import FoundationStyles from '../components/catalog/FoundationStyles.astro';
+import { tokenGroups } from '../design-system/tokens';
+import { componentAnchor, componentDocs } from '../design-system/catalog';
+import '../styles/catalog.css';
+interface Props { active: string; title: string; }
+const { active, title } = Astro.props;
+const groupHref = (slug: string) => slug === 'colors' ? '/components/' : `/components/${slug}/`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · Cottonwood design system</title>
+    <FoundationStyles />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="catalog-nav" aria-label="Design system">
+      <p class="catalog-title">Design system</p>
+      <h2>Tokens</h2>
+      <ul>{tokenGroups.map(group => <li><a href={groupHref(group.slug)} aria-current={active === group.slug ? 'page' : undefined}>{group.title}</a></li>)}</ul>
+      <h2>Components</h2>
+      <ul>{componentDocs.map(doc => <li><a href={`/components/ui/#${componentAnchor(doc.name)}`}>{doc.name}</a></li>)}</ul>
+      <p><a href="/components/tokens.css">tokens.css</a></p>
+    </nav>
+    <main id="main" tabindex="-1"><slot /></main>
+  </body>
+</html>

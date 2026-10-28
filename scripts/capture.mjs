@@ -39,6 +39,8 @@ try {
       // Same for an active fundraiser: an empty Givebutter library leaves the widget undefined,
       // so the "See progress and give on Givebutter" fallback link is what gets checked.
       if (url.hostname === 'widgets.givebutter.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
+      // Turnstile's spam check only runs on the real site; an empty script keeps the form usable.
+      if (url.hostname === 'challenges.cloudflare.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
       return url.origin === base ? route.continue() : route.abort();
     });
     for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {
@@ -71,7 +73,7 @@ try {
   if (errors.length) throw new Error(errors.join('\n'));
   const pictures = {};
   for (const name of ['desktop', 'phone']) pictures[name] = createHash('sha256').update(await readFile(path.join(output, `${name}.png`))).digest('hex');
-  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'offline prototype; map address/directions fallback exercised; external requests blocked', rerun: `pnpm assistant:capture -- ${digest}`, evidence, errors }, null, 2));
+  await writeFile(path.join(output, 'evidence.json'), JSON.stringify({ digest, pictures, sourceCommit: manifest.sourceCommit, capturedAt: new Date().toISOString(), mode: 'offline prototype; map address/directions fallback exercised; external requests blocked', rerun: `pnpm release:capture -- ${digest}`, evidence, errors }, null, 2));
   console.log(`Screenshots and checks: ${output}`);
 } finally {
   await browser?.close();

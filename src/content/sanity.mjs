@@ -154,7 +154,9 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
       if (![width,height].every(size => Number.isInteger(size) && size > 0 && size <= 50000)) problem(at, 'This picture needs real image dimensions. Re-upload the picture.');
       const match = /^image-([A-Za-z0-9]+)-(\d+)x(\d+)-(jpg|jpeg|png|webp|avif)$/.exec(asset._id);
       if (!match || Number(match[2]) !== width || Number(match[3]) !== height || new URL(url).pathname.split('/').pop() !== `${match[1]}-${width}x${height}.${match[4]}`) problem(at, 'The image URL, id, and dimensions disagree. Re-upload the picture.');
-      return { ...base, url, width, height };
+      // Uploaded pictures are shown by shape, so nobody has to choose: landscape fills the frame,
+      // portrait or square (posters, logos, covers) shows whole. A saved fit from an older picture is ignored.
+      return { ...base, fit: width >= 1.2 * height ? 'cover' : 'contain', url, width, height };
     }
     if (!LEGACY_IMAGES.has(value.legacyKey)) problem(at, 'This needs an uploaded picture (or a known migration legacyKey).');
     return { ...base, key: value.legacyKey };

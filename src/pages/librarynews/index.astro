@@ -17,7 +17,7 @@ const when = (schedule: string) => { const [day, ...time] = schedule.split(' · 
   </section>
   <section id="regular" tabindex="-1" class="section section-tint" aria-labelledby="regular-heading">
     <div class="container-prose">
-      <h2 id="regular-heading" class="section-heading section-header">Regular programs</h2>
+      <h2 id="regular-heading" class="section-heading section-header">Regular events</h2>
       <ul class="m-0 list-none border-b border-line p-0">
         {programs.map(program => { const { day, time } = when(program.schedule); return <li class="agenda-day">
           <p class="agenda-date"><span class="font-semibold">{day}</span>{time && <span class="mt-1 block font-sans text-base tracking-normal">{time}</span>}</p>

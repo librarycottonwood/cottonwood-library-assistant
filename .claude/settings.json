@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push --force-with-lease *)",
+      "Bash(git push --mirror *)",
+      "Bash(git push --all *)",
+      "Bash(git push * --force)",
+      "Bash(git push * -f)",
+      "Bash(git push * main)",
+      "Bash(git push * HEAD:main)",
+      "Bash(git push * --delete main)",
+      "Bash(git push * --delete maintenance-reports)",
+      "Bash(git push * :main)",
+      "Bash(git push * :maintenance-reports)",
+      "Bash(git branch -D main)",
+      "Bash(git branch -D maintenance-reports)",
+      "Bash(wrangler login *)",
+      "Bash(wrangler pages *)",
+      "Bash(wrangler secret *)",
+      "Bash(wrangler versions *)",
+      "Bash(wrangler rollback *)",
+      "Bash(npx wrangler login *)",
+      "Bash(npx wrangler pages *)",
+      "Bash(npx wrangler secret *)",
+      "Bash(gh secret *)",
+      "Bash(gh variable *)",
+      "Bash(gh repo delete *)",
+      "Bash(gh repo edit *)",
+      "Bash(gh auth token *)",
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.production)",
+      "Read(**/.dev.vars)",
+      "Read(**/*.pem)",
+      "Read(~/.wrangler/**)",
+      "Read(~/.config/gh/**)",
+      "mcp__claude_ai_Sanity__deploy_schema",
+      "mcp__claude_ai_Sanity__deploy_studio",
+      "mcp__claude_ai_Sanity__create_project",
+      "mcp__claude_ai_Sanity__create_dataset",
+      "mcp__claude_ai_Sanity__update_dataset",
+      "mcp__claude_ai_Sanity__add_cors_origin",
+      "mcp__claude_ai_Sanity__cors_origins_delete",
+      "mcp__claude_ai_Sanity__run_sanity_cli"
+    ],
+    "ask": [
+      "Bash(gh pr merge *)",
+      "Bash(gh workflow run *)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.claude/hooks/**)",
+      "Edit(/.github/workflows/**)"
+    ],
+    "allow": [
+      "Bash(pnpm install --frozen-lockfile)",
+      "Bash(pnpm check)",
+      "Bash(pnpm build)",
+      "Bash(pnpm cms:snapshot *)",
+      "Bash(pnpm image:prepare *)",
+      "Bash(node --test *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git fetch *)",
+      "Bash(git switch -c *)",
+      "Bash(git checkout -b *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.mjs"],
+            "timeout": 15,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash",
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.sh"],
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

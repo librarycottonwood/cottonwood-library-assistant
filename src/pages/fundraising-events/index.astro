@@ -8,13 +8,19 @@ import UpdateFeed from '../../components/UpdateFeed.astro';
 import Disclosure from '../../components/Disclosure.astro';
 import { contentRepository } from '../../content/repository';
 import { activeCampaign } from '../../content/feeds';
+import { dayAfter } from '../../content/donate';
 const [{ library, hero }, { campaigns, updates, initiatives }, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getPosts()]);
 const campaign = activeCampaign(campaigns);
+// After the fundraiser's end date the visitor's browser swaps in this version (CampaignExpiry.astro).
+const ended = campaign?.endsOn ? dayAfter(campaign.endsOn) : undefined;
 const options = initiatives.filter(item => item.category === 'community');
 ---
 <SiteLayout title="Donate & support | Cottonwood Community Library" description="Your donations keep Cottonwood’s independent community library open.">
   <PageIntro title="Your gifts keep us open" description="No county or taxpayer funding. Just neighbors." />
-  <DonateSection library={library} campaign={campaign} />
+  {ended ? <>
+    <div data-campaign-only data-campaign-ends={campaign!.endsOn}><DonateSection library={library} campaign={campaign} /></div>
+    <div data-campaign-after data-campaign-ends={campaign!.endsOn} hidden><DonateSection library={library} campaign={activeCampaign(campaigns, ended)} now={ended} headingId="donate-heading-after" /></div>
+  </> : <DonateSection library={library} campaign={campaign} />}
   <section class="section section-tint" aria-labelledby="other-support-heading">
     <div class="container">
       <div class="section-header">

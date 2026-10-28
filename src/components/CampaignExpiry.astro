@@ -1,0 +1,25 @@
+---
+// Pages are built ahead of time, so a fundraiser's end date can pass with no new save. This runs in the visitor's
+// browser (Pacific dates) after the page and before Givebutter's script, which reads Donate links only once:
+// - [data-campaign-only] (the fundraiser badge and form) hides after its end date;
+// - [data-campaign-after] (what the page shows once it has ended) appears;
+// - Donate links with data-after-* switch to the general donation link.
+---
+<script is:inline>
+  (function () {
+    var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    var part = function (type) { return parts.find(function (item) { return item.type === type; }).value; };
+    var today = part('year') + '-' + part('month') + '-' + part('day');
+    document.querySelectorAll('[data-campaign-ends]').forEach(function (element) {
+      if (today <= element.dataset.campaignEnds) return;
+      if (element.hasAttribute('data-campaign-only')) element.hidden = true;
+      if (element.hasAttribute('data-campaign-after')) element.hidden = false;
+      if (element.dataset.afterHref === undefined) return;
+      element.setAttribute('href', element.dataset.afterHref);
+      ['account', 'campaign'].forEach(function (name) {
+        var value = element.getAttribute('data-after-gb-' + name);
+        if (value) element.setAttribute('data-gb-' + name, value); else element.removeAttribute('data-gb-' + name);
+      });
+    });
+  })();
+</script>

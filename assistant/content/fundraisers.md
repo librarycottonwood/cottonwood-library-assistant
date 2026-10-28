@@ -26,7 +26,7 @@ A fundraiser's `givebutter` uses `formWidgetId`, optional `campaign`, and option
 
 ## Behavior and verification
 
-The first non-ended campaign in the published list drives the fundraiser panel and Donate destination. Confirm a replacement with the volunteer instead of overwriting an existing active campaign. Campaign selection and `endsOn` are evaluated when the static website is built: a date alone does not guarantee an immediate switch on an already deployed website. End/remove a campaign through the checked publishing route when the site needs to change. The weekly review reports; it does not silently make that edit.
+The first non-ended campaign in the published list drives the fundraiser panel and Donate destination. Confirm a replacement with the volunteer instead of overwriting an existing active campaign. After `endsOn`, the website hides the campaign by itself (the badge goes away and Donate buttons switch to the next campaign or general giving), with no save needed. To end a campaign early or remove it, use the checked publishing route. The weekly review reports; it does not silently make that edit.
 
 When configured, Donate buttons open the approved Givebutter checkout; otherwise they use the verified fallback destination. Live fundraising totals come from Givebutter, never a manually maintained CMS total. Updating a total is a report request, not a website edit.
 

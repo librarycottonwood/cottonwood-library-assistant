@@ -2,18 +2,25 @@
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PageIntro from '../../components/PageIntro.astro';
 ---
-<SiteLayout title="Privacy | Cottonwood Library demo">
-  <PageIntro title="Privacy on this demo website" width="prose" />
+<SiteLayout title="Privacy | Cottonwood Community Library" description="What this website collects, why, and the choices you have.">
+  <PageIntro title="Privacy" width="prose" />
   <section class="container-prose section pt-0" aria-label="Privacy details">
     <div class="prose-flow">
-      <p>This is a demonstration website. Its statistics are test traffic, not a report of visits to the library's existing website.</p>
-      <p>If you choose "Allow statistics," Google Analytics uses cookies to measure the pages you visit and selected catalog and donation-button clicks. Clicking a donation button does not mean a donation was completed.</p>
-      <p>Our tracking does not send names, email addresses, form contents, or website address query strings. Advertising features and Google's enhanced measurement are disabled. Google processes browser and usage information according to its <a class="underline" href="https://policies.google.com/privacy">privacy policy</a>.</p>
-      <p>Choosing "No thanks" prevents this website from loading Google Analytics. Use "Privacy choices" at the bottom of any page to change your decision. Withdrawing your choice stops tracking and removes this site's Analytics cookies.</p>
-      <p>The embedded map uses OpenStreetMap data served by OpenFreeMap. Loading it sends normal web requests to the map provider; it does not request your device location.</p>
-      <p>Donations made on this site go through Givebutter. Once the Donate buttons are set to open Givebutter's checkout here, every page loads Givebutter's widget script; until then, only the Donate page loads it, and only while a fundraiser is running, so the total stays current. That sends normal web requests to Givebutter, which processes them, and any donation, under its own privacy policy.</p>
-      <p>The newsletter signup form also loads Givebutter. When you submit it, your email address and any name you choose to provide go directly to the library's Givebutter mailing list, not to website Analytics. Subscribing is optional, and newsletter emails include an unsubscribe link. Givebutter processes signup and email delivery under its <a class="underline" href="https://givebutter.com/privacy">privacy policy</a>.</p>
-      <p>The library's website, fundraising service, catalog, and social accounts are separate services. Their privacy practices may differ. Contact details on this prototype remain subject to library review.</p>
+      <p>We keep this short and plain. The Cottonwood Community Library collects as little as it can and never sells anything about you.</p>
+      <h2>Visit statistics (only if you allow them)</h2>
+      <p>If you choose "Allow statistics," Google Analytics uses cookies to count the pages you visit and a few clicks, such as the catalog and Donate buttons. It helps us see which parts of the website people use. Advertising features are off, and we don't send names, email addresses, what you type into forms, or search terms.</p>
+      <p>If you allowed statistics and then give through Givebutter on this website, Givebutter also tells our Google Analytics when a gift is started and completed, with the amount and the fundraiser's name. It does not send your name, email address or card details.</p>
+      <p>If you choose "No thanks," Google Analytics never loads. You can change your mind any time with "Privacy choices" at the bottom of every page; turning statistics off also removes this website's Analytics cookies. Google handles this information under its <a class="underline" href="https://policies.google.com/privacy">privacy policy</a>.</p>
+      <h2>Donations</h2>
+      <p>Donations go through Givebutter, the library's fundraising service. Donate buttons load Givebutter's checkout on this website, so your browser connects to Givebutter, and your gift and the details you enter are handled under Givebutter's <a class="underline" href="https://givebutter.com/privacy">privacy policy</a>. The library sees your gift in Givebutter so we can thank you and keep records.</p>
+      <h2>Newsletter</h2>
+      <p>When you sign up, your email address (and first name, if you give one) goes through this website to the library's mailing list in Givebutter. The website doesn't keep a copy, and it isn't sent to Google Analytics. Every newsletter has an unsubscribe link. To stop spam, the form may use Cloudflare Turnstile, which checks that a person is filling it in; Cloudflare handles that check under its <a class="underline" href="https://www.cloudflare.com/privacypolicy/">privacy policy</a>.</p>
+      <h2>Map</h2>
+      <p>The map uses OpenStreetMap data from OpenFreeMap. Loading it makes normal web requests to the map provider. It never asks for your location.</p>
+      <h2>Other services</h2>
+      <p>The library catalog, Givebutter and our social media pages are separate services with their own privacy policies.</p>
+      <p>Questions? Call or email the library; the details are at the bottom of every page.</p>
+      <p class="text-muted">Last updated October 27, 2026.</p>
     </div>
   </section>
 </SiteLayout>

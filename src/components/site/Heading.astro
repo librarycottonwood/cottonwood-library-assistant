@@ -1,0 +1,29 @@
+---
+/**
+ * @component Heading
+ * Page and section headings in Bree Serif, plus bold card-style titles.
+ * @use The page's one h1 (size="display"), section headings (size="heading"), small bold titles (size="title").
+ * @avoid Making text big for emphasis, or skipping levels (h1 then h3).
+ * @example
+ * <Heading level={1} size="display" id="welcome-heading">Your community.<br />Your library.</Heading>
+ */
+interface Props {
+  level?: 1 | 2 | 3;
+  /** display: 70px h1. heading: 50px section heading. title: bold body-size title. */
+  size?: 'display' | 'heading' | 'title';
+  id?: string;
+  /** Relaxed line height, for headings centered above a grid. */
+  relaxed?: boolean;
+}
+const { level = 2, size = 'heading', id, relaxed = false } = Astro.props;
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
+---
+<Tag id={id} class:list={['heading', `heading-${size}`, { relaxed }]}><slot /></Tag>
+<style>
+  .heading { margin: 0; line-height: var(--leading-tight); }
+  .heading-display, .heading-heading { font-family: var(--font-display); font-weight: var(--weight-regular); overflow-wrap: break-word; }
+  .heading-display { font-size: var(--fluid-display); }
+  .heading-heading { font-size: var(--fluid-heading); }
+  .heading-title { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); }
+  .relaxed { line-height: var(--leading-relaxed); }
+</style>
