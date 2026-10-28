@@ -1,6 +1,7 @@
 ---
 // Old-design (SiteLayout) version of the newsletter sign-up. Same fields, endpoint, messages and
 // script as src/components/site/NewsletterForm.astro, styled with the old page classes.
+import TurnstileField from './TurnstileField.astro';
 import { contentRepository } from '../content/repository';
 import { NEWSLETTER_ENDPOINT, newsletterMailto, newsletterMessages, newsletterStatuses } from '../content/newsletter';
 const { library } = await contentRepository.getHome();
@@ -36,6 +37,7 @@ const input = 'min-h-12 w-full rounded-[3px] border border-forest bg-white px-4 
         </p>
       ))}
     </div>
+    <TurnstileField />
   </form>
 </section>
 <script>

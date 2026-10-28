@@ -37,6 +37,8 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form[data-newslet
     if (button) button.disabled = false;
     show(status);
     if (status === 'subscribed' || status === 'already') form.reset();
+    // Each Turnstile token works once; get a fresh one for the next try.
+    (window as { turnstile?: { reset(element: Element): void } }).turnstile?.reset(form.querySelector('.cf-turnstile') ?? form);
     if (status === 'invalid') form.querySelector<HTMLInputElement>('input[type="email"]')?.focus();
   });
 }

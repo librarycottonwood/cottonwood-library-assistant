@@ -26,9 +26,12 @@ const MAX_NAME = 100;
 const RATE_LIMIT = 5;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 
-export interface Env { GIVEBUTTER_API_KEY?: string }
+/** TURNSTILE_SECRET_KEY: the Cloudflare Turnstile secret (Pages project secret). While it isn't set, sign-ups
+ * skip the bot check, so the form keeps working before Turnstile is set up. The matching public site key is
+ * turnstileSiteKey in src/content/newsletter-signup.json. */
+export interface Env { GIVEBUTTER_API_KEY?: string; TURNSTILE_SECRET_KEY?: string }
 interface Options { fetcher?: typeof fetch; now?: number }
-export interface Submission { email: string; firstName: string; honeypot: string; returnPath: string }
+export interface Submission { email: string; firstName: string; honeypot: string; returnPath: string; turnstileToken: string }
 type Fetcher = typeof fetch;
 
 /** Pages Function entry point. Every method reaches this; only POST is accepted. */
@@ -62,6 +65,9 @@ export async function handleNewsletter(request: Request, env: Env, { fetcher = f
   if (!isValidEmail(submission.email)) return reply('invalid', 'invalid_email', 400, submission);
   if (!isValidName(submission.firstName)) return reply('invalid', 'invalid_name', 400, submission);
   if (isRateLimited(request.headers.get('CF-Connecting-IP') ?? '', now)) return reply('error', 'rate_limited', 429, submission);
+  if (env.TURNSTILE_SECRET_KEY && !(await passesTurnstile(submission.turnstileToken, env.TURNSTILE_SECRET_KEY, request.headers.get('CF-Connecting-IP'), fetcher))) {
+    return reply('error', 'bot_check_failed', 403, submission);
+  }
   if (!env.GIVEBUTTER_API_KEY) {
     console.error('Newsletter sign-up is not configured: add the GIVEBUTTER_API_KEY secret to the Cloudflare Pages project.');
     return reply('error', 'not_configured', 503, submission);
@@ -92,7 +98,23 @@ export function parseSubmission(raw: string, kind: 'json' | 'form'): Submission 
     try { values = JSON.parse(raw); } catch { return undefined; }
     if (!values || typeof values !== 'object' || Array.isArray(values)) return undefined;
   } else values = Object.fromEntries(new URLSearchParams(raw));
-  return { email: field(values.email), firstName: field(values.first_name), honeypot: field(values.website), returnPath: field(values.return) };
+  return { email: field(values.email), firstName: field(values.first_name), honeypot: field(values.website), returnPath: field(values.return), turnstileToken: field(values['cf-turnstile-response']) };
+}
+
+/** Cloudflare Turnstile: the widget puts a one-time token in the form; Cloudflare confirms it came from a person. */
+export async function passesTurnstile(token: string, secret: string, ip: string | null, fetcher: Fetcher = fetch): Promise<boolean> {
+  if (!token || token.length > 2048) return false;
+  try {
+    const response = await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret, response: token, ...(ip ? { remoteip: ip } : {}) }),
+      signal: AbortSignal.timeout(10000),
+    });
+    return (await readJson(response))?.success === true;
+  } catch {
+    return false;
+  }
 }
 
 export function isValidEmail(email: string): boolean {

@@ -3,7 +3,7 @@
 import test, {beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {handleNewsletter, buildContact, parseSubmission, isValidEmail, isValidName, isSameOrigin, redirectTarget, resetRateLimit, NEWSLETTER_TAG, STATUSES} from '../functions/api/newsletter.ts';
+import {handleNewsletter, passesTurnstile, buildContact, parseSubmission, isValidEmail, isValidName, isSameOrigin, redirectTarget, resetRateLimit, NEWSLETTER_TAG, STATUSES} from '../functions/api/newsletter.ts';
 import {newsletterStatuses} from '../src/content/newsletter.ts';
 
 const SITE = 'https://cottonwood-library.pages.dev';
@@ -60,7 +60,7 @@ test('validates email and first name', () => {
 
 test('parses JSON and form posts, trimming whitespace', () => {
   const fields = {email: '  reader@example.org ', first_name: ' Ada   Lovelace ', website: '', return: '/visit/'};
-  const expected = {email: 'reader@example.org', firstName: 'Ada Lovelace', honeypot: '', returnPath: '/visit/'};
+  const expected = {email: 'reader@example.org', firstName: 'Ada Lovelace', honeypot: '', returnPath: '/visit/', turnstileToken: ''};
   assert.deepEqual(parseSubmission(JSON.stringify(fields), 'json'), expected);
   assert.deepEqual(parseSubmission(new URLSearchParams(fields).toString(), 'form'), expected);
   assert.equal(parseSubmission('not json', 'json'), undefined);
@@ -209,4 +209,33 @@ test('one visitor posting over and over is slowed down', async () => {
   assert.equal(calls, 5);
   // Ten minutes later they can sign up again.
   assert.equal((await handleNewsletter(post({email: 'later@example.org'}), env, {fetcher, now: 1000 + 10 * 60 * 1000 + 10})).status, 200);
+});
+
+test('with a Turnstile secret, a sign-up needs a token Cloudflare accepts', async () => {
+  const secretEnv = {...env, TURNSTILE_SECRET_KEY: 'turnstile-secret'};
+  // No token: rejected before Givebutter is called.
+  const none = givebutter();
+  let response = await handleNewsletter(post({email: 'reader@example.com'}), secretEnv, {fetcher: none.fetcher});
+  assert.equal(response.status, 403);
+  assert.deepEqual(await response.json(), {ok: false, status: 'error', reason: 'bot_check_failed'});
+  assert.equal(none.calls.length, 0);
+  // Cloudflare says no.
+  const rejected = givebutter(reply(200, {success: false}));
+  response = await handleNewsletter(post({email: 'reader@example.com', 'cf-turnstile-response': 'bad'}), secretEnv, {fetcher: rejected.fetcher});
+  assert.equal(response.status, 403);
+  assert.equal(rejected.calls[0].url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+  assert.deepEqual(rejected.calls[0].body, {secret: 'turnstile-secret', response: 'bad', remoteip: '203.0.113.7'});
+  // Cloudflare says yes: the sign-up goes on to Givebutter.
+  const accepted = givebutter(reply(200, {success: true}), reply(201, {id: 1}));
+  response = await handleNewsletter(post({email: 'reader@example.com', 'cf-turnstile-response': 'good'}), secretEnv, {fetcher: accepted.fetcher});
+  assert.equal(response.status, 200);
+  assert.equal(accepted.calls[1].url, 'https://api.givebutter.com/v1/contacts');
+});
+
+test('without a Turnstile secret the check is skipped, and a Cloudflare outage fails closed', async () => {
+  const {fetcher, calls} = givebutter(reply(201, {id: 1}));
+  const response = await handleNewsletter(post({email: 'reader@example.com'}), env, {fetcher});
+  assert.equal(response.status, 200);
+  assert.equal(calls.length, 1);
+  assert.equal(await passesTurnstile('token', 'secret', null, async () => { throw Error('down'); }), false);
 });
