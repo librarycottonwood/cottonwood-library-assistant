@@ -1,5 +1,5 @@
 import {defineArrayMember, defineField, defineType} from 'sanity';
-import {slugPattern, validImage, validLink, validSession} from '../validation.ts';
+import {emptyEntryNotice, identifierNotice, nestedListNotice, sessionTimeNotice, slugPattern, validIdentifier, validImage, validLink, validSession} from '../validation.ts';
 import {pacificDateLabel} from '../dates.ts';
 
 export const text = (name: string, title: string, description?: string) => defineField({
@@ -13,6 +13,13 @@ export const link = (name: string, title: string, required = true) => defineFiel
   description: 'A site page such as /visit/, a secure https:// address, email, or phone link.',
   validation: (rule) => required ? rule.required().custom(validLink) : rule.custom((value) => value ? validLink(value) : true),
 });
+/** A free-text identifier that ends up in web addresses and page anchors. The website tidies it the
+ * same way (Printing & Copies -> printing-copies); the warning shows the address it will use. */
+export const identifier = (name: string, title: string) => defineField({
+  name, title, type: 'string',
+  description: 'Used in web addresses. Lowercase words joined by hyphens, such as book-sale. Changing it changes the address.',
+  validation: (rule) => [rule.required().custom(validIdentifier), rule.custom(identifierNotice).warning()],
+});
 export const slug = defineField({
   name: 'slug', title: 'Page address', type: 'slug',
   description: 'Use Generate for a new item. Keep this address when correcting an existing item so shared links continue working.',
@@ -24,8 +31,9 @@ export const image = (name = 'image', title = 'Picture', required = true) => def
   name, title, type: 'libraryImage', validation: (rule) => required ? rule.required() : rule,
 });
 export const strings = (name: string, title: string) => defineField({
-  name, title, type: 'array', of: [defineArrayMember({type: 'text', rows: 3})],
-  validation: (rule) => rule.required().min(1),
+  name, title, type: 'array', of: [defineArrayMember({type: 'text', rows: 3, validation: (rule) => rule.custom(emptyEntryNotice).warning()})],
+  validation: (rule) => rule.required().min(1).custom((value) => Array.isArray(value) && !value.some((entry) => typeof entry === 'string' && entry.trim())
+    ? 'Add at least one entry with text.' : true),
 });
 
 export const libraryImage = defineType({
@@ -53,7 +61,7 @@ export const eventSession = defineType({
     defineField({name: 'startsAt', title: 'Starts (Pacific time)', type: 'datetime', options: {displayTimeZone: 'America/Los_Angeles', allowTimeZoneSwitch: false}, validation: (rule) => rule.required()}),
     defineField({name: 'endsAt', title: 'Ends (Pacific time)', type: 'datetime', description: 'Required so the event stays listed until it finishes.', options: {displayTimeZone: 'America/Los_Angeles', allowTimeZoneSwitch: false}, validation: (rule) => rule.required().error('Choose an end date and time.')}),
   ],
-  validation: (rule) => rule.custom(validSession),
+  validation: (rule) => [rule.custom(validSession), rule.custom(sessionTimeNotice).warning()],
   preview: {select: {start: 'startsAt', end: 'endsAt'}, prepare({start, end}) {
     return {title: pacificDateLabel(start, true), subtitle: end ? `Until ${pacificDateLabel(end, true)} · Pacific` : 'Pacific time'};
   }},
@@ -70,12 +78,13 @@ export const portableBody = defineType({
       annotations: [{name: 'link', title: 'Link', type: 'object', fields: [link('href', 'Link address')]}],
     },
   })],
+  validation: (rule) => rule.custom(nestedListNotice).warning(),
 });
 
 export const navigationLink = defineType({name: 'navigationLink', title: 'Navigation link', type: 'object', fields: [text('label', 'Label'), link('href', 'Destination')]});
 export const hoursRow = defineType({name: 'hoursRow', title: 'Opening hours', type: 'object', fields: [text('days', 'Day or days'), text('hours', 'Hours', 'Enter the approved opening times, or Closed.')]});
 export const libraryService = defineType({name: 'libraryService', title: 'Library service', type: 'object', fields: [
-  text('id', 'Service identifier'), text('title', 'Title'), paragraph('description', 'Short description'),
+  identifier('id', 'Service identifier'), text('title', 'Title'), paragraph('description', 'Short description'),
   defineField({name: 'icon', title: 'Service symbol', type: 'string', options: {list: [
     {title: 'Books', value: 'book'}, {title: 'Computer', value: 'computer'}, {title: 'Printer', value: 'printer'},
   ]}, validation: (rule) => rule.required()}),
@@ -94,10 +103,10 @@ export const initiativeAction = defineType({name: 'initiativeAction', title: 'Ac
   text('label', 'Link label'), link('href', 'Destination'), defineField({name: 'download', title: 'Download a file', type: 'boolean', initialValue: false}),
 ]});
 export const supportUpdate = defineType({name: 'supportUpdate', title: 'Community acknowledgment', type: 'object', fields: [
-  text('id', 'Identifier'), text('title', 'Title'), paragraph('body', 'Thank-you text'), text('category', 'Category'), image(), link('href', 'Destination'), text('linkLabel', 'Link label'),
+  identifier('id', 'Identifier'), text('title', 'Title'), paragraph('body', 'Thank-you text'), text('category', 'Category'), image(), link('href', 'Destination'), text('linkLabel', 'Link label'),
 ], preview: {select: {title: 'title', media: 'image'}}});
 export const supportInitiative = defineType({name: 'supportInitiative', title: 'Way to help', type: 'object', fields: [
-  text('id', 'Identifier'), text('title', 'Title'),
+  identifier('id', 'Identifier'), text('title', 'Title'),
   defineField({name: 'category', title: 'Kind', type: 'string', options: {list: [
     {title: 'Giving', value: 'giving'}, {title: 'Volunteering', value: 'volunteering'}, {title: 'Community', value: 'community'},
   ]}, validation: (rule) => rule.required()}),
@@ -107,7 +116,7 @@ export const supportInitiative = defineType({name: 'supportInitiative', title: '
   defineField({name: 'action', title: 'Action link', type: 'initiativeAction', validation: (rule) => rule.required()}),
 ], preview: {select: {title: 'title', media: 'image'}}});
 export const fundraisingCampaign = defineType({name: 'fundraisingCampaign', title: 'Approved fundraiser', type: 'object', fields: [
-  text('id', 'Identifier'), text('title', 'Title'), paragraph('description', 'Short description'),
+  identifier('id', 'Identifier'), text('title', 'Title'), paragraph('description', 'Short description'),
   defineField({name: 'url', title: 'Approved donation page', type: 'url', validation: (rule) => rule.required().uri({scheme: ['https']})}),
   defineField({name: 'givebutter', title: 'Givebutter form', type: 'donationWidget', validation: (rule) => rule.required()}),
   defineField({name: 'endsOn', title: 'Last day to show', type: 'date', description: 'Optional. Includes this entire day in Pacific time.'}),

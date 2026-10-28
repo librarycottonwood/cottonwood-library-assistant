@@ -35,7 +35,7 @@ test('published event sessions cannot omit an end time or end at or before their
   for (const endsAt of [undefined, null, '', 'not a date', '2027-03-05T10:00:00-08:00', '2027-03-05T09:00:00-08:00']) {
     const snapshot = fixture();
     doc(snapshot, 'event').sessions[0].endsAt = endsAt;
-    assert.throws(() => validateSanitySnapshot(snapshot), /event\.endsAt|end time must be later/);
+    assert.throws(() => validateSanitySnapshot(snapshot), /endsAt|end time must be later/);
   }
 });
 test('upcoming events remain listed during the event and expire after the required end time', () => {
@@ -129,4 +129,143 @@ test('uploaded newsletter PDFs resolve only through their matching project file 
   const s=fixture();doc(s,'newsletter').file={asset:{_ref:'file-abc123-pdf'}};s.documents.push({_id:'file-abc123-pdf',_type:'sanity.fileAsset',mimeType:'application/pdf',url:'https://cdn.sanity.io/files/testproject/rehearsal/abc123.pdf'});
   assert.equal(validateSanitySnapshot(s).home.newsletter.fileUrl,'https://cdn.sanity.io/files/testproject/rehearsal/abc123.pdf');
   doc(s,'sanity.fileAsset').mimeType='text/html';assert.throws(()=>validateSanitySnapshot(s),/PDF/);
+});
+
+// Small content mistakes typed in Studio, or written by the assistant through the API (where Studio
+// validation never runs), are corrected with a warning instead of blocking every preview and publish.
+const quiet = () => { const warnings = []; return { warnings, options: { warn: message => warnings.push(message) } }; };
+const initiative = (overrides = {}) => ({ id: 'book-sale', title: 'Book sale', category: 'giving', label: 'Shop', summary: 'Buy books.', image: picture, paragraphs: ['Every Saturday.'], steps: ['Come by.'], action: { label: 'Visit', href: '/#visit' }, ...overrides });
+const campaign = (overrides = {}) => ({ id: 'auction', title: 'Online auction', description: 'Bid on items.', url: 'https://givebutter.com/auction', givebutter: { formWidgetId: 'jwyYlq' }, ...overrides });
+
+test('phone links typed with spaces, punctuation or a country code become one dialable tel: link', () => {
+  for (const [href, expected] of [['tel:(208) 962-3851', 'tel:+12089623851'], ['tel:+1 208 962 3851', 'tel:+12089623851'], ['tel:208-962-3851', 'tel:+12089623851'], ['tel:+15303474818', 'tel:+15303474818'], ['tel:(530) 347-3373 ext. 2', 'tel:+15303473373,2'], ['tel:211', 'tel:211']]) {
+    const s = fixture(); doc(s, 'siteSettings').navigation[0].href = href;
+    const { options } = quiet();
+    assert.equal(validateSanitySnapshot(s, undefined, options).home.navigation[0].href, expected, href);
+    assert.equal(safeHref(expected), expected, 'normalized links stay stable when rendered');
+  }
+  const bad = fixture(); doc(bad, 'siteSettings').navigation[0].href = 'tel:call us';
+  assert.throws(() => validateSanitySnapshot(bad, undefined, quiet().options), /Library settings.*Main navigation › item 1 › Destination \(navigation\[0\]\.href\).*phone/);
+});
+test('links with stray leading or trailing spaces are trimmed everywhere, including https-only fields', () => {
+  const s = fixture();
+  doc(s, 'givingSettings').campaigns = [campaign({ url: 'https://givebutter.com/auction ' })];
+  doc(s, 'siteSettings').navigation[0].href = '  /librarynews/ ';
+  doc(s, 'post').body[0].markDefs[0].href = ' /events/spring-sale/';
+  const result = validateSanitySnapshot(s, undefined, quiet().options);
+  assert.equal(result.support.campaigns[0].url, 'https://givebutter.com/auction');
+  assert.equal(result.home.navigation[0].href, '/librarynews/');
+  assert.equal(result.posts[0].body[0].markDefs[0].href, '/events/spring-sale/');
+});
+test('unsafe links still fail, with plain English naming the document title and the field', () => {
+  const cases = [
+    [s => { doc(s, 'event').href = 'https://localhost/x'; }, /In the event "Spring sale" \(document event-sale\): Optional destination link \(href\): The link "https:\/\/localhost\/x" points to "localhost", which isn't a public website/],
+    [s => { doc(s, 'siteSettings').navigation[0].href = '/visit/../events/'; }, /In Library settings \(document library-settings\): Main navigation › item 1 › Destination \(navigation\[0\]\.href\): The link "\/visit\/\.\.\/events\/" uses "\." or "\.\." in the page path/],
+    [s => { doc(s, 'givingSettings').campaigns = [campaign({ url: 'http://givebutter.com/auction' })]; }, /In Giving and acknowledgments.*Approved fundraising campaigns › item 1 › Approved donation page \(campaigns\[0\]\.url\): .*Use the secure https:\/\/ address/],
+    [s => { doc(s, 'post').body[0].markDefs[0].href = 'javascript:alert(1)'; }, /In the blog post "Spring news".*Post text › item 1 › links › item 1 › Link address/],
+    [s => { doc(s, 'siteSettings').library.catalogUrl = 'https://192.168.1.20/catalog'; }, /Catalog address \(library\.catalogUrl\).*isn't a public website/],
+  ];
+  for (const [modify, message] of cases) { const s = fixture(); modify(s); assert.throws(() => validateSanitySnapshot(s, undefined, quiet().options), message); }
+});
+test('free-text identifiers become stable URL ids; existing valid ids are never changed', () => {
+  const s = fixture();
+  doc(s, 'siteSettings').services = [{ id: 'Printing & Copies', title: 'Printing', description: 'Print pages.', icon: 'printer' }, { id: 'computers', title: 'Computers', description: 'Use a computer.', icon: 'computer' }, { id: 'borrowing', title: 'Borrowing', description: 'Borrow books.', icon: 'book' }];
+  doc(s, 'givingSettings').initiatives = [initiative({ id: 'bookDonations' }), initiative({ id: 'book-sale' }), initiative({ id: ' Library Fund ' })];
+  const { warnings, options } = quiet();
+  const result = validateSanitySnapshot(s, undefined, options);
+  assert.deepEqual(result.home.services.map(item => item.id), ['printing-copies', 'computers', 'borrowing']);
+  assert.deepEqual(result.support.initiatives.map(item => item.id), ['book-donations', 'book-sale', 'library-fund']);
+  assert.equal(warnings.length, 3);
+  assert.match(warnings[0], /Library settings.*Library services › item 1 › Service identifier \(services\[0\]\.id\): "Printing & Copies" is used on the website as "printing-copies"/);
+  // Two entries that normalize to the same id still fail rather than silently sharing a page.
+  const clash = fixture(); doc(clash, 'givingSettings').initiatives = [initiative({ id: 'Book Sale' }), initiative({ id: 'book-sale' })];
+  assert.throws(() => validateSanitySnapshot(clash, undefined, quiet().options), /Ways to help.*duplicate identifier "book-sale"/);
+  const empty = fixture(); doc(empty, 'siteSettings').services[0].id = '&&&';
+  assert.throws(() => validateSanitySnapshot(empty, undefined, quiet().options), /Service identifier \(services\[0\]\.id\): The identifier "&&&" has no letters or numbers/);
+});
+test('identifier normalization leaves every already-valid slug exactly as it is', async () => {
+  const { slugify, SLUG_PATTERN } = await import('../src/content/rules.mjs');
+  for (const value of ['book-sale', 'borrowing', 'wow-points', 'first-five', 'summer-2026', '424afbea-07cb-447c-a77f-6f3172fd2b85', 'a', '2026']) assert.equal(slugify(value), value);
+  for (const value of ['Printing & Copies', 'bookDonations', 'WOWPoints', 'Café Nights', ' spaced ', 'Kids’ Corner', 'a--b']) assert.match(slugify(value), SLUG_PATTERN, value);
+  assert.equal(slugify('Kids’ Corner'), 'kids-corner');
+});
+test('blank story paragraphs and blank steps are left off instead of failing the build', () => {
+  const s = fixture();
+  doc(s, 'siteSettings').story.paragraphs = ['Built by neighbors.', '', '   ', null, 'Still growing.'];
+  doc(s, 'givingSettings').initiatives = [initiative({ paragraphs: ['Every Saturday.', ''], steps: ['', 'Come by.', '\n'] })];
+  const { warnings, options } = quiet();
+  const result = validateSanitySnapshot(s, undefined, options);
+  assert.deepEqual(result.home.story.paragraphs, ['Built by neighbors.', 'Still growing.']);
+  assert.deepEqual(result.support.initiatives[0].paragraphs, ['Every Saturday.']);
+  assert.deepEqual(result.support.initiatives[0].steps, ['Come by.']);
+  assert.equal(warnings.length, 6);
+  assert.match(warnings[0], /Library story › Story paragraphs › item 2 \(story\.paragraphs\[1\]\): This entry is empty/);
+});
+test('library phone numbers with an extension keep the extension in the call link', () => {
+  for (const [phone, href] of [['(530) 347-3373 ext. 2', 'tel:+15303473373,2'], ['530-347-3373 x12', 'tel:+15303473373,12'], ['1 (530) 347-4818', 'tel:+15303474818'], ['+1 530 347 4818', 'tel:+15303474818']]) {
+    const s = fixture(); doc(s, 'siteSettings').library.phone = phone;
+    const library = validateSanitySnapshot(s, undefined, quiet().options).home.library;
+    assert.equal(library.phoneHref, href, phone); assert.equal(library.phone, phone);
+  }
+  const local = fixture(); doc(local, 'siteSettings').library.phone = '347-4818';
+  assert.throws(() => validateSanitySnapshot(local, undefined, quiet().options), /Phone number \(library\.phone\): The phone number "347-4818" needs to be a 10-digit US number/);
+});
+test('a hand-typed winter offset on a summer date keeps the Pacific wall-clock time and warns', () => {
+  const s = fixture();
+  doc(s, 'event').sessions = [{ _key: 'halloween', startsAt: '2026-10-31T10:00:00-08:00', endsAt: '2026-10-31T12:00:00-08:00' }];
+  const { warnings, options } = quiet();
+  const [event] = validateSanitySnapshot(s, undefined, options).events;
+  assert.equal(event.startsAt, '2026-10-31T10:00:00-07:00');
+  assert.equal(event.endsAt, '2026-10-31T12:00:00-07:00');
+  assert.equal(Date.parse(event.startsAt), Date.parse('2026-10-31T17:00:00Z'), '10 a.m. Pacific, not 11 a.m.');
+  assert.equal(warnings.length, 2);
+  assert.match(warnings[0], /In the event "Spring sale" \(document event-sale\): Confirmed dates › item 1 › Starts \(Pacific time\) \(sessions\[0\]\.startsAt\): "2026-10-31T10:00:00-08:00" uses the winter \(PST, -08:00\) offset, but on 2026-10-31 Pacific time is -07:00/);
+  // The reverse mistake: summer offset on a winter date.
+  const winter = fixture(); doc(winter, 'event').sessions = [{ _key: 'dec', startsAt: '2026-12-05T10:00:00-07:00', endsAt: '2026-12-05T12:00:00-07:00' }];
+  assert.equal(validateSanitySnapshot(winter, undefined, quiet().options).events[0].startsAt, '2026-12-05T10:00:00-08:00');
+});
+test('event times without seconds are accepted; Studio UTC times and correct offsets are untouched', () => {
+  const s = fixture();
+  doc(s, 'event').sessions = [
+    { _key: 'auction', startsAt: '2026-11-14T00:00-08:00', endsAt: '2026-11-14T23:59-08:00' },
+    { _key: 'studio', startsAt: '2026-11-07T18:00:00.000Z', endsAt: '2026-11-07T20:00:00.000Z' },
+    { _key: 'october', startsAt: '2026-10-16T10:00:00-07:00', endsAt: '2026-10-16T14:00:00-07:00' },
+    // Both 1:30 a.m. on the fall-back night are real Pacific times.
+    { _key: 'early', startsAt: '2026-11-01T01:30:00-07:00', endsAt: '2026-11-01T01:45:00-07:00' },
+    { _key: 'repeat', startsAt: '2026-11-01T01:30:00-08:00', endsAt: '2026-11-01T01:45:00-08:00' },
+  ];
+  const { warnings, options } = quiet();
+  const events = validateSanitySnapshot(s, undefined, options).events;
+  assert.deepEqual(events.map(event => [event.startsAt, event.endsAt]), [
+    ['2026-11-14T00:00:00-08:00', '2026-11-14T23:59:00-08:00'], ['2026-11-07T18:00:00.000Z', '2026-11-07T20:00:00.000Z'],
+    ['2026-10-16T10:00:00-07:00', '2026-10-16T14:00:00-07:00'], ['2026-11-01T01:30:00-07:00', '2026-11-01T01:45:00-07:00'], ['2026-11-01T01:30:00-08:00', '2026-11-01T01:45:00-08:00'],
+  ]);
+  assert.deepEqual(warnings, []);
+  const noZone = fixture(); doc(noZone, 'event').sessions[0].startsAt = '2027-03-05T09:00';
+  const result = quiet();
+  assert.equal(validateSanitySnapshot(noZone, undefined, result.options).events[0].startsAt, '2027-03-05T09:00:00-08:00');
+  assert.match(result.warnings[0], /has no timezone, so it is read as 9:00 a\.m\. on 2027-03-05 Pacific time/);
+  const nonsense = fixture(); doc(nonsense, 'event').sessions[0].startsAt = 'next Tuesday';
+  assert.throws(() => validateSanitySnapshot(nonsense, undefined, quiet().options), /In the event "Spring sale".*Starts \(Pacific time\) \(sessions\[0\]\.startsAt\): The date and time "next Tuesday" must be a real date and time/);
+});
+test('indented (nested) list items join the parent list instead of failing the build', () => {
+  const s = fixture();
+  const li = (key, text, listItem, level) => ({ _key: key, _type: 'block', style: 'normal', markDefs: [], listItem, level, children: [{ _key: `${key}s`, _type: 'span', text, marks: [] }] });
+  doc(s, 'post').body = [li('a', 'Bring a bag', 'bullet', 1), li('b', 'Paper or cloth', 'bullet', 2), li('c', 'Ask at the desk', 'number', 3), li('d', 'Pay at the counter', 'bullet', 1)];
+  const { warnings, options } = quiet();
+  const body = validateSanitySnapshot(s, undefined, options).posts[0].body;
+  assert.deepEqual(body.map(block => [block.listItem, block.level]), [['bullet', 1], ['bullet', 1], ['bullet', 1], ['bullet', 1]]);
+  assert.equal(warnings.length, 2);
+  assert.match(warnings[0], /In the blog post "Spring news".*Post text › item 2 \(body\[1\]\): This is an indented list item/);
+});
+test('correction warnings print once per message by default and are returned with the content', () => {
+  const s = fixture(); doc(s, 'siteSettings').services[0].id = 'Computer Lab';
+  const original = console.warn; const printed = [];
+  console.warn = message => printed.push(message);
+  try {
+    assert.equal(validateSanitySnapshot(s).warnings.length, 1);
+    assert.equal(validateSanitySnapshot(s).warnings.length, 1);
+  } finally { console.warn = original; }
+  assert.equal(printed.length, 1);
+  assert.match(printed[0], /^Sanity content warning: In Library settings/);
 });
