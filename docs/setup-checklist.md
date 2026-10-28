@@ -19,6 +19,10 @@ Still open before launch:
 - [ ] **Claude nonprofit/Team setup** (sections 1 to 3).
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
 - [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
+- [ ] **Spam protection for the newsletter form** (see 4f). Free, about 5 minutes in Cloudflare.
+- [ ] **Pipeline fixes:** review and merge PR #52 (build tolerates small content mistakes) and PR #53 (safer saves: lists other waiting changes, keeps open PRs' previews, reports failed saves, one file per save, closes abandoned saves after 14 days). Each merge publishes, so do them on a quiet day, one at a time. After #52: deploy the Studio. After #53: update the ChatGPT plugin to the new version in Plugin Creator, then switch this branch (#45) to one file per save.
+- [ ] **Name a board admin** for "a board admin needs to look at this" messages, and put their name and contact in `CLAUDE.md` and `docs/library-facts.md`.
+- [ ] **Google Analytics:** rename the property from "Cottonwood Library - Demo" to "Cottonwood Community Library website" (Admin → Property details) and add an annotation on launch day; older numbers are test traffic.
 
 ## 1. Accounts
 
@@ -73,6 +77,19 @@ The website's own newsletter form sends sign-ups to Givebutter with an API key. 
 ## 4e. Visitor reports
 
 - [ ] **Visitor reports**: decide whether to keep the `connector/` Worker as a Claude custom connector (see `connector/README.md`) or use Google Analytics directly.
+
+## 4f. Newsletter spam protection (Cloudflare Turnstile, free)
+
+- [ ] Cloudflare dashboard → **Turnstile** → **Add widget**. Name: Library newsletter. Hostnames: `cottonwood-library.pages.dev` (add the new domain at the switch). Mode: **Managed**. Create.
+- [ ] Copy the **Site key** into `src/content/newsletter-signup.json` → `turnstileSiteKey` (it's public), through a normal save.
+- [ ] Copy the **Secret key** into Cloudflare → Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Production → **Add** → type Secret, name `TURNSTILE_SECRET_KEY`. Never paste it in a chat.
+- [ ] After the next publish, sign up with a test address and check it reaches Givebutter.
+
+## 4g. After launch
+
+- [ ] **Givebutter skill** so Claude can create and update campaigns (and their dates) with the API key, instead of staff clicking through Givebutter. Needs a small server action that holds the key; the key is never given to the assistant.
+- [ ] **Test pasted photos** in a Claude cloud session on the library account (a pasted image may have no file to upload). Fix the photo steps if it fails.
+- [ ] **Test that maintenance alerts reach someone.** Run the daily routine once and check who gets the GitHub email; if nobody reads it, pick a channel staff do read.
 
 ## 5. Scheduled tasks (signed in as the library account)
 
