@@ -6,6 +6,7 @@ import BackToTop from '../components/BackToTop.astro';
 import NoticeBanner from '../components/NoticeBanner.astro';
 import { contentRepository } from '../content/repository';
 import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
+import CampaignExpiry from '../components/CampaignExpiry.astro';
 interface Props { title?: string; description?: string; }
 const [content, notices] = await Promise.all([contentRepository.getHome(), contentRepository.getNotices()]);
 // Donate buttons are on every page, so once they open Givebutter's popup its script loads once per page here.
@@ -17,5 +18,6 @@ const givebutterAccount = await sitewideGivebutterAccount();
   <main id="main" tabindex="-1"><slot /></main>
   <Footer library={content.library} navigation={content.navigation} />
   <BackToTop />
+  <CampaignExpiry />
   {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}
 </PageLayout>

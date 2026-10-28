@@ -38,7 +38,7 @@ Ask one at a time; skip anything they already told you.
 
 Write a short, heartfelt description yourself. Only one fundraiser can be active; if one is running, ask whether this replaces it. Save, and ask them to check the form and goal bar on the preview before saying yes.
 
-Sanity: insert a `fundraisingCampaign` at the **start** of `library-giving` → `campaigns[]` (the first campaign that hasn't ended is the active one): `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {_type: "donationWidget", formWidgetId, campaign, account?}`. `campaign` is needed for the popup; leave `account` out unless it differs from `library.givebutter.account`. Optional: `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`.
+Sanity: insert a `fundraisingCampaign` at the **start** of `library-giving` → `campaigns[]` (the first campaign that hasn't ended is the active one): `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {_type: "donationWidget", formWidgetId, campaign, account?}`. `campaign` is needed for the popup; leave `account` out unless it differs from `library.givebutter.account`. Optional: `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`. After `endsOn` the website hides the fundraiser and sends Donate buttons to general giving by itself; no save needed that day.
 
 ## Update a fundraiser
 

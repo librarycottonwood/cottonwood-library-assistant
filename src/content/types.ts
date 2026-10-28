@@ -95,7 +95,7 @@ export interface FundraisingCampaign {
     /** acct=… from the widget script, only when it differs from library.givebutter.account. */
     account?: string;
   };
-  /** YYYY-MM-DD, inclusive (Pacific time). After this day the campaign disappears and Donate buttons revert, at the next publish (the site is built ahead of time). */
+  /** YYYY-MM-DD, inclusive (Pacific time). After this day the campaign disappears and Donate buttons revert (in the visitor's browser; see CampaignExpiry.astro). */
   endsOn?: string;
   image?: LibraryImage;
 }

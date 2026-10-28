@@ -8,16 +8,17 @@ import Icon from './Icon.astro';
 import CampaignProgress from './CampaignProgress.astro';
 import { checkoutAttributes, getDonateLink } from '../content/donate';
 import type { HomeContent, FundraisingCampaign, LibraryImage } from '../content/types';
-interface Props { library: HomeContent['library']; campaign?: FundraisingCampaign; }
-const { library, campaign } = Astro.props;
-const donate = await getDonateLink();
+/** now: build the section as it should look at that moment (the Donate page also renders the after-it-ends version). */
+interface Props { library: HomeContent['library']; campaign?: FundraisingCampaign; now?: number; headingId?: string; }
+const { library, campaign, now, headingId = 'donate-heading' } = Astro.props;
+const donate = await getDonateLink(now);
 const photo: LibraryImage = campaign?.image ?? { key: 'readingNook', alt: 'A sunny reading nook inside the library, with a large window, wooden chairs and a patterned armchair.' };
 ---
-<section class="container section pt-0" aria-labelledby="donate-heading">
+<section class="container section pt-0" aria-labelledby={headingId}>
   <div class:list={['split', campaign && 'lg:items-start']}>
     <Image width={1100} quality={70} image={photo} alt={photo.alt} widths={[500, 800, 1100]} sizes="(max-width: 1023px) 100vw, 600px" loading="eager" class="feature-shape aspect-[1.4] w-full object-cover" />
     <div class="measure">
-      <h2 id="donate-heading" class="section-heading">{campaign ? campaign.title : 'Make a gift'}</h2>
+      <h2 id={headingId} class="section-heading">{campaign ? campaign.title : 'Make a gift'}</h2>
       {campaign ? <>
         <p class="lede">{campaign.description}</p>
         <CampaignProgress campaign={campaign} />

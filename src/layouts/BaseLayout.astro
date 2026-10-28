@@ -16,6 +16,7 @@ import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
 import { contentRepository } from '../content/repository';
 import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
+import CampaignExpiry from '../components/CampaignExpiry.astro';
 import '../styles/base.css';
 interface Props {
   /** Browser tab and search title. */
@@ -52,6 +53,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <main id="main" tabindex="-1"><slot /></main>
     <SiteFooter library={content.library} navigation={content.navigation} />
     <Analytics privacyLinks={false} />
+    <CampaignExpiry />
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}
   </body>
 </html>
