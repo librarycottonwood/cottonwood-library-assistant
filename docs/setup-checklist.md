@@ -19,7 +19,7 @@ Still open before launch:
 - [ ] **Claude nonprofit/Team setup** (sections 1 to 3).
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
 - [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
-- [ ] **Spam protection for the newsletter form** (see 4f). Free, about 5 minutes in Cloudflare.
+- [x] **Spam protection for the newsletter form** (see 4f). Set up Oct 27; turns on when this PR goes live.
 - [ ] **Pipeline fixes:** review and merge PR #52 (build tolerates small content mistakes) and PR #53 (safer saves: lists other waiting changes, keeps open PRs' previews, reports failed saves, one file per save, closes abandoned saves after 14 days). Each merge publishes, so do them on a quiet day, one at a time. After #52: deploy the Studio. After #53: update the ChatGPT plugin to the new version in Plugin Creator, then switch this branch (#45) to one file per save.
 - [ ] **Name a board admin** for "a board admin needs to look at this" messages, and put their name and contact in `CLAUDE.md` and `docs/library-facts.md`.
 - [ ] **Google Analytics:** rename the property from "Cottonwood Library - Demo" to "Cottonwood Community Library website" (Admin → Property details) and add an annotation on launch day; older numbers are test traffic.
@@ -80,9 +80,9 @@ The website's own newsletter form sends sign-ups to Givebutter with an API key. 
 
 ## 4f. Newsletter spam protection (Cloudflare Turnstile, free)
 
-- [ ] Cloudflare dashboard → **Turnstile** → **Add widget**. Name: Library newsletter. Hostnames: `cottonwood-library.pages.dev` (add the new domain at the switch). Mode: **Managed**. Create.
-- [ ] Copy the **Site key** into `src/content/newsletter-signup.json` → `turnstileSiteKey` (it's public), through a normal save.
-- [ ] Copy the **Secret key** into Cloudflare → Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Production → **Add** → type Secret, name `TURNSTILE_SECRET_KEY`. Never paste it in a chat.
+- [x] Turnstile widget "Cottonwood newsletter form" created (Managed, hostname `cottonwood-library.pages.dev`). Add the new domain to it at the domain switch.
+- [x] Site key is in `src/content/newsletter-signup.json` (it's public).
+- [x] Secret key saved in Cloudflare → `cottonwood-library` → Variables and Secrets → Production as `TURNSTILE_SECRET_KEY`. Never paste it in a chat.
 - [ ] After the next publish, sign up with a test address and check it reaches Givebutter.
 
 ## 4g. After launch
