@@ -25,7 +25,7 @@ Write a short one-line summary yourself. Show it, get a yes, save it. Afterwards
 
 - **Change details or time:** find the event; if it has several dates, confirm which one. Edit, then save.
 - **Move:** change both start and end times of that session. If it's soon, offer a notice banner (`notices` skill).
-- **Cancel:** confirm which date. If other dates are still on, remove only that session. The title is shared by every date, so add "Cancelled:" to the title or summary only when every date is cancelled; otherwise ask "Remove it from the calendar, or keep it showing as cancelled?" If it's within a week, offer a banner and a social post.
+- **Cancel:** confirm which date. If other dates are still on, remove only that session. The title is shared by every date, so add "Cancelled:" to the title or summary only when every date is cancelled; otherwise ask "Remove it from the calendar, or keep it showing as cancelled?" If it's the only date, "remove" means unpublish the event (check posts that link to it first); never leave an event with no dates, because that stops the whole website from building. A regular program with no calendar entry (Book Club, Story Time) gets a banner for that day instead. If it's within a week, offer a banner and a social post. If it's today, say: "A website change takes about 20 minutes. Facebook or a sign on the door reaches people faster."
 
 Past events drop off the upcoming list on their own. No need to remove them.
 
