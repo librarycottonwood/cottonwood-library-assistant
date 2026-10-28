@@ -17,7 +17,7 @@ The library's website (Astro, Sanity CMS, Cloudflare Pages) and the Claude Code 
 | `cms-publisher/` | Cloudflare Worker for Sanity webhooks, the publishing ledger and the admin recovery page. |
 | `connector/` | Cloudflare Worker: visitor-report MCP connector (ChatGPT era, see its README). |
 | `scripts/` | Build, CMS, image, release and publishing scripts plus their tests. |
-| `content-updates/latest.json` | Changed by content-only PRs so the website gets a reviewable preview. |
+| `content-updates/` | One small file per content-only save (`YYYY-MM-DD-name.json`), so each save gets a reviewable preview and can be undone. |
 | `.github/workflows/` | Checks, previews, live publishing and monitoring. The only way anything is deployed. |
 | `.claude/` | Claude Code settings, safety hooks, staff skills and scheduled-task (routine) prompts. |
 | `docs/` | Staff guide, setup checklist, design rules, domain launch plan. |

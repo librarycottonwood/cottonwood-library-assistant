@@ -9,6 +9,11 @@ on:
     - cron: '37 16 * * *'
 permissions:
   contents: read
+# A newer push to the same PR cancels its older check, so superseded heads never
+# preview. Main, scheduled and manual checks each get their own group: never cancelled.
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('library-check-pr-{0}', github.head_ref) || format('library-check-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -21,7 +26,8 @@ jobs:
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs
+      - run: node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs
+      - run: python3 -m unittest discover -s scripts -p 'test_cms_artifacts.py'
       - run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
         env:
@@ -161,6 +167,7 @@ jobs:
     permissions:
       contents: write
       actions: write
+      pull-requests: read
     steps:
       - uses: actions/checkout@v7.0.1
         with:
