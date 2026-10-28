@@ -23,19 +23,25 @@ const notices = unexpiredNotices(Astro.props.notices);
 {notices.length > 0 && <script is:inline>
   // Pages are built ahead of time, so re-check dates in the visitor's browser
   // (Pacific time): hide notices after endsOn and reveal ones once startsOn arrives.
+  // Re-checked every minute and when the tab comes back, so a page left open overnight (a kiosk) stays right.
   (function () {
-    var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
-    var part = function (type) { return parts.find(function (item) { return item.type === type; }).value; };
-    var today = part('year') + '-' + part('month') + '-' + part('day');
     var banner = document.currentScript && document.currentScript.previousElementSibling;
     if (!banner || !banner.classList.contains('library-notices')) return;
-    var shown = 0;
-    banner.querySelectorAll('[data-notice-ends]').forEach(function (notice) {
-      var active = notice.dataset.noticeStarts <= today && today <= notice.dataset.noticeEnds;
-      notice.hidden = !active;
-      if (active) shown++;
-    });
-    banner.hidden = shown === 0;
+    var refresh = function () {
+      var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+      var part = function (type) { return parts.find(function (item) { return item.type === type; }).value; };
+      var today = part('year') + '-' + part('month') + '-' + part('day');
+      var shown = 0;
+      banner.querySelectorAll('[data-notice-ends]').forEach(function (notice) {
+        var active = notice.dataset.noticeStarts <= today && today <= notice.dataset.noticeEnds;
+        notice.hidden = !active;
+        if (active) shown++;
+      });
+      banner.hidden = shown === 0;
+    };
+    refresh();
+    window.setInterval(refresh, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
   })();
 </script>}
 <style>

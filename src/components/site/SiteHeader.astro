@@ -86,6 +86,8 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
     container: site-header / inline-size;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
+  /* An open phone menu can be taller than a landscape or zoomed-in screen; let it scroll so every link is reachable. */
+  .site-header:has(.menu-toggle[aria-expanded='true']) { max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
   /* Below desktop the logo, wordmark, Donate and menu share one row. The brand takes the space Donate and the menu
    * leave; it is a container so the wordmark hides when that space is too narrow for it (screens under about 380px). */
   .brand { display: flex; align-items: center; gap: var(--space-xs); min-width: 2.75rem; flex: 1 1 0; container: brand / inline-size; text-decoration-line: none; }

@@ -10,8 +10,9 @@
   --fluid-body: clamp(1.0625rem, 0.85rem + 0.55vw, var(--text-body));
   --fluid-lead: clamp(1.1875rem, 0.95rem + 0.75vw, var(--text-lead));
   --fluid-heading: clamp(2rem, 1.4rem + 1.6vw, var(--text-heading));
-  /* The 14vw floor shrinks it on very narrow or zoomed-in screens so "community." still fits. */
-  --fluid-display: clamp(min(2.625rem, 14vw), 1.6rem + 2.8vw, var(--text-display));
+  /* Capped at 13vw on very narrow or zoomed-in screens so "community." still fits (the cap is on the middle
+   * value too, because 1.6rem grows with the visitor's text size). */
+  --fluid-display: clamp(min(2.625rem, 13vw), min(1.6rem + 2.8vw, 13vw), var(--text-display));
   --border-image: rgba(0, 0, 0, 0.15);
   color-scheme: light;
 }

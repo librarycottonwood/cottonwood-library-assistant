@@ -51,7 +51,9 @@ const hasBadge = Astro.slots.has('badge');
   .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
   .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
-  .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); }
+  /* right keeps a long schedule badge inside the photo at large text sizes; it wraps instead. */
+  .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }
+  .card-badge > :global(*) { min-width: 0; overflow-wrap: anywhere; }
   .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
   .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
   .card-copy p { color: var(--color-text-muted); }

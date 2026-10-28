@@ -51,7 +51,7 @@ const { privacyLinks = true } = Astro.props;
     window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('consent', 'update', { analytics_storage: 'granted' });
     window.gtag('js', new Date());
-    window.gtag('config', measurement, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_flags: 'SameSite=Lax;Secure', page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), debug_mode: true });
+    window.gtag('config', measurement, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_flags: 'SameSite=Lax;Secure', page_location: location.origin + location.pathname, page_referrer: cleanReferrer() });
     window.gtag('event', 'page_view', { page_location: location.origin + location.pathname, page_referrer: cleanReferrer(), page_title: document.title });
     const script = document.createElement('script');
     script.async = true;

@@ -56,9 +56,13 @@ const fillers = programs.filter(program => !events.some(event => event.programId
   const zone = 'America/Los_Angeles';
   const dayKey = (date: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
   const weekday = (key: string) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long' }).format(new Date(`${key}T12:00:00Z`));
+  // Day maths on the date text, so a daylight-saving change can't skip or repeat a day.
+  const addDays = (key: string, days: number) => new Date(Date.parse(`${key}T12:00:00Z`) + days * 864e5).toISOString().slice(0, 10);
   const refreshEvents = () => {
     const now = Date.now();
-    const today = dayKey(new Date(now)), tomorrow = dayKey(new Date(now + 864e5)), week = dayKey(new Date(now + 6 * 864e5));
+    const today = dayKey(new Date(now)), tomorrow = addDays(today, 1);
+    // "This Tuesday" only up to this Saturday; later dates keep their full label.
+    const week = addDays(today, 6 - new Date(`${today}T12:00:00Z`).getUTCDay());
     for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
       const maximum = Number(list.dataset.eventLimit ?? Infinity);
       let shown = 0;
