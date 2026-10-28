@@ -18,7 +18,7 @@ test('each save has its own content-update file; the old shared path still count
 });
 
 test('content-update files are read leniently but need a request and document ids', () => {
-  assert.deepEqual(parseContentUpdate(JSON.stringify({request: ' Add auction ', sanityDocuments: [{id: 'event-auction', revision: 'a2', fields: ['title']}, 'post-x'], requestedInChat: '2026-10-27'})),
+  assert.deepEqual(parseContentUpdate(JSON.stringify({request: ' Add auction ', sanityDocuments: [{id: 'event-auction', revision: 'a2', fields: ['title'], before: {title: 'Old'}}, {id: 'post-x', before: null}], requestedInChat: '2026-10-27'})),
     {request: 'Add auction', documentIds: ['event-auction', 'post-x'], requestedInChat: '2026-10-27'});
   for (const bad of ['nope', '[]', '{"sanityDocuments":[]}', '{"request":"x"}', '{"request":"x","sanityDocuments":[{"id":"drafts.a"}]}', '{"request":"x","sanityDocuments":[],"requestedInChat":"today"}'])
     assert.throws(() => parseContentUpdate(bad), bad);

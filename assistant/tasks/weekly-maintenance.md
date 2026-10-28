@@ -18,6 +18,17 @@ Open the current website and its /_review/status.json. For a recent publishing r
 
 A newer source commit awaiting approval does not make the approved website unhealthy. Report drafts, pending previews, verified updates and failures accurately; do not imply every new source commit should already be live.
 
+## Unfinished and stuck saves
+
+Check these through the GitHub and Sanity tools and name each one in plain words (what the change was, not ids):
+
+- Open save PRs (branch `content/…`) older than 24 hours: a change waiting for a yes. Say what it is and that it is not on the website yet.
+- PRs merged in the last 7 days whose merge commit has no **Live website** success: merged but not live. Say so and point to the publishing skill's "If it doesn't go live".
+- Sanity records published since the last live save with no open save PR (compare with the live site's `/_content/revisions.json`): they will go live with the next person's save. Say what they are.
+- A `Sanity content:` failure in a recent `main` check or **Live website** status: name the record and the value that needs fixing.
+
+These problems can sit for days between weekly reviews. Add one line to the report saying this check really wants a daily run, until a daily task is set up.
+
 ## Handle problems
 
 The existing GitHub worker owns automatic repairs. Check what it is doing before recommending another attempt. Follow assistant/MAINTENANCE.md for its exact boundaries; do not repair content, account access, authentication, tests or deployment rules to make a check pass. Do not publish from this review or change permissions, billing, domains or library facts. Account failures, exhausted allowances and work outside the worker's scope need the appropriate human step or reviewed technical work. Do not enable paid services or an automatic retry loop.

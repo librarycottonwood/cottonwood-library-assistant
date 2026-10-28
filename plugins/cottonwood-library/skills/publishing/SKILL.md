@@ -24,31 +24,73 @@ Read the actual CMS record, PR, its **Website preview**/**Live website** statuse
 
 ## Save a content change
 
-Use this after the Sanity record is published. Do every step yourself with the GitHub tools in this chat, on `librarycottonwood/cottonwood-library-assistant`. Tell the volunteer only the preview link, the question and the result.
+Do every step yourself with the Sanity and GitHub tools in this chat, on `librarycottonwood/cottonwood-library-assistant`. Tell the volunteer only the preview link, the questions and the result.
+
+### Before you start
+
+1. **Check for other waiting changes.** Look for open PRs whose branch starts with `content/`, and for Sanity documents published since the last live save: compare current published records with https://cottonwood-library.pages.dev/_content/revisions.json (if that file is missing, look for records updated after the newest **Live website** success on `main`). If someone else's change is waiting, say: "Someone else's change is also waiting: <what it is, in plain words>. If we save now, it goes on the website too. Include it, or wait?" Wait for the answer.
+2. **Upload every photo first**, then publish the records that use them. A record that points to a photo that isn't uploaded yet breaks the preview.
+3. **Write down the old values.** Before changing a record, read it and keep the current value of each field you will change. They go in the content-update file as `before`, so any later chat can undo this save.
+4. Check every value against "Values that break the website" below, then publish the Sanity records.
+
+### Save it
 
 1. Create a branch from current `main` named `content/<short-request-name>`.
-2. On that branch, add a **new** file `content-updates/<today as YYYY-MM-DD>-<short-request-name>.json` (lowercase letters, numbers and dashes) with `request` (one sentence), `sanityDocuments` (each changed Sanity document's `id`, `revision` and `fields`) and `requestedInChat` (today's date). Every save gets its own file, so two saves never clash. Do not edit `assistant/website-update.json` (older saves only). Commit it with a short message.
-3. Open a PR into `main` titled with the request in plain words.
-4. Wait for the commit status **Website preview** on the PR's head commit to be **success** or **failure** (usually 5–8 minutes). Check every minute or so. On success its target URL is the checked preview. On failure read its description and the job log, fix what you can and say what is wrong.
+2. On that branch, add a **new** file `content-updates/<today as YYYY-MM-DD>-<short-request-name>.json` (lowercase letters, numbers and dashes only). Every save gets its own file, so two saves never clash. Do not edit `assistant/website-update.json` (older saves only). Contents:
+   ```json
+   {
+     "request": "One sentence in plain words.",
+     "sanityDocuments": [
+       {"id": "<published document id>", "revision": "<its _rev after publishing>", "fields": ["title", "sessions"],
+        "before": {"title": "<old title>", "sessions": [<old sessions>]}}
+     ],
+     "requestedInChat": "YYYY-MM-DD"
+   }
+   ```
+   For a brand-new record use `"before": null`. Commit it with a short message.
+3. Open a PR into `main` titled with the request in plain words. Tell the volunteer once: "The preview takes about 8 minutes."
+4. Wait for the commit status **Website preview** on the PR's head commit to be **success** or **failure**. Check every minute or so. On success its target URL is the checked preview. If it fails, or nothing has arrived after 12 minutes, see "If the preview doesn't come".
 5. Read the PR comment **"What this save puts on the live website"**. It lists every website document that differs from the live website and marks the ones this save did not list.
-   - If it lists **other changes that will also go live**, tell the volunteer in plain words before asking: "This save will also put these other changes live: … Is that OK?" Name each one (for example "the Main Street Readers photo"). If they say no, do not merge. Those changes belong to another save or person: look for an open `content/*` PR that lists them and ask whether to finish or undo that one first. Undo someone else's change in Sanity only when the volunteer clearly asks; then push a new commit for a fresh preview and read the list again.
+   - If it lists **other changes that will also go live**, tell the volunteer before asking: "Someone else's change is also waiting: … If we save now, it goes on the website too. Include it, or wait?" Name each one (for example "the Main Street Readers photo"). If they want to wait, do not merge. Those changes belong to another save or person: look for an open `content/*` PR that lists them and ask whether to finish or undo that one first. Undo someone else's change in Sanity only when the volunteer clearly asks; then push a new commit for a fresh preview and read the list again.
    - If it says content changed while preparing, or it could not compare with the live website, get a fresh preview (push a new commit) before asking.
 6. Open the preview and confirm the change is there. Share the link and ask **"Ready to save?"**
-7. After a clear yes, merge the PR (merge commit). If `main` moved or a check fails, update the branch and wait for a fresh preview (and a fresh list) first.
-8. Wait for the commit status **Live website** on the merge commit to be **success**, then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved. "Not live yet: waiting to publish" means it is still queued.
+7. After a clear yes, re-check right before merging:
+   - the PR is still open;
+   - nothing was merged to `main` since the preview;
+   - the **Website preview** status is less than 1 hour old;
+   - no Sanity record was published after the PR's head commit.
+
+   If any of these fails, push a new commit (for example update `requestedInChat`) for a fresh preview and list, and ask again. Otherwise merge the PR (merge commit).
+8. Wait for the commit status **Live website** on the merge commit to be **success** (usually about 10 minutes; "Not live yet: waiting to publish" means it is queued). Then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved. If it fails, or isn't success 15 minutes after the merge, see "If it doesn't go live".
 9. Delete the request's branch.
 
-### When a merged save does not go live
+### If the preview doesn't come
 
-If **Live website** on the merge commit is **failure**, or still pending after 30 minutes, the PR is merged but the website did not change. Read the PR comment "This save did not reach the live website". First open the live website: if a later save already put the change live, it is saved. Otherwise:
+Read the **Website preview** description and the failed job's log.
 
-- "Website content changed after the preview" or "another save reached main first": make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments`, open a PR and follow steps 4–9 (including the list of other changes).
-- "Website checks failed": tell the volunteer the website is unchanged and that an administrator needs to fix the website check. Do not retry.
-- Anything else: try one refresh save. If that stops the same way, tell the volunteer the website is unchanged and an administrator needs to look.
+- A line starting with `Sanity content:` names a record value the website can't use (see the list below). Fix that record in Sanity, publish it, then push a new commit for a fresh preview.
+- "Superseded" or no status because a newer commit was pushed: wait for the newer commit's preview.
+- Anything else, or still nothing after 20 minutes: tell the volunteer "The preview didn't finish, so nothing changed on the website. A board admin needs to look at this: <run link>." Do not keep retrying.
 
-Before merging, if Sanity content changed after the preview (someone else published), push a new commit to the branch (for example update `requestedInChat`) for a fresh preview and list, then ask again.
+### If it doesn't go live
+
+A merged PR can't be retried. Read the PR comment "This save did not reach the live website" and the **Live website** description. First open the live website: if a later save already put the change live, it is saved.
+
+- "Website content changed after the preview", "another save reached main first", or still pending after 15 minutes with no publish run still going: make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments` (keep their `before` values), open a PR and follow steps 3–9 (including the list of other changes).
+- `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
+- Anything else, or the refresh save stops the same way: tell the volunteer "Your change is merged but isn't on the website yet. The website still shows the previous version and works. A board admin needs to look at this: <run link>."
 
 Save PRs with no activity for 14 days are closed automatically with a comment. Nothing from them went live, but what they published in Sanity stays published and goes live with the next save, so check that comment's list.
+
+## Values that break the website (check before every publish)
+
+- **Links:** no spaces. Start with `https://`, or use `mailto:name@example.org`, or `tel:` followed by digits only (for example `tel:5303470000`). Pages on our own site start with `/`.
+- **Ids and page addresses (slugs):** lowercase letters and numbers separated by single hyphens, like `book-sale-2026`.
+- **Event times:** full date and time with seconds and the Pacific offset for the **event's** date, like `2026-11-14T10:00:00-08:00` (offsets are in `assistant/content/events.md`). The end must be after the start. Every event needs at least one date.
+- **Plain dates** (notices, end dates): `YYYY-MM-DD`.
+- **Text:** one level of bullets only; no bullets inside bullets.
+- **Photos:** JPG, PNG or WebP, uploaded to Sanity, with a short description (alt text).
+- **Don't unpublish** a record that another record points to (an event used by a news post, a program used by an event, the current newsletter). Change or remove the pointer first.
 
 The reporting connector has no website-saving tools. Do not ask for website OAuth permissions, repeatedly reconnect it, or send volunteers to an external approval page for ordinary saves. The existing CMS review page remains an administrator recovery option when explicitly chosen. Do not present sample-content pictures as current content or imply a repository change repairs an external Codex browser error.
 
@@ -56,4 +98,8 @@ The reporting connector has no website-saving tools. Do not ask for website OAut
 
 For a failure, first establish whether the existing website is working and what the repair system has already attempted. Handle what the available tools and authorization allow. If a person must reconnect an account or make a choice, explain that one action with its real link. A failed preview does not mean the current website is down.
 
-“Discard the draft” means remove only the unfinished work from this request; preserve the published record and other people's changes. Read the result back. “Undo the website change” means restore only that change, check a new preview and follow the normal approval route. Do not delete shared assets or promise recovery before it is verified.
+“Discard the draft” means remove only the unfinished work from this request; preserve the published record and other people's changes. Read the result back.
+
+“Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 20 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
+
+If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. A board admin needs to delete them." Undoing the website change alone does not remove them.
