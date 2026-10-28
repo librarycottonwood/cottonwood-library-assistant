@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType, type DocumentDefinition} from 'sanity';
 import {image, link, paragraph, slug, strings, text} from './objects.ts';
-import {uniqueSessions, validDateRange, validLink, validNewsletter} from '../validation.ts';
+import {uniqueSessions, validDateRange, validLink, validNewsletter, validPhone} from '../validation.ts';
 import {pacificDateLabel} from '../dates.ts';
 
 export const event = defineType({
@@ -90,7 +90,9 @@ export const siteSettings = defineType({
   groups: [{name: 'contact', title: 'Contact and hours', default: true}, {name: 'home', title: 'Homepage'}, {name: 'services', title: 'Services'}, {name: 'about', title: 'Story and support'}, {name: 'navigation', title: 'Navigation'}],
   fields: [
     defineField({name: 'library', title: 'Library contact and hours', type: 'object', group: 'contact', validation: (rule) => rule.required(), fields: [
-      text('name', 'Library name'), text('phone', 'Phone number'),
+      text('name', 'Library name'),
+      defineField({name: 'phone', title: 'Phone number', type: 'string', description: 'As visitors should see it, such as (530) 347-4818. An extension such as ext. 2 is dialed too.',
+        validation: (rule) => rule.required().custom(validPhone)}),
       defineField({name: 'phoneHref', title: 'Imported phone link', type: 'string', hidden: true, readOnly: true, description: 'The website derives this from the phone number above.'}),
       defineField({name: 'email', title: 'Email', type: 'string', validation: (rule) => rule.required().email()}),
       text('address', 'Street address'), text('locality', 'City, state and ZIP'), text('mailingAddress', 'Mailing address'),
