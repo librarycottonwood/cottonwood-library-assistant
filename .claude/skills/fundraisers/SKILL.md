@@ -24,7 +24,7 @@ IDs are letters, numbers, `_` and `-`, up to 64 characters.
 Ask one at a time; skip anything they already told you.
 
 1. "What are we raising money for?"
-2. "Which Givebutter campaign is it?" If none exists yet: they create it in Givebutter first, with a goal, then come back.
+2. "Which Givebutter campaign is it?" If none exists yet: they create it in Givebutter first, with a goal, then come back. Get its page link and its short code (check `docs/library-facts.md` first). If you can't find the code: "At the top of the campaign in Givebutter, just above its name, there's a short code of letters and numbers. What does it say?" Without the code, Donate buttons can't open the checkout.
 3. Get the **Form** widget code. Never send these steps all at once, and never as one long sentence. Send one step, wait until they say it's done (or send a screenshot), then send the next. Start with: "Next I need a bit of code from Givebutter so the donation form and goal bar show on our website. I'll walk you through it one click at a time. Ready?"
    1. "Go to givebutter.com and sign in. Click **Campaigns** on the left, then click **<campaign name>**." (Use the campaign's real name.)
    2. "Along the top of the campaign, click **Sharing**."
@@ -38,7 +38,7 @@ Ask one at a time; skip anything they already told you.
 
 Write a short, heartfelt description yourself. Only one fundraiser can be active; if one is running, ask whether this replaces it. Save, and ask them to check the form and goal bar on the preview before saying yes.
 
-Sanity: add a `fundraisingCampaign` to `library-giving` → `campaigns[]`: `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {formWidgetId, campaign?, account?}`, optional `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`. The first campaign that hasn't ended is the active one.
+Sanity: insert a `fundraisingCampaign` at the **start** of `library-giving` → `campaigns[]` (the first campaign that hasn't ended is the active one): `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {_type: "donationWidget", formWidgetId, campaign, account?}`. `campaign` is needed for the popup; leave `account` out unless it differs from `library.givebutter.account`. Optional: `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`.
 
 ## Update a fundraiser
 
@@ -50,8 +50,8 @@ Confirm which one. Ask: "Want a thank-you post with the final total?" (`news` sk
 
 ## Donate buttons (one-time setup or change)
 
-General donations use `library-settings` → `library.givebutter.{account, campaign}` and the fallback page `library.donationUrl`. To switch campaigns, ask which Givebutter campaign takes general donations, get its code and account (from any widget code), update those fields and save. If they only have a plain donation link, confirm it opens a real donation page, then use it as `donationUrl`.
+General donations use `library-settings` → `library.givebutter.{account, campaign}` and the fallback page `library.donationUrl`. To switch campaigns, ask which Givebutter campaign takes general donations, get its code and account (from any widget code), then update `library.givebutter.account`, `library.givebutter.campaign` **and** `library.donationUrl` (the new campaign's Givebutter page) together and save. `donationUrl` is where Donate goes when the popup can't open. If they only have a plain donation link, confirm it opens a real donation page, then use it as `donationUrl`.
 
 ## How much have we raised?
 
-Use a Givebutter connector if one is connected in this session: give the amount, goal and the date checked. If not, say you can't see Givebutter from here and give the campaign link from `docs/library-facts.md`. Never guess a number. Never share donor names unless a board member asks directly, and keep them out of public content.
+Use the `reports` skill.

@@ -33,4 +33,4 @@ Show the drafts and ask "Look good?" before putting them in Buffer.
 
 ## Connecting Buffer (one time)
 
-A board member signs in at buffer.com with the library Google account, connects the Facebook page (and Instagram when ready), then connects Buffer in Claude's connector settings. Walk them through one step at a time. Stay within the free plan unless the board decides otherwise.
+One message per step, waiting for "done": 1) sign in at buffer.com with the library Google account; 2) connect the Facebook page (Instagram when ready); 3) in Claude's connector settings, connect Buffer. Stay within the free plan unless the board decides otherwise.

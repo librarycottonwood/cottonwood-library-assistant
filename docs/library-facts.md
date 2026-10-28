@@ -10,6 +10,8 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 
 ## Website
 
+- Public launch and AI Expo: Tuesday, November 3, 2026. The domain is attached then (`docs/domain-launch.md`).
+
 - Live: https://cottonwood-library.pages.dev/ (Cloudflare Pages project `cottonwood-library` on the library's Cloudflare account). Previews: `https://<8 hex>.cottonwood-library.pages.dev`.
 - Public domain `cottonwoodcommunitylibrary.com` (registered at Squarespace) is not attached yet. Plan: `docs/domain-launch.md`.
 - GitHub: `librarycottonwood/cottonwood-library-assistant`.
@@ -17,6 +19,8 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 - CMS publisher Worker (webhooks, admin recovery page): https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/
 
 ## Donations (Givebutter)
+
+- Fundraiser not yet on the website: **Under One Roof** (new roof), code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Form widget `jwyYlq` (turn its goal bar on first).
 
 - General donations campaign: **Support Your Local Library**, code `R62NJU`, page https://givebutter.com/support-your-local-library-r62nju
 - Public widget account `D4OkqF0zVDUb7Rdx`. These are saved in Sanity `library-settings` (`library.givebutter.account`, `library.givebutter.campaign`, `library.donationUrl`).
@@ -41,3 +45,7 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 
 - Google Analytics demo property `557596091` (measurement ID in `src/content/analytics.json`), consent-gated, counting visits to the new site only.
 - The `connector/` Worker served these reports to ChatGPT. Whether Claude uses it is an open decision (see `connector/README.md`).
+
+## Open questions
+
+- Under One Roof auction: Givebutter (unpublished) says Nov 2, 1:00 a.m. to Nov 5, 9:00 a.m.; Donna's letter and the website say Saturday, Nov 14. Ask before repeating either.

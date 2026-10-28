@@ -77,7 +77,7 @@ Sanity array object members need the matching `_type` and a stable `_key` to rem
 
 Nested named values use `givebutterAccount` for `library.givebutter`, `donationWidget` for campaign `givebutter`, `initiativeAction` for initiative `action`, and `navigationLink` for a notice’s optional `link`. Inline settings objects use `object`. Portable Text uses native `block`/`span`; references use `reference`.
 
-Images have `asset._ref` **or** migration-only `legacyKey`, plus required `alt`, optional `caption`, and `fit: cover | contain`. A real uploaded asset takes priority over the legacy key. Uploaded newsletter files are constrained to PDF in the picker and checked against the asset MIME type before Studio publication.
+Images have `asset._ref` **or** migration-only `legacyKey`, plus required `alt` and optional `caption`. `fit` is a hidden legacy field: the website ignores it for uploaded pictures and picks fill or whole from the picture's shape. Never set it. A real uploaded asset takes priority over the legacy key. Uploaded newsletter files are constrained to PDF in the picker and checked against the asset MIME type before Studio publication.
 
 ## Sources used for setup
 

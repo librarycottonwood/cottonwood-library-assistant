@@ -1,6 +1,6 @@
 ---
 name: news
-description: Write, publish, fix or take down a library news post, announcement, thank-you, or event recap with photos. Use when someone says "post this on the website", "add a news post", "share photos from the event", or wants to change or remove a post.
+description: Write, publish, fix or take down a library news post, announcement, thank-you, or event recap with photos. Use when someone asks for a news post or announcement, wants to "share photos from the event", or wants to change or remove a post. If they only say "put this on the website", ask where first (see CLAUDE.md).
 ---
 
 # Library news

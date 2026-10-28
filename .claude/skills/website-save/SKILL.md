@@ -21,8 +21,8 @@ Use the Sanity connector with `projectId: 2ou0xy2r`, `dataset: production`.
 ### Photos
 
 1. Strip hidden location data and resize first: `node scripts/images.mjs prepare <file> --out /tmp/photos --name <short-name>`.
-2. Call `dataset_assets_upload_from_file` (`assetType: image`, a real `description`), then POST the file bytes to the returned `uploadUrl` with `curl --data-binary @/tmp/photos/<file> -H 'Content-Type: image/jpeg' "<uploadUrl>"`.
-3. Use the returned asset ID as `{"_type": "image", "asset": {"_type": "reference", "_ref": "image-..."}, "alt": "..."}`. Every photo needs real alt text.
+2. Call `dataset_assets_upload_from_file` (`assetType: image`, a real `description`), then POST the file bytes to the returned `uploadUrl` with `curl --data-binary @/tmp/photos/<file> -H 'Content-Type: image/jpeg' "<uploadUrl>"` (use `image/png` when the prepared file ends in `.png`).
+3. Use the returned asset ID as `{"_type": "libraryImage", "asset": {"_type": "reference", "_ref": "image-..."}, "alt": "..."}`. Gallery items also need a `_key`. When replacing a picture, set this whole value, not just `asset`: drop the old `alt`, `caption`, `fit` and `legacyKey`, and write new alt text for the new picture.
 4. If the upload can't reach the file, say so and offer the editor (Studio) as a fallback. Never pretend a photo was uploaded.
 
 #### Picture shape and dead zones
@@ -80,6 +80,7 @@ Check, in order: the Sanity draft/published record, the PR and its **Website pre
 ## Undo or discard
 
 - **Discard the draft**: `discard_drafts` for only this request's drafts. Read back the result.
+- **Cancelled after the Sanity record was published**: put back the values you read before editing and publish them (or unpublish a record you created), then close the PR. Published content goes live with the next person's save, so never leave a published change without an open PR.
 - **Undo a saved change**: restore only that change (previous Sanity values or a revert commit), then do the full preview → "Ready to save?" → merge flow again. Don't delete shared photos.
 - **A failed live publish**: the workflow restores the previous site automatically. Check the live page before telling anyone it's fine. If unsure, say the website needs Jaden or a board admin, and open a GitHub issue with the run link.
 

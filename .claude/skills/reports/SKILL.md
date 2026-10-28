@@ -20,7 +20,7 @@ Use the library's visitor-report connector if it is connected in this session (t
 
 ## Donations
 
-Use a Givebutter connector if one is connected: amounts, goal, and the date you checked. Website Donate clicks are not completed gifts; keep them separate. Without a connector, give the campaign link from `docs/library-facts.md`. Never share donor names or details unless a board member asks directly, and then only in this conversation.
+Use a Givebutter connector if one is connected: amounts, goal, and the date you checked. Website Donate clicks are not completed gifts; keep them separate. Without a connector, give the campaign link from `docs/library-facts.md`. Give totals, goals and counts only. Don't list donor names, emails or individual gifts in chat, even if asked: everyone shares the library account, so you can't tell who is asking. Point them to Givebutter, where their own role controls what they see.
 
 ## When a report stops working
 

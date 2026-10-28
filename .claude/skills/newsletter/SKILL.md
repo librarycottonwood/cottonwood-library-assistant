@@ -30,10 +30,10 @@ A correction to the same issue keeps its record and address; replace only what's
 1. Gather the topic or approved issue, and any requested send time.
 2. Write the subject line and a short message, linking to the website issue if there is one.
 3. Show the exact draft and the audience: **Library Newsletter sign-ups**, unsubscribed contacts excluded. Donors are not automatically subscribers.
-4. Claude can't send from Givebutter. Give them the draft to paste and the Engage link from `docs/library-facts.md`, one step at a time. Never say it was saved, scheduled or sent unless they confirm it.
+4. Claude can't send from Givebutter. Give the subject and message as separate copy blocks, send the Engage link from `docs/library-facts.md`, and wait. Then give one click at a time based on what they say they see; don't name buttons you haven't seen. Never say it was saved, scheduled or sent unless they confirm it.
 
 Don't set up a recurring email schedule or send to all contacts from a general request. Before the very first bulk send, remind them the unsubscribe test and board approval are still open.
 
 ## Sign-up problems
 
-The sign-up form is the website's own form (in the footer, and on `/librarynews/newsletter/`). It adds people to Givebutter tagged **Library Newsletter**. If someone sees "sign-up isn't working", the usual cause is the Givebutter key missing or expired: a board admin follows "Newsletter sign-up key" in `docs/setup-checklist.md`. Never ask for or handle the key yourself. Check the page on the live site, then give one next step. Don't create another mailing service.
+The sign-up form is the website's own form (in the footer, and on `/librarynews/newsletter/`). It adds people to Givebutter tagged **Library Newsletter**. If someone sees "sign-up isn't working", the usual cause is the Givebutter key missing or expired: a board admin follows "Newsletter sign-up key" in `docs/setup-checklist.md`. Never ask for or handle the key yourself. Check the page on the live site (previews have no key, so the form always shows the error there), then give one next step. Don't create another mailing service.

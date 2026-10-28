@@ -25,10 +25,10 @@ Write a short one-line summary yourself. Show it, get a yes, save it. Afterwards
 
 - **Change details or time:** find the event; if it has several dates, confirm which one. Edit, then save.
 - **Move:** change both start and end times of that session. If it's soon, offer a notice banner (`notices` skill).
-- **Cancel:** ask "Remove it from the calendar, or keep it showing as cancelled?" There's no cancelled field; to keep it, put "Cancelled:" in the title or summary. If it's within a week, offer a banner and a social post.
+- **Cancel:** confirm which date. If other dates are still on, remove only that session. The title is shared by every date, so add "Cancelled:" to the title or summary only when every date is cancelled; otherwise ask "Remove it from the calendar, or keep it showing as cancelled?" If it's within a week, offer a banner and a social post.
 
 Past events drop off the upcoming list on their own. No need to remove them.
 
 ## Fields (`event`)
 
-`title`, `slug.current` (keep when editing), `summary`, optional `image`, `location`, `program` (reference an existing program), and `sessions[]`: each `{_key, startsAt, endsAt}` as ISO times with the correct Pacific offset (`-07:00` in daylight time, `-08:00` in winter). Both times are required and the end must be after the start. Before unpublishing an event, check posts that reference it. Full contract: `studio/README.md`.
+`title`, `slug.current` (keep when editing), `summary`, optional `image`, `location`, `program` (reference an existing program), and `sessions[]`: each `{_key, startsAt, endsAt}` as ISO times with the Pacific offset **for the event's date, not today's**: `-07:00` before Nov 1, 2026; `-08:00` from Nov 1, 2026 to Mar 13, 2027; `-07:00` from Mar 14, 2027. After saving the draft, convert the stored times back to Pacific and read *those* back with the weekday. Both times are required and the end must be after the start. Before unpublishing an event, check posts that reference it. Full contract: `studio/README.md`.

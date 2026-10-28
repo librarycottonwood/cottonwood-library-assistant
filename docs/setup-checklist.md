@@ -29,7 +29,7 @@ Still open before launch:
 ## 2. GitHub
 
 - [ ] Install the **Claude GitHub App** on the `librarycottonwood` org, only for `cottonwood-library-assistant`.
-- [ ] Merge the `claude/fresh-setup` branch (this setup) through the normal PR + preview flow.
+- [ ] Merge the `claude/fresh-setup` branch (this setup) through the normal PR + preview flow. It keeps `AGENTS.md`, `assistant/` and `plugins/`, which ChatGPT reads from `main` until cutover.
 - [ ] **Branch protection / ruleset** on `main`: require a pull request, require the `check` workflow, block force-pushes and deletion. Claude's own rules can't stop everything; GitHub is the real lock.
 - [ ] **Ruleset on `maintenance-reports`**: block deletion and force-pushes (the workflow still writes to it).
 - [ ] Repo setting: **automatically delete head branches** after merge.
@@ -96,4 +96,5 @@ At https://claude.ai/code/routines → **New task**, repository `cottonwood-libr
 
 - [ ] Keep ChatGPT running **1-2 weeks** alongside Claude.
 - [ ] After two weeks of clean saves, cancel the ChatGPT plan and remove its GitHub/Sanity access.
+- [ ] Then open a PR that deletes `AGENTS.md`, `assistant/` and `plugins/`.
 - [ ] Hand over: board admin knows where `docs/staff-guide.md` and this checklist live.

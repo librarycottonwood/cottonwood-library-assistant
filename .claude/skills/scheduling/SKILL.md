@@ -26,7 +26,15 @@ Ask one at a time; skip anything they already told you.
 
 Then:
 - Write the instructions as a new file `.claude/routines/<name>.md`: the exact job, what to read, where to post, what to do if something can't be checked ("say so plainly; never report zero"), and "do not merge, publish, send or change accounts". Save that file with the `website-save` flow (it's a code change).
-- Walk them through creating the task, one step at a time: open https://claude.ai/code/routines → **New task** → name it → instructions: `Follow .claude/routines/<name>.md in the repository.` → pick the repository `librarycottonwood/cottonwood-library-assistant` and the library's cloud environment → set the schedule → under connectors keep only the ones the job needs → **Create** → **Run now** once to test.
+- Walk them through creating the task. Send one step, wait for "done", then send the next:
+  1. "Open https://claude.ai/code/routines and click **New task**."
+  2. "Name it <name>."
+  3. "Paste this as the instructions: `Follow .claude/routines/<name>.md in the repository.`"
+  4. "Pick **cottonwood-library-assistant** and the **Cottonwood Library** environment."
+  5. "Set the schedule to <day, time>."
+  6. "Under connectors, keep only <list>."
+  7. "Click **Create**, then **Run now** once to test it."
+
 
 ## Change or stop
 

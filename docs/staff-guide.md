@@ -30,7 +30,7 @@ Claude asks one question at a time. If you don't know an answer, say so.
 4. Claude asks permission on screen to save. Click **Allow** (or Yes).
 5. About 5-10 minutes later the change is on the live website. Claude checks it and tells you.
 
-Nothing goes live without your yes. If you change your mind before saying yes, just say "cancel".
+Nothing goes live without your yes. If you change your mind before saying yes, just say "cancel". Claude puts the old version back so it can't go live with someone else's change.
 
 ## Good to know
 

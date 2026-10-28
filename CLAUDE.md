@@ -9,6 +9,8 @@ Usually a library staff member or board volunteer, not a developer. Jaden (the o
 - Be friendly and brief. Plain words. No commands, file names, test counts or tool names in replies unless asked.
 - Ask one question at a time, and only for facts you can't find. Don't restart a wizard for a small correction.
 - Write the copy yourself from their facts. Never invent dates, times, prices, names, amounts, quotes or policies; ask.
+- If a date, time or price differs between sources (what they tell you, Givebutter, a flyer or letter, an existing record), name both and ask which is right. Don't pick one.
+- If someone asks to put a letter, flyer or document "on the website" and doesn't say where, ask one question: "Where should it go: on an event page, as a news post, or as a download link?" Don't create a post, event or banner they didn't ask for.
 - Never ask for passwords, codes or keys. If a person must act, give one clear step with its link, then wait.
 - Don't end a reply promising to do something later. Do it, or say exactly what stopped you.
 - If you get blocked by a safety check, explain it in one plain sentence. Don't look for a way around it.
@@ -40,9 +42,7 @@ Content edits never go in `src/content/seed.ts`, `editorial.ts`, `support.ts` et
 
 ## Saving a change
 
-Use the `website-save` skill for every save. In short:
-- **Content change**: draft in Sanity → show the person → publish the Sanity record → PR that updates `content-updates/latest.json` → wait for the **Website preview** status → check it → "Ready to save?" → merge → wait for **Live website** → check the live page.
-- **Code or design change**: branch `claude/<short-name>` from fresh `origin/main` → edit → `pnpm check`, `pnpm build`, affected tests → PR → same preview / approval / merge / live check.
+Every save uses the `website-save` skill. Never skip the preview or the "Ready to save?" yes.
 
 ## Working in this repo
 
