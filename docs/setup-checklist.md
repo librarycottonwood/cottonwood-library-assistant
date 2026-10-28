@@ -22,7 +22,8 @@ Still open before launch:
 - [x] **Spam protection for the newsletter form** (see 4f). Set up Oct 27; turns on when this PR goes live.
 - [ ] **Pipeline fixes:** review and merge PR #52 (build tolerates small content mistakes) and PR #53 (safer saves: lists other waiting changes, keeps open PRs' previews, reports failed saves, one file per save, closes abandoned saves after 14 days). Each merge publishes, so do them on a quiet day, one at a time. After #52: deploy the Studio. After #53: update the ChatGPT plugin to the new version in Plugin Creator, then switch this branch (#45) to one file per save.
 - [ ] **Name a board admin** for "a board admin needs to look at this" messages, and put their name and contact in `CLAUDE.md` and `docs/library-facts.md`.
-- [ ] **Google Analytics:** rename the property from "Cottonwood Library - Demo" to "Cottonwood Community Library website" (Admin → Property details) and add an annotation on launch day; older numbers are test traffic.
+- [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
+- [ ] **Launch day:** add a Google Analytics annotation; numbers before Nov 3 are test traffic.
 
 ## 1. Accounts
 
