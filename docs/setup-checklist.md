@@ -1,6 +1,6 @@
 # Claude Code setup checklist
 
-Moving the library from ChatGPT to Claude Code. Do these in order. Keep ChatGPT working until the last step.
+Moving the library from ChatGPT to Claude Code. **On hold (Oct 29):** staff keep using ChatGPT for now; the launch items under Status still apply. When the move resumes, do these in order and keep ChatGPT working until the last step.
 
 **Public launch and AI Expo: Tuesday, November 3, 2026** (replaces the earlier November 16 plan).
 
