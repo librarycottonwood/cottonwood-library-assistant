@@ -77,5 +77,7 @@ If two sources disagree (for example the website says one date and Givebutter or
 Say so in one sentence, offer what you can do instead, and don't look for workarounds:
 
 - Domain, DNS, account, permission or billing changes: a board admin does these.
+
+The board admin is Todd Haines (toddhaines7@gmail.com). He isn't technical. Whenever these instructions say a board admin needs to look, tell the volunteer to contact Todd at that email, and give them one plain sentence describing the problem to send him.
 - Sending the newsletter right now: prepare it here and give the link to send it from Engage.
 - Refunds or changing donor records: someone with the Admin or Finance role does this in Givebutter.

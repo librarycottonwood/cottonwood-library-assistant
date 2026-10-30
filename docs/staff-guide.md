@@ -36,7 +36,7 @@ Nothing goes live without your yes. If you change your mind before saying yes, j
 
 - Facebook posts go into **Buffer** as drafts. Open https://publish.buffer.com and click Approve to post them.
 - Claude can't send the email newsletter. It writes the email; you paste it into Givebutter.
-- If Claude says a safety check stopped it, that's on purpose. Ask the board admin if you think it's wrong.
+- If Claude says a safety check stopped it, that's on purpose. Ask Todd Haines (toddhaines7@gmail.com) if you think it's wrong.
 - Never paste passwords or codes into the chat.
 - Only share photos the library has permission to use.
 
@@ -46,6 +46,6 @@ Nothing goes live without your yes. If you change your mind before saying yes, j
 - **The live site didn't change:** ask "Where is my change?"
 - **Want to undo a saved change:** ask "Undo the last change." It goes through the same preview and yes.
 - **Claude is stuck or confused:** start a new session and ask again in one sentence.
-- **Still stuck:** check the GitHub issue titled "Website needs attention", or contact the board admin.
+- **Still stuck:** check the GitHub issue titled "Website needs attention", or contact Todd Haines, the board admin, at toddhaines7@gmail.com.
 
 You can also edit words and photos directly in the website editor: https://cottonwood-community-library.sanity.studio/ Publishing there saves the words, but the live website only updates after the preview-and-approve step. If unsure, ask Claude "Is my editor change live?"

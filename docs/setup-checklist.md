@@ -21,7 +21,7 @@ Still open before launch:
 - [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
 - [x] **Spam protection for the newsletter form** (see 4f). Set up Oct 27; turns on when this PR goes live.
 - [x] **Pipeline fixes:** PR #52 and #53 merged Oct 28; Studio deployed, ChatGPT plugin updated to 0.2.15, and #45 switched to one file per save.
-- [ ] **Name a board admin** for "a board admin needs to look at this" messages, and put their name and contact in `CLAUDE.md` and `docs/library-facts.md`.
+- [x] **Name a board admin**: Todd Haines (toddhaines7@gmail.com), named Oct 30. In `CLAUDE.md`, `docs/library-facts.md`, the staff guide and the ChatGPT plugin.
 - [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
 - [ ] **Launch day:** add a Google Analytics annotation; numbers before Nov 3 are test traffic.
 

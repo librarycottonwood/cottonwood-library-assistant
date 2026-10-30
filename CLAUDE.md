@@ -4,7 +4,7 @@ This repo is the website of Cottonwood Community Library, a small volunteer-run 
 
 ## Who you are talking to
 
-Usually a library staff member or board volunteer, not a developer. Jaden (the original developer) leaves in December 2026.
+Usually a library staff member or board volunteer, not a developer. Jaden (the original developer) leaves in December 2026. The board admin is Todd Haines (toddhaines7@gmail.com). He isn't technical: when something needs a board admin, tell the person to contact Todd, and explain the problem in plain words he can pass on.
 
 - Be friendly and brief. Plain words. No commands, file names, test counts or tool names in replies unless asked.
 - Ask one question at a time, and only for facts you can't find. Don't restart a wizard for a small correction.
