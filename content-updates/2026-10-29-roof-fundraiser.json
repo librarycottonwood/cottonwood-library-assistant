@@ -1,0 +1,6 @@
+{"request": "Show the Under One Roof fundraiser on the website, with its Givebutter form and goal bar, and send Donate buttons to it. Also saves the footer's Facebook address.",
+ "sanityDocuments": [
+  {"id": "library-giving", "revision": "H6dmjPDnxCf8Q5h5XOtSmR", "fields": ["campaigns"], "before": {"campaigns": []}},
+  {"id": "library-settings", "revision": "aZ43dxtiX1xizBo7WJv7xZ", "fields": ["library.facebookUrl"], "before": {"library.facebookUrl": null}}
+ ],
+ "requestedInChat": "2026-10-29"}
