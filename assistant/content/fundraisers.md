@@ -5,7 +5,7 @@ Use the fundraisers wizard. Read [CMS workflow](../CMS.md) for the current conne
 ## Where to edit
 
 - **Library settings and hours → Contact and hours → General Givebutter donations:** `siteSettings.library.givebutter` on the existing `library-settings` document. Store the approved public `account` and general `campaign` codes. `library.donationUrl` is the approved fallback donation page.
-- **Giving and acknowledgments → Approved fundraising campaigns:** `givingSettings.campaigns[]` on the existing `library-giving` document. Each `fundraisingCampaign` needs a stable `_key`, `id`, `title`, `description`, approved HTTPS `url` and `givebutter` form settings. Optional `endsOn` includes that full Pacific day; `image` is optional.
+- **Giving and acknowledgments → Approved fundraising campaigns:** `givingSettings.campaigns[]` on the existing `library-giving` document. Each `fundraisingCampaign` needs a stable `_key`, `id`, `title`, `description`, approved HTTPS `url` and `givebutter` form settings. Optional `badgeLabel` is the short homepage badge line (40 characters at most; blank uses the title). Optional `endsOn` includes that full Pacific day; `image` is optional.
 - **Community acknowledgments** and **Ways to help** are `updates[]` and `initiatives[]` in that same giving document. Preserve other entries and shared assets. Read `studio/schemas/objects.ts` for their current required fields before editing.
 
 Read the current published record and any existing draft before making a narrow change. Do not create duplicate singleton documents or change migration files in `seed.ts`/`support.ts`.

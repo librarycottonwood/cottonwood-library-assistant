@@ -84,6 +84,8 @@ export interface SupportContent {
 export interface FundraisingCampaign {
   id: string;
   title: string;
+  /** Short line for the homepage badge, such as "Help us afford a new roof". Falls back to the title. */
+  badgeLabel?: string;
   description: string;
   /** Approved donation page, such as the library's Givebutter campaign. */
   url: string;
