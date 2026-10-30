@@ -63,7 +63,7 @@ const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:0
     </Card>)}
     {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/librarynews/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
       {program.next
-        ? <Badge slot="badge" surface data-event-day={program.next.day} data-schedule={program.schedule}>{dayLabel(program.next.day)}{program.next.time && <span class="badge-time">· {program.next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
+        ? <Badge slot="badge" surface data-event-day={program.next.day} data-schedule={program.schedule}>{dayLabel(program.next.day)}{program.next.time && <span>&nbsp;· {program.next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
         : <Badge slot="badge" surface>{program.schedule}</Badge>}
       {program.description}
     </Card>)}
@@ -133,7 +133,7 @@ const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:0
     .event-list[data-event-count='2'] :global(.card) { grid-column: span 2; }
     .event-list[data-event-count='2'] :global(.card:nth-child(1 of :not([hidden]))) { grid-column: 2 / span 2; }
   }
-  /* The badge's gap already spaces its parts; pull the time in so it reads "Nov 4 · 11:30 a.m.". */
-  .badge-time { margin-inline-start: calc(0.3em - var(--space-xs)); }
+  /* A program badge reads as one line, "Nov 4 · 11:30 a.m.": no flex gap between the date and its time. */
+  .event-list :global(.badge[data-schedule]) { column-gap: 0; }
   .event-empty { color: var(--color-text-muted); text-align: center; }
 </style>
