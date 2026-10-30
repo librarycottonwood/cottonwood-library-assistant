@@ -38,11 +38,11 @@ Ask one at a time; skip anything they already told you.
 
 Write a short, heartfelt description yourself. Only one fundraiser can be active; if one is running, ask whether this replaces it. Save, and ask them to check the form and goal bar on the preview before saying yes.
 
-Sanity: insert a `fundraisingCampaign` at the **start** of `library-giving` → `campaigns[]` (the first campaign that hasn't ended is the active one): `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {_type: "donationWidget", formWidgetId, campaign, account?}`. `campaign` is needed for the popup; leave `account` out unless it differs from `library.givebutter.account`. Optional: `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`. After `endsOn` the website hides the fundraiser and sends Donate buttons to general giving by itself; no save needed that day.
+Sanity: insert a `fundraisingCampaign` at the **start** of `library-giving` → `campaigns[]` (the first campaign that hasn't ended is the active one): `_key`, `id`, `title`, `description`, `url` (the campaign's https page), `givebutter: {_type: "donationWidget", formWidgetId, campaign, account?}`. Optional `badgeLabel`: the short line in the homepage badge (40 characters at most, such as "Help us afford a new roof"); without it the badge shows the title. `campaign` is needed for the popup; leave `account` out unless it differs from `library.givebutter.account`. Optional: `endsOn` (YYYY-MM-DD, Pacific, inclusive) and `image`. After `endsOn` the website hides the fundraiser and sends Donate buttons to general giving by itself; no save needed that day.
 
 ## Update a fundraiser
 
-Title, description, end date or photo: edit the campaign entry and save. Goal, or the look of the form or bar: changed in Givebutter (Details tab or the widget gear); the site follows automatically.
+Title, homepage badge text, description, end date or photo: edit the campaign entry and save. Goal, or the look of the form or bar: changed in Givebutter (Details tab or the widget gear); the site follows automatically.
 
 ## End a fundraiser
 

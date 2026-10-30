@@ -157,6 +157,13 @@ test('links with stray leading or trailing spaces are trimmed everywhere, includ
   assert.equal(result.home.navigation[0].href, '/librarynews/');
   assert.equal(result.posts[0].body[0].markDefs[0].href, '/events/spring-sale/');
 });
+test('a fundraiser keeps its optional homepage badge text; blank badge text is left off', () => {
+  const s = fixture();
+  doc(s, 'givingSettings').campaigns = [campaign({ badgeLabel: ' Help us afford a new roof ' }), campaign({ id: 'second', badgeLabel: '  ' })];
+  const [first, second] = validateSanitySnapshot(s, undefined, quiet().options).support.campaigns;
+  assert.equal(first.badgeLabel, 'Help us afford a new roof');
+  assert.equal('badgeLabel' in second, false);
+});
 test('unsafe links still fail, with plain English naming the document title and the field', () => {
   const cases = [
     [s => { doc(s, 'event').href = 'https://localhost/x'; }, /In the event "Spring sale" \(document event-sale\): Optional destination link \(href\): The link "https:\/\/localhost\/x" points to "localhost", which isn't a public website/],

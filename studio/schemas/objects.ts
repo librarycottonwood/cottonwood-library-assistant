@@ -117,7 +117,10 @@ export const supportInitiative = defineType({name: 'supportInitiative', title: '
   defineField({name: 'action', title: 'Action link', type: 'initiativeAction', validation: (rule) => rule.required()}),
 ], preview: {select: {title: 'title', media: 'image'}}});
 export const fundraisingCampaign = defineType({name: 'fundraisingCampaign', title: 'Approved fundraiser', type: 'object', fields: [
-  identifier('id', 'Identifier'), text('title', 'Title'), paragraph('description', 'Short description'),
+  identifier('id', 'Identifier'), text('title', 'Title'),
+  defineField({name: 'badgeLabel', title: 'Homepage badge text', type: 'string', description: 'Optional. The short line in the badge above the homepage heading, such as "Help us afford a new roof". Blank uses the title.',
+    validation: (rule) => rule.max(40)}),
+  paragraph('description', 'Short description'),
   defineField({name: 'url', title: 'Approved donation page', type: 'url', validation: (rule) => rule.required().uri({scheme: ['https']})}),
   defineField({name: 'givebutter', title: 'Givebutter form', type: 'donationWidget', validation: (rule) => rule.required()}),
   defineField({name: 'endsOn', title: 'Last day to show', type: 'date', description: 'Optional. Includes this entire day in Pacific time.'}),
