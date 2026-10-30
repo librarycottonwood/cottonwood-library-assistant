@@ -5,7 +5,8 @@
  * any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end,
  * keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday".
  * The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`.
- * Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo.
+ * Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows.
+ * Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written.
  * @use Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
  * @avoid Past events or news posts (use Grid + Card), or wrapping it in another Grid.
  * @example
@@ -16,6 +17,7 @@ import Grid from './Grid.astro';
 import Badge from './Badge.astro';
 import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
 import { upcomingEvents } from '../../content/feeds';
+import { nextScheduledDay } from '../../content/schedule.mjs';
 interface Props {
   events: LibraryEvent[];
   /** Regular programs. They give events their photo and fill spots no dated event takes. */
@@ -34,33 +36,62 @@ const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long
 const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
 // Library photos for events with none of their own, picked by id so a card keeps its photo between builds.
 const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(key => ({ key, alt: '' }));
-const fallbackImage = (id: string) => fallbackImages[[...id].reduce((sum, character) => sum + character.charCodeAt(0), 0) % fallbackImages.length]!;
-const image = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackImage(event.id);
+const pictureId = (picture: LibraryImage) => picture.url ?? picture.key ?? '';
+const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image;
 // Programs already showing as a dated event don't get a second card.
 const fillers = programs.filter(program => !events.some(event => event.programId === program.id));
+// In card order, each fallback starts from the id-picked photo and moves on to the next one no other card uses,
+// so two cards side by side never share a picture (unless every library photo is already taken).
+const used = new Set([...events.map(ownImage), ...fillers.map(program => program.image)].filter(Boolean).map(picture => pictureId(picture!)));
+const images = new Map<LibraryEvent, LibraryImage>();
+for (const event of events) {
+  const own = ownImage(event);
+  if (own) { images.set(event, own); continue; }
+  const start = [...event.id].reduce((sum, character) => sum + character.charCodeAt(0), 0) % fallbackImages.length;
+  const picked = fallbackImages.map((_, step) => fallbackImages[(start + step) % fallbackImages.length]!).find(picture => !used.has(pictureId(picture))) ?? fallbackImages[start]!;
+  used.add(pictureId(picked));
+  images.set(event, picked);
+}
+const today = dayKey.format(new Date());
+const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:00`));
 ---
 <div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
   <Grid as="ul" columns={3} hidden={events.length + fillers.length === 0} data-event-rows>
-    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={image(event)} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
+    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
     </Card>)}
     {fillers.map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/librarynews/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
-      <Badge slot="badge" surface>{program.schedule}</Badge>
+      {(() => {
+        const next = nextScheduledDay(program.schedule, today);
+        return next
+          ? <Badge slot="badge" surface data-event-day={next.day} data-schedule={program.schedule}>{dayLabel(next.day)}{next.time && <span>· {next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
+          : <Badge slot="badge" surface>{program.schedule}</Badge>;
+      })()}
       {program.description}
     </Card>)}
   </Grid>
   <p data-event-empty hidden={events.length + fillers.length > 0} class="event-empty">{emptyMessage}</p>
 </div>
 <script>
+  import { nextScheduledDay } from '../../content/schedule.mjs';
   const zone = 'America/Los_Angeles';
   const dayKey = (date: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
   const weekday = (key: string) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long' }).format(new Date(`${key}T12:00:00Z`));
   // Day maths on the date text, so a daylight-saving change can't skip or repeat a day.
   const addDays = (key: string, days: number) => new Date(Date.parse(`${key}T12:00:00Z`) + days * 864e5).toISOString().slice(0, 10);
+  const shortDay = (key: string) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(`${key}T12:00:00Z`));
   const refreshEvents = () => {
     const now = Date.now();
     const today = dayKey(new Date(now)), tomorrow = addDays(today, 1);
+    // Regular programs: move the badge to the next session once the built-in date has passed.
+    for (const badge of document.querySelectorAll<HTMLElement>('[data-schedule]')) {
+      const next = nextScheduledDay(badge.dataset.schedule, today);
+      if (!next || next.day === badge.dataset.eventDay) continue;
+      badge.dataset.eventDay = next.day;
+      badge.dataset.dateLabel = shortDay(next.day);
+      if (badge.firstChild?.nodeType === Node.TEXT_NODE) badge.firstChild.textContent = badge.dataset.dateLabel;
+    }
     // "This Tuesday" only up to this Saturday; later dates keep their full label.
     const week = addDays(today, 6 - new Date(`${today}T12:00:00Z`).getUTCDay());
     for (const list of document.querySelectorAll<HTMLElement>('[data-event-list]')) {
