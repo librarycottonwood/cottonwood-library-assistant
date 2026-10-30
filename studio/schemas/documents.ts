@@ -100,7 +100,7 @@ export const siteSettings = defineType({
         validation: (rule) => rule.required().custom((value) => value === 'America/Los_Angeles' ? true : 'Library dates use America/Los_Angeles.')}),
       defineField({name: 'hoursSummary', title: 'Imported hours summary', type: 'string', hidden: true, readOnly: true, description: 'The website derives this from the opening hours below.'}),
       defineField({name: 'hours', title: 'Opening hours', type: 'array', of: [defineArrayMember({type: 'hoursRow'})], validation: (rule) => rule.required().min(1)}),
-      link('catalogUrl', 'Catalog address'), link('directionsUrl', 'Directions address'), link('instagramUrl', 'Instagram address'),
+      link('catalogUrl', 'Catalog address'), link('directionsUrl', 'Directions address'), link('instagramUrl', 'Instagram address'), link('facebookUrl', 'Facebook address'),
       defineField({name: 'donationUrl', title: 'Approved donation page', type: 'url', validation: (rule) => rule.uri({scheme: ['https']})}),
       defineField({name: 'givebutter', title: 'General Givebutter donations', type: 'givebutterAccount', description: 'Leave empty until the board supplies the approved campaign. Live totals remain in Givebutter.'}),
     ]}),

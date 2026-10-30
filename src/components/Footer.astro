@@ -19,7 +19,7 @@ const { library, navigation } = Astro.props;
         <p class="mt-4 text-sm text-muted">Community-supported since 1996.</p>
         <div class="mt-3 flex flex-wrap items-start gap-x-6 lg:flex-col">
           <a href={library.instagramUrl} class="inline-flex min-h-11 items-center gap-3 text-sm font-medium hover:underline" aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="size-5" />Instagram</a>
-          <button type="button" disabled class="inline-flex min-h-11 cursor-default items-center gap-3 text-sm font-medium"><FacebookIcon class="size-5" />Facebook</button>
+          <a href={library.facebookUrl} class="inline-flex min-h-11 items-center gap-3 text-sm font-medium hover:underline" aria-label="Cottonwood Community Library on Facebook"><FacebookIcon class="size-5" />Facebook</a>
         </div>
       </div>
       <nav aria-label="Footer sitemap">
