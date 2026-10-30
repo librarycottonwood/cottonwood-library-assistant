@@ -87,6 +87,7 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'text-heading', label: 'Heading', value: '3.125rem', detail: '50px', useFor: 'Section headings (h2).', avoid: 'Card titles (use <Heading size="title">).', example: '<Heading size="heading">' }),
       token({ name: 'text-display', label: 'Display', value: '4.375rem', detail: '70px', useFor: 'The one main page heading (h1).', avoid: 'More than once per page.', example: '<Heading level={1} size="display">' }),
       token({ name: 'leading-tight', label: 'Tight line height', value: '1', useFor: 'Big headings, badges and the wordmark.', avoid: 'Paragraphs; lines would touch.', example: 'line-height: var(--leading-tight);' }),
+      token({ name: 'leading-snug', label: 'Snug line height', value: '1.25', useFor: 'Card titles and other short bold text that can wrap.', avoid: 'Paragraphs.', example: 'line-height: var(--leading-snug);' }),
       token({ name: 'leading-relaxed', label: 'Relaxed line height', value: '1.5', useFor: 'Body copy, buttons and centered section headings.', avoid: 'Display headings.', example: 'line-height: var(--leading-relaxed);' }),
     ],
   },

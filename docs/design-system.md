@@ -62,6 +62,7 @@ Desktop sizes from the 1920px design. base.css scales them down on phones (--flu
 | `--text-heading` | `3.125rem` (50px) | Section headings (h2). | Card titles (use <Heading size="title">). | `<Heading size="heading">` |
 | `--text-display` | `4.375rem` (70px) | The one main page heading (h1). | More than once per page. | `<Heading level={1} size="display">` |
 | `--leading-tight` | `1` | Big headings, badges and the wordmark. | Paragraphs; lines would touch. | `line-height: var(--leading-tight);` |
+| `--leading-snug` | `1.25` | Card titles and other short bold text that can wrap. | Paragraphs. | `line-height: var(--leading-snug);` |
 | `--leading-relaxed` | `1.5` | Body copy, buttons and centered section headings. | Display headings. | `line-height: var(--leading-relaxed);` |
 
 ### Spacing
