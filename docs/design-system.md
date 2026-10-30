@@ -107,7 +107,7 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | --- | --- | --- | --- | --- |
 | `--border-thin` | `1px` | Outlined buttons, badges and photo edges. | Focus outlines (base.css handles focus). | `border: var(--border-thin) solid var(--color-border);` |
 | `--border-strong` | `2px` | Filled buttons, so they match outlined ones in size. | Decorative frames. | `border: var(--border-strong) solid var(--color-primary);` |
-| `--underline-thickness` | `0.08em` (about 2px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
+| `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
 ## Components
