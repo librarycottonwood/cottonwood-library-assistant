@@ -53,10 +53,9 @@ export const tokenGroups: TokenGroup[] = [
     note: 'Use the role names below. Do not add new colors or shades.',
     tokens: [
       token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate) and the opening-hours strip.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
-      token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
+      token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders, badge labels and contact details.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
       token({ name: 'color-accent', label: 'Pale green', value: '#beedae', useFor: 'Supporting actions (directions, donations) and the notices bar.', avoid: 'Text color; it fails contrast on paper.', example: '<Button variant="accent">' }),
       token({ name: 'color-accent-ink', label: 'Leaf green', value: '#3b5c30', useFor: 'Text and icons on pale-green backgrounds.', avoid: 'Text on paper or white (use --color-text).', example: 'color: var(--color-accent-ink);' }),
-      token({ name: 'color-forest', label: 'Forest', value: '#152d25', useFor: 'Badge labels and contact details.', avoid: 'Backgrounds or long paragraphs.', example: 'color: var(--color-forest);' }),
       token({ name: 'color-background', label: 'Paper', value: '#f7f8ff', useFor: 'The page background.', avoid: 'Cards that must stand out from the page (use --color-surface).', example: 'background: var(--color-background);' }),
       token({ name: 'color-surface', label: 'White', value: '#ffffff', useFor: 'Raised surfaces, badges on photos, and text on indigo.', avoid: 'The page background.', example: 'background: var(--color-surface);' }),
       token({ name: 'color-text', label: 'Black', value: '#000000', useFor: 'Headings and primary text.', avoid: 'Secondary or supporting copy (use --color-text-muted).', example: '<Text>' }),

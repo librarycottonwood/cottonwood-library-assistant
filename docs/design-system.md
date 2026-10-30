@@ -26,10 +26,9 @@ Use the role names below. Do not add new colors or shades.
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--color-primary` | `#4956a7` | Primary actions (Donate) and the opening-hours strip. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
-| `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
+| `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
-| `--color-forest` | `#152d25` | Badge labels and contact details. | Backgrounds or long paragraphs. | `color: var(--color-forest);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
 | `--color-surface` | `#ffffff` | Raised surfaces, badges on photos, and text on indigo. | The page background. | `background: var(--color-surface);` |
 | `--color-text` | `#000000` | Headings and primary text. | Secondary or supporting copy (use --color-text-muted). | `<Text>` |
