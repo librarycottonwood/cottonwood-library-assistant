@@ -1,6 +1,6 @@
 # Claude Code setup checklist
 
-Moving the library from ChatGPT to Claude Code. Do these in order. Keep ChatGPT working until the last step.
+Moving the library from ChatGPT to Claude Code. **On hold (Oct 29):** staff keep using ChatGPT for now; the launch items under Status still apply. When the move resumes, do these in order and keep ChatGPT working until the last step.
 
 **Public launch and AI Expo: Tuesday, November 3, 2026** (replaces the earlier November 16 plan).
 
@@ -20,7 +20,7 @@ Still open before launch:
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
 - [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
 - [x] **Spam protection for the newsletter form** (see 4f). Set up Oct 27; turns on when this PR goes live.
-- [ ] **Pipeline fixes:** review and merge PR #52 (build tolerates small content mistakes) and PR #53 (safer saves: lists other waiting changes, keeps open PRs' previews, reports failed saves, one file per save, closes abandoned saves after 14 days). Each merge publishes, so do them on a quiet day, one at a time. After #52: deploy the Studio. After #53: update the ChatGPT plugin to the new version in Plugin Creator, then switch this branch (#45) to one file per save.
+- [x] **Pipeline fixes:** PR #52 and #53 merged Oct 28; Studio deployed, ChatGPT plugin updated to 0.2.15, and #45 switched to one file per save.
 - [ ] **Name a board admin** for "a board admin needs to look at this" messages, and put their name and contact in `CLAUDE.md` and `docs/library-facts.md`.
 - [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
 - [ ] **Launch day:** add a Google Analytics annotation; numbers before Nov 3 are test traffic.
@@ -34,7 +34,7 @@ Still open before launch:
 ## 2. GitHub
 
 - [ ] Install the **Claude GitHub App** on the `librarycottonwood` org, only for `cottonwood-library-assistant`.
-- [ ] Merge the `claude/fresh-setup` branch (this setup) through the normal PR + preview flow. It keeps `AGENTS.md`, `assistant/` and `plugins/`, which ChatGPT reads from `main` until cutover.
+- [x] Merge the `claude/fresh-setup` branch (this setup): merged Oct 28 as PR #45.
 - [ ] **Branch protection / ruleset** on `main`: require a pull request, require the `check` workflow, block force-pushes and deletion. Claude's own rules can't stop everything; GitHub is the real lock.
 - [ ] **Ruleset on `maintenance-reports`**: block deletion and force-pushes (the workflow still writes to it).
 - [ ] Repo setting: **automatically delete head branches** after merge.

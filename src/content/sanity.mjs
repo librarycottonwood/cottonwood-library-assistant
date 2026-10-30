@@ -207,7 +207,7 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
       name: text(l.name, sub(lAt, 'Library name', 'name')), phone, phoneHref: phoneLink.value, email,
       address: text(l.address, sub(lAt, 'Street address', 'address')), locality: text(l.locality, sub(lAt, 'City, state and ZIP', 'locality')), mailingAddress: text(l.mailingAddress, sub(lAt, 'Mailing address', 'mailingAddress')),
       timezone: oneOf(l.timezone, ['America/Los_Angeles'], sub(lAt, 'Library timezone', 'timezone')), hoursSummary, hours,
-      catalogUrl: httpsHref(l.catalogUrl, sub(lAt, 'Catalog address', 'catalogUrl'), warn), directionsUrl: httpsHref(l.directionsUrl, sub(lAt, 'Directions address', 'directionsUrl'), warn), instagramUrl: httpsHref(l.instagramUrl, sub(lAt, 'Instagram address', 'instagramUrl'), warn),
+      catalogUrl: httpsHref(l.catalogUrl, sub(lAt, 'Catalog address', 'catalogUrl'), warn), directionsUrl: httpsHref(l.directionsUrl, sub(lAt, 'Directions address', 'directionsUrl'), warn), instagramUrl: httpsHref(l.instagramUrl, sub(lAt, 'Instagram address', 'instagramUrl'), warn), facebookUrl: httpsHref(l.facebookUrl, sub(lAt, 'Facebook address', 'facebookUrl'), warn),
       donationUrl: l.donationUrl && String(l.donationUrl).trim() ? httpsHref(l.donationUrl, sub(lAt, 'Approved donation page', 'donationUrl'), warn) : null,
       givebutter: gb ? { account: id(gb.account, sub(lAt, 'Givebutter account ID', 'givebutter.account')), campaign: id(gb.campaign, sub(lAt, 'General donation campaign code', 'givebutter.campaign')) } : null,
     };

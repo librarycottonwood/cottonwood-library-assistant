@@ -36,6 +36,7 @@ export interface HomeContent {
     catalogUrl: string;
     directionsUrl: string;
     instagramUrl: string;
+    facebookUrl: string;
     /** Null until the library supplies an approved campaign. Never a placeholder URL. */
     donationUrl: string | null;
     /** The library's general donation campaign in Givebutter. Absent or null until the board supplies it;
