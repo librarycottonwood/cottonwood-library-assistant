@@ -1,0 +1,5 @@
+{"request": "Show \"Help us afford a new roof\" in the homepage fundraiser badge, as in Figma.",
+ "sanityDocuments": [
+  {"id": "library-giving", "revision": "aZ43dxtiX1xizBo7WLY643", "fields": ["campaigns[_key==\"under-one-roof\"].badgeLabel"], "before": {"campaigns[_key==\"under-one-roof\"].badgeLabel": null}}
+ ],
+ "requestedInChat": "2026-10-29"}
