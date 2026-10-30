@@ -28,7 +28,6 @@ const returnPath = Astro.url.pathname;
     <input id="newsletter-email" type="email" name="email" required maxlength="254" autocomplete="email" spellcheck="false" placeholder="Email" />
     <Button type="submit" variant="primary">Sign up</Button>
   </div>
-  <p class="newsletter-note">Library news by email. Unsubscribe anytime.</p>
   <TurnstileField />
   <!-- Left empty by people; bots that fill it are ignored. -->
   <div class="sr-only" aria-hidden="true">
@@ -58,7 +57,6 @@ const returnPath = Astro.url.pathname;
     font: inherit; font-weight: var(--weight-medium);
   }
   .newsletter-row input::placeholder { color: var(--color-text-muted); opacity: 1; }
-  .newsletter-note { color: var(--color-text-muted); font-size: var(--fluid-label); }
   .newsletter-row input:focus-visible { border-color: var(--color-primary); }
   /* Very narrow: field above, button full width below. */
   @container (max-width: 17rem) {
