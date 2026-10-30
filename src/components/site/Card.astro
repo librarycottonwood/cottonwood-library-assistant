@@ -60,7 +60,7 @@ const hasBadge = Astro.slots.has('badge');
   .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; color: var(--color-text-muted); }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
-  .card-copy h3 :global(.icon-link .icon-end) { margin-inline-start: var(--space-xs); vertical-align: -0.125em; }
+  .card-copy h3 :global(.icon-link .icon-end) { display: inline-block; margin-inline-start: var(--space-xs); vertical-align: -0.125em; }
 
   /* IconLink already underlines on hover; hovering anywhere on the card hovers the link. */
   .card-copy h3 :global(.icon-link)::after { content: ''; position: absolute; z-index: 1; inset: 0; border-radius: var(--radius-image); }
