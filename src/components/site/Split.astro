@@ -31,7 +31,7 @@ interface Props {
 const { image, media = 'end', ratio = '1314 / 652', headingId, first = false, mediaId, ...attributes } = Astro.props;
 const hasCaption = Astro.slots.has('caption');
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first }]} {...attributes}>
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, bleed: ratio === '1314 / 652' }]} {...attributes}>
   <div class="split-copy"><slot /></div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption }]}>
     <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class:list={['split-image', image.fit === 'contain' && 'is-contained']} style={`aspect-ratio: ${ratio}`} />
@@ -74,6 +74,14 @@ const hasCaption = Astro.slots.has('caption');
     .media-end .split-media :global(.split-image) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
     .media-start .split-media :global(.split-image) { border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
     .split-caption { left: 0; right: auto; margin-inline-start: var(--space-md); }
+    /* The hero photo touches the header, as in the design. */
+    .first { padding-block-start: 0; }
+    /* The design's 1314 × 652 photo runs past the page edge, so it is cropped there, not shrunk.
+       Keep it as tall as the design (652px at 1920 wide) and never shorter than its own shape. */
+    .bleed .split-media { container-type: inline-size; }
+    .bleed .split-media :global(.split-image) { height: max(calc(100cqi * 652 / 1314), calc(100vw * 652 / 1920)); }
+    .bleed.media-end .split-media :global(.split-image) { object-position: left center; }
+    .bleed.media-start .split-media :global(.split-image) { object-position: right center; }
   }
   @media (min-width: 90rem) {
     .media-end { grid-template-columns: minmax(0, var(--width-copy)) minmax(0, 1fr); }
