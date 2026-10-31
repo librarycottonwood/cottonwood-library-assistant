@@ -1,5 +1,7 @@
 # Updating the library website with Claude
 
+> **Not in use yet.** Staff use ChatGPT to update the website. This guide is for a possible later move to Claude.
+
 A one-page guide for library staff and board volunteers.
 
 ## Getting started

@@ -5,7 +5,7 @@ The library's website (Astro, Sanity CMS, Cloudflare Pages) and the Claude Code 
 - Live website: https://cottonwood-library.pages.dev/
 - Content editor (Sanity Studio): https://cottonwood-community-library.sanity.studio/
 - Staff guide: [docs/staff-guide.md](docs/staff-guide.md)
-- Claude rules: [CLAUDE.md](CLAUDE.md) and [.claude/](.claude/)
+- Claude setup (parked; staff use ChatGPT): [.claude/](.claude/)
 
 ## Layout
 
