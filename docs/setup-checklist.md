@@ -15,7 +15,7 @@ Still open before launch:
 - [ ] **Deploy and test the newsletter.** The key only works after the next deployment. Then sign up with an approved test address (see 4b). Nobody has tested it yet.
 - [ ] **Roof fundraiser on the website** (see 4c). Turn the goal bar on in its Form widget first; it was off.
 - [ ] **Auction dates.** Givebutter's auction (unpublished) says Nov 2, 1:00 a.m. to Nov 5, 9:00 a.m.; Donna's letter and the website calendar say Saturday, Nov 14. Confirm with the library which is right before anyone changes either.
-- [ ] **Domain.** Confirm access to the Squarespace domain and keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
+- [x] **Domain.** Access to the Squarespace domain is confirmed. Keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
 - [ ] **Claude nonprofit/Team setup** (sections 1 to 3).
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
 - [ ] **Claude creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.

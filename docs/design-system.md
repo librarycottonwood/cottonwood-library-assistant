@@ -26,10 +26,9 @@ Use the role names below. Do not add new colors or shades.
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--color-primary` | `#4956a7` | Primary actions (Donate) and the opening-hours strip. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
-| `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
+| `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
-| `--color-forest` | `#152d25` | Badge labels and contact details. | Backgrounds or long paragraphs. | `color: var(--color-forest);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
 | `--color-surface` | `#ffffff` | Raised surfaces, badges on photos, and text on indigo. | The page background. | `background: var(--color-surface);` |
 | `--color-text` | `#000000` | Headings and primary text. | Secondary or supporting copy (use --color-text-muted). | `<Text>` |
@@ -62,6 +61,7 @@ Desktop sizes from the 1920px design. base.css scales them down on phones (--flu
 | `--text-heading` | `3.125rem` (50px) | Section headings (h2). | Card titles (use <Heading size="title">). | `<Heading size="heading">` |
 | `--text-display` | `4.375rem` (70px) | The one main page heading (h1). | More than once per page. | `<Heading level={1} size="display">` |
 | `--leading-tight` | `1` | Big headings, badges and the wordmark. | Paragraphs; lines would touch. | `line-height: var(--leading-tight);` |
+| `--leading-snug` | `1.25` | Card titles and other short bold text that can wrap. | Paragraphs. | `line-height: var(--leading-snug);` |
 | `--leading-relaxed` | `1.5` | Body copy, buttons and centered section headings. | Display headings. | `line-height: var(--leading-relaxed);` |
 
 ### Spacing
@@ -106,7 +106,7 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | --- | --- | --- | --- | --- |
 | `--border-thin` | `1px` | Outlined buttons, badges and photo edges. | Focus outlines (base.css handles focus). | `border: var(--border-thin) solid var(--color-border);` |
 | `--border-strong` | `2px` | Filled buttons, so they match outlined ones in size. | Decorative frames. | `border: var(--border-strong) solid var(--color-primary);` |
-| `--underline-thickness` | `0.08em` (about 2px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
+| `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
 ## Components
@@ -119,7 +119,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
-| [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo. |
+| [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
@@ -236,7 +236,7 @@ interface Props {
 
 ### EventCards
 
-`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo.
+`src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written.
 
 - **Use for:** Any page that lists upcoming events. Pass the events from contentRepository.getEvents().
 - **Don't use for:** Past events or news posts (use Grid + Card), or wrapping it in another Grid.

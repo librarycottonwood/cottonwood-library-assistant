@@ -53,10 +53,9 @@ export const tokenGroups: TokenGroup[] = [
     note: 'Use the role names below. Do not add new colors or shades.',
     tokens: [
       token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate) and the opening-hours strip.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
-      token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
+      token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders, badge labels and contact details.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
       token({ name: 'color-accent', label: 'Pale green', value: '#beedae', useFor: 'Supporting actions (directions, donations) and the notices bar.', avoid: 'Text color; it fails contrast on paper.', example: '<Button variant="accent">' }),
       token({ name: 'color-accent-ink', label: 'Leaf green', value: '#3b5c30', useFor: 'Text and icons on pale-green backgrounds.', avoid: 'Text on paper or white (use --color-text).', example: 'color: var(--color-accent-ink);' }),
-      token({ name: 'color-forest', label: 'Forest', value: '#152d25', useFor: 'Badge labels and contact details.', avoid: 'Backgrounds or long paragraphs.', example: 'color: var(--color-forest);' }),
       token({ name: 'color-background', label: 'Paper', value: '#f7f8ff', useFor: 'The page background.', avoid: 'Cards that must stand out from the page (use --color-surface).', example: 'background: var(--color-background);' }),
       token({ name: 'color-surface', label: 'White', value: '#ffffff', useFor: 'Raised surfaces, badges on photos, and text on indigo.', avoid: 'The page background.', example: 'background: var(--color-surface);' }),
       token({ name: 'color-text', label: 'Black', value: '#000000', useFor: 'Headings and primary text.', avoid: 'Secondary or supporting copy (use --color-text-muted).', example: '<Text>' }),
@@ -87,6 +86,7 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'text-heading', label: 'Heading', value: '3.125rem', detail: '50px', useFor: 'Section headings (h2).', avoid: 'Card titles (use <Heading size="title">).', example: '<Heading size="heading">' }),
       token({ name: 'text-display', label: 'Display', value: '4.375rem', detail: '70px', useFor: 'The one main page heading (h1).', avoid: 'More than once per page.', example: '<Heading level={1} size="display">' }),
       token({ name: 'leading-tight', label: 'Tight line height', value: '1', useFor: 'Big headings, badges and the wordmark.', avoid: 'Paragraphs; lines would touch.', example: 'line-height: var(--leading-tight);' }),
+      token({ name: 'leading-snug', label: 'Snug line height', value: '1.25', useFor: 'Card titles and other short bold text that can wrap.', avoid: 'Paragraphs.', example: 'line-height: var(--leading-snug);' }),
       token({ name: 'leading-relaxed', label: 'Relaxed line height', value: '1.5', useFor: 'Body copy, buttons and centered section headings.', avoid: 'Display headings.', example: 'line-height: var(--leading-relaxed);' }),
     ],
   },
@@ -127,7 +127,7 @@ export const tokenGroups: TokenGroup[] = [
     tokens: [
       token({ name: 'border-thin', label: 'Thin', value: '1px', useFor: 'Outlined buttons, badges and photo edges.', avoid: 'Focus outlines (base.css handles focus).', example: 'border: var(--border-thin) solid var(--color-border);' }),
       token({ name: 'border-strong', label: 'Strong', value: '2px', useFor: 'Filled buttons, so they match outlined ones in size.', avoid: 'Decorative frames.', example: 'border: var(--border-strong) solid var(--color-primary);' }),
-      token({ name: 'underline-thickness', label: 'Underline', value: '0.08em', detail: 'about 2px on body text', useFor: 'Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it).', avoid: 'Borders, dividers or focus outlines (use --border-thin / base.css).', example: 'text-decoration-thickness: var(--underline-thickness);' }),
+      token({ name: 'underline-thickness', label: 'Underline', value: '0.12em', detail: 'about 3px on body text', useFor: 'Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it).', avoid: 'Borders, dividers or focus outlines (use --border-thin / base.css).', example: 'text-decoration-thickness: var(--underline-thickness);' }),
       token({ name: 'underline-offset', label: 'Underline gap', value: '0.25em', useFor: 'Space between a link’s text and its underline, so the thicker line clears letters like g and y.', avoid: 'Spacing between elements (use the spacing steps).', example: 'text-underline-offset: var(--underline-offset);' }),
     ],
   },
