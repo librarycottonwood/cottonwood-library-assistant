@@ -6,6 +6,7 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 
 - Cottonwood Community Library, 3427 Main Street, Cottonwood, CA. Mail: PO Box 1807, Cottonwood, CA 96022.
 - Phone (530) 347-4818. Email cottonlib@shasta.com. Library Google account: librarycottonwood@gmail.com.
+- Board admin (the contact for anything that "needs a board admin"): Todd Haines (toddhaines7@gmail.com). Not technical; he decides account, billing and permission questions and brings in technical help.
 - Hours, address and contact details shown on the site come from Sanity (`library-settings` → Contact and hours). Change them there, never in code.
 
 ## Website
