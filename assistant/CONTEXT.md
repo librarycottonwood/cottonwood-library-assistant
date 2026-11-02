@@ -11,7 +11,7 @@ With `LIBRARY_CONTENT_SOURCE=sanity`, published CMS records feed one validated s
 - Homepage heading, hours, programs: `src/content/seed.ts`.
 - Stories/news/events: `src/content/editorial.ts` and `src/content/feeds.ts`.
 - Giving: `src/content/support.ts`.
-- Images: `src/content/images.ts`, `library-files/`, and `public/`.
+- Images: `src/content/images.ts`, `src/assets/`, and `public/`.
 
 Source provenance is recorded in `assistant/source.json`. Only website source and referenced public-facing assets were copied; unrelated research, emails, and working files were excluded.
 
