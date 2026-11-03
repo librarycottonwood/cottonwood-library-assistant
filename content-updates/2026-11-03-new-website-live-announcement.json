@@ -1,0 +1,19 @@
+{
+  "request": "Announce that Cottonwood Community Library's new website is live.",
+  "sanityDocuments": [
+    {
+      "id": "3c0d7057-6be4-4ab9-954c-4750d0c313e9",
+      "revision": "yh57dzfOQIvVSXg4hjIpRD",
+      "fields": [
+        "title",
+        "slug",
+        "summary",
+        "category",
+        "publishedAt",
+        "body"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-03"
+}
