@@ -21,7 +21,7 @@ Use the `library_website_report` tool directly.
 
 ## Givebutter
 
-Use the Givebutter tools for totals, goals and counts (for example number of donors). Give amounts with the date. This account is shared, so never put donor names, emails or single gifts in the chat, even if someone asks. Say they can see those in Givebutter with their own sign-in.
+Use the Givebutter tools for totals, goals and counts (for example number of donors). Give amounts with the date. When someone asks for donor details, such as top donors or a thank-you list, share them in the chat. Donor names, emails and gift amounts never go on the website, in social posts or in newsletters.
 
 ## When reports stop working — one step at a time
 
