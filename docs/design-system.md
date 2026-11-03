@@ -531,6 +531,8 @@ interface Props {
   width?: 'content' | 'full' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
+  /** Continues the block above (Service View's line under its photo): no space on top, only the block's own space below. */
+  continues?: boolean;
   id?: string;
 }
 ```

@@ -23,11 +23,13 @@ interface Props {
   width?: 'content' | 'full' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
+  /** Continues the block above (Service View's line under its photo): no space on top, only the block's own space below. */
+  continues?: boolean;
   id?: string;
 }
-const { title, headingId, align = 'center', width = 'content', gap, id } = Astro.props;
+const { title, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
-<section id={id} aria-labelledby={headingId} class="section">
+<section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>}
     <slot />
@@ -35,6 +37,7 @@ const { title, headingId, align = 'center', width = 'content', gap, id } = Astro
 </section>
 <style>
   .section { padding: var(--section-space) var(--page-inset); }
+  .continues { padding-block-start: 0; }
   .section-inner { display: flex; flex-direction: column; margin-inline: auto; }
   .section-inner:not([data-gap]) { gap: var(--section-gap); }
   .width-content { max-width: var(--width-content); }

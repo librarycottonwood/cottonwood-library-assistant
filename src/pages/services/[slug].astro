@@ -37,7 +37,7 @@ const when = program.schedule.replace(' · ', ' at ') + (/[.!?]$/.test(program.s
     <DetailList label={`${program.title} schedule`} items={[{ label: 'When', value: program.schedule }, { label: 'Where', value: library.address }]} />
     {program.details && <Text tone="muted">{program.details}</Text>}
   </Split>
-  <Section align="start">
+  <Section align="start" continues>
     <Text tone="muted" size="lead">{`${program.description} ${when}`}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>

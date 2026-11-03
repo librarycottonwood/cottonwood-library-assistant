@@ -101,7 +101,9 @@ const hasCaption = Astro.slots.has('caption');
     .panel.media-end .split-copy { border-radius: 0 var(--radius-image) var(--radius-image) 0; }
     .panel .split-media { container-type: inline-size; }
     .panel .split-media :global(.split-image) { height: 100%; min-height: calc(100cqi * 9 / 16); }
-    .inset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    /* Figma Explore Services: text 674px, photo 746px. */
+    .inset.media-end { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+    .inset.media-start { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
     .inset.media-end, .inset.media-start { padding-inline: var(--page-inset); }
     .inset .split-media :global(.split-image) { border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
     /* The hero photo touches the header, as in the design. */
