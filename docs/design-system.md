@@ -133,7 +133,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
-| [NewsletterIssue](#newsletterissue) | One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button. |
+| [NewsletterIssue](#newsletterissue) | One newsletter issue: its whole cover page beside the issue, its summary and a "Read the newsletter (PDF)" button. The cover is a document page, so it is never cropped (unlike Split photos). |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
@@ -437,7 +437,7 @@ interface Props { library: HomeContent['library']; }
 
 ### NewsletterIssue
 
-`src/components/site/NewsletterIssue.astro` — One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button.
+`src/components/site/NewsletterIssue.astro` — One newsletter issue: its whole cover page beside the issue, its summary and a "Read the newsletter (PDF)" button. The cover is a document page, so it is never cropped (unlike Split photos).
 
 - **Use for:** The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
 - **Don't use for:** Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).

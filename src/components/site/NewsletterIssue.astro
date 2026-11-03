@@ -1,20 +1,50 @@
 ---
 /**
  * @component NewsletterIssue
- * One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button.
+ * One newsletter issue: its whole cover page beside the issue, its summary and a "Read the newsletter (PDF)" button.
+ * The cover is a document page, so it is never cropped (unlike Split photos).
  * @use The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
  * @avoid Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).
  * @example
  * <NewsletterIssue newsletter={newsletter} />
  */
+import Image from '../OptimizedImage.astro';
 import Button from './Button.astro';
 import Heading from './Heading.astro';
-import Split from './Split.astro';
+import Text from './Text.astro';
 import type { LibraryNewsletter } from '../../content/types';
 interface Props { newsletter: LibraryNewsletter; }
 const { newsletter } = Astro.props;
 ---
-<Split media="start" inset image={{ ...newsletter.cover, fit: 'contain' }} headingId="issue-heading">
-  <Heading id="issue-heading">{newsletter.title}</Heading>
-  <Button href={newsletter.fileUrl} variant="primary" icon="download">Read the newsletter (PDF)</Button>
-</Split>
+<section class="issue" aria-labelledby="issue-heading">
+  <a href={newsletter.fileUrl} class="issue-cover" aria-label={`Read the ${newsletter.issue} newsletter (PDF)`}>
+    <Image width={700} quality={75} image={newsletter.cover} alt="" widths={[400, 700]} sizes="(max-width: 63.99rem) 100vw, 28rem" loading="eager" class="cover" />
+  </a>
+  <div class="issue-copy">
+    <Text tone="muted">{newsletter.issue}</Text>
+    <Heading id="issue-heading">{newsletter.title}</Heading>
+    <Text tone="muted" size="lead">{newsletter.summary}</Text>
+    <Button href={newsletter.fileUrl} variant="primary" icon="download">Read the newsletter (PDF)</Button>
+    <Text tone="muted" size="label">Want the next one? <a href="#newsletter-heading">Sign up below</a> to get it by email.</Text>
+  </div>
+</section>
+<style>
+  .issue {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); align-items: center;
+    max-width: var(--width-content); margin-inline: auto; box-sizing: content-box;
+    padding: var(--space-sm) var(--page-inset) var(--section-space);
+  }
+  /* The cover is a printed page: shown whole, at its own shape, like a sheet on the table. */
+  .issue-cover { display: block; justify-self: center; width: min(100%, 28rem); transition: transform 0.2s; }
+  .issue-cover:hover { transform: translateY(-0.25rem); }
+  .issue-cover :global(.cover) {
+    width: 100%; height: auto;
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+    background: var(--color-surface); box-shadow: 0 1.25rem 2.5rem rgba(27, 32, 64, 0.12);
+  }
+  .issue-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); max-width: var(--width-copy); }
+  .issue-copy a { text-decoration-line: underline; }
+  @media (min-width: 64rem) {
+    .issue { grid-template-columns: minmax(0, 28rem) minmax(0, 1fr); gap: var(--space-xl); }
+  }
+</style>

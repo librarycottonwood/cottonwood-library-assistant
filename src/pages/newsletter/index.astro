@@ -15,9 +15,9 @@ const archives = (await contentRepository.getNewsletters()).filter(issue => issu
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
 <BaseLayout title={`${newsletter?.issue ?? 'Library'} newsletter | Cottonwood Community Library`} description={newsletter?.summary}>
-  <PageTitle title={newsletter ? `${newsletter.issue} newsletter` : 'Library newsletter'} trail={[eventsLink]}>{newsletter?.summary}</PageTitle>
+  <PageTitle title="Library newsletter" trail={[eventsLink]} />
   {newsletter ? <NewsletterIssue newsletter={newsletter} /> : <Section><Text tone="muted">No newsletter has been published yet.</Text></Section>}
-  {archives.length > 0 && <Section title="Earlier newsletters" headingId="archive-heading" width="text" align="start">
+  {archives.length > 0 && <Section title="Earlier newsletters" headingId="archive-heading" width="text">
     <Stack as="ul" gap="xs">{archives.map(issue => <li><IconLink href={`/newsletters/${issue.id}/`} iconEnd="arrow">{issue.issue}</IconLink></li>)}</Stack>
   </Section>}
 </BaseLayout>

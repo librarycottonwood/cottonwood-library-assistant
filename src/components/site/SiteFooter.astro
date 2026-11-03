@@ -11,6 +11,7 @@
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
 import Icon from '../Icon.astro';
+import IconLink from './IconLink.astro';
 import Section from './Section.astro';
 import Text from './Text.astro';
 import InstagramIcon from '../InstagramIcon.astro';
@@ -26,6 +27,7 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
 <Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
   <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
   <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
+  <IconLink href="/newsletter/" iconEnd="arrow">Read the latest newsletter</IconLink>
 </Section>
 <footer class="site-footer">
   <Image src={logo} alt="" width={700} widths={[400, 700]} sizes="700px" loading="lazy" class="footer-watermark" />

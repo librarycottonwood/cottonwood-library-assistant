@@ -14,6 +14,6 @@ const { newsletter } = Astro.props;
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
 <BaseLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
-  <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]}>{newsletter.summary}</PageTitle>
+  <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]} />
   <NewsletterIssue newsletter={newsletter} />
 </BaseLayout>
