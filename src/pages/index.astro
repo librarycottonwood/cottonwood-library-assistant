@@ -16,21 +16,15 @@ import Text from '../components/site/Text.astro';
 import fundraiserHouse from '../assets/images/fundraiser-house.png';
 import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
+import { servicePhotos } from '../content/service-photos';
 import { checkoutAttributes, DONATE_PAGE_HREF, getDonateLink } from '../content/donate';
-import type { LibraryImage } from '../content/types';
 const [home, support, allEvents, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents(), getDonateLink()]);
 const { library, hero, programs, services, givingImage } = home;
 const events = upcomingEvents(allEvents);
 const campaign = activeCampaign(support.campaigns);
 const featured = events[0]?.image ? events[0] : undefined;
 const givingPhoto = givingImage ?? home.support.image;
-// Services have no photos in the CMS yet, so each icon maps to a library photo.
-const servicePhotos: Record<string, LibraryImage> = {
-  book: { key: 'interior', alt: '' },
-  computer: { key: 'computerLab', alt: '' },
-  printer: { key: 'copyRoom', alt: '' },
-};
-const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/visit/#${service.id}`;
+const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout>
@@ -67,7 +61,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Grid as="ul" columns={3}>
       {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!}>{service.description}</Card>)}
     </Grid>
-    <Button href="/visit/" iconEnd="arrow">Read more</Button>
+    <Button href="/services/" iconEnd="arrow">Read more</Button>
   </Section>
 
   <Split media="start" image={givingPhoto} headingId="community-heading">

@@ -1,0 +1,35 @@
+---
+// Explore Services (Figma 1002:423): each service beside its photo, the regular programs, and borrowing questions.
+// Built only from src/components/site (see docs/design-system.md); every text comes from Sanity.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/site/Button.astro';
+import Card from '../../components/site/Card.astro';
+import Faq from '../../components/site/Faq.astro';
+import Grid from '../../components/site/Grid.astro';
+import Heading from '../../components/site/Heading.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import Section from '../../components/site/Section.astro';
+import Split from '../../components/site/Split.astro';
+import Text from '../../components/site/Text.astro';
+import { mainNavigation } from '../../components/site/navigation';
+import { contentRepository } from '../../content/repository';
+import { servicePhotos } from '../../content/service-photos';
+const { library, services, programs, borrowing } = await contentRepository.getHome();
+const title = mainNavigation.find(link => link.href === '/services/')!.label;
+---
+<BaseLayout title={`${title} | Cottonwood Community Library`} description={services.map(service => service.title).join(', ') + ' at the Cottonwood Community Library.'}>
+  <PageTitle title={title} />
+  {services.map((service, index) => <Split media={index % 2 ? 'start' : 'end'} inset image={servicePhotos[service.icon]!} headingId={`${service.id}-heading`} id={service.id}>
+    <Heading id={`${service.id}-heading`}>{service.title}</Heading>
+    <Text tone="muted" size="lead">{service.description}</Text>
+    {service.icon === 'book' && <Button href={library.catalogUrl} variant="accent" iconEnd="arrow">Browse the catalog</Button>}
+  </Split>)}
+  {programs.length > 0 && <Section title="Regular programs" headingId="programs-heading" id="programs">
+    <Grid as="ul" columns={3}>
+      {programs.map(program => <Card as="li" title={program.title} href={`/services/${program.id}/`} image={program.image}>{program.schedule}</Card>)}
+    </Grid>
+  </Section>}
+  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
+    <Faq items={borrowing} />
+  </Section>}
+</BaseLayout>

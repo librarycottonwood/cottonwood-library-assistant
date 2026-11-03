@@ -1,0 +1,46 @@
+---
+// Service View (Figma 1012:1243): one regular program (Story Time, reading groups) with its photo and schedule,
+// the map and borrowing questions. Built only from src/components/site; every text comes from Sanity.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/site/Button.astro';
+import DetailList from '../../components/site/DetailList.astro';
+import Faq from '../../components/site/Faq.astro';
+import Heading from '../../components/site/Heading.astro';
+import MapCard from '../../components/site/MapCard.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import Section from '../../components/site/Section.astro';
+import Split from '../../components/site/Split.astro';
+import Stack from '../../components/site/Stack.astro';
+import Text from '../../components/site/Text.astro';
+import { mainNavigation } from '../../components/site/navigation';
+import { contentRepository } from '../../content/repository';
+import type { Program } from '../../content/types';
+export async function getStaticPaths() {
+  const { programs } = await contentRepository.getHome();
+  return programs.map(program => ({ params: { slug: program.id }, props: { program } }));
+}
+interface Props { program: Program; }
+const { program } = Astro.props;
+const { library, borrowing } = await contentRepository.getHome();
+const services = mainNavigation.find(link => link.href === '/services/')!;
+---
+<BaseLayout title={`${program.title} | Cottonwood Community Library`} description={program.description}>
+  <PageTitle title={program.title} trail={[services]} />
+  <Split media="start" panel image={program.image} headingId="program-heading">
+    <Stack gap="xs">
+      <Heading id="program-heading">{program.description}</Heading>
+    </Stack>
+    <DetailList label={`${program.title} schedule`} items={[{ label: 'When', value: program.schedule }, { label: 'Where', value: `${library.address}, ${library.locality}` }]} />
+    <Text tone="muted">{program.details}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
+      <Button href={library.phoneHref} icon="phone">{library.phone}</Button>
+    </Stack>
+  </Split>
+  <Section title="Find us" headingId="map-heading">
+    <MapCard library={library} />
+  </Section>
+  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
+    <Faq items={borrowing} />
+  </Section>}
+</BaseLayout>

@@ -61,7 +61,7 @@ const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:0
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
     </Card>)}
-    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/librarynews/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
+    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/services/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
       {program.next
         ? <Badge slot="badge" surface data-event-day={program.next.day} data-schedule={program.schedule}>{dayLabel(program.next.day)}{program.next.time && <span>&nbsp;· {program.next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
         : <Badge slot="badge" surface>{program.schedule}</Badge>}

@@ -9,6 +9,8 @@ export default defineConfig({
     '/librarynews/summer-2026/': '/librarynews/newsletter/',
     // The old separate "Keep the library open" page; the Donate page is now the only donation page.
     '/fundraising-events/library-fund/': '/fundraising-events/',
+    // Kids & families became the Story Time page under Explore Services.
+    '/kids/': '/services/story-time/',
   },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },

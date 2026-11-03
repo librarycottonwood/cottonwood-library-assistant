@@ -525,6 +525,8 @@ interface Props {
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
   first?: boolean;
+  /** id on the section, for links like /services/#computers. */
+  id?: string;
   /** id on the photo wrapper, for links like /#visit. */
   mediaId?: string;
   hidden?: boolean;
