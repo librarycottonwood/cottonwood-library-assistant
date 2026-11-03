@@ -1,34 +1,72 @@
 ---
-// Explore Services (Figma 1002:423): each service beside its photo, the regular programs, and borrowing questions.
-// Built only from src/components/site (see docs/design-system.md); every text comes from Sanity.
+// Explore Services (Figma 1002:423): borrowing, computers and printing, each beside its photo, then borrowing questions.
+// Built only from src/components/site (see docs/design-system.md). Service text, prices and fees are page content,
+// written here in Figma's wording (docs/design-rules.md); the questions come from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
-import Card from '../../components/site/Card.astro';
+import DetailList from '../../components/site/DetailList.astro';
 import Faq from '../../components/site/Faq.astro';
-import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
+import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
+import TopicList from '../../components/site/TopicList.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
-import { servicePhotos } from '../../content/service-photos';
-const { library, services, programs, borrowing } = await contentRepository.getHome();
+import type { LibraryImage } from '../../content/types';
+const { library, borrowing } = await contentRepository.getHome();
 const title = mainNavigation.find(link => link.href === '/services/')!.label;
+
+// The section ids are linked from the homepage service cards (/services/#computers).
+const photos: Record<'borrowing' | 'computers' | 'printing', LibraryImage> = {
+  borrowing: { key: 'borrowingShelves', alt: 'Bookshelves and a round reading table with red chairs inside the library.' },
+  computers: { key: 'computerRoom', alt: 'A row of public computers along the window in the library’s computer room.' },
+  printing: { key: 'copyRoom', alt: 'The library’s copier and printer beside the window in the computer room.' },
+};
+const printing = [
+  { label: 'Black-and-white printing or copies', value: '20¢/page' },
+  { label: 'Double-sided black-and-white printing', value: '40¢/sheet' },
+  { label: 'Color copies', value: '$1/page' },
+];
 ---
-<BaseLayout title={`${title} | Cottonwood Community Library`} description={services.map(service => service.title).join(', ') + ' at the Cottonwood Community Library.'}>
+<BaseLayout title={`${title} | Cottonwood Community Library`} description="Borrowing books, library computers and Wi-Fi, and printing and copying at the Cottonwood Community Library.">
   <PageTitle title={title} />
-  {services.map((service, index) => <Split media={index % 2 ? 'start' : 'end'} inset image={servicePhotos[service.icon]!} headingId={`${service.id}-heading`} id={service.id}>
-    <Heading id={`${service.id}-heading`}>{service.title}</Heading>
-    <Text tone="muted" size="lead">{service.description}</Text>
-    {service.icon === 'book' && <Button href={library.catalogUrl} variant="accent" iconEnd="arrow">Browse the catalog</Button>}
-  </Split>)}
-  {programs.length > 0 && <Section title="Regular programs" headingId="programs-heading" id="programs">
-    <Grid as="ul" columns={3}>
-      {programs.map(program => <Card as="li" title={program.title} href={`/services/${program.id}/`} image={program.image}>{program.schedule}</Card>)}
-    </Grid>
-  </Section>}
+
+  <Split media="end" inset ratio="5 / 4" image={photos.borrowing} headingId="borrowing-heading" id="borrowing">
+    <Stack gap="xs">
+      <Heading id="borrowing-heading">Borrowing books</Heading>
+      <Text tone="muted">Find your next read and make yourself at home!</Text>
+    </Stack>
+    <TopicList items={[
+      { title: 'Getting started', text: 'Bring photo ID and proof of residence. Family accounts let everyone in your household borrow together! No physical library card needed.' },
+      { title: 'Renewals & returns', text: 'Renew items up to two times, in person or by phone. Return books at the front desk or use our outdoor book drop!' },
+    ]} />
+    <Text tone="muted" note>Late fees: 10¢/day, up to the replacement cost.</Text>
+    <Button href={library.catalogUrl} variant="accent" iconEnd="arrow">Browse the catalog</Button>
+  </Split>
+
+  <Split media="start" inset ratio="5 / 4" image={photos.computers} headingId="computers-heading" id="computers">
+    <Stack gap="xs">
+      <Heading id="computers-heading">Computers and Wi-Fi</Heading>
+      <Text tone="muted">Use a library computer or use our Wi-Fi on your own device.</Text>
+    </Stack>
+    <TopicList items={[
+      { title: 'Library Computers', text: 'Sign in at the front desk first. First time users will need to read and agree to the terms of our computer use policy. Ask one of our friendly volunteers for the form!' },
+      { title: 'Connecting to Wi-Fi', text: 'Find the current password on the placard at the front desk.' },
+    ]} />
+  </Split>
+
+  <Split media="end" inset ratio="5 / 4" image={photos.printing} headingId="printing-heading" id="printing">
+    <Stack gap="xs">
+      <Heading id="printing-heading">Printing &amp; copying</Heading>
+      <Text tone="muted">Our library offers black-and-white and color printing.</Text>
+    </Stack>
+    <DetailList label="Printing prices" items={printing} />
+    <Text tone="muted">Ask a volunteer at the front desk for any assistance!</Text>
+  </Split>
+
   {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
     <Faq items={borrowing} />
   </Section>}
