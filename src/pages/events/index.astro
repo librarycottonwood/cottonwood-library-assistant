@@ -23,7 +23,7 @@ const upcoming = events.map(event => ({ ...event, image: eventPhoto(event, progr
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
   <PageTitle title={title} />
   <Section id="upcoming">
-    <EventCards events={upcoming} programs={programs} fill={false} limit={9} />
+    <EventCards events={upcoming} programs={programs} fill={false} limit={9} pair="split" />
   </Section>
   {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
     <PostList posts={postsWithPhotos(posts)} />
