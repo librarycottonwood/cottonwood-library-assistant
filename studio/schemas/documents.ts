@@ -120,7 +120,7 @@ export const siteSettings = defineType({
       text('title', 'Heading'), paragraph('introduction', 'Introduction'), image(), link('volunteerFileUrl', 'Volunteer application PDF'),
       paragraph('materials', 'Donating books and DVDs'), paragraph('bookSale', 'Ongoing book sales'), paragraph('wowPoints', 'WOW points'),
     ]}),
-    defineField({name: 'navigation', title: 'Main navigation', type: 'array', group: 'navigation', of: [defineArrayMember({type: 'navigationLink'})], validation: (rule) => rule.required().min(1)}),
+    defineField({name: 'navigation', title: 'Main navigation', type: 'array', group: 'navigation', description: 'Not used by the website. The header and footer menus are set in the website code, so changes here do not show on the site.', of: [defineArrayMember({type: 'navigationLink'})], validation: (rule) => rule.required().min(1)}),
   ],
   preview: {prepare: () => ({title: 'Library settings', subtitle: 'One shared source for contact details, hours, and page content'})},
 });

@@ -56,7 +56,8 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         const active=()=>list.locator('[data-event-expires]:visible');
         // The first session has a photo, so it leads both pages as the featured event and the cards list the rest.
         assert.equal(await active().count(),3,`${viewportName} ${route} before expiry`);
-        assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),true);
+        // Wait for the featured photo instead of checking once; it can appear a moment after load.
+        await page.locator('[data-event-feature-expires]').waitFor({state:'visible',timeout:10000});
         if(route==='/events/'){
           assert.match(await list.locator('[data-event-day="2099-04-17"]').first().innerText(),/^Today/);
           assert.match(await list.locator('[data-event-day="2099-04-18"]').first().innerText(),/^Tomorrow/);

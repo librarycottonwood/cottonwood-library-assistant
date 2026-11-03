@@ -3,7 +3,7 @@
     "status": "Prepared in an isolated PR; not merged, deployed or installed until its separate acceptance evidence is recorded.",
     "repository": "librarycottonwood/cottonwood-library-assistant",
     "baselineMain": "0ffcfea58a2ab8aa646f5ca80b7a53903940acf7",
-    "sourcePluginVersion": "0.2.12",
+    "sourcePluginVersion": "0.2.12 (October 22; history, current source is 0.2.21)",
     "lastObservedInstalledPluginVersion": "0.2.11",
     "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact live publication and verification; task-owned cleanup.",
     "detour": "Website MCP tools, scopes and service binding removed in restoration source. PR35/36 had no successful native chat preview/save acceptance. Reporting remains read-only.",
@@ -26,11 +26,11 @@
     "account": "Library Cloudflare account e05729fd6b6fad329e31896d8b1c2da9 only. Deploy scripts refuse any other CLOUDFLARE_ACCOUNT_ID or a missing library token; no local or personal-account deploy path remains.",
     "project": "cottonwood-library (production branch production)",
     "workflows": "publish-live.yml (PR preview + live save), cms.yml (CMS preview + administrator recovery), live-hosting-setup.yml (one-time project creation)",
-    "domain": "cottonwoodcommunitylibrary.com is attached to this project at launch (planned November 16); see assistant/DOMAIN-LAUNCH.md.",
+    "domain": "cottonwoodcommunitylibrary.com is attached to this project at the public launch (Tuesday, November 3, 2026); see assistant/DOMAIN-LAUNCH.md.",
     "status": "First verified live save October 24: PR #40 merged as 48d30939; publish-live run 40160373342 published the exact checked PR artifact (release 6b00c9b49bd9f5d7040064c2a99329472aec56da32c60b02ada49bda57c6de35, preview https://acf77744.cottonwood-library.pages.dev/) to the production deployment and recorded it in the CMS ledger. live-hosting-setup run 40160161567 created the project on the library account. CMS preview run 40160353204 also succeeded on the new project.",
     "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
     "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) is retired and awaits deletion after the live website is verified; no redirects are kept.",
-    "sourcePluginVersion": "0.2.15 (each save writes its own content-updates file, stores before-values for undo, lists other changes going live before asking, adds stress-test fixes for cancellations, time zones, photos and stuck saves, and recovers a merged save that did not go live with a refresh save; must be updated in Plugin Creator before it is installed)"
+    "sourcePluginVersion": "0.2.21 (see plugins/cottonwood-library/plugin.json; a new version must be updated in Plugin Creator before it is installed, so check the installed version in the library ChatGPT account separately)"
   },
   "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
@@ -474,7 +474,8 @@
       "state": "Domain Connected, correct sender verified, branding and organization PO Box address saved. Actual signup submitted with approved inbox and Terms confirmation; sole recipient read back in newsletter widget audience. User confirmed the test email arrived. Unsubscribe-link rehearsal remains open. Typo sender removed with explicit authorization. Website integration is deployed to the saved trial.",
       "sender": "newsletter@cottonwoodlibrary.givebutter-mail.com",
       "signupSource": "src/content/newsletter-signup.json",
-      "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter)"
+      "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter); October 21 test segment for the old widget",
+      "audience": "Contacts tagged Library Newsletter (added by the website form, functions/api/newsletter.ts), plus earlier Widget form sign-ups → Library Newsletter (old widget L4EVDm, no longer on the site), excluding unsubscribed"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
     "assistant": "Installed 0.2.10 read back in Safari with ten skills enabled. Earlier actual donation report, newsletter draft and unscheduled Facebook draft passed; fresh 0.2.10 routing question correctly selected Codex for design and Work/Sanity for news. No public social or bulk email send."

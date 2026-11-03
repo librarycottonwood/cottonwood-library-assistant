@@ -1,6 +1,6 @@
 # Cottonwood Library: roadmap to handoff
 
-Updated October 21, 2026. Based on the shared [Weekly Deliverables](https://docs.google.com/document/d/1B4DKhP4bpmaMiQ3R_Feq-1qr33MunxwouhGEbAKE5h4/edit), October 20 meeting feedback and verified account work. Dates are week-of milestones from Drive; November 16 remains a target, not a confirmed launch. Newsletter delivery is an added request, not a previously promised Drive milestone.
+Updated October 21, 2026. Based on the shared [Weekly Deliverables](https://docs.google.com/document/d/1B4DKhP4bpmaMiQ3R_Feq-1qr33MunxwouhGEbAKE5h4/edit), October 20 meeting feedback and verified account work. Dates are week-of milestones from Drive; The public launch is Tuesday, November 3, 2026 (this replaced the earlier November 16 target). Newsletter delivery is an added request, not a previously promised Drive milestone.
 
 ## Current position
 
@@ -38,7 +38,7 @@ General-donation campaign **Support Your Local Library / R62NJU** is active. Its
 - [ ] Provision and rehearse the separate production publisher, exact-artifact approval, host verification and rollback. Set production canonical/indexing/analytics behavior; review domain/DNS plan.
 - [ ] Prepare the Expo story, approved screenshots, demonstration and relaunch messages. Review actual recurring costs and old-service invoices.
 
-## Week of November 16: target public relaunch
+## Tuesday, November 3, 2026: public launch
 
 - [ ] Board approves the exact website release and launch date. Apply [DOMAIN-LAUNCH.md](DOMAIN-LAUNCH.md), preserving registration/email and recovery values.
 - [ ] Verify bare/www HTTPS, redirects/deep links, downloads, mobile, actual donation checkout and eligible Apple Pay, newsletter signup and delivery, consent/Analytics and production publishing/undo.

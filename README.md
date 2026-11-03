@@ -1,6 +1,6 @@
 # Cottonwood Community Library website
 
-The library's website (Astro, Sanity CMS, Cloudflare Pages) and the Claude Code setup that library staff use to update it.
+The library's website (Astro, Sanity CMS, Cloudflare Pages) and the ChatGPT plugin ([plugins/cottonwood-library/](plugins/cottonwood-library/)) that library staff use to update it.
 
 - Live website: https://cottonwood-library.pages.dev/
 - Content editor (Sanity Studio): https://cottonwood-community-library.sanity.studio/
