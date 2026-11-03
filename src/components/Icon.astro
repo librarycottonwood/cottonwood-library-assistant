@@ -27,10 +27,10 @@ const icons = {
 };
 
 interface Props {
-  icon: keyof typeof icons;
+  name: keyof typeof icons;
   class?: string;
 }
-const { icon, class: className = '' } = Astro.props;
-const LucideIcon = icons[icon];
+const { name, class: className = '' } = Astro.props;
+const LucideIcon = icons[name];
 ---
 <LucideIcon class={className} aria-hidden="true" focusable="false" />
