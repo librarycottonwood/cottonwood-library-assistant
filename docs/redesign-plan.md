@@ -4,6 +4,16 @@ Figma file `ZHygohymNhKRQyxIhQsQ2P`, page 0:1. Rules for building: `docs/design-
 
 **Status (Nov 2, 2026): every page is on the new design.** `SiteLayout`, `PageLayout`, `global.css` and the old components are deleted. Old URLs redirect (table below). New blocks beyond the list below: `FundraiserForm` (Givebutter form on Support Us) and `NewsletterIssue`; `EventCards` got `fill`, `Prose` got `steps` and a slot. Not built: `ProgramCards` (plain `Card` + schedule `Badge` does the job) and `Signature` (no content for it).
 
+## Page build kit (Nov 2, 2026 rebuild against Figma)
+
+Read first: `docs/design-rules.md` "Where content lives" and `docs/design-system.md` rules 1–7. Pages only compose `src/components/site/`; page text that isn't frequently changing is written in the page file in Figma's wording.
+
+- **Figma specs** (verbatim text, layout, token snaps), on this machine: `/tmp/figma/spec/{home,services,service-view,events,event-view,visit,about,support}.md`. Figma's MCP quota is used up; work from these.
+- **Photos** (in `src/content/images.ts`, use as `{ key, alt }`): `borrowingShelves` (Borrowing books), `computerRoom` (Computers and Wi-Fi), `copyRoom` (Printing), `entrance` (Visit), `bookSale` (Event View sample / Shop the book sale), `newReads` (Donate books & DVDs), `holidayMarket` (WOW points), `cattleDrivePainting` (About top), `foundersPortrait` + `founders` (About "A place of our own"), About gallery: `founders`, `libraryBuilding`, `countyCertificate`, `caterpillarNote`, `muralOrchard`, `muralPicnic`. Story Time's photo is the Sanity program image. Write real alt text.
+- **Components added for the rebuild:** `TopicList` (bold sub-heading + muted paragraph, e.g. "Getting started"), `Text note` (italic side note, e.g. late fees), `Signature` (About sign-off). Existing: `Split` (`inset` for service rows, `panel` for photo + panel), `DetailList` (price table), `Faq`, `MapCard`, `WideImage` (`bleed` for About), `Gallery` (2 or 3 columns), `Card` + `Badge` (Regular Events, Other ways to help), `PostList`, `Prose`, `PageTitle`, `Button` (accent `navigate`, outline `book`, primary `heart`).
+- **Token snaps** (Figma value → token): 50px gaps/padding → `--space-md`/`--space-lg` (components decide); 1120px text column → `--width-text` 920; 805px panel → Split panel ratio; 200px row gap → section spacing; rgba(0,0,0,.15) borders → `--border-image`; 30px card titles → 24px (`--text-body`); button 24/16 padding and 26px icons → Button as is.
+- Need something else? Push `REQUEST-<name>.md` on your branch; don't edit components, layouts, tokens, nav or `astro.config.mjs`.
+
 ## Phase 1 (this PR)
 
 - Header and footer navigation follow Figma, from one list in `src/components/site/navigation.ts` (site structure, so it lives in code, not Sanity).

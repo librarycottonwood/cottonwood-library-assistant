@@ -136,9 +136,11 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
+| [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
 | [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
+| [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
 | [WideImage](#wideimage) | One large rounded photo across the page, right under the page title (Figma Event View and About Us). |
 
 ### BaseLayout
@@ -540,6 +542,17 @@ interface Props {
 </Section>
 ```
 
+### Signature
+
+`src/components/site/Signature.astro` — A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!").
+
+- **Use for:** The end of a long text such as the About Us story, inside the same Section as the Prose, before its Donate button.
+- **Don't use for:** Page headers or footers (they have their own logo), or more than one per page.
+
+```astro
+<Signature>Thank you for your support!</Signature>
+```
+
 ### Split
 
 `src/components/site/Split.astro` — A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
@@ -611,7 +624,7 @@ interface Props {
 
 `src/components/site/Text.astro` — A paragraph (or inline text) in one of the body sizes and tones.
 
-- **Use for:** Introductions, descriptions, dates, small print.
+- **Use for:** Introductions, descriptions, dates, small print, an italic side note (`note`).
 - **Don't use for:** Headings (use Heading) or text inside Button, Badge and Card, which style their own text.
 
 ```ts
@@ -621,11 +634,35 @@ interface Props {
   /** label: 20px. body: 24px (default). lead: 30px. All scale down on phones. */
   size?: 'label' | 'body' | 'lead';
   as?: 'p' | 'span' | 'div';
+  /** Italic, for a side note such as "Late fees: 10¢/day, up to the replacement cost." */
+  note?: boolean;
 }
 ```
 
 ```astro
 <Text tone="muted" size="lead">{featured.summary}</Text>
+```
+
+### TopicList
+
+`src/components/site/TopicList.astro` — Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns").
+
+- **Use for:** Two to four sub-topics inside a Split or Section, under that block's Heading: how to get started, renewals, connecting to Wi-Fi.
+- **Don't use for:** Questions people click to open (use Faq), label-and-value rows such as prices or hours (use DetailList), or a single paragraph (use Text).
+
+```ts
+interface Props {
+  items: { title: string; text: string }[];
+  /** Heading level of each sub-heading: 3 under a section's h2 (default), 4 under an h3. */
+  level?: 3 | 4;
+}
+```
+
+```astro
+<TopicList items={[
+  { title: 'Getting started', text: 'Bring photo ID and proof of residence.' },
+  { title: 'Renewals & returns', text: 'Renew items up to two times, in person or by phone.' },
+]} />
 ```
 
 ### WideImage

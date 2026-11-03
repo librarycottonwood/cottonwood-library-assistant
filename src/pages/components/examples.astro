@@ -12,6 +12,8 @@ import PageTitle from '../../components/site/PageTitle.astro';
 import PostList from '../../components/site/PostList.astro';
 import Prose from '../../components/site/Prose.astro';
 import Section from '../../components/site/Section.astro';
+import Signature from '../../components/site/Signature.astro';
+import TopicList from '../../components/site/TopicList.astro';
 import Split from '../../components/site/Split.astro';
 import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
@@ -41,6 +43,8 @@ const entrance: LibraryImage = { key: 'entrance', alt: 'Inside the library entra
       <Heading id="inset-heading">{service.title}</Heading>
       <Text tone="muted">{service.description}</Text>
     </Stack>
+    <TopicList items={[{ title: 'Getting started', text: 'Bring photo ID and proof of residence.' }, { title: 'Renewals & returns', text: 'Renew items up to two times, in person or by phone.' }]} />
+    <Text tone="muted" note>An italic side note.</Text>
     <Button href={library.catalogUrl} variant="accent" iconEnd="arrow">Browse the catalog</Button>
   </Split>
 
@@ -55,6 +59,7 @@ const entrance: LibraryImage = { key: 'entrance', alt: 'Inside the library entra
   <WideImage image={story.image} bleed />
   <Section width="text" align="start" title={story.heading} headingId="story-heading">
     <Prose paragraphs={story.paragraphs} />
+    <Signature>Thank you for your support!</Signature>
   </Section>
 
   <Section title="Gallery" headingId="gallery-heading">
