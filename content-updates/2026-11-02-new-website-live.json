@@ -1,0 +1,19 @@
+{
+  "request": "Announce the launch of the new Cottonwood Community Library website with a text-only news post.",
+  "sanityDocuments": [
+    {
+      "id": "f8e55268-7766-4d9f-bcbc-04b1463454a0",
+      "revision": "U6YB7cNktEbNVaYZl4zwDx",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-02"
+}
