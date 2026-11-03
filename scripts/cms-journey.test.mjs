@@ -103,8 +103,9 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
     const current=await readFile(path.join(output,'newsletter/index.html'),'utf8');
     const archive=await readFile(path.join(output,'newsletters/archive-rehearsal/index.html'),'utf8');
     assert.ok(plain(current).includes('Current rehearsal issue'));
-    assert.ok(current.includes('/newsletters/archive-rehearsal/'));
-    assert.ok(plain(archive).includes('Archive rehearsal newsletter'));
+    // Every issue is a cover card on the newsletter page (each opens its PDF); the issue page stays for older links.
+    assert.ok(plain(current).includes('Earlier rehearsal issue'));
+    assert.ok(plain(archive).includes('Earlier rehearsal issue newsletter'));
     assert.ok(archive.includes(newsletter.legacyFileUrl));
     const version=JSON.parse(await readFile(path.join(output,'_content/version.json'),'utf8'));
     assert.equal(version.provider,'sanity');assert.equal(version.contentDigest,approved.contentDigest);
