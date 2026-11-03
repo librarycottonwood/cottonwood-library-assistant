@@ -1,0 +1,12 @@
+{
+  "request": "Sync the restored published October 16–17 book sale news post to the live website without changing its wording or the separate event.",
+  "sanityDocuments": [
+    {
+      "id": "post-october-book-sale",
+      "revision": "pdPP5UKcrXrbURi1vYmq3M",
+      "fields": [],
+      "before": {}
+    }
+  ],
+  "requestedInChat": "2026-11-03"
+}
