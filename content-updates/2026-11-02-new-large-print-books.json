@@ -1,0 +1,20 @@
+{
+  "request": "Add a library news post thanking the Friends of the Library for a donation of new large-print books, with an illustrative picture.",
+  "sanityDocuments": [
+    {
+      "id": "de3c4a9e-ddc9-4345-aadf-1c8ec7790a3c",
+      "revision": "U6YB7cNktEbNVaYZl3Klit",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body",
+        "image"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-02"
+}
