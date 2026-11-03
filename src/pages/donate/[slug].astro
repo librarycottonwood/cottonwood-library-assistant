@@ -1,6 +1,6 @@
 ---
 // One way to help (volunteer, book sale, book donations, WOW points), in the Support Us layout:
-// photo beside how to help, more about it, other ways to help. Built only from src/components/site; text from Sanity.
+// photo beside what it is and how to help (said once, in the panel), photos, other ways to help. Built only from src/components/site; text from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
 import Card from '../../components/site/Card.astro';
@@ -26,7 +26,9 @@ interface Props { initiative: SupportInitiative; }
 const { initiative } = Astro.props;
 const [{ initiatives }, events] = await Promise.all([contentRepository.getSupport(), contentRepository.getEvents()]);
 const action = initiative.action;
-const details = initiative.paragraphs.filter(text => text !== initiative.summary);
+// The panel says it once: the first paragraph (what this is), then the steps. The summary is the card text on
+// Support Us, and later paragraphs repeat the steps, so neither is shown again here.
+const intro = initiative.paragraphs[0] ?? initiative.summary;
 const others = otherWaysToHelp(initiatives, initiative.id);
 // The book-sale page names the next dated sale from the event records, if one is scheduled.
 const nextSale = initiative.id === 'book-sale' ? upcomingEvents(events).find(event => /book sale/i.test(event.title)) : undefined;
@@ -35,14 +37,11 @@ const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'lon
 <BaseLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary}>
   <PageTitle title={initiative.title} trail={[supportLink]} />
   <Split media="start" panel image={initiative.image}>
-    <Text size="lead">{initiative.summary}</Text>
+    <Text size="lead">{intro}</Text>
     {nextSale && <Text>Next sale: <a href={nextSale.href}><time datetime={nextSale.startsAt}>{saleDate.format(new Date(nextSale.startsAt))}</time></a></Text>}
     <Prose steps={initiative.steps} />
     <Button href={action.href} download={action.download || undefined} variant="accent" icon={action.download ? 'download' : undefined} iconEnd={action.download ? undefined : 'arrow'}>{action.label}</Button>
   </Split>
-  {details.length > 0 && <Section width="text" align="start">
-    <Prose paragraphs={details} />
-  </Section>}
   {initiative.gallery && initiative.gallery.length > 0 && <Section title="Photos" headingId="photos-heading">
     <Gallery images={initiative.gallery} />
   </Section>}

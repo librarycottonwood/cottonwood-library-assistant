@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
 import DetailList from '../../components/site/DetailList.astro';
 import Faq from '../../components/site/Faq.astro';
+import Gallery from '../../components/site/Gallery.astro';
 import MapCard from '../../components/site/MapCard.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
@@ -24,8 +25,18 @@ const { library } = await contentRepository.getHome();
 const services = mainNavigation.find(link => link.href === '/services/')!;
 // Page photos from Figma. Programs without one show their Sanity picture, filling the frame like every page photo.
 const photos: Record<string, LibraryImage> = {
-  'story-time': { key: 'storyTimeCorner', alt: 'The Story Time corner: a bright alphabet rug, bookshelves, a reading chair and a globe by the window.' },
+  'story-time': { key: 'storyTimeSession', alt: 'Story Time in the children’s corner: a volunteer reads a picture book to children sitting on the alphabet rug and cushions.' },
+  'book-club': { key: 'bookClubMeeting', alt: 'Book Club members talking around a table in the library.' },
 };
+// More photos from the program, shown under the panel.
+const galleries: Record<string, LibraryImage[]> = {
+  'story-time': [
+    { key: 'storyTimeBeeColoring', alt: 'Bee coloring pages and craft supplies laid out for a Story Time craft.' },
+    { key: 'storyTimeSnailCraft', alt: 'A clay snail made at Story Time, beside a tank with a real snail.' },
+    { key: 'storyTimeButterflyCraft', alt: 'A child colors a butterfly craft with pencils at the craft table.' },
+  ],
+};
+const gallery = galleries[program.id] ?? [];
 const photo = photos[program.id] ?? { ...program.image, fit: 'cover' as const };
 // Questions about this program, written from the program's Sanity details (staff-provided). A program listed here
 // shows its details as these questions; a new program without questions shows its details in the panel instead.
@@ -57,6 +68,9 @@ const faq = questions[program.id] ?? [];
       <Button href={library.catalogUrl} icon="book">Browse the catalog</Button>
     </Stack>
   </Split>
+  {gallery.length > 0 && <Section title="Photos" headingId="photos-heading">
+    <Gallery images={gallery} />
+  </Section>}
   <Section title="Find us" headingId="map-heading">
     <MapCard library={library} />
   </Section>

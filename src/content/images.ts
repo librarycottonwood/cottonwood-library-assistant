@@ -31,12 +31,18 @@ import countyCertificate from '../assets/images/county-10th-anniversary-certific
 import thankYouNote from '../assets/images/caterpillar-mural-thank-you-note.jpg';
 import muralOrchard from '../assets/images/childrens-mural-orchard.jpg';
 import storyTimeCorner from '../assets/images/story-time-corner.jpg';
+// Library photos from the board's "Unused Library Pics" Drive folder (Todd Haines, Oct 2026).
+import storyTimeSession from '../assets/images/story-time-session.jpg';
+import storyTimeBeeColoring from '../assets/images/story-time-bee-coloring.jpg';
+import storyTimeSnailCraft from '../assets/images/story-time-snail-craft.jpg';
+import storyTimeButterflyCraft from '../assets/images/story-time-butterfly-craft.jpg';
+import bookClubMeeting from '../assets/images/book-club-meeting.jpg';
 // Cropped from the Figma About Us frame (the Square site had no copy).
 import muralPicnicTable from '../assets/images/childrens-mural-picnic-table.jpg';
 // Cropped from the Figma Events & News frame (the Square site had no copy).
 import adventureMural from '../assets/images/adventure-awaits-mural.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];
