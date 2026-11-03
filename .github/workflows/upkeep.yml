@@ -53,7 +53,9 @@ jobs:
           python3 "$RUNNER_TEMP/upkeep/github.py" prepare
       - name: Build isolated repair worker
         if: steps.prepare.outputs.ready == 'true'
-        run: docker build -t library-upkeep "$RUNNER_TEMP/image"
+        run: |
+          docker build -t library-upkeep "$RUNNER_TEMP/image"
+          docker run --rm library-upkeep codex --version
       - name: Prepare exact source without credentials
         if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true'
         env:
@@ -88,16 +90,20 @@ jobs:
           LIBRARY_CODEX_AUTH_SEED: ${{ secrets.LIBRARY_CODEX_AUTH_SEED }}
         run: |
           python3 "$RUNNER_TEMP/upkeep/vault.py" restore "$RUNNER_TEMP/auth.enc" "$RUNNER_TEMP/agent-auth/auth.json"
+      # No pinned model: Codex picks OpenAI's current recommended model for the
+      # library's plan, so retired models never strand the worker.
       - name: Investigate one failure using Plus
         if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair == 'true' && inputs.replay_run == ''
-        timeout-minutes: 6
+        timeout-minutes: 10
         run: |
           docker run --rm --name library-codex-worker \
             -v "$GITHUB_WORKSPACE:/repo" \
             -v "$RUNNER_TEMP/agent-auth:/auth" \
             -v "$RUNNER_TEMP/review:/review" \
             -e CODEX_HOME=/auth library-upkeep \
-            bash -c 'codex exec --disable apps --ignore-user-config --ephemeral --dangerously-bypass-approvals-and-sandbox -m gpt-6-luna -c model_reasoning_effort="low" -o /review/result.txt - < /review/prompt.md >/dev/null 2>&1'
+            bash -c 'codex exec --disable apps --ignore-user-config --ephemeral --dangerously-bypass-approvals-and-sandbox -c model_reasoning_effort="medium" -o /review/result.txt - < /review/prompt.md >/dev/null 2>/review/codex.log'
+          grep -m1 -E '^model:' "$RUNNER_TEMP/review/codex.log" || true
+          rm -f "$RUNNER_TEMP/review/codex.log"
       - name: Maintain sign-in on idle weeks
         if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.repair != 'true' && inputs.replay_run == ''
         timeout-minutes: 2
@@ -105,7 +111,7 @@ jobs:
           docker run --rm --name library-codex-worker \
             -v "$RUNNER_TEMP/agent-auth:/auth" -e CODEX_HOME=/auth library-upkeep \
             codex exec --disable apps --ignore-user-config --ephemeral --skip-git-repo-check -s read-only \
-            -m gpt-6-luna -c model_reasoning_effort="low" 'Reply with the single word OK.' >"$RUNNER_TEMP/login-test.log" 2>&1 || {
+            -c model_reasoning_effort="low" 'Reply with the single word OK.' >"$RUNNER_TEMP/login-test.log" 2>&1 || {
             python3 -c 'import os,re; from pathlib import Path; s=Path(os.environ["RUNNER_TEMP"]+"/login-test.log").read_text(); print(re.sub(r"[A-Za-z0-9_./+-]{80,}","[redacted]",s[-6000:]))'
             exit 1
           }
