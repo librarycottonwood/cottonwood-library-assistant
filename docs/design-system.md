@@ -91,7 +91,7 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 | `--width-text` | `57.5rem` (920px) | Long reading on its own: FAQs, articles, the About story (Section width="text", Prose). | Text beside a photo (use --width-copy) or card grids. | `<Section width="text">` |
 | `--page-inset` | `var(--space-sm)` (20 → 60 → 100px) → `var(--space-lg)` from 48rem, `var(--space-xl)` from 100rem | Left and right space at the page edge. Section, Split, header and footer apply it. | Spacing inside content; pages never need it directly. | `padding-inline: var(--page-inset);` |
 | `--section-space` | `var(--space-lg)` (60 → 100px) → `var(--space-xl)` from 100rem | Space above and below each page section. Section and Split apply it. | Gaps inside a section (use --section-gap). | `padding-block: var(--section-space);` |
-| `--section-gap` | `var(--space-md)` (30 → 60px) → `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
+| `--section-gap` | `var(--space-lg)` (60 → 30 → 60px) → `var(--space-md)` from 48rem, `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. Phones get the large step: their cards stack (60px apart), so a heading or button closer than that reads as part of the nearest card. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
 
 ### Corners
 
