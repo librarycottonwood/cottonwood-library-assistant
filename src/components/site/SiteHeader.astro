@@ -32,7 +32,7 @@ const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
   <div class="header-actions">
     <!-- Goes to the Support Us page (its button opens Givebutter's popup). The click still counts as donate_header. -->
     <Button href={supportLink.href} aria-current={isCurrent(supportLink.href) ? 'page' : undefined} data-analytics-event="donate_header" variant="primary" icon="heart">Donate</Button>
-    <button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle" hidden>
+    <button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle">
       <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
     </button>
   </div>
@@ -114,6 +114,10 @@ const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
   .mobile-nav { display: flex; flex-direction: column; flex-basis: 100%; padding-top: var(--space-xs); font-weight: var(--weight-semibold); }
   .mobile-nav a { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 0; border-top: var(--border-thin) solid var(--color-border); }
   .mobile-nav :global(.mobile-external) { width: 1em; height: 1em; }
+  /* The phone menu starts closed before the script runs, so pages don't open with the menu showing and then jump
+   * up. Without JavaScript the links simply stay listed and there is no menu button. */
+  @media (scripting: enabled) { .site-header:has(.menu-toggle[aria-expanded='false']) .mobile-nav { display: none; } }
+  @media (scripting: none) { .menu-toggle { display: none; } }
 
   @media (min-width: 48rem) {
     .hours-strip, .site-header { padding-block: var(--space-sm); }
