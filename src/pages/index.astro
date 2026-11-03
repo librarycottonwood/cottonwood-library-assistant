@@ -18,11 +18,15 @@ import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
 import { servicePhotos } from '../content/service-photos';
 import { checkoutAttributes, DONATE_PAGE_HREF, getDonateLink } from '../content/donate';
+import { fallbackPhoto } from './_photos';
 const [home, support, allEvents, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents(), getDonateLink()]);
 const { library, hero, programs, services, givingImage } = home;
 const events = upcomingEvents(allEvents);
 const campaign = activeCampaign(support.campaigns);
-const featured = events[0]?.image ? events[0] : undefined;
+// Figma's photo-and-text block always shows the next event; with no photo of its own it shows its program's photo,
+// or a fitting library photo (as on Events & News).
+const featured = events[0];
+const featuredImage = featured && (featured.image ?? programs.find(program => program.id === featured.programId)?.image ?? fallbackPhoto(featured.title, featured.summary));
 const givingPhoto = givingImage ?? home.support.image;
 const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
@@ -36,7 +40,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
     <Text tone="muted">{hero.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
-      <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="primary" icon="navigate">Get directions</Button>
+      <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
       <Button href={library.catalogUrl} data-analytics-event="catalog_quick" icon="book">Catalog</Button>
     </Stack>
     <Fragment slot="caption">
@@ -45,7 +49,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Fragment>
   </Split>
 
-  {featured?.image && <Split media="start" image={featured.image} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+  {featured && featuredImage && <Split media="start" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
     <Text tone="muted" size="lead">{featured.summary}</Text>
@@ -68,7 +72,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Heading id="community-heading">{home.support.title}</Heading>
     <Text tone="muted">{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
-      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="primary" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
       <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
     </Stack>
   </Split>
