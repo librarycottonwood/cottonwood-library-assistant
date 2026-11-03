@@ -48,7 +48,7 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
    }
    ```
    For a brand-new record use `"before": null`. Commit it with a short message.
-3. Open a PR into `main` titled with the request in plain words. Tell the volunteer once: "The preview takes about 8 minutes."
+3. Open a PR into `main` titled with the request in plain words. Tell the volunteer once: "The preview takes about 5 minutes."
 4. Wait for the commit status **Website preview** on the PR's head commit to be **success** or **failure**. Check every minute or so. On success its target URL is the checked preview. If it fails, or nothing has arrived after 12 minutes, see "If the preview doesn't come".
 5. Read the PR comment **"What this save puts on the live website"**. It lists every website document that differs from the live website and marks the ones this save did not list.
    - If it lists **other changes that will also go live**, tell the volunteer before asking: "Someone else's change is also waiting: … If we save now, it goes on the website too. Include it, or wait?" Name each one (for example "the Main Street Readers photo"). If they want to wait, do not merge. Those changes belong to another save or person: look for an open `content/*` PR that lists them and ask whether to finish or undo that one first. Undo someone else's change in Sanity only when the volunteer clearly asks; then push a new commit for a fresh preview and read the list again.
@@ -61,7 +61,7 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
    - no Sanity record was published after the PR's head commit.
 
    If any of these fails, push a new commit (for example update `requestedInChat`) for a fresh preview and list, and ask again. Otherwise merge the PR (merge commit).
-8. Wait for the commit status **Live website** on the merge commit to be **success** (usually about 10 minutes; "Not live yet: waiting to publish" means it is queued). Then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved. If it fails, or isn't success 15 minutes after the merge, see "If it doesn't go live".
+8. Wait for the commit status **Live website** on the merge commit to be **success** (usually about 6 minutes; "Not live yet: waiting to publish" means it is queued). Then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved. If it fails, or isn't success 15 minutes after the merge, see "If it doesn't go live".
 9. Delete the request's branch.
 
 ### If the preview doesn't come
@@ -100,6 +100,6 @@ For a failure, first establish whether the existing website is working and what 
 
 “Discard the draft” means remove only the unfinished work from this request; preserve the published record and other people's changes. Read the result back.
 
-“Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 20 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
+“Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 15 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
 
 If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. A board admin needs to delete them." Undoing the website change alone does not remove them.
