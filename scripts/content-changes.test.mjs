@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readdir, readFile} from 'node:fs/promises';
-import {isContentUpdatePath, contentUpdatePath, parseContentUpdate, siteDocuments, siteDigest, revisionList, parseRevisions, compareContent, statusDescription, commentBody, LEGACY_UPDATE_PATH, COMMENT_MARKER} from './content-changes.mjs';
+import {isContentUpdatePath, contentUpdatePath, parseContentUpdate, siteDocuments, siteDigest, revisionList, parseRevisions, compareContent, statusDescription, commentBody, pagePath, checkPages, LEGACY_UPDATE_PATH, COMMENT_MARKER} from './content-changes.mjs';
 
 const image = (id, rev = 'r1', extra = {}) => ({_id: id, _type: 'sanity.imageAsset', _rev: rev, originalFilename: `${id}.jpg`, ...extra});
 const snapshot = documents => ({schemaVersion: 1, projectId: '2ou0xy2r', dataset: 'production', documents});
@@ -90,4 +90,42 @@ test('a code change with identical content says nothing else goes live', () => {
   assert.equal(result.changes.length, 0);
   assert.match(statusDescription(result), /No content differences/);
   assert.match(commentBody(result, {}), /No other changes will go live/);
+});
+
+test('posts, events, programs and newsletters get their current page address; the rest have none', () => {
+  const page = (_type, current) => pagePath({_type, slug: {current}});
+  assert.equal(page('post', 'our-new-website'), '/news/our-new-website/');
+  assert.equal(page('event', 'book-sale'), '/events/book-sale/');
+  assert.equal(page('program', 'story-time'), '/events/regular/story-time/');
+  assert.equal(page('newsletter', 'summer-2026'), '/newsletters/summer-2026/');
+  assert.equal(page('siteSettings', 'x'), null);
+  assert.equal(page('post', 'Bad Slug'), null);
+  assert.equal(pagePath(image('image-new')), null);
+});
+
+const launchPost = {_id: 'post-launch', _type: 'post', _rev: 'n1', title: 'Our New Library Website Is Live!', slug: {current: 'our-new-website-is-live'}};
+const launchSave = () => compareContent({live: revisionList(snapshot([settings])), current: snapshot([settings, launchPost]), listed: ['post-launch'], updateFiles: ['content-updates/2026-11-03-launch.json']});
+const respond = (status, body = '') => ({status, text: async () => body});
+
+test('the preview check opens each listed page and only passes when it shows the title', async () => {
+  const result = launchSave();
+  const asked = [];
+  const ok = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async url => {asked.push(url); return respond(200, '<h1>Our New Library Website Is Live&#33;</h1>');}});
+  assert.deepEqual(asked, ['https://abcd1234.cottonwood-library.pages.dev/news/our-new-website-is-live/']);
+  assert.deepEqual(ok, [{id: 'post-launch', typeName: 'News post', label: 'Our New Library Website Is Live!', url: asked[0], ok: true}]);
+  const body = commentBody(result, {previewUrl: 'https://abcd1234.cottonwood-library.pages.dev/', sha: 'f'.repeat(40), pages: ok});
+  assert.match(body, /Pages checked on the preview/);
+  assert.match(body, /News post "Our New Library Website Is Live!": https:\/\/abcd1234\.cottonwood-library\.pages\.dev\/news\/our-new-website-is-live\//);
+  assert.match(statusDescription(result, {pages: ok}), /Only this save/);
+
+  const missing = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async () => respond(404), wait: async () => {}});
+  assert.equal(missing[0].ok, false);
+  assert.match(statusDescription(result, {pages: missing}), /^No working preview: the news post page answers 404/);
+  assert.match(commentBody(result, {pages: missing}), /\*\*Problem:\*\* News post "Our New Library Website Is Live!" answers 404/);
+
+  const wrong = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async () => respond(200, '<h1>Page not found</h1>')});
+  assert.match(wrong[0].problem, /does not show/);
+  let tries = 0;
+  const later = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async () => ++tries < 3 ? respond(404) : respond(200, '<h1>Our New Library Website Is Live!</h1>'), wait: async () => {}});
+  assert.equal(later[0].ok, true, 'a page still being published gets a few tries');
 });
