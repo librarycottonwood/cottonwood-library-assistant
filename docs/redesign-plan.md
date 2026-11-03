@@ -2,7 +2,7 @@
 
 Figma file `ZHygohymNhKRQyxIhQsQ2P`, page 0:1. Rules for building: `docs/design-system.md`.
 
-**Status (Nov 2, 2026): every page is on the new design.** `SiteLayout`, `PageLayout`, `global.css` and the old components are deleted. Old URLs redirect (table below). New blocks beyond the list below: `FundraiserForm` (Givebutter form on Support Us) and `NewsletterIssue`; `EventCards` got `fill`, `Prose` got `steps` and a slot. Not built: `ProgramCards` (plain `Card` + schedule `Badge` does the job) and `Signature` (no content for it).
+**Status (Nov 2, 2026): every page is on the new design.** `SiteLayout`, `PageLayout`, `global.css` and the old components are deleted. Old URLs redirect (table below). New blocks beyond the list below: `FundraiserForm` (Givebutter form on Support Us); `EventCards` got `fill`, `Prose` got `steps` and a slot; `Card` got `shape="page"` for newsletter covers. Not built: `ProgramCards` (plain `Card` + schedule `Badge` does the job) and `Signature` (no content for it).
 
 ## Page build kit (Nov 2, 2026 rebuild against Figma)
 

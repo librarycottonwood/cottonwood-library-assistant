@@ -13,11 +13,13 @@
  * <EventCards events={events} programs={programs} limit={3} />
  */
 import Card from './Card.astro';
+import { programHref } from './navigation';
 import Grid from './Grid.astro';
 import Badge from './Badge.astro';
 import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
 import { upcomingEvents } from '../../content/feeds';
 import { nextScheduledDay } from '../../content/schedule.mjs';
+import { eventTopicPhoto, refreshPhoto } from '../../content/photography';
 interface Props {
   events: LibraryEvent[];
   /** Regular programs. They give events their photo and fill spots no dated event takes. */
@@ -38,8 +40,11 @@ const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long
 const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
 // Library photos for events with none of their own, picked by id so a card keeps its photo between builds.
 const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(key => ({ key, alt: '' }));
-const pictureId = (picture: LibraryImage) => picture.url ?? picture.key ?? '';
-const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image;
+const pictureId = (picture: LibraryImage) => {
+  const selected = refreshPhoto(picture);
+  return selected.url ?? selected.key ?? '';
+};
+const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? eventTopicPhoto(event.title, event.summary);
 // Programs already showing as a dated event don't get a second card.
 const fillers = !fill ? [] : programs.filter(program => !events.some(event => event.programId === program.id));
 // In card order, each fallback starts from the id-picked photo and moves on to the next one no other card uses,
@@ -58,12 +63,12 @@ const today = dayKey.format(new Date());
 const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:00`));
 ---
 <div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
-  <Grid as="ul" columns={3} hidden={events.length + fillers.length === 0} data-event-rows>
+  <Grid as="ul" columns={3} balance={false} hidden={events.length + fillers.length === 0} data-event-rows>
     {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
     </Card>)}
-    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={`/services/${program.id}/`} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
+    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={programHref(program.id)} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
       {program.next
         ? <Badge slot="badge" surface data-event-day={program.next.day} data-schedule={program.schedule}>{dayLabel(program.next.day)}{program.next.time && <span>&nbsp;· {program.next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
         : <Badge slot="badge" surface>{program.schedule}</Badge>}

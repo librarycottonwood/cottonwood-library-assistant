@@ -9,12 +9,14 @@
  */
 import Image from '../OptimizedImage.astro';
 import type { LibraryImage } from '../../content/types';
+import { refreshPhoto } from '../../content/photography';
 interface Props {
   images: LibraryImage[];
   /** Columns from tablet width up. Phones get one column. */
   columns?: 2 | 3;
 }
-const { images, columns = 3 } = Astro.props;
+const { images: originalImages, columns = 3 } = Astro.props;
+const images = originalImages.map(refreshPhoto);
 ---
 <ul class:list={['gallery', `columns-${columns}`]}>
   {images.map(image => <li>
@@ -31,10 +33,16 @@ const { images, columns = 3 } = Astro.props;
     width: 100%; aspect-ratio: 6 / 5; object-fit: cover;
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
-  .gallery :global(.gallery-photo.is-contained) { object-fit: contain; background: var(--color-surface); }
+  /* Posters, portraits and square pictures show whole, at their own shape, with no box around them. */
+  .gallery { align-items: start; }
+  .gallery :global(.gallery-photo.is-contained) { aspect-ratio: auto; height: auto; }
   figcaption { color: var(--color-text-muted); font-size: var(--fluid-label); line-height: var(--leading-snug); }
   @media (min-width: 48rem) {
     .columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .columns-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    /* Three columns as six half-tracks (as in Grid), so a short last row of one or two photos sits centered. */
+    .columns-3 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .columns-3 > li { grid-column: span 2; }
+    .columns-3 > li:nth-child(3n + 1):nth-last-child(2) { grid-column: 2 / span 2; }
+    .columns-3 > li:nth-child(3n + 1):last-child { grid-column: 3 / span 2; }
   }
 </style>

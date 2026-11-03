@@ -2,7 +2,7 @@
 /**
  * @component WideImage
  * One large rounded photo across the page, right under the page title (Figma Event View and About Us).
- * @use The main photo of an event, news post or the About page. `bleed` lets it run off the right edge, as on About Us.
+ * @use The main photo of an event, news post or the About page. `bleed` lets it run off the right edge at every width, as on About Us.
  * @avoid Photos beside text (use Split), several photos (use Gallery), or logos and posters that must not be cropped.
  * @example
  * <PageTitle title={event.title} />
@@ -10,6 +10,7 @@
  */
 import Image from '../OptimizedImage.astro';
 import type { LibraryImage } from '../../content/types';
+import { refreshPhoto } from '../../content/photography';
 interface Props {
   image: LibraryImage;
   /** Run off the right page edge (About Us). */
@@ -17,7 +18,8 @@ interface Props {
   /** Directly under the page title: less space above, and the photo loads immediately. */
   first?: boolean;
 }
-const { image, bleed = false, first = false } = Astro.props;
+const { image: originalImage, bleed = false, first = false } = Astro.props;
+const image = refreshPhoto(originalImage);
 ---
 <div class:list={['wide-image', { bleed, first }]}>
   <Image width={1720} quality={70} image={image} alt={image.alt} widths={[600, 1000, 1400, 1720]} sizes="100vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class:list={['wide-photo', image.fit === 'contain' && 'is-contained']} />
@@ -30,9 +32,11 @@ const { image, bleed = false, first = false } = Astro.props;
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
   .wide-image :global(.wide-photo.is-contained) { object-fit: contain; background: var(--color-surface); }
-  @media (min-width: 64rem) {
-    .bleed { padding-inline-end: 0; }
-    .bleed :global(.wide-photo) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
+  /* Bleed: runs off the right page edge at every width, like the homepage photo. */
+  .bleed { padding-inline-end: 0; }
+  .bleed :global(.wide-photo) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
+  @media (max-width: 47.99rem) {
+    .bleed :global(.wide-photo) { aspect-ratio: 3 / 2; object-position: left center; }
   }
   @media (min-width: 100rem) {
     .first { padding-block-start: var(--space-xl); }

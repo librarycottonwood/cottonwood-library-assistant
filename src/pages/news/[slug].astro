@@ -8,10 +8,8 @@ import Gallery from '../../components/site/Gallery.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Prose from '../../components/site/Prose.astro';
 import Section from '../../components/site/Section.astro';
-import Stack from '../../components/site/Stack.astro';
 import WideImage from '../../components/site/WideImage.astro';
 import { mainNavigation } from '../../components/site/navigation';
-import { checkoutAttributes, getDonateLink } from '../../content/donate';
 import { postDate, upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import type { LibraryPost } from '../../content/types';
@@ -23,7 +21,7 @@ export async function getStaticPaths() {
 }
 interface Props { post: LibraryPost; }
 const { post } = Astro.props;
-const [{ programs }, donate] = await Promise.all([contentRepository.getHome(), getDonateLink()]);
+const { programs } = await contentRepository.getHome();
 const related = post.eventIds?.length ? upcomingEvents(await contentRepository.getEvents()).filter(event => event.documentId && post.eventIds!.includes(event.documentId)).map(event => ({ ...event, image: eventPhoto(event, programs) })) : [];
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 const date = postDate(post);
@@ -35,10 +33,7 @@ const date = postDate(post);
   {post.image && <WideImage image={post.image} first />}
   <Section width="text" align="start">
     <Prose blocks={post.body} paragraphs={post.paragraphs} />
-    <Stack direction="row" gap="xs" wrap>
-      {post.externalUrl && <Button href={post.externalUrl} iconEnd="external">Read at {post.sourceLabel ?? 'the source'}</Button>}
-      <Button href={donate.href} {...checkoutAttributes(donate)} variant="primary" icon="heart">Support your library</Button>
-    </Stack>
+    {post.externalUrl && <Button href={post.externalUrl} iconEnd="external">Read at {post.sourceLabel ?? 'the source'}</Button>}
   </Section>
   {post.gallery && post.gallery.length > 0 && <Section title="Photos" headingId="photos-heading">
     <Gallery images={post.gallery} />

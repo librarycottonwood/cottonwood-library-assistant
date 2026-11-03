@@ -32,11 +32,11 @@ export const homeContent = {
     givebutter: null as HomeContent['library']['givebutter'],
   },
   navigation: [
-    { label: 'Visit & services', href: '/visit/' },
-    { label: 'Events & news', href: '/librarynews/' },
-    { label: 'Kids & families', href: '/kids/' },
-    { label: 'Our story', href: '/our-story/' },
-    { label: 'Support us', href: '/fundraising-events/' },
+    { label: 'Explore Services', href: '/services/' },
+    { label: 'Events & News', href: '/events/' },
+    { label: 'Visit Us', href: '/visit/' },
+    { label: 'About Us', href: '/about/' },
+    { label: 'Support Us', href: '/donate/' },
   ],
   hero: {
     eyebrow: 'Rooted in Cottonwood · Open to you',

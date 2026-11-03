@@ -57,11 +57,11 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
    ```
    For a brand-new record use `"before": null`. Commit it with a short message.
 3. Open a PR into `main` titled with the request in plain words. Tell the volunteer once: "The preview takes about 5 minutes."
-4. Wait for the commit status **Website preview** on the PR's head commit to be **success** or **failure**. Check every minute or so. On success its target URL is the checked preview. If it fails, or nothing has arrived after 12 minutes, see "If the preview doesn't come".
+4. Wait for the commit status **Website preview** on the PR's head commit to be **success** or **failure**. Check every minute or so. If it fails, or nothing has arrived after 12 minutes, see "If the preview doesn't come". Don't tell the volunteer it's ready until it is **success**.
 5. Read the PR comment **"What this save puts on the live website"**. It lists every website document that differs from the live website and marks the ones this save did not list.
    - If it lists **other changes that will also go live**, tell the volunteer before asking: "Someone else's change is also waiting: … If we save now, it goes on the website too. Include it, or wait?" Name each one (for example "the Main Street Readers photo"). If they want to wait, do not merge. Those changes belong to another save or person: look for an open `content/*` PR that lists them and ask whether to finish or undo that one first. Undo someone else's change in Sanity only when the volunteer clearly asks; then push a new commit for a fresh preview and read the list again.
    - If it says content changed while preparing, or it could not compare with the live website, get a fresh preview (push a new commit) before asking.
-6. Open the preview and confirm the change is there. Share the link and ask **"Ready to save?"** If you show a picture in this reply, show only the one you uploaded for this change. Never show pictures from a web search here; volunteers will think that picture is going on the website.
+6. Share the link from **Pages checked on the preview** in that comment (for a settings or notice change, the **Preview** link) and ask **"Ready to save?"** Those pages were opened and showed the right title. Never build a page address yourself, and never share a link the comment doesn't give. If you show a picture in this reply, show only the one you uploaded for this change. Never show pictures from a web search here; volunteers will think that picture is going on the website.
 7. After a clear yes, re-check right before merging:
    - the PR is still open;
    - nothing was merged to `main` since the preview;
@@ -76,6 +76,7 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
 
 Read the **Website preview** description and the failed job's log.
 
+- "No working preview: the … page …": the record's page didn't open on the preview. Check its page address (slug) and that it is published, fix it in Sanity, then push a new commit for a fresh preview.
 - A line starting with `Sanity content:` names a record value the website can't use (see the list below). Fix that record in Sanity, publish it, then push a new commit for a fresh preview.
 - "Superseded" or no status because a newer commit was pushed: wait for the newer commit's preview.
 - Anything else, or still nothing after 20 minutes: you are the fixer. Read the failed job log and fix what you can (a bad record value, a stale branch: update it from `main` and push). If the cause is in the website code, tell the volunteer "The preview didn't finish, so nothing changed on the website, and the current website still works. The library's automatic repair is checking it; ask me again in about an hour." Do not keep retrying the same thing, and don't send this to a person unless an account must be reconnected.

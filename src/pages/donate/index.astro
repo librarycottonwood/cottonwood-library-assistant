@@ -1,6 +1,6 @@
 ---
 // Support Us (Figma 1012:1364): the active fundraiser and its Givebutter form (or the general giving block),
-// then other ways to help. Built only from src/components/site (see docs/design-system.md). The fundraiser
+// volunteering, then other ways to help. Built only from src/components/site (see docs/design-system.md). The fundraiser
 // comes from Sanity; "Other ways to help" is written here in Figma's wording (docs/design-rules.md).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
@@ -38,22 +38,20 @@ const otherWays = otherWaysToHelp(support.initiatives);
       <Text tone="muted" size="lead">{campaign.description}</Text>
     </Stack>
     <FundraiserForm campaign={campaign} />
-    <Stack direction="row" gap="xs" wrap>
-      {donate.checkout && <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
-      {volunteer && <Button href={`/donate/${volunteer.id}/`} icon="user">Volunteer</Button>}
-    </Stack>
   </Split>}
-  {general && <Split media={campaign ? 'start' : 'end'} image={photo} headingId="give-heading" mediaId="give" hidden={campaign ? true : undefined} data-campaign-after={campaign ? '' : undefined} data-campaign-ends={campaign?.endsOn}>
+  {general && <Split media="end" image={photo} headingId="give-heading" mediaId="give" hidden={campaign ? true : undefined} data-campaign-after={campaign ? '' : undefined} data-campaign-ends={campaign?.endsOn}>
     <Heading id="give-heading">{home.support.title}</Heading>
     <Text tone="muted">{home.support.introduction}</Text>
     {general.source === 'fallback' && <Stack gap="xs">
       <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
       <IconLink href={`mailto:${library.email}?subject=Supporting%20the%20library`} icon="mail">{library.email}</IconLink>
     </Stack>}
-    <Stack direction="row" gap="xs" wrap>
-      {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
-      {volunteer && <Button href={`/donate/${volunteer.id}/`} icon="user">Volunteer</Button>}
-    </Stack>
+    {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
+  </Split>}
+  {volunteer && <Split media="start" image={volunteer.image} headingId="volunteer-heading" id="volunteer">
+    <Heading id="volunteer-heading">{volunteer.title}</Heading>
+    <Text tone="muted">{volunteer.summary}</Text>
+    <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
   </Split>}
   {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
     <Grid as="ul" columns={3}>
