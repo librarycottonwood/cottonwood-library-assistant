@@ -1,7 +1,6 @@
 ---
 // Service View (Figma 1012:1243): one regular program (Story Time, reading groups) beside its photo, the map and
 // borrowing questions. Built only from src/components/site. Programs and questions come from Sanity.
-// Figma leaves the pale-indigo panel empty and puts the line and buttons below it; here they fill the panel.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
 import DetailList from '../../components/site/DetailList.astro';
@@ -28,19 +27,24 @@ const photos: Record<string, LibraryImage> = {
   'story-time': { key: 'storyTimeCorner', alt: 'The Story Time corner: a bright alphabet rug, bookshelves, a reading chair and a globe by the window.' },
 };
 const photo = photos[program.id] ?? { ...program.image, fit: 'contain' };
+// "Wednesdays · 11:30 a.m." reads as Figma's "Wednesdays at 11:30 a.m."
+const when = program.schedule.replace(' · ', ' at ') + (/[.!?]$/.test(program.schedule) ? '' : '.');
 ---
 <BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`}>
   <PageTitle title={program.title} trail={[services]} />
-  <Split media="start" panel image={photo}>
-    <Text tone="muted" size="lead">{program.description}</Text>
+  {/* Figma leaves this panel empty; it holds the program's details and When/Where. */}
+  <Split media="start" panel ratio="16 / 9" image={photo}>
     <DetailList label={`${program.title} schedule`} items={[{ label: 'When', value: program.schedule }, { label: 'Where', value: library.address }]} />
     {program.details && <Text tone="muted">{program.details}</Text>}
+  </Split>
+  <Section align="start">
+    <Text tone="muted" size="lead">{`${program.description} ${when}`}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
       <Button href={library.catalogUrl} icon="book">Browse the catalog</Button>
       <Button href={supportLink.href} variant="primary" icon="heart">Donate</Button>
     </Stack>
-  </Split>
+  </Section>
   <Section title="Find us" headingId="map-heading">
     <MapCard library={library} />
   </Section>
