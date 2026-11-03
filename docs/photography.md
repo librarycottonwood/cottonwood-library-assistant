@@ -31,7 +31,6 @@ and book covers can differ. Do not use them to establish library facts or prices
 | copy-room-v2.jpg | [Drive copier room](https://drive.google.com/file/d/1n_A7ij4ayDhRQZYuSVzn-p8AM3Jneaxj/view) |
 | library-entrance-v2.jpg | [Drive entrance](https://drive.google.com/file/d/1E6Psu0o1GzszNLHvTAxFU-ZU5ti7zre3/view) |
 | storytime-room-v2.jpg | [Drive Story Time setup](https://drive.google.com/file/d/1HOtJQjXBKySYix0BWi5GgEg-amUqxhr6/view) |
-| library-exterior-v3.jpg | Faithful retouch of [Drive CCL.jpeg](https://drive.google.com/file/d/1FvsI5fI2QxC0slpyjH5r1q7k_0deKLLn/view), retaining the source camera view and actual asymmetrical building geometry |
 | reading-table-v3.jpg | Calm book-and-table composition referenced to the [Drive library interior](https://drive.google.com/file/d/1G2aAPoxIyJbGNqfxbsHBWohC-WQH8OVA/view) |
 | book-sale-shelves-v2.jpg | Existing back-hall-bookshelf.jpeg |
 | childrens-book-sale-v2.jpg | Existing book-sale-childrens.jpeg |
@@ -44,16 +43,19 @@ people, faces or artwork:
 
 | Prepared asset | Source and context |
 | --- | --- |
+| library-exterior-original.jpg | [Drive CCL.jpeg](https://drive.google.com/file/d/1FvsI5fI2QxC0slpyjH5r1q7k_0deKLLn/view), original building photograph with web resizing/compression only; no generative edits |
 | storytime-session.jpg | [Instagram Story Time](https://www.instagram.com/cottonwoodcommunitylibrary/p/Dd2xjaRm_Qw/), a volunteer reading to children |
 | library-roof-original.jpg | [Drive actual roof and entrance](https://drive.google.com/file/d/1KcWd87_JRDerE3cIhFNfdt1q9-kxPht_/view), used for the roof fundraiser |
 | storytime-facebook.jpg | [Facebook June 24 photo](https://www.facebook.com/photo.php?fbid=961347140271185), volunteer reading to children |
 | adventure-mural-original.jpg | [Drive full mural photograph](https://drive.google.com/file/d/1m6h_licjfExXICSM640FRTQdmMOD1xzu/view), replaces the tiny Figma screenshot crop |
 
-The generated junior-book variant and first generated exterior were rejected
-for unverified architecture. Neither is registered or served. The crowded junior
+The generated junior-book variant and both generated exteriors were rejected
+for invented details. None is registered or served. Exterior photographs must
+use original source pixels with web preparation only, including the hero and
+About Us gallery. The crowded junior
 display, Main Street Readers portrait and close exterior were also rejected
 during preview review; their page appearances now use the reading table, actual
-community Story Time photograph and revised exterior.
+community Story Time photograph and original exterior.
 
 ## How replacements work
 

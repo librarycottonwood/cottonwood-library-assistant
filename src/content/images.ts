@@ -41,7 +41,7 @@ import computersV2 from '../assets/images/computers-wifi-v2.jpg';
 import copyRoomV2 from '../assets/images/copy-room-v2.jpg';
 import entranceV2 from '../assets/images/library-entrance-v2.jpg';
 import storytimeRoomV2 from '../assets/images/storytime-room-v2.jpg';
-import exteriorV3 from '../assets/images/library-exterior-v3.jpg';
+import exteriorOriginal from '../assets/images/library-exterior-original.jpg';
 import roofExterior from '../assets/images/library-roof-original.jpg';
 import readingTable from '../assets/images/reading-table-v3.jpg';
 import bookSaleV2 from '../assets/images/book-sale-shelves-v2.jpg';
@@ -53,7 +53,7 @@ import storytimeSession from '../assets/images/storytime-session.jpg';
 import storytimeFacebook from '../assets/images/storytime-facebook.jpg';
 import adventureMuralOriginal from '../assets/images/adventure-mural-original.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorV3, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];
