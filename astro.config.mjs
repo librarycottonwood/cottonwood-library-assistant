@@ -14,9 +14,6 @@ export default defineConfig({
     '/product/donate-to-the-library/1': '/donate/',
     '/s/shop': '/donate/',
     '/s/stories/story-title': '/events/',
-    // Still linked from Sanity's "Giving and acknowledgments" thank-you records. Drop once those links are updated.
-    '/librarynews/story-time/': '/services/story-time/',
-    '/fundraising-events/library-fund/': '/donate/',
   },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },

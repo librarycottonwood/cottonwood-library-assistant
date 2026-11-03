@@ -10,7 +10,7 @@ import Section from '../../components/site/Section.astro';
 import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
 import WideImage from '../../components/site/WideImage.astro';
-import { mainNavigation } from '../../components/site/navigation';
+import { mainNavigation, programHref } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryEvent } from '../../content/types';
 import { eventPhoto } from '../_photos';
@@ -46,7 +46,7 @@ const when = sessions.map(session => ({ label: day.format(new Date(session.start
     <DetailList label="Dates and times" items={[...when, { label: 'Where', value: event.location ?? `${library.address}, ${library.locality}` }]} />
     {(inPerson || program) && <Stack direction="row" gap="xs" wrap>
       {inPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
-      {program && <Button href={`/services/${program.id}/`} icon="book">About {program.title}</Button>}
+      {program && <Button href={programHref(program.id)} icon="book">About {program.title}</Button>}
     </Stack>}
   </Section>
   {inPerson && <Section title="Find us" headingId="map-heading">

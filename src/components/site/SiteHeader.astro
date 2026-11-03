@@ -12,11 +12,11 @@ import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
 import Icon from '../Icon.astro';
 import Button from './Button.astro';
-import { isCurrentPage, mainNavigation as links, supportLink } from './navigation';
+import { isCurrentSection, mainNavigation as links, supportLink } from './navigation';
 import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
-const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
+const isCurrent = (href: string) => { const link = [...links, supportLink].find(item => item.href === href); return link ? isCurrentSection(link, Astro.url.pathname) : false; };
 // The hours summary in groups ("Monday–Wednesday 11 a.m.–5 p.m.", "Saturday 11 a.m.–2 p.m."), so phones can show one per line.
 const hoursParts = library.hoursSummary.split(/\s+·\s+/);
 ---

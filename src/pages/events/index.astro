@@ -14,7 +14,7 @@ import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
 import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
-import { mainNavigation } from '../../components/site/navigation';
+import { mainNavigation, programHref } from '../../components/site/navigation';
 import { upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import { eventPhoto, postsWithPhotos } from '../_photos';
@@ -45,7 +45,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   </Section>}
   {programs.length > 0 && <Section title="Regular Events" headingId="regular-heading" id="regular">
     <Grid as="ul" columns={3}>
-      {programs.map(program => <Card as="li" title={program.title} href={`/services/${program.id}/`} image={program.image}>
+      {programs.map(program => <Card as="li" title={program.title} href={programHref(program.id)} image={program.image}>
         <Badge slot="badge" surface>{program.schedule}</Badge>
         {program.description}
       </Card>)}
