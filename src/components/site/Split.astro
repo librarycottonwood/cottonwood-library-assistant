@@ -50,7 +50,8 @@ const hasCaption = Astro.slots.has('caption');
   .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); padding-block: var(--section-space); }
   .first { padding-block-start: var(--space-sm); }
   .split-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); padding-inline: var(--page-inset); }
-  .media-start .split-copy { order: 1; }
+  /* Phones: the photo always sits above the text. */
+  .split-copy { order: 1; }
   .split-media { position: relative; padding-inline: var(--page-inset); }
   .has-caption { padding-block-end: var(--space-md); }
   .split-media :global(.split-image) {
@@ -76,8 +77,6 @@ const hasCaption = Astro.slots.has('caption');
   /* Inset: photo and text stay inside the content width; the photo keeps all four corners. */
   .inset { max-width: var(--width-content); margin-inline: auto; box-sizing: content-box; padding-inline: var(--page-inset); }
   .inset .split-copy, .inset .split-media { padding-inline: 0; }
-  /* A run of inset blocks alternates sides on desktop; on phones every photo sits above its text. */
-  .inset .split-copy { order: 1; }
 
   @media (min-width: 48rem) {
     .first { padding-block-start: var(--space-md); }
@@ -85,9 +84,9 @@ const hasCaption = Astro.slots.has('caption');
   }
   @media (min-width: 64rem) {
     .split { align-items: center; gap: var(--space-lg); }
+    .split-copy { order: 0; }
     .media-end { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); padding-inline-start: var(--page-inset); }
     .media-start { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); padding-inline-end: var(--page-inset); }
-    .media-start .split-copy { order: 0; }
     .media-start .split-media { order: -1; }
     .split-copy, .split-media { padding-inline: 0; }
     .media-end .split-media :global(.split-image) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
@@ -103,7 +102,6 @@ const hasCaption = Astro.slots.has('caption');
     .panel .split-media { container-type: inline-size; }
     .panel .split-media :global(.split-image) { height: 100%; min-height: calc(100cqi * 9 / 16); }
     .inset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .inset .split-copy { order: 0; }
     .inset.media-end, .inset.media-start { padding-inline: var(--page-inset); }
     .inset .split-media :global(.split-image) { border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
     /* The hero photo touches the header, as in the design. */

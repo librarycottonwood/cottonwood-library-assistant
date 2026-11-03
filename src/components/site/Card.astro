@@ -57,7 +57,7 @@ const hasBadge = Astro.slots.has('badge');
   .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
   .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
   /* Three lines at most, ending in "…"; the full text is on the linked page and stays readable to screen readers. */
-  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; color: var(--color-text-muted); }
+  .card-copy p { color: var(--color-text-muted); }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
   .card-copy h3 :global(.icon-link .icon-end) { display: inline-block; margin-inline-start: var(--space-xs); vertical-align: -0.125em; }

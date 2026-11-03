@@ -35,4 +35,9 @@ const { items, openFirst = true } = Astro.props;
   summary :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; color: var(--color-text-muted); }
   details[open] :global(.faq-open), details:not([open]) :global(.faq-close) { display: none; }
   details p { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
+  /* Figma (1920): questions 105px apart, the answer 30px below its question. */
+  @media (min-width: 64rem) {
+    .faq { gap: var(--space-lg); }
+    details p { padding-block-start: var(--space-md); }
+  }
 </style>

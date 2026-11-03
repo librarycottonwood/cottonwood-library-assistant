@@ -527,8 +527,8 @@ interface Props {
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
   align?: 'center' | 'start';
-  /** content: up to 1520px (default). text: a 920px column for FAQs and articles. copy: a 622px column. */
-  width?: 'content' | 'text' | 'copy';
+  /** content: up to 1520px (default). full: the whole width inside the page inset (Figma About Us gallery). text: a 920px column for FAQs and articles. copy: a 622px column. */
+  width?: 'content' | 'full' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
   id?: string;

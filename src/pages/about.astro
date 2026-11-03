@@ -28,9 +28,8 @@ const gallery: LibraryImage[] = [
   { key: 'libraryBuilding', alt: 'The Cottonwood Community Library building on a sunny day, with its wooden sign, flagpole and a flowering bush.' },
   { key: 'countyCertificate', alt: 'Shasta County Board of Supervisors certificate recognizing Cottonwood Community Library on its 10th anniversary, August 5, 2017.' },
   // The files behind these keys are named differently from what they show (see the lead's images.ts):
-  // muralOrchard is the framed thank-you note, muralPicnic is the orchard mural.
-  { key: 'muralOrchard', alt: 'Framed note thanking artist Virginia Gilcrease for the “Very Hungry Caterpillar” mural in the children’s section, 2013.' },
-  { key: 'muralPicnic', alt: 'Part of the children’s mural: fruit trees under a blue sky, with a caterpillar on a trunk.' },
+  { key: 'thankYouNote', alt: 'Framed note thanking artist Virginia Gilcrease for the “Very Hungry Caterpillar” mural in the children’s section, 2013.' },
+  { key: 'muralOrchard', alt: 'Part of the children’s mural: fruit trees under a blue sky, with a caterpillar on a trunk.' },
   { key: 'muralPicnicTable', alt: 'Part of the children’s mural: a picnic table of cake, pie, cupcakes and watermelon under the trees.' },
 ];
 ---
@@ -49,7 +48,7 @@ const gallery: LibraryImage[] = [
     <Signature>Thank you for your support!</Signature>
     <Button href={supportLink.href} variant="primary" icon="heart">Donate</Button>
   </Section>
-  <Section title="Gallery" headingId="gallery-heading">
+  <Section title="Gallery" headingId="gallery-heading" width="full">
     <Gallery images={gallery} />
   </Section>
 </BaseLayout>

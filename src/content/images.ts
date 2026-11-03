@@ -28,14 +28,13 @@ import cattleDrivePainting from '../assets/images/cottonwood-cattle-drive-painti
 import foundersPortrait from '../assets/images/founders-portrait-doc-reifert.jpg';
 import libraryBuilding from '../assets/images/library-building-exterior.jpg';
 import countyCertificate from '../assets/images/county-10th-anniversary-certificate.jpg';
-import caterpillarNote from '../assets/images/caterpillar-mural-thank-you-note.jpg';
+import thankYouNote from '../assets/images/caterpillar-mural-thank-you-note.jpg';
 import muralOrchard from '../assets/images/childrens-mural-orchard.jpg';
-import muralPicnic from '../assets/images/childrens-mural-picnic.jpg';
 import storyTimeCorner from '../assets/images/story-time-corner.jpg';
 // Cropped from the Figma About Us frame (the Square site had no copy).
 import muralPicnicTable from '../assets/images/childrens-mural-picnic-table.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, caterpillarNote, muralOrchard, muralPicnic, storyTimeCorner, muralPicnicTable };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

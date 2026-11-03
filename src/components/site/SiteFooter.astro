@@ -20,6 +20,8 @@ import { footerNavigation } from './navigation';
 import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
+// Figma puts the PO box and the town on separate lines.
+const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
 ---
 <Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
   <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
@@ -43,7 +45,7 @@ const { library } = Astro.props;
     <ul>
       <li><a href={library.phoneHref}>{library.phone}</a></li>
       <li><a href={`mailto:${library.email}`}>{library.email}</a></li>
-      <li>Mailing Address:<br />{library.mailingAddress}</li>
+      <li>Mailing Address:<br />{addressLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</li>
     </ul>
     <div class="social">
       <a href={library.instagramUrl} aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="social-icon" /></a>
