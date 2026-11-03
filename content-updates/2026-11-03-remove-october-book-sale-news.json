@@ -1,5 +1,5 @@
 {
-  "request": "Refresh the live website to remove the already-unpublished news post 'Our next book sale: October 16–17', keeping the separate book sale event.",
+  "request": "Refresh the live website from current published content to remove the already-unpublished news post 'Our next book sale: October 16–17'; leave the separate Quarterly book sale event unchanged. Fresh preview after content changed during initial preview.",
   "sanityDocuments": [],
   "requestedInChat": "2026-11-03"
 }
