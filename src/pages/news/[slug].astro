@@ -15,6 +15,7 @@ import { checkoutAttributes, getDonateLink } from '../../content/donate';
 import { postDate, upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import type { LibraryPost } from '../../content/types';
+import { fallbackPhoto } from '../_photos';
 export async function getStaticPaths() {
   const posts = await contentRepository.getPosts();
   return posts.filter(post => post.href === `/news/${post.id}/`).map(post => ({ params: { slug: post.id }, props: { post } }));
@@ -25,12 +26,14 @@ const [{ programs }, donate] = await Promise.all([contentRepository.getHome(), g
 const related = post.eventIds?.length ? upcomingEvents(await contentRepository.getEvents()).filter(event => event.documentId && post.eventIds!.includes(event.documentId)) : [];
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 const date = postDate(post);
+// No photo in Sanity: a fitting library photo (never an empty box).
+const image = post.image ?? fallbackPhoto(post.title, post.summary);
 ---
 <BaseLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
   <PageTitle title={post.title} trail={[eventsLink]}>
     {date && <time datetime={post.publishedAt ?? undefined}>{date}</time>}
   </PageTitle>
-  {post.image && <WideImage image={post.image} first />}
+  <WideImage image={image} first />
   <Section width="text" align="start">
     <Prose blocks={post.body} paragraphs={post.paragraphs} />
     <Stack direction="row" gap="xs" wrap>
