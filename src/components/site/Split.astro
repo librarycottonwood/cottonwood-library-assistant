@@ -76,6 +76,8 @@ const hasCaption = Astro.slots.has('caption');
   /* Inset: photo and text stay inside the content width; the photo keeps all four corners. */
   .inset { max-width: var(--width-content); margin-inline: auto; box-sizing: content-box; padding-inline: var(--page-inset); }
   .inset .split-copy, .inset .split-media { padding-inline: 0; }
+  /* A run of inset blocks alternates sides on desktop; on phones every photo sits above its text. */
+  .inset .split-copy { order: 1; }
 
   @media (min-width: 48rem) {
     .first { padding-block-start: var(--space-md); }
@@ -101,6 +103,7 @@ const hasCaption = Astro.slots.has('caption');
     .panel .split-media { container-type: inline-size; }
     .panel .split-media :global(.split-image) { height: 100%; min-height: calc(100cqi * 9 / 16); }
     .inset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .inset .split-copy { order: 0; }
     .inset.media-end, .inset.media-start { padding-inline: var(--page-inset); }
     .inset .split-media :global(.split-image) { border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
     /* The hero photo touches the header, as in the design. */
