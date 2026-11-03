@@ -15,16 +15,18 @@ on:
         type: string
   schedule:
     - cron: '17 18 * * 4'
-# Serialize all uses of this one library sign-in, including token refresh.
-concurrency:
-  group: library-codex-managed-signin
-  cancel-in-progress: false
 permissions:
   contents: read
   actions: read
 jobs:
   repair:
-    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'failure')
+    # Only failed main checks wake the worker; passing or branch checks skip
+    # this job, so they never queue behind (and bump) a waiting repair.
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_branch == 'main'))
+    # Serialize all uses of this one library sign-in, including token refresh.
+    concurrency:
+      group: library-codex-managed-signin
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 25
     outputs:
