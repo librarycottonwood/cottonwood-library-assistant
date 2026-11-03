@@ -85,6 +85,8 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--width-content` | `95rem` (1520px) | Max width of section content (card grids). At 1920px this leaves the design’s 200px margins. | Text columns (use --width-copy). | `<Section width="content">` |
+| `--width-wide` | `82.5rem` (1320px) | The Find us map (MapCard caps itself at this width). | Text or card grids. | `max-width: var(--width-wide);` |
+| `--width-article` | `70rem` (1120px) | A news list or an event’s text and buttons (Figma Events & News, Event View): PostList, Section width="article". | Long text on its own (use --width-text) or card grids. | `<Section width="article">` |
 | `--width-copy` | `38.875rem` (622px) | Readable text columns: hero copy, newsletter, split sections. | Card grids. | `<Section width="copy">` |
 | `--width-text` | `57.5rem` (920px) | Long reading on its own: FAQs, articles, the About story (Section width="text", Prose). | Text beside a photo (use --width-copy) or card grids. | `<Section width="text">` |
 | `--page-inset` | `var(--space-sm)` (20 → 60 → 100px) → `var(--space-lg)` from 48rem, `var(--space-xl)` from 100rem | Left and right space at the page edge. Section, Split, header and footer apply it. | Spacing inside content; pages never need it directly. | `padding-inline: var(--page-inset);` |
@@ -527,8 +529,8 @@ interface Props {
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
   align?: 'center' | 'start';
-  /** content: up to 1520px (default). full: the whole width inside the page inset (Figma About Us gallery). text: a 920px column for FAQs and articles. copy: a 622px column. */
-  width?: 'content' | 'full' | 'text' | 'copy';
+  /** content: up to 1520px (default). full: the whole width inside the page inset (Figma About Us gallery). article: 1120px (an event's text, a news list). text: a 920px column for FAQs and articles. copy: a 622px column. */
+  width?: 'content' | 'full' | 'article' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
   /** Continues the block above (Service View's line under its photo): no space on top, only the block's own space below. */

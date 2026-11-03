@@ -30,7 +30,7 @@ const LIBRARY_POINT = [-122.2805738, 40.3873866];
 <style>
   /* The pills sit on the map's top edge: half above it, half over it. */
   /* Phones: the pills sit above the map. From tablet width they sit on its top edge, half over it. */
-  .map-card { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; }
+  .map-card { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; max-width: var(--width-wide); margin-inline: auto; }
   .map-pills {
     z-index: 2;
     display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs);
