@@ -6,7 +6,7 @@ import type { LibraryImage } from './types';
 const photo = (key: string, alt: string, position?: string): LibraryImage => ({
   key, alt, fit: 'cover', ...(position ? { position } : {}),
 });
-const exterior = photo('exteriorOriginal', 'Cottonwood Community Library, with its wooden sign, three narrow windows and covered entrance.');
+const exterior = photo('exteriorPolished', 'Cottonwood Community Library, with its wooden sign, three narrow windows and covered entrance.');
 const computers = photo('computersV2', 'Public computer stations along the wood-framed window in the library’s computer room.');
 const shelves = photo('borrowingV2', 'Book-filled library shelves beside a round wooden table and burgundy chairs.');
 const storytime = photo('storytimeSession', 'A library volunteer reads a picture book to children in the Story Time corner.', '50% 0%');

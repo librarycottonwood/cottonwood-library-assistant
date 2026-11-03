@@ -26,6 +26,7 @@ and book covers can differ. Do not use them to establish library facts or prices
 
 | Prepared asset | Reference |
 | --- | --- |
+| library-exterior-polished.jpg | Lighting/framing reconstruction of [Drive CCL.jpeg](https://drive.google.com/file/d/1FvsI5fI2QxC0slpyjH5r1q7k_0deKLLn/view); the previously generated v3, restored after the user confirmed the bicycle rack exists in the source |
 | borrowing-shelves-v2.jpg | [Drive library interior](https://drive.google.com/file/d/1G2aAPoxIyJbGNqfxbsHBWohC-WQH8OVA/view) |
 | computers-wifi-v2.jpg | Original photo supplied and reconstructed in this chat |
 | copy-room-v2.jpg | [Drive copier room](https://drive.google.com/file/d/1n_A7ij4ayDhRQZYuSVzn-p8AM3Jneaxj/view) |
@@ -49,13 +50,15 @@ people, faces or artwork:
 | storytime-facebook.jpg | [Facebook June 24 photo](https://www.facebook.com/photo.php?fbid=961347140271185), volunteer reading to children |
 | adventure-mural-original.jpg | [Drive full mural photograph](https://drive.google.com/file/d/1m6h_licjfExXICSM640FRTQdmMOD1xzu/view), replaces the tiny Figma screenshot crop |
 
-The generated junior-book variant and both generated exteriors were rejected
-for invented details. None is registered or served. Exterior photographs must
-use original source pixels with web preparation only, including the hero and
-About Us gallery. The crowded junior
+The junior-book variant and first generated exterior (v2) remain unselected.
+The hero and About Us gallery use the polished v3 exterior. After comparing the
+original Drive photograph, the user confirmed the bicycle rack was real and
+authorized restoring this AI version for improved lighting and framing. It is
+a reconstruction, not an unchanged documentary photo; the original Drive file
+remains available and the roof fundraiser retains its original photograph. The crowded junior
 display, Main Street Readers portrait and close exterior were also rejected
 during preview review; their page appearances now use the reading table, actual
-community Story Time photograph and original exterior.
+community Story Time photograph and polished exterior.
 
 ## How replacements work
 

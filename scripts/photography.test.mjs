@@ -23,7 +23,7 @@ test('the rejected portrait and crowded display are replaced across local and CM
     assert.equal(refreshPhoto({key, alt: ''}).key, 'readingTable');
   }
   assert.equal(refreshPhoto({key: 'communityExterior', alt: ''}).key, 'storytimeFacebook');
-  assert.equal(refreshPhoto({key: 'exterior', alt: ''}).key, 'exteriorOriginal');
+  assert.equal(refreshPhoto({key: 'exterior', alt: ''}).key, 'exteriorPolished');
 });
 
 test('roof and building events get the real roof photograph, unrelated events retain normal fallbacks', () => {
