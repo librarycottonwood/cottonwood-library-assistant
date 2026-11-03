@@ -24,7 +24,7 @@ Read the actual CMS record, PR, its **Website preview**/**Live website** statuse
 
 ## Change page text
 
-Only events, news, newsletters, notices, hours and fundraisers live in Sanity. All other words on the website (service descriptions, printing prices, late fees, About Us, Support Us and so on) are in the page files in `src/pages/`. To change them:
+Events, news, newsletters, notices, fundraisers and the library settings (hours, contact details, the borrowing questions and answers, and the Support Us wording) live in Sanity; change those there. Other words on the website (service descriptions, printing prices, late fees, About Us and so on) are in the page files in `src/pages/`. Search Sanity first, then `src/pages/`. To change them:
 
 1. Find the text in `src/pages/` on current `main`. Create a branch `page/<short-request-name>`, change only the words asked for, and keep the page's components and layout as they are.
 2. Open a PR into `main` titled with the request in plain words, then follow steps 3–9 of "Save it" below (preview, "Ready to save?", merge, live check). No content-update file is needed.
