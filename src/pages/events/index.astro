@@ -12,29 +12,37 @@ import PageTitle from '../../components/site/PageTitle.astro';
 import PostList from '../../components/site/PostList.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
+import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
-const [{ programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+import { fallbackPhoto } from '../_photos';
+const [{ library, programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
 const title = mainNavigation.find(link => link.href === '/events/')!.label;
 const events = upcomingEvents(allEvents);
-// The next event leads the page when it has its own photo (as on the homepage); the browser hides it once it ends.
-const featured = events[0]?.image ? events[0] : undefined;
+// The next event leads the page (Figma's photo-and-panel block); the browser hides it once it ends.
+// With no photo of its own it shows its program's photo, or a fitting library photo.
+const featured = events[0];
+const featuredImage = featured && (featured.image ?? programs.find(program => program.id === featured.programId)?.image ?? fallbackPhoto(featured.title, featured.summary));
+const featuredInPerson = featured && !/online/i.test(featured.location ?? '');
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
   <PageTitle title={title} />
-  {featured?.image && <Split media="start" panel image={featured.image} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+  {featured && featuredImage && <Split media="start" panel image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
     <Text tone="muted" size="lead">{featured.summary}</Text>
-    <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
+    <Stack direction="row" gap="xs" wrap>
+      {featuredInPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
+      <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow">Read more</Button>
+    </Stack>
   </Split>}
-  <Section title="Upcoming events" headingId="events-heading" id="upcoming">
-    <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} fill={false} limit={9} />
-  </Section>
-  {programs.length > 0 && <Section title="Regular events" headingId="regular-heading" id="regular">
+  {events.length > 1 && <Section title="Upcoming Events" headingId="events-heading" id="upcoming">
+    <EventCards events={events.slice(1)} programs={programs} fill={false} limit={9} />
+  </Section>}
+  {programs.length > 0 && <Section title="Regular Events" headingId="regular-heading" id="regular">
     <Grid as="ul" columns={3}>
       {programs.map(program => <Card as="li" title={program.title} href={`/services/${program.id}/`} image={program.image}>
         <Badge slot="badge" surface>{program.schedule}</Badge>
@@ -42,7 +50,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
       </Card>)}
     </Grid>
   </Section>}
-  {posts.length > 0 && <Section title="Latest news" headingId="news-heading" id="news">
+  {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
     <PostList posts={posts} />
   </Section>}
 </BaseLayout>
