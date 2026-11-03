@@ -31,7 +31,7 @@ All times are Pacific. Write a short one-line summary yourself. Preview and ask 
   - **A program with no calendar entry** (for example Book Club or Story Time, which only have a regular schedule): there is no date to remove. Offer a banner for that day (notices skill) and a Facebook post (social skill).
   - **An event with several dates:** remove only the cancelled dates. List the exact dates you will remove with their weekdays ("Saturday, November 14") and get a yes first. Keep the others.
   - **An event's only date:** ask "Take it off the website, or keep it showing as cancelled?" Off means unpublish it, after checking no news post or other record points to it. Never leave an event with zero dates. Kept means add "Cancelled" to the title and summary.
-  - **Same day:** say "A website change takes about 20 minutes to show up. Facebook or a sign on the door reaches people faster." Offer the post, then do the website change too.
+  - **Same day:** say "A website change takes about 15 minutes to show up. Facebook or a sign on the door reaches people faster." Offer the post, then do the website change too.
   - Within a week: also offer a banner (notices skill) and a social post.
 
 Past events drop off the upcoming list on their own; there's no need to remove them.

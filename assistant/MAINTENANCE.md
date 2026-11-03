@@ -30,6 +30,17 @@ Secrets live in GitHub/Cloudflare settings. Encrypted refreshed Plus state is st
 
 Healthy website checks consume GitHub allowance, while repairs and the weekly review consume shared Plus allowance. GitHub allowance is finite: the configured $0 overage stop and artifact-retention caps remain necessary. Keep at most three archives per named source/CMS/result category, with a combined 450 MiB cap; retain small health reports briefly. PR previews that can still go live (open PR heads and PRs merged in the last two days) are never pruned; previews of closed PRs and superseded heads are deleted first. An older approval whose checked artifact expired (7 days) requires a fresh preview and fresh approval. A hosted preview URL does not replace the immutable artifact required for publication. Avoid duplicate check runs and unneeded agent retries. No paid API, cloud billing or email/social sending is enabled. Sanity’s nonprofit application was submitted October 20; its decision is pending. Do not add a card, enable AI-credit features, buy a plugin, or assume unlimited free usage. CMS hosting/storage, exports, retained releases, and checks must fit existing free allowances; reaching a limit pauses the affected work and gets a plain explanation, not an unapproved upgrade.
 
+## Renew the repair sign-in
+
+The repair worker uses the library ChatGPT account (librarycottonwood@gmail.com). Its weekly run keeps that sign-in fresh. If a run fails because the sign-in was rejected or revoked, guide Todd through these steps on a computer with Node and the GitHub CLI signed in to the library account:
+
+1. `npm install --global @openai/codex`
+2. `mkdir -p ~/.library-codex-login && CODEX_HOME=~/.library-codex-login codex login`. In the browser, sign in with the library email and password, not "Continue with Google" (that asks for a phone code).
+3. `gh secret set LIBRARY_CODEX_AUTH_SEED -R librarycottonwood/cottonwood-library-assistant < ~/.library-codex-login/auth.json`
+4. Remove the stored rejected sign-ins, which the worker would otherwise prefer: `gh api 'repos/librarycottonwood/cottonwood-library-assistant/actions/artifacts?name=library-codex-auth' --paginate --jq '.artifacts[].id' | xargs -I{} gh api -X DELETE repos/librarycottonwood/cottonwood-library-assistant/actions/artifacts/{}`
+5. `gh workflow run upkeep.yml -R librarycottonwood/cottonwood-library-assistant`, then confirm that run succeeds.
+6. `rm -rf ~/.library-codex-login`. Using that copy anywhere else would sign the worker out again.
+
 ## October 20 deprecation audit
 
 - Replace Node 20 GitHub Actions with the maintained Node 24 releases: checkout 7.0.1, setup-node 7.1.0, upload-artifact 7.0.2 and download-artifact 8.0.2. Disable automatic dependency caching in privileged jobs.
