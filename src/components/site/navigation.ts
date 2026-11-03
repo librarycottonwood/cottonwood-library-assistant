@@ -10,7 +10,7 @@ export interface NavLink { label: string; href: string; }
 /** Header links, left to right. Support Us is the Donate button, so it isn't repeated here. */
 export const mainNavigation: NavLink[] = [
   { label: 'Explore Services', href: '/services/' },
-  { label: 'Events & News', href: '/librarynews/' },
+  { label: 'Events & News', href: '/events/' },
   { label: 'Visit Us', href: '/visit/' },
   { label: 'About Us', href: '/our-story/' },
 ];

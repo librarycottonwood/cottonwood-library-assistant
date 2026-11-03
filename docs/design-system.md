@@ -279,6 +279,8 @@ interface Props {
   limit?: number;
   /** Shown when there are no upcoming events. */
   emptyMessage?: string;
+  /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
+  fill?: boolean;
 }
 ```
 
@@ -428,7 +430,7 @@ interface Props {
 ```
 
 ```astro
-<PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/librarynews/' }]}>
+<PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/events/' }]}>
   <time datetime={event.startsAt}>{date}</time>
 </PageTitle>
 ```

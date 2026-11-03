@@ -11,6 +11,12 @@ export default defineConfig({
     '/fundraising-events/library-fund/': '/fundraising-events/',
     // Kids & families became the Story Time page under Explore Services.
     '/kids/': '/services/story-time/',
+    // Events & News moved from /librarynews/: posts to /news/<post>/, regular programs to /services/<program>/.
+    '/librarynews/': '/events/',
+    '/librarynews/[slug]': '/news/[slug]',
+    '/librarynews/story-time/': '/services/story-time/',
+    '/librarynews/main-street-readers/': '/services/main-street-readers/',
+    '/librarynews/book-club/': '/services/book-club/',
   },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },

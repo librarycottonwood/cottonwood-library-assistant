@@ -26,8 +26,10 @@ interface Props {
   limit?: number;
   /** Shown when there are no upcoming events. */
   emptyMessage?: string;
+  /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
+  fill?: boolean;
 }
-const { programs = [], limit = 3, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const { programs = [], limit = 3, fill = true, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
 const zone = 'America/Los_Angeles';
 const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
 const shortDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
@@ -39,7 +41,7 @@ const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', '
 const pictureId = (picture: LibraryImage) => picture.url ?? picture.key ?? '';
 const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image;
 // Programs already showing as a dated event don't get a second card.
-const fillers = programs.filter(program => !events.some(event => event.programId === program.id));
+const fillers = !fill ? [] : programs.filter(program => !events.some(event => event.programId === program.id));
 // In card order, each fallback starts from the id-picked photo and moves on to the next one no other card uses,
 // so two cards side by side never share a picture (unless every library photo is already taken).
 const used = new Set([...events.map(ownImage), ...fillers.map(program => program.image)].filter(Boolean).map(picture => pictureId(picture!)));

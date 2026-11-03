@@ -5,7 +5,7 @@
  * @use The first block of every page except the homepage. Put it directly inside BaseLayout, before the first Split or Section. Give `trail` only on pages under a top-level page (a service, an event, a news post).
  * @avoid The homepage (its h1 is in the hero), section headings (use Section's title), or more than one per page.
  * @example
- * <PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/librarynews/' }]}>
+ * <PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/events/' }]}>
  *   <time datetime={event.startsAt}>{date}</time>
  * </PageTitle>
  */

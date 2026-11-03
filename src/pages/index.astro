@@ -54,7 +54,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
 
   <Section title="Upcoming events" headingId="events-heading">
     <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
-    <Button href="/librarynews/" iconEnd="arrow">View all</Button>
+    <Button href="/events/" iconEnd="arrow">View all</Button>
   </Section>
 
   <Section title="Library services" headingId="services-heading">
