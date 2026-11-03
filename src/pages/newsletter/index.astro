@@ -1,23 +1,28 @@
 ---
-// The current newsletter issue and earlier issues, on the new design. Built only from src/components/site;
-// issues come from Sanity (Library settings › Current newsletter). The sign-up form is in the layout.
+// The library newsletter: every issue as a cover card, newest (the current issue) first. Each card opens the PDF.
+// Built only from src/components/site; issues come from Sanity (Newsletters, and Library settings › Current newsletter).
+// The sign-up form is in the layout's footer.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import IconLink from '../../components/site/IconLink.astro';
-import NewsletterIssue from '../../components/site/NewsletterIssue.astro';
+import Card from '../../components/site/Card.astro';
+import Grid from '../../components/site/Grid.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
-import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 const { newsletter } = await contentRepository.getHome();
-const archives = (await contentRepository.getNewsletters()).filter(issue => issue.id !== newsletter?.id);
+const issues = await contentRepository.getNewsletters();
+// The current issue leads; the rest follow in the order Sanity returns them.
+const ordered = newsletter ? [newsletter, ...issues.filter(issue => issue.id !== newsletter.id)] : issues;
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
-<BaseLayout title={`${newsletter?.issue ?? 'Library'} newsletter | Cottonwood Community Library`} description={newsletter?.summary}>
-  <PageTitle title={newsletter ? `${newsletter.issue} newsletter` : 'Library newsletter'} trail={[eventsLink]}>{newsletter?.summary}</PageTitle>
-  {newsletter ? <NewsletterIssue newsletter={newsletter} /> : <Section><Text tone="muted">No newsletter has been published yet.</Text></Section>}
-  {archives.length > 0 && <Section title="Earlier newsletters" headingId="archive-heading" width="text" align="start">
-    <Stack as="ul" gap="xs">{archives.map(issue => <li><IconLink href={`/newsletters/${issue.id}/`} iconEnd="arrow">{issue.issue}</IconLink></li>)}</Stack>
-  </Section>}
+<BaseLayout title="Library newsletter | Cottonwood Community Library" description={newsletter?.summary ?? 'News from the Cottonwood Community Library.'}>
+  <PageTitle title="Newsletter" trail={[eventsLink]}>News from your library. Sign up below to get the next issue by email.</PageTitle>
+  <Section>
+    {ordered.length > 0
+      ? <Grid as="ul" columns={3} balance={false}>
+          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
+        </Grid>
+      : <Text tone="muted">No newsletter has been published yet.</Text>}
+  </Section>
 </BaseLayout>

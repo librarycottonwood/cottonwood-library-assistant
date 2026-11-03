@@ -91,7 +91,7 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 | `--width-text` | `57.5rem` (920px) | Long reading on its own: FAQs, articles, the About story (Section width="text", Prose). | Text beside a photo (use --width-copy) or card grids. | `<Section width="text">` |
 | `--page-inset` | `var(--space-sm)` (20 → 60 → 100px) → `var(--space-lg)` from 48rem, `var(--space-xl)` from 100rem | Left and right space at the page edge. Section, Split, header and footer apply it. | Spacing inside content; pages never need it directly. | `padding-inline: var(--page-inset);` |
 | `--section-space` | `var(--space-lg)` (60 → 100px) → `var(--space-xl)` from 100rem | Space above and below each page section. Section and Split apply it. | Gaps inside a section (use --section-gap). | `padding-block: var(--section-space);` |
-| `--section-gap` | `var(--space-sm)` (20 → 30 → 60px) → `var(--space-md)` from 48rem, `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
+| `--section-gap` | `var(--space-lg)` (60 → 30 → 60px) → `var(--space-md)` from 48rem, `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. Phones get the large step: their cards stack (60px apart), so a heading or button closer than that reads as part of the nearest card. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
 
 ### Corners
 
@@ -126,20 +126,19 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
-| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary). |
+| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary). |
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
-| [NewsletterIssue](#newsletterissue) | One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
-| [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
+| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
@@ -227,8 +226,8 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
-- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
 
 ```ts
 interface Props {
@@ -240,6 +239,8 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
+  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  shape?: 'photo' | 'page';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -297,9 +298,9 @@ interface Props {
 
 ### Faq
 
-`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
+`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary).
 
-- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Pass the questions from Sanity (borrowing) or written in the page.
+- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Each page asks its own questions: borrowing (Sanity) on Explore Services, visiting on Visit Us, the program on its service page.
 - **Don't use for:** Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
 
 ```ts
@@ -307,12 +308,14 @@ interface Props {
   items: { question: string; answer: string }[];
   /** Open the first question, as in Figma. */
   openFirst?: boolean;
+  /** The library's email: adds "Still have a question? Email us." under the questions. */
+  email?: string;
 }
 ```
 
 ```astro
 <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
-  <Faq items={borrowing} />
+  <Faq items={borrowing} email={library.email} />
 </Section>
 ```
 
@@ -354,7 +357,7 @@ interface Props {
 
 `src/components/site/Grid.astro` — Equal-width columns that collapse to one column on phones.
 
-- **Use for:** Rows of Cards, or any set of same-sized items.
+- **Use for:** Rows of Cards, or any set of same-sized items. In three columns a short last row (one or two items) is centered.
 - **Don't use for:** A photo next to text (use Split), or rows of buttons (use Stack direction="row").
 
 ```ts
@@ -364,6 +367,8 @@ interface Props {
   gap?: Space;
   /** Use "ul" when the children are a list (then give each child as="li"). */
   as?: 'div' | 'ul';
+  /** Center a short last row in three columns (default). EventCards turns this off and lays out its own rows. */
+  balance?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | boolean | undefined;
 }
@@ -431,21 +436,6 @@ interface Props { library: HomeContent['library']; }
 
 ```astro
 <Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
-```
-
-### NewsletterIssue
-
-`src/components/site/NewsletterIssue.astro` — One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button.
-
-- **Use for:** The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
-- **Don't use for:** Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).
-
-```ts
-interface Props { newsletter: LibraryNewsletter; }
-```
-
-```astro
-<NewsletterIssue newsletter={newsletter} />
 ```
 
 ### PageTitle
@@ -559,10 +549,10 @@ interface Props {
 
 ### Split
 
-`src/components/site/Split.astro` — A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
 - **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
-- **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped.
+- **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
 
 ```ts
 interface Props {
@@ -673,7 +663,7 @@ interface Props {
 
 `src/components/site/WideImage.astro` — One large rounded photo across the page, right under the page title (Figma Event View and About Us).
 
-- **Use for:** The main photo of an event, news post or the About page. `bleed` lets it run off the right edge, as on About Us.
+- **Use for:** The main photo of an event, news post or the About page. `bleed` lets it run off the right edge at every width, as on About Us.
 - **Don't use for:** Photos beside text (use Split), several photos (use Gallery), or logos and posters that must not be cropped.
 
 ```ts

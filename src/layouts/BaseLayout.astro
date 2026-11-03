@@ -54,6 +54,16 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <SiteFooter library={content.library} />
     <Analytics privacyLinks={false} />
     <CampaignExpiry />
+    <script is:inline>
+      // Links to other websites (catalog, maps, Givebutter, Facebook) open in a new tab, so the library site stays open.
+      // Decided at click time, so links that scripts change later (CampaignExpiry) are covered too.
+      document.addEventListener('click', function (event) {
+        var link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+        if (!link || link.target || !/^https?:$/.test(link.protocol) || link.origin === location.origin) return;
+        link.target = '_blank';
+        link.rel = 'noopener';
+      });
+    </script>
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}
   </body>
 </html>

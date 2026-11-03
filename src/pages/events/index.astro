@@ -53,5 +53,6 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   </Section>}
   {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
     <PostList posts={postsWithPhotos(posts)} />
+    <Button href="/news/" iconEnd="arrow">All news</Button>
   </Section>}
 </BaseLayout>

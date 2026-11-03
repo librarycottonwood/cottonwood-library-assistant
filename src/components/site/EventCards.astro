@@ -62,7 +62,7 @@ const today = dayKey.format(new Date());
 const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:00`));
 ---
 <div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
-  <Grid as="ul" columns={3} hidden={events.length + fillers.length === 0} data-event-rows>
+  <Grid as="ul" columns={3} balance={false} hidden={events.length + fillers.length === 0} data-event-rows>
     {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}

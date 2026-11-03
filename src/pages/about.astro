@@ -1,16 +1,15 @@
 ---
-// About Us (Figma 1012:122): the Main Street painting, the library's story in three parts, a thank-you with
-// the Donate button, then the gallery. Built only from src/components/site (see docs/design-system.md).
+// About Us (Figma 1012:122): the Main Street painting, the library's story in three parts, a thank-you, then the
+// gallery. Built only from src/components/site (see docs/design-system.md).
 // The text is written here in Figma's wording (docs/design-rules.md, "Where content lives").
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/site/Button.astro';
 import Gallery from '../components/site/Gallery.astro';
 import PageTitle from '../components/site/PageTitle.astro';
 import Prose from '../components/site/Prose.astro';
 import Section from '../components/site/Section.astro';
 import Signature from '../components/site/Signature.astro';
 import WideImage from '../components/site/WideImage.astro';
-import { mainNavigation, supportLink } from '../components/site/navigation';
+import { mainNavigation } from '../components/site/navigation';
 import type { LibraryImage } from '../content/types';
 const title = mainNavigation.find(link => link.href === '/about/')!.label;
 
@@ -46,7 +45,6 @@ const gallery: LibraryImage[] = [
   <Section title="We are here for you!" headingId="here-heading" width="text" align="start">
     <Prose paragraphs={[hereForYou]} />
     <Signature>Thank you for your support!</Signature>
-    <Button href={supportLink.href} variant="primary" icon="heart">Donate</Button>
   </Section>
   <Section title="Gallery" headingId="gallery-heading" width="full">
     <Gallery images={gallery} />
