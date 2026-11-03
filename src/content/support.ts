@@ -29,12 +29,12 @@ export const supportContent: SupportContent = {
     {
       id: 'first-five', title: 'Books for young readers', category: 'Children’s programs', image: { key: 'firstFive', alt: 'First 5 Shasta', fit: 'contain' },
       body: 'The library’s published thank-you recognizes First 5 Shasta for supporting books for new families, craft bags and publicity for Wednesday Story Time.',
-      href: '/librarynews/story-time/', linkLabel: 'Explore Story Time',
+      href: '/services/story-time/', linkLabel: 'Explore Story Time',
     },
     {
       id: 'community-foundation', title: 'Support for everyday operations', category: 'Community giving', image: { key: 'communityFoundation', alt: 'Community Foundation of the North State', fit: 'contain' },
       body: 'The library has thanked the Community Foundation of the North State for a grant that helps cover day-to-day operating costs.',
-      href: '/fundraising-events/library-fund/', linkLabel: 'Support the library',
+      href: '/donate/', linkLabel: 'Support the library',
     },
   ],
   initiatives: [

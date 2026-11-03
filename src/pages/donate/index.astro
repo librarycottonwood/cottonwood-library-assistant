@@ -1,0 +1,63 @@
+---
+// Support Us (Figma 1012:1364): the active fundraiser and its Givebutter form (or the general giving block),
+// then other ways to help. Built only from src/components/site (see docs/design-system.md). The fundraiser
+// comes from Sanity; "Other ways to help" is written here in Figma's wording (docs/design-rules.md).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/site/Button.astro';
+import Card from '../../components/site/Card.astro';
+import FundraiserForm from '../../components/site/FundraiserForm.astro';
+import Grid from '../../components/site/Grid.astro';
+import Heading from '../../components/site/Heading.astro';
+import IconLink from '../../components/site/IconLink.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import Section from '../../components/site/Section.astro';
+import Split from '../../components/site/Split.astro';
+import Stack from '../../components/site/Stack.astro';
+import Text from '../../components/site/Text.astro';
+import { supportLink } from '../../components/site/navigation';
+import { activeCampaign } from '../../content/feeds';
+import { contentRepository } from '../../content/repository';
+import { checkoutAttributes, dayAfter, getDonateLink } from '../../content/donate';
+import { otherWaysToHelp } from './_other-ways';
+const [home, support, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), getDonateLink()]);
+const { library } = home;
+const photo = home.givingImage ?? home.support.image;
+const campaign = activeCampaign(support.campaigns);
+// Pages are built ahead of time: after the fundraiser's end date the visitor's browser hides it and shows the
+// general giving block instead (CampaignExpiry in BaseLayout).
+const after = campaign?.endsOn ? await getDonateLink(dayAfter(campaign.endsOn)) : undefined;
+const general = campaign ? after : donate;
+const volunteer = support.initiatives.find(item => item.category === 'volunteering');
+const otherWays = otherWaysToHelp(support.initiatives);
+---
+<BaseLayout title={`${supportLink.label} | Cottonwood Community Library`} description={home.support.introduction}>
+  <PageTitle title={supportLink.label} />
+  {campaign && <Split media="end" panel image={campaign.image ?? photo} headingId="fundraiser-heading" mediaId="fundraiser" data-campaign-only={campaign.endsOn ? '' : undefined} data-campaign-ends={campaign.endsOn}>
+    <Stack gap="xs">
+      <Heading id="fundraiser-heading">{campaign.title}</Heading>
+      <Text tone="muted" size="lead">{campaign.description}</Text>
+    </Stack>
+    <FundraiserForm campaign={campaign} />
+    <Stack direction="row" gap="xs" wrap>
+      {donate.checkout && <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
+      {volunteer && <Button href={`/donate/${volunteer.id}/`} icon="user">Volunteer</Button>}
+    </Stack>
+  </Split>}
+  {general && <Split media={campaign ? 'start' : 'end'} image={photo} headingId="give-heading" mediaId="give" hidden={campaign ? true : undefined} data-campaign-after={campaign ? '' : undefined} data-campaign-ends={campaign?.endsOn}>
+    <Heading id="give-heading">{home.support.title}</Heading>
+    <Text tone="muted">{home.support.introduction}</Text>
+    {general.source === 'fallback' && <Stack gap="xs">
+      <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
+      <IconLink href={`mailto:${library.email}?subject=Supporting%20the%20library`} icon="mail">{library.email}</IconLink>
+    </Stack>}
+    <Stack direction="row" gap="xs" wrap>
+      {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
+      {volunteer && <Button href={`/donate/${volunteer.id}/`} icon="user">Volunteer</Button>}
+    </Stack>
+  </Split>}
+  {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
+    <Grid as="ul" columns={3}>
+      {otherWays.map(item => <Card as="li" title={item.title} href={`/donate/${item.id}/`} image={item.image}>{item.summary}</Card>)}
+    </Grid>
+  </Section>}
+</BaseLayout>

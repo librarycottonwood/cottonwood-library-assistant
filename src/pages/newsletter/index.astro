@@ -1,0 +1,23 @@
+---
+// The current newsletter issue and earlier issues, on the new design. Built only from src/components/site;
+// issues come from Sanity (Library settings › Current newsletter). The sign-up form is in the layout.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IconLink from '../../components/site/IconLink.astro';
+import NewsletterIssue from '../../components/site/NewsletterIssue.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import Section from '../../components/site/Section.astro';
+import Stack from '../../components/site/Stack.astro';
+import Text from '../../components/site/Text.astro';
+import { mainNavigation } from '../../components/site/navigation';
+import { contentRepository } from '../../content/repository';
+const { newsletter } = await contentRepository.getHome();
+const archives = (await contentRepository.getNewsletters()).filter(issue => issue.id !== newsletter?.id);
+const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
+---
+<BaseLayout title={`${newsletter?.issue ?? 'Library'} newsletter | Cottonwood Community Library`} description={newsletter?.summary}>
+  <PageTitle title={newsletter ? `${newsletter.issue} newsletter` : 'Library newsletter'} trail={[eventsLink]}>{newsletter?.summary}</PageTitle>
+  {newsletter ? <NewsletterIssue newsletter={newsletter} /> : <Section><Text tone="muted">No newsletter has been published yet.</Text></Section>}
+  {archives.length > 0 && <Section title="Earlier newsletters" headingId="archive-heading" width="text" align="start">
+    <Stack as="ul" gap="xs">{archives.map(issue => <li><IconLink href={`/newsletters/${issue.id}/`} iconEnd="arrow">{issue.issue}</IconLink></li>)}</Stack>
+  </Section>}
+</BaseLayout>

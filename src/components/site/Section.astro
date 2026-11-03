@@ -19,15 +19,17 @@ interface Props {
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
   align?: 'center' | 'start';
-  /** content: up to 1520px (default). copy: a 622px reading column. */
-  width?: 'content' | 'copy';
+  /** content: up to 1520px (default). full: the whole width inside the page inset (Figma About Us gallery). article: 1120px (an event's text, a news list). text: a 920px column for FAQs and articles. copy: a 622px column. */
+  width?: 'content' | 'full' | 'article' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
+  /** Continues the block above (Service View's line under its photo): no space on top, only the block's own space below. */
+  continues?: boolean;
   id?: string;
 }
-const { title, headingId, align = 'center', width = 'content', gap, id } = Astro.props;
+const { title, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
-<section id={id} aria-labelledby={headingId} class="section">
+<section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>}
     <slot />
@@ -35,10 +37,16 @@ const { title, headingId, align = 'center', width = 'content', gap, id } = Astro
 </section>
 <style>
   .section { padding: var(--section-space) var(--page-inset); }
+  .continues { padding-block-start: 0; }
   .section-inner { display: flex; flex-direction: column; margin-inline: auto; }
   .section-inner:not([data-gap]) { gap: var(--section-gap); }
   .width-content { max-width: var(--width-content); }
+  .width-full { width: 100%; }
+  .width-article { width: 100%; max-width: var(--width-article); }
+  .width-text { max-width: var(--width-text); }
   .width-copy { max-width: var(--width-copy); }
+  /* Text and FAQ columns fill their width even when their lines are short. */
+  .width-text { width: 100%; }
   .align-center { align-items: center; }
   .align-center > :global(:is(h2, p)) { text-align: center; }
   .align-start { align-items: flex-start; }

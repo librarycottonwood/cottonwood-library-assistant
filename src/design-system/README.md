@@ -26,7 +26,7 @@ Type sizes stay fluid.
 is stale, when a component lacks a usage block, or when a new-system file uses raw
 px/rem/em (or clamp/calc) spacing, a spacing token outside the five steps, a deleted
 token, Tailwind spacing classes, or (in pages) any spacing declaration at all.
-Old pages (`SiteLayout` + `global.css`) are not checked.
+Every page is on this system; the old `SiteLayout` and `global.css` are gone.
 
 ## Source
 

@@ -1,0 +1,83 @@
+---
+/**
+ * @component PostList
+ * News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript).
+ * @use The news list on Events & News. Pass the posts from contentRepository; they are sorted newest first here.
+ * @avoid Events (use EventCards), or a short "latest news" teaser of one item (use Split).
+ * @example
+ * <Section title="Latest News" headingId="news-heading"><PostList posts={posts} /></Section>
+ */
+import Image from '../OptimizedImage.astro';
+import Button from './Button.astro';
+import Heading from './Heading.astro';
+import Text from './Text.astro';
+import { newestPosts, postDate } from '../../content/feeds';
+import type { LibraryImage, LibraryPost } from '../../content/types';
+interface Props {
+  posts: LibraryPost[];
+  /** How many show before "Load more news". */
+  initial?: number;
+}
+const { posts, initial = 4 } = Astro.props;
+// Posts with no photo get a library photo picked by id (so it stays the same between builds), never the
+// same one as the post above it.
+const libraryPhotos: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(name => ({ key: name, alt: '' }));
+let previous: LibraryImage | undefined;
+const rows = newestPosts(posts).map(post => {
+  let image = post.image;
+  if (!image) {
+    const start = [...post.id].reduce((sum, character) => sum + character.charCodeAt(0), 0) % libraryPhotos.length;
+    image = libraryPhotos.map((_, step) => libraryPhotos[(start + step) % libraryPhotos.length]!).find(photo => photo !== previous)!;
+  }
+  previous = image;
+  return { post, image, date: postDate(post) };
+});
+---
+<div class="post-list" data-post-list data-initial={initial}>
+  <ul>
+    {rows.map(({ post, image, date }, index) => <li data-post-row>
+      <Image width={600} quality={70} image={image} alt="" widths={[400, 600]} sizes="(max-width: 47.99rem) 100vw, 30vw" loading={index < 2 ? 'eager' : 'lazy'} class:list={['post-photo', image.fit === 'contain' && 'is-contained']} />
+      <div class="post-text">
+        <div class="post-heading">
+          {date && <Text tone="muted"><time datetime={post.publishedAt ?? undefined}>{date}</time></Text>}
+          <Heading level={3} size="title">{post.title}</Heading>
+        </div>
+        <Text tone="muted">{post.summary}</Text>
+        <Button href={post.href} iconEnd="arrow" aria-label={`Read more: ${post.title}`}>Read more</Button>
+      </div>
+    </li>)}
+  </ul>
+  {rows.length > initial && <Button variant="accent" data-load-more hidden>Load more news</Button>}
+</div>
+<style>
+  .post-list { display: flex; flex-direction: column; align-items: center; gap: var(--section-gap); width: 100%; max-width: var(--width-article); margin-inline: auto; }
+  ul { display: flex; flex-direction: column; gap: var(--section-space); width: 100%; margin: 0; padding: 0; list-style: none; }
+  li { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); align-items: center; }
+  .post-list :global(.post-photo) {
+    width: 100%; aspect-ratio: 17 / 15; object-fit: cover;
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+  }
+  .post-list :global(.post-photo.is-contained) { object-fit: contain; background: var(--color-surface); }
+  .post-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+  .post-heading { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .post-heading :global(h3) { font-size: var(--fluid-lead); }
+  @media (min-width: 48rem) {
+    li { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--section-space); }
+  }
+</style>
+<script>
+  for (const list of document.querySelectorAll<HTMLElement>('[data-post-list]')) {
+    const rows = [...list.querySelectorAll<HTMLElement>('[data-post-row]')];
+    const button = list.querySelector<HTMLButtonElement>('[data-load-more]');
+    const initial = Number(list.dataset.initial) || rows.length;
+    if (!button) continue;
+    rows.slice(initial).forEach(row => { row.hidden = true; });
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      const shown = rows.filter(row => row.hidden).slice(0, initial);
+      shown.forEach(row => { row.hidden = false; });
+      shown[0]?.querySelector<HTMLElement>('a')?.focus();
+      if (!rows.some(row => row.hidden)) button.hidden = true;
+    });
+  }
+</script>

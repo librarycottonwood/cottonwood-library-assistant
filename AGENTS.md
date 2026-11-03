@@ -6,7 +6,7 @@ Read `plugins/cottonwood-library/skills/library-assistant/SKILL.md`, then the re
 
 Use the maintained `librarycottonwood/cottonwood-library-assistant` repository. Fetch main and create a new isolated worktree, branch and PR for each website request. Do not edit the separate redesign checkout or other tasks' worktrees.
 
-Current content comes from Sanity. Use permitted tools for CMS drafts/corrections/publication and preserve unrelated records; do not overwrite live content with seed files. Layout/code changes belong on the request's branch.
+Frequently changing content comes from Sanity: events, news posts, newsletters, notices, hours, fundraisers and site-wide settings. Everything else on a page (service details, prices, fees, About Us, ways to help) is written in the page file and changes through a PR; do not add Sanity fields for it (`docs/design-rules.md`, "Where content lives"). Use permitted tools for CMS drafts/corrections/publication and preserve unrelated records; do not overwrite live content with seed files. Layout/code changes belong on the request's branch.
 
 Content-only requests are finished entirely in the library chat: Sanity tools publish the record, then the chat's GitHub tools open a `content/*` PR that adds its own new file `content-updates/<YYYY-MM-DD>-<short-name>.json` (never edit `assistant/website-update.json`; it is kept only for older saves), read its **Website preview** commit status, ask “Ready to save?”, merge and confirm the **Live website** status (publishing skill, “Save a content change”). Volunteers never sign in to Sanity, GitHub or Codex.
 

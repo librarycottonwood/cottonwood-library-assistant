@@ -1,0 +1,40 @@
+---
+/**
+ * @component Gallery
+ * A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event.
+ * @use Two or more photos that belong together, inside a Section. Photos come from the page (or Sanity, for news posts); every photo needs real alt text.
+ * @avoid A single photo (use WideImage or Split), or photos that need a title and description each (use Card).
+ * @example
+ * <Section title="Gallery" headingId="gallery-heading"><Gallery images={story.gallery} /></Section>
+ */
+import Image from '../OptimizedImage.astro';
+import type { LibraryImage } from '../../content/types';
+interface Props {
+  images: LibraryImage[];
+  /** Columns from tablet width up. Phones get one column. */
+  columns?: 2 | 3;
+}
+const { images, columns = 3 } = Astro.props;
+---
+<ul class:list={['gallery', `columns-${columns}`]}>
+  {images.map(image => <li>
+    <figure>
+      <Image width={800} quality={70} image={image} alt={image.alt} widths={[400, 600, 800]} sizes={`(max-width: 47.99rem) 100vw, ${Math.round(100 / columns)}vw`} loading="lazy" class:list={['gallery-photo', image.fit === 'contain' && 'is-contained']} />
+      {image.caption && <figcaption>{image.caption}</figcaption>}
+    </figure>
+  </li>)}
+</ul>
+<style>
+  .gallery { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); width: 100%; margin: 0; padding: 0; list-style: none; }
+  figure { display: flex; flex-direction: column; gap: var(--space-xs); margin: 0; }
+  .gallery :global(.gallery-photo) {
+    width: 100%; aspect-ratio: 6 / 5; object-fit: cover;
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+  }
+  .gallery :global(.gallery-photo.is-contained) { object-fit: contain; background: var(--color-surface); }
+  figcaption { color: var(--color-text-muted); font-size: var(--fluid-label); line-height: var(--leading-snug); }
+  @media (min-width: 48rem) {
+    .columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .columns-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>
