@@ -6,7 +6,7 @@ export function recoveryDetail(reason,keylessReady=false) {
     reader_missing:['The library visitor connection has not finished setup.','Open the library Google account and check that it says librarycottonwood@gmail.com.',GOOGLE_CLIENT_URL,'administrator_setup'],
     google_grant_revoked:['Google needs the library to reconnect visitor reports.','Open Reconnect visitor reports and choose librarycottonwood@gmail.com.',RECONNECT_URL,'google_reconnect'],
     google_client_rejected:['The library’s Google connection settings need attention.','Ask the library administrator to open the existing Google connection settings. Repeated sign-in will not repair this.',GOOGLE_CLIENT_URL,'administrator_setup'],
-    reader_access_removed:['Google is refusing access to the library’s visitor reports.','Open the library Analytics property and confirm that Cottonwood Library - Demo is selected.', 'https://analytics.google.com/analytics/web/#/a410873133p557596091/admin/property/accessmanagement','property_access'],
+    reader_access_removed:['Google is refusing access to the library’s visitor reports.','Open the library Analytics property and confirm that Cottonwood Community Library website is selected.', 'https://analytics.google.com/analytics/web/#/a410873133p557596091/admin/property/accessmanagement','property_access'],
     chatgpt_signin_expired:['ChatGPT needs to reconnect its library report connection.','Open the library’s installed visitor report plugin and select Reconnect. Use librarycottonwood on GitHub.','https://chatgpt.com/plugins','chatgpt_reconnect'],
   };
   if(!Object.hasOwn(problems,reason))reason='temporary';

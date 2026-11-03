@@ -7,8 +7,8 @@ export function normalizeReport(data, request) {
     return fields;
   });
   return {
-    source: 'Google Analytics 4', property: PROPERTY, propertyName: 'Cottonwood Library - Demo',
-    trackingScope: 'Consent-gated demo website visits only; this is not all traffic to the existing public library website.',
+    source: 'Google Analytics 4', property: PROPERTY, propertyName: 'Cottonwood Community Library website',
+    trackingScope: 'Visits from people who allowed statistics on the library website; visitors who chose No thanks are not counted.',
     timezone: data.metadata?.timeZone || TIMEZONE, report: request.report, dateRanges: request.body.dateRanges,
     rows, noRecordedData: rows.length === 0, rowCount: data.rowCount || 0,
     warnings: [

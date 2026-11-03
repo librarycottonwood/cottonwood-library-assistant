@@ -70,7 +70,7 @@ Read the **Website preview** description and the failed job's log.
 
 - A line starting with `Sanity content:` names a record value the website can't use (see the list below). Fix that record in Sanity, publish it, then push a new commit for a fresh preview.
 - "Superseded" or no status because a newer commit was pushed: wait for the newer commit's preview.
-- Anything else, or still nothing after 20 minutes: tell the volunteer "The preview didn't finish, so nothing changed on the website. A board admin needs to look at this: <run link>." Do not keep retrying.
+- Anything else, or still nothing after 20 minutes: you are the fixer. Read the failed job log and fix what you can (a bad record value, a stale branch: update it from `main` and push). If the cause is in the website code, tell the volunteer "The preview didn't finish, so nothing changed on the website, and the current website still works. The library's automatic repair is checking it; ask me again in about an hour." Do not keep retrying the same thing, and don't send this to a person unless an account must be reconnected.
 
 ### If it doesn't go live
 
@@ -78,7 +78,7 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 
 - "Website content changed after the preview", "another save reached main first", or still pending after 15 minutes with no publish run still going: make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments` (keep their `before` values), open a PR and follow steps 3–9 (including the list of other changes).
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
-- Anything else, or the refresh save stops the same way: tell the volunteer "Your change is merged but isn't on the website yet. The website still shows the previous version and works. A board admin needs to look at this: <run link>."
+- Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. Otherwise tell the volunteer "Your change is saved but isn't on the website yet. The website still shows the previous version and works. The library's automatic repair is checking it; ask me again in about an hour." Only send this to Todd (see the library assistant skill) if a person must reconnect an account.
 
 Save PRs with no activity for 14 days are closed automatically with a comment. Nothing from them went live, but what they published in Sanity stays published and goes live with the next save, so check that comment's list.
 
@@ -102,4 +102,4 @@ For a failure, first establish whether the existing website is working and what 
 
 “Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 20 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
 
-If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. A board admin needs to delete them." Undoing the website change alone does not remove them.
+If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. Todd Haines, the board admin, needs to delete them." Give the volunteer one plain sentence to email him (toddhaines7@gmail.com). Undoing the website change alone does not remove them.
