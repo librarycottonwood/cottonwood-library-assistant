@@ -85,7 +85,7 @@ const { privacyLinks = true } = Astro.props;
     });
     document.querySelector('#statistics-allow')?.addEventListener('click', () => choose(true));
     document.querySelector('#statistics-deny')?.addEventListener('click', () => choose(false));
-    const events = new Set(['catalog_header', 'catalog_mobile', 'catalog_footer', 'donate_header', 'catalog_quick', 'donate_quick', 'directions_click']);
+    const events = new Set(['catalog_header', 'catalog_mobile', 'catalog_footer', 'donate_header', 'catalog_quick', 'donate_quick', 'donate_page', 'directions_click']);
     document.addEventListener('click', event => {
       if (!active || !(event.target instanceof Element)) return;
       const name = event.target.closest<HTMLElement>('[data-analytics-event]')?.dataset.analyticsEvent;

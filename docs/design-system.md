@@ -27,6 +27,7 @@ Use the role names below. Do not add new colors or shades.
 | --- | --- | --- | --- | --- |
 | `--color-primary` | `#4956a7` | Primary actions (Donate) and the opening-hours strip. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
 | `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
+| `--color-primary-soft` | `#e3e7ff` | Panels beside a photo: opening hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |

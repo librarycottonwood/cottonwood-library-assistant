@@ -21,7 +21,7 @@ const photo = home.givingImage ?? home.support.image;
     <Heading id="give-heading">{home.support.title}</Heading>
     <Text tone="muted">{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
-      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="primary" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_page" variant="primary" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
       <Button href="/fundraising-events/volunteer/" icon="user">Volunteer</Button>
     </Stack>
   </Split>
