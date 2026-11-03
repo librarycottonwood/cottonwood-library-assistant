@@ -15,7 +15,9 @@ export default defineConfig({
     '/s/shop': '/donate/',
     '/s/stories/story-title': '/events/',
     // Still linked from Sanity's "Giving and acknowledgments" thank-you records. Drop once those links are updated.
-    '/librarynews/story-time/': '/services/story-time/',
+    '/librarynews/story-time/': '/events/regular/story-time/',
+    // Regular programs (Story Time, reading groups) moved from Explore Services to Events & News on Nov 3, 2026.
+    '/services/[slug]': '/events/regular/[slug]',
     '/fundraising-events/library-fund/': '/donate/',
   },
   vite: { plugins: [tailwindcss()] },

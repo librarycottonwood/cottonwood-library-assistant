@@ -21,6 +21,9 @@ export const supportLink: NavLink = { label: 'Support Us', href: '/donate/' };
 /** Footer "Explore" links: Home, the header links, then Support Us (the catalog link is added after). */
 export const footerNavigation: NavLink[] = [{ label: 'Home', href: '/' }, ...mainNavigation, supportLink];
 
+/** A regular program's page (Story Time, reading groups). They are listed on Events & News, so they live under it. */
+export const programHref = (id: string) => `/events/regular/${id}/`;
+
 /** True when `href` is the page being shown or a page under it. Links with a #fragment never count. */
 export function isCurrentPage(href: string, pathname: string): boolean {
   if (href.includes('#') || href === '/') return false;
