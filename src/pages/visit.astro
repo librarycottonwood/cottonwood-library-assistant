@@ -1,6 +1,8 @@
 ---
-// Visit Us (Figma 1002:539): address and hours beside the entrance photo, the map, and borrowing questions.
-// Built only from src/components/site (see docs/design-system.md); hours, address and answers come from Sanity.
+// Visit Us (Figma 1002:539): address and hours beside the entrance photo, the map, and questions about visiting.
+// Built only from src/components/site (see docs/design-system.md); hours, address and contact details come from Sanity.
+// The visiting questions are page content (docs/design-rules.md), written from the library's own borrowing, donation
+// and Wi-Fi answers.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/site/Button.astro';
 import DetailList from '../components/site/DetailList.astro';
@@ -14,8 +16,15 @@ import Stack from '../components/site/Stack.astro';
 import Text from '../components/site/Text.astro';
 import { contentRepository } from '../content/repository';
 import type { LibraryImage } from '../content/types';
-const { library, borrowing } = await contentRepository.getHome();
+const { library } = await contentRepository.getHome();
 const entrance: LibraryImage = { key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California” sign, with shelves of books beyond.' };
+const questions = [
+  { question: 'Can I return books when the library is closed?', answer: 'Yes. Use the outdoor book drop to return items when we’re closed.' },
+  { question: 'Do I need a library card?', answer: 'No. We don’t issue physical library cards; just tell a volunteer your account name. To open an account, adults bring photo ID and proof of residence to the front desk.' },
+  { question: 'Can I drop off book donations?', answer: 'Yes. Bring gently used books and unblemished DVDs to library personnel during opening hours. We can’t accept damaged books, dictionaries, encyclopedias, textbooks or used workbooks.' },
+  { question: 'Is there Wi-Fi?', answer: 'Yes. The Wi-Fi password is on the placard at the front desk. Library computers are available too; sign in at the front desk first.' },
+  { question: 'How do I contact the library?', answer: `Call ${library.phone} or email ${library.email}. Our mailing address is ${library.mailingAddress}.` },
+];
 const hours = library.hours.map(row => ({ label: row.days, value: row.hours, muted: /^closed$/i.test(row.hours) }));
 ---
 <BaseLayout title="Visit Us | Cottonwood Community Library" description={`Hours, directions and borrowing at ${library.address}, ${library.locality}.`}>
@@ -31,7 +40,7 @@ const hours = library.hours.map(row => ({ label: row.days, value: row.hours, mut
   <Section title="Find us" headingId="map-heading">
     <MapCard library={library} />
   </Section>
-  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
-    <Faq items={borrowing} />
-  </Section>}
+  <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
+    <Faq items={questions} />
+  </Section>
 </BaseLayout>

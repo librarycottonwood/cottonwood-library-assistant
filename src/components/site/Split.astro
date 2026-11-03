@@ -3,7 +3,7 @@
  * @component Split
  * A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
  * @use The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
- * @avoid Several similar items (use Grid + Card), or photos that must not be cropped.
+ * @avoid Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
  * @example
  * <Split media="start" image={photo} headingId="community-heading">
  *   <Heading id="community-heading">Keep your library open.</Heading>
@@ -41,7 +41,7 @@ const hasCaption = Astro.slots.has('caption');
 <section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed: ratio === '1314 / 652' && !panel && !inset }]} {...attributes}>
   <div class="split-copy"><slot /></div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption }]}>
-    <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class:list={['split-image', image.fit === 'contain' && 'is-contained']} style={`aspect-ratio: ${ratio}`} />
+    <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class="split-image" style={`aspect-ratio: ${ratio}`} />
     {hasCaption && <p class="split-caption"><slot name="caption" /></p>}
   </div>
 </section>
@@ -58,7 +58,6 @@ const hasCaption = Astro.slots.has('caption');
     width: 100%; object-fit: cover;
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
-  .split-media :global(.split-image.is-contained) { object-fit: contain; background: var(--color-surface); }
   .split-caption {
     position: absolute; bottom: 0; left: var(--page-inset); right: var(--page-inset);
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-md);

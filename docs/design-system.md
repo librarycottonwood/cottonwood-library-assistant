@@ -126,7 +126,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
-| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary). |
+| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary). |
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
@@ -228,7 +228,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
 - **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
 
 ```ts
 interface Props {
@@ -297,9 +297,9 @@ interface Props {
 
 ### Faq
 
-`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
+`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary).
 
-- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Pass the questions from Sanity (borrowing) or written in the page.
+- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Each page asks its own questions: borrowing (Sanity) on Explore Services, visiting on Visit Us, the program on its service page.
 - **Don't use for:** Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
 
 ```ts
@@ -354,7 +354,7 @@ interface Props {
 
 `src/components/site/Grid.astro` — Equal-width columns that collapse to one column on phones.
 
-- **Use for:** Rows of Cards, or any set of same-sized items.
+- **Use for:** Rows of Cards, or any set of same-sized items. In three columns a short last row (one or two items) is centered.
 - **Don't use for:** A photo next to text (use Split), or rows of buttons (use Stack direction="row").
 
 ```ts
@@ -364,6 +364,8 @@ interface Props {
   gap?: Space;
   /** Use "ul" when the children are a list (then give each child as="li"). */
   as?: 'div' | 'ul';
+  /** Center a short last row in three columns (default). EventCards turns this off and lays out its own rows. */
+  balance?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | boolean | undefined;
 }
@@ -562,7 +564,7 @@ interface Props {
 `src/components/site/Split.astro` — A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
 - **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
-- **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped.
+- **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
 
 ```ts
 interface Props {

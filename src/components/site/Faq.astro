@@ -1,8 +1,8 @@
 ---
 /**
  * @component Faq
- * Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
- * @use "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Pass the questions from Sanity (borrowing) or written in the page.
+ * Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary).
+ * @use "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Each page asks its own questions: borrowing (Sanity) on Explore Services, visiting on Visit Us, the program on its service page.
  * @avoid Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
  * @example
  * <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
@@ -16,9 +16,12 @@ interface Props {
   openFirst?: boolean;
 }
 const { items, openFirst = true } = Astro.props;
+// Details sharing a name form an exclusive accordion: opening one closes the others. Built from the questions so the
+// build output stays the same from one build to the next.
+const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) % 1e6, 7)}`;
 ---
 <div class="faq">
-  {items.map((item, index) => <details open={openFirst && index === 0}>
+  {items.map((item, index) => <details name={group} open={openFirst && index === 0}>
     <summary><span>{item.question}</span><Icon name="plus" class="faq-open" /><Icon name="close" class="faq-close" /></summary>
     <p>{item.answer}</p>
   </details>)}

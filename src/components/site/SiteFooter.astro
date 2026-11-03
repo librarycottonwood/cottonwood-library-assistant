@@ -89,8 +89,8 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
   .social a { display: inline-flex; align-items: center; justify-content: flex-start; min-width: 2.75rem; min-height: 2.75rem; }
   .social :global(.social-icon) { width: 1.875rem; height: 1.875rem; }
   .footer-legal { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--color-text-muted); font-size: var(--fluid-label); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
-  .footer-legal a, .footer-legal button { text-decoration-line: underline; }
-  .footer-legal a:hover, .footer-legal button:hover { color: var(--color-text); }
+  .footer-legal a, .footer-legal button { text-decoration-line: none; }
+  .footer-legal a:hover, .footer-legal button:hover { text-decoration-line: underline; }
   .footer-legal button {
     padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
     text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);

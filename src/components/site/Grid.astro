@@ -2,7 +2,7 @@
 /**
  * @component Grid
  * Equal-width columns that collapse to one column on phones.
- * @use Rows of Cards, or any set of same-sized items.
+ * @use Rows of Cards, or any set of same-sized items. In three columns a short last row (one or two items) is centered.
  * @avoid A photo next to text (use Split), or rows of buttons (use Stack direction="row").
  * @example
  * <Grid as="ul" columns={3} gap="md">
@@ -16,17 +16,25 @@ interface Props {
   gap?: Space;
   /** Use "ul" when the children are a list (then give each child as="li"). */
   as?: 'div' | 'ul';
+  /** Center a short last row in three columns (default). EventCards turns this off and lays out its own rows. */
+  balance?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | boolean | undefined;
 }
-const { columns = 3, gap = 'md', as: Tag = 'div', ...attributes } = Astro.props;
+const { columns = 3, gap = 'md', as: Tag = 'div', balance = true, ...attributes } = Astro.props;
 ---
-<Tag data-gap={gap} class:list={['grid', `grid-${columns}`]} {...attributes}><slot /></Tag>
+<Tag data-gap={gap} class:list={['grid', `grid-${columns}`, { balance }]} {...attributes}><slot /></Tag>
 <style>
   .grid { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 48rem) {
     .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    /* Three columns as six half-tracks, each item spanning two, so a short last row can start half a column or a
+     * whole column in and sit centered. */
+    .grid-3.balance { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .grid-3.balance > :global(*) { grid-column: span 2; }
+    .grid-3.balance > :global(:nth-child(3n + 1):nth-last-child(2)) { grid-column: 2 / span 2; }
+    .grid-3.balance > :global(:nth-child(3n + 1):last-child) { grid-column: 3 / span 2; }
   }
 </style>

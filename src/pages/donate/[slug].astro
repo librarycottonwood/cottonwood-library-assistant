@@ -6,7 +6,6 @@ import Button from '../../components/site/Button.astro';
 import Card from '../../components/site/Card.astro';
 import Gallery from '../../components/site/Gallery.astro';
 import Grid from '../../components/site/Grid.astro';
-import Heading from '../../components/site/Heading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Prose from '../../components/site/Prose.astro';
 import Section from '../../components/site/Section.astro';
@@ -35,8 +34,8 @@ const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'lon
 ---
 <BaseLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary}>
   <PageTitle title={initiative.title} trail={[supportLink]} />
-  <Split media="start" panel image={initiative.image} headingId="how-heading">
-    <Heading id="how-heading">{initiative.summary}</Heading>
+  <Split media="start" panel image={initiative.image}>
+    <Text size="lead">{initiative.summary}</Text>
     {nextSale && <Text>Next sale: <a href={nextSale.href}><time datetime={nextSale.startsAt}>{saleDate.format(new Date(nextSale.startsAt))}</time></a></Text>}
     <Prose steps={initiative.steps} />
     <Button href={action.href} download={action.download || undefined} variant="accent" icon={action.download ? 'download' : undefined} iconEnd={action.download ? undefined : 'arrow'}>{action.label}</Button>

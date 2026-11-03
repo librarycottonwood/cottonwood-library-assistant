@@ -3,7 +3,7 @@
  * @component Card
  * Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
  * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
- * @avoid A single highlighted item that is always on its own (use Split), text without a photo, anything with more than two short sentences, or links and buttons inside the card (the card is already one link; a badge must not have href).
+ * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
  * @example
  * <Grid as="ul" columns={3}>
  *   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
@@ -56,9 +56,9 @@ const hasBadge = Astro.slots.has('badge');
   .card-badge > :global(*) { min-width: 0; overflow-wrap: anywhere; }
   .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
   .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
-  /* Four lines at most, ending in "…" (long Sanity event summaries); the full text is on the linked page and stays
-   * readable to screen readers. Four, not three, so short page-written texts such as "Ask your cashier." fit. */
-  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; color: var(--color-text-muted); }
+  /* Two lines at most, ending in "…" (long Sanity event summaries), so cards side by side read evenly. The full text is
+   * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
+  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
   .card-copy h3 :global(.icon-link .icon-end) { display: inline-block; margin-inline-start: var(--space-xs); vertical-align: -0.125em; }

@@ -18,6 +18,7 @@ interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
 ---
+<div class="toolbar-tint" aria-hidden="true"></div>
 <div class="hours-strip">
   <p><Icon name="clock" class="hours-icon" /><span><span class="sr-only">Library hours: </span>{library.hoursSummary}</span></p>
 </div>
@@ -63,6 +64,20 @@ const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
   }
 </script>
 <style>
+  /* Safari 26 ignores <meta name="theme-color"> and colors its toolbar from a fixed or sticky element touching the top
+   * of the page. At the top that is this strip (the hours bar's color, or the notices' green when they show);
+   * once the page scrolls it slides away and Safari takes the sticky header's color. Browsers without scroll-driven
+   * animations never show it. */
+  .toolbar-tint { display: none; }
+  @supports (animation-timeline: scroll()) {
+    .toolbar-tint {
+      display: block; position: fixed; top: 0; right: 0; left: 0; z-index: 40;
+      height: 0.375rem; background: var(--color-primary); pointer-events: none;
+      animation: toolbar-tint-away linear both; animation-timeline: scroll(); animation-range: 0.625rem 0.6875rem;
+    }
+    :global(body:has(.library-notices:not([hidden]))) .toolbar-tint { background: var(--color-accent); }
+  }
+  @keyframes toolbar-tint-away { to { transform: translateY(-200%); } }
   .hours-strip {
     display: flex; justify-content: center;
     padding: var(--space-xs) var(--page-inset);

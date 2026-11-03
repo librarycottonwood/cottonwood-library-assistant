@@ -1,6 +1,6 @@
 ---
 // Service View (Figma 1012:1243): one regular program (Story Time, reading groups) beside its photo, the map and
-// borrowing questions. Built only from src/components/site. Programs and questions come from Sanity.
+// questions about the program. Built only from src/components/site. Programs and questions come from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
 import DetailList from '../../components/site/DetailList.astro';
@@ -11,7 +11,7 @@ import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
 import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
-import { mainNavigation, supportLink } from '../../components/site/navigation';
+import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryImage, Program } from '../../content/types';
 export async function getStaticPaths() {
@@ -20,35 +20,47 @@ export async function getStaticPaths() {
 }
 interface Props { program: Program; }
 const { program } = Astro.props;
-const { library, borrowing } = await contentRepository.getHome();
+const { library } = await contentRepository.getHome();
 const services = mainNavigation.find(link => link.href === '/services/')!;
-// Page photos from Figma. Programs without one show their Sanity picture whole (the reading groups' are posters).
+// Page photos from Figma. Programs without one show their Sanity picture, filling the frame like every page photo.
 const photos: Record<string, LibraryImage> = {
   'story-time': { key: 'storyTimeCorner', alt: 'The Story Time corner: a bright alphabet rug, bookshelves, a reading chair and a globe by the window.' },
 };
-const photo = photos[program.id] ?? { ...program.image, fit: 'contain' };
-// "Wednesdays · 11:30 a.m." reads as Figma's "Wednesdays at 11:30 a.m."
-const when = program.schedule.replace(' · ', ' at ') + (/[.!?]$/.test(program.schedule) ? '' : '.');
+const photo = photos[program.id] ?? { ...program.image, fit: 'cover' as const };
+// Questions about this program, written from the program's Sanity details (staff-provided). A program listed here
+// shows its details as these questions; a new program without questions shows its details in the panel instead.
+const questions: Record<string, { question: string; answer: string }[]> = {
+  'story-time': [
+    { question: 'Who is Story Time for?', answer: 'Preschoolers, during the school year. Older children are welcome in the summer.' },
+    { question: 'What happens at Story Time?', answer: 'Stories, songs, crafts and a snack. First 5 Shasta helps provide books for children to take home.' },
+  ],
+  'book-club': [
+    { question: 'How do I get the book?', answer: 'Book Club titles are held at the front desk for members a month ahead.' },
+    { question: 'The library is closed on Thursdays. How do I get in?', answer: 'Please enter through the back door by the book drop.' },
+  ],
+  'main-street-readers': [
+    { question: 'What do we talk about?', answer: 'Recent reads and recommendations. Bring your thoughts about a book you loved, or one you wish you hadn’t picked up.' },
+    { question: 'Is it a formal club?', answer: 'No. Main Street Readers is an informal group that meets at the library.' },
+  ],
+};
+const faq = questions[program.id] ?? [];
 ---
 <BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`}>
   <PageTitle title={program.title} trail={[services]} />
-  {/* Figma leaves this panel empty; it holds the program's details and When/Where. */}
+  {/* Figma leaves this panel empty; it holds the program's introduction, When/Where and the next steps. */}
   <Split media="start" panel ratio="16 / 9" image={photo}>
+    <Text size="lead">{program.description}</Text>
     <DetailList label={`${program.title} schedule`} items={[{ label: 'When', value: program.schedule }, { label: 'Where', value: library.address }]} />
-    {program.details && <Text tone="muted">{program.details}</Text>}
-  </Split>
-  <Section align="start" continues>
-    <Text tone="muted" size="lead">{`${program.description} ${when}`}</Text>
+    {faq.length === 0 && program.details && <Text tone="muted">{program.details}</Text>}
     <Stack direction="row" gap="xs" wrap>
       <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
       <Button href={library.catalogUrl} icon="book">Browse the catalog</Button>
-      <Button href={supportLink.href} variant="primary" icon="heart">Donate</Button>
     </Stack>
-  </Section>
+  </Split>
   <Section title="Find us" headingId="map-heading">
     <MapCard library={library} />
   </Section>
-  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
-    <Faq items={borrowing} />
+  {faq.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
+    <Faq items={faq} />
   </Section>}
 </BaseLayout>
