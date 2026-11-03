@@ -97,8 +97,11 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
     padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
     text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);
   }
+  /* Phones: one column, everything lined up on the left edge. */
   @media (max-width: 40rem) {
-    .footer-brand { width: 100%; }
+    .site-footer { flex-direction: column; }
+    .footer-brand { width: 100%; align-items: flex-start; text-align: start; }
+    .footer-column { width: 100%; }
     .site-footer :global(.footer-watermark) { width: 85vw; }
   }
 </style>

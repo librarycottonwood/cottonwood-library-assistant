@@ -41,6 +41,6 @@ const hours = library.hours.map(row => ({ label: row.days, value: row.hours, mut
     <MapCard library={library} />
   </Section>
   <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
-    <Faq items={questions} />
+    <Faq items={questions} email={library.email} />
   </Section>
 </BaseLayout>

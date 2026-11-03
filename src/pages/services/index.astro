@@ -68,6 +68,6 @@ const printing = [
   </Split>
 
   {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
-    <Faq items={borrowing} />
+    <Faq items={borrowing} email={library.email} />
   </Section>}
 </BaseLayout>

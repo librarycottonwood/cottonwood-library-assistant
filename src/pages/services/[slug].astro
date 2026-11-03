@@ -75,6 +75,6 @@ const faq = questions[program.id] ?? [];
     <MapCard library={library} />
   </Section>
   {faq.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
-    <Faq items={faq} />
+    <Faq items={faq} email={library.email} />
   </Section>}
 </BaseLayout>

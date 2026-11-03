@@ -91,7 +91,7 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 | `--width-text` | `57.5rem` (920px) | Long reading on its own: FAQs, articles, the About story (Section width="text", Prose). | Text beside a photo (use --width-copy) or card grids. | `<Section width="text">` |
 | `--page-inset` | `var(--space-sm)` (20 → 60 → 100px) → `var(--space-lg)` from 48rem, `var(--space-xl)` from 100rem | Left and right space at the page edge. Section, Split, header and footer apply it. | Spacing inside content; pages never need it directly. | `padding-inline: var(--page-inset);` |
 | `--section-space` | `var(--space-lg)` (60 → 100px) → `var(--space-xl)` from 100rem | Space above and below each page section. Section and Split apply it. | Gaps inside a section (use --section-gap). | `padding-block: var(--section-space);` |
-| `--section-gap` | `var(--space-sm)` (20 → 30 → 60px) → `var(--space-md)` from 48rem, `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
+| `--section-gap` | `var(--space-md)` (30 → 60px) → `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
 
 ### Corners
 
@@ -308,12 +308,14 @@ interface Props {
   items: { question: string; answer: string }[];
   /** Open the first question, as in Figma. */
   openFirst?: boolean;
+  /** The library's email: adds "Still have a question? Email us." under the questions. */
+  email?: string;
 }
 ```
 
 ```astro
 <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
-  <Faq items={borrowing} />
+  <Faq items={borrowing} email={library.email} />
 </Section>
 ```
 
@@ -661,7 +663,7 @@ interface Props {
 
 `src/components/site/WideImage.astro` — One large rounded photo across the page, right under the page title (Figma Event View and About Us).
 
-- **Use for:** The main photo of an event, news post or the About page. `bleed` lets it run off the right edge, as on About Us.
+- **Use for:** The main photo of an event, news post or the About page. `bleed` lets it run off the right edge at every width, as on About Us.
 - **Don't use for:** Photos beside text (use Split), several photos (use Gallery), or logos and posters that must not be cropped.
 
 ```ts

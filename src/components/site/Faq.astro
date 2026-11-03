@@ -6,7 +6,7 @@
  * @avoid Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
  * @example
  * <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
- *   <Faq items={borrowing} />
+ *   <Faq items={borrowing} email={library.email} />
  * </Section>
  */
 import Icon from '../Icon.astro';
@@ -14,8 +14,10 @@ interface Props {
   items: { question: string; answer: string }[];
   /** Open the first question, as in Figma. */
   openFirst?: boolean;
+  /** The library's email: adds "Still have a question? Email us." under the questions. */
+  email?: string;
 }
-const { items, openFirst = true } = Astro.props;
+const { items, openFirst = true, email } = Astro.props;
 // Details sharing a name form an exclusive accordion: opening one closes the others. Built from the questions so the
 // build output stays the same from one build to the next.
 const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) % 1e6, 7)}`;
@@ -25,6 +27,7 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
     <summary><span>{item.question}</span><Icon name="plus" class="faq-open" /><Icon name="close" class="faq-close" /></summary>
     <p>{item.answer}</p>
   </details>)}
+  {email && <p class="faq-ask">Still have a question? <a href={`mailto:${email}`}>Email us</a>.</p>}
 </div>
 <style>
   .faq { display: flex; flex-direction: column; gap: var(--space-md); width: 100%; font-size: var(--fluid-lead); line-height: var(--leading-relaxed); }
@@ -38,6 +41,8 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
   summary :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; color: var(--color-text-muted); }
   details[open] :global(.faq-open), details:not([open]) :global(.faq-close) { display: none; }
   details p { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
+  .faq-ask { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
+  .faq-ask a { color: var(--color-text); font-weight: var(--weight-bold); text-decoration-line: underline; }
   /* Figma (1920): questions 105px apart, the answer 30px below its question. */
   @media (min-width: 64rem) {
     .faq { gap: var(--space-lg); }
