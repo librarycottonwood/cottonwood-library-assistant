@@ -29,9 +29,10 @@ const LIBRARY_POINT = [-122.2805738, 40.3873866];
 </div>
 <style>
   /* The pills sit on the map's top edge: half above it, half over it. */
-  .map-card { position: relative; width: 100%; padding-block-start: var(--space-md); }
+  /* Phones: the pills sit above the map. From tablet width they sit on its top edge, half over it. */
+  .map-card { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; }
   .map-pills {
-    position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+    z-index: 2;
     display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs);
     padding-inline: var(--space-sm);
     font-size: var(--fluid-body); font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
@@ -60,7 +61,8 @@ const LIBRARY_POINT = [-122.2805738, 40.3873866];
   .map-canvas :global(.maplibregl-canvas) { filter: saturate(0.4); }
   @media (min-width: 48rem) {
     .map-frame { aspect-ratio: 1320 / 652; }
-    .map-card { padding-block-start: var(--space-md); }
+    .map-card { display: block; padding-block-start: var(--space-md); }
+    .map-pills { position: absolute; top: 0; left: 0; right: 0; }
   }
 </style>
 <script>
