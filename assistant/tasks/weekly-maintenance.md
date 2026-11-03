@@ -29,6 +29,14 @@ Check these through the GitHub and Sanity tools and name each one in plain words
 
 Report only items that are actually stuck, and what you did about each. Do not mention how often this check runs.
 
+## Problems only GitHub shows
+
+The library does not read GitHub or its emails, so this report is how these reach anyone. Check each one and report it in plain words, with what you did about it:
+
+- Open issues titled "Website check needs attention" or "Library visitor reports need attention": say what broke and whether it is fixed now.
+- A failed **Library automatic upkeep** run in the last 7 days, including the weekly sign-in renewal: automatic repairs are off until it is fixed. If the run says the sign-in was rejected or revoked, follow "Renew the repair sign-in" in assistant/MAINTENANCE.md and name Todd for the sign-in step.
+- Save PRs closed by the stale-save cleanup in the last 7 days: say which change was dropped, that it never went on the website, and that it can be redone on request.
+
 ## Handle problems
 
 The existing GitHub worker owns automatic repairs. Check what it is doing before recommending another attempt. Follow assistant/MAINTENANCE.md for its exact boundaries; do not repair content, account access, authentication, tests or deployment rules to make a check pass. Do not publish from this review or change permissions, billing, domains or library facts. Account failures, exhausted allowances and work outside the worker's scope need the appropriate human step or reviewed technical work. Do not enable paid services or an automatic retry loop.
