@@ -9,6 +9,8 @@ export interface LibraryImage {
   caption?: string;
   /** Preserve the full artwork/logo instead of cropping it like a photograph. */
   fit?: 'cover' | 'contain';
+  /** Focal point for page photographs, so wide crops keep faces in view. */
+  position?: string;
 }
 
 export interface Program {

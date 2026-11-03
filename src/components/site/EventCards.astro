@@ -18,6 +18,7 @@ import Badge from './Badge.astro';
 import type { LibraryEvent, LibraryImage, Program } from '../../content/types';
 import { upcomingEvents } from '../../content/feeds';
 import { nextScheduledDay } from '../../content/schedule.mjs';
+import { eventTopicPhoto, refreshPhoto } from '../../content/photography';
 interface Props {
   events: LibraryEvent[];
   /** Regular programs. They give events their photo and fill spots no dated event takes. */
@@ -38,8 +39,11 @@ const fullDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long
 const events = upcomingEvents(Astro.props.events).slice(0, limit + 9);
 // Library photos for events with none of their own, picked by id so a card keeps its photo between builds.
 const fallbackImages: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(key => ({ key, alt: '' }));
-const pictureId = (picture: LibraryImage) => picture.url ?? picture.key ?? '';
-const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image;
+const pictureId = (picture: LibraryImage) => {
+  const selected = refreshPhoto(picture);
+  return selected.url ?? selected.key ?? '';
+};
+const ownImage = (event: LibraryEvent) => event.image ?? programs.find(program => program.id === event.programId)?.image ?? eventTopicPhoto(event.title, event.summary);
 // Programs already showing as a dated event don't get a second card.
 const fillers = !fill ? [] : programs.filter(program => !events.some(event => event.programId === program.id));
 // In card order, each fallback starts from the id-picked photo and moves on to the next one no other card uses,
