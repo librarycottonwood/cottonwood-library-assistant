@@ -57,8 +57,10 @@ authorized restoring this AI version for improved lighting and framing. It is
 a reconstruction, not an unchanged documentary photo; the original Drive file
 remains available and the roof fundraiser retains its original photograph. The crowded junior
 display, Main Street Readers portrait and close exterior were also rejected
-during preview review; their page appearances now use the reading table, actual
-community Story Time photograph and polished exterior.
+during preview review. The display now uses the reading table and community
+support uses the actual Story Time photograph. At the user’s request, Main Street
+Readers and Book Club retain their original published illustrations in both
+program cards and detail-page panels.
 
 ## How replacements work
 
@@ -72,8 +74,8 @@ over local aliases and passes through unchanged. Unrelated images pass through.
 Story Time uses the same selected Instagram photograph in its program cards and
 main detail-page panel. Its additional craft photographs remain in the gallery.
 
-The reading groups use a calm library reading-table composition and the polished
-reading-nook view. Book-donation artwork becomes the book-and-table composition;
+The reading groups retain their original illustrations. Book-donation artwork
+becomes the book-and-table composition;
 the community support block shows the real Facebook Story Time gathering. The news
 fallback rotation uses library places and activities instead of repeating artwork.
 The historical About Us paintings, portraits, plaque, certificates and murals are

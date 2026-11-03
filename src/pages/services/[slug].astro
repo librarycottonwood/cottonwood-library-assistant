@@ -23,10 +23,6 @@ interface Props { program: Program; }
 const { program } = Astro.props;
 const { library } = await contentRepository.getHome();
 const services = mainNavigation.find(link => link.href === '/services/')!;
-// Programs use their shared card photo unless a page-specific photo is listed here.
-const photos: Record<string, LibraryImage> = {
-  'book-club': { key: 'bookClubMeeting', alt: 'Book Club members talking around a table in the library.' },
-};
 // More photos from the program, shown under the panel.
 const galleries: Record<string, LibraryImage[]> = {
   'story-time': [
@@ -36,7 +32,8 @@ const galleries: Record<string, LibraryImage[]> = {
   ],
 };
 const gallery = galleries[program.id] ?? [];
-const photo = photos[program.id] ?? { ...program.image, fit: 'cover' as const };
+// Use the same program image as the cards, including restored reading-group illustrations.
+const photo = { ...program.image, fit: 'cover' as const };
 // Questions about this program, written from the program's Sanity details (staff-provided). A program listed here
 // shows its details as these questions; a new program without questions shows its details in the panel instead.
 const questions: Record<string, { question: string; answer: string }[]> = {

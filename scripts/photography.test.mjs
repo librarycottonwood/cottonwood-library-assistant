@@ -2,15 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { refreshPhoto, eventTopicPhoto } from '../src/content/photography.ts';
 
-test('the old program artwork becomes a local photo with matching description and crop', () => {
+test('the old computer photo becomes a local photo with matching description and crop', () => {
   const original = {
-    url: 'https://cdn.sanity.io/images/2ou0xy2r/production/420d14d5696a4f17d16d5c0a5c00c491d9964d40-1800x1200.png',
-    alt: 'Lamp-lit book illustration', fit: 'contain', width: 1800, height: 1200,
+    url: 'https://cdn.sanity.io/images/2ou0xy2r/production/51396244812efc45a073ddfec54db0381a1e98ff-960x720.jpg',
+    alt: 'Old computer-room photo', fit: 'contain', width: 1800, height: 1200,
   };
   const updated = refreshPhoto(original);
-  assert.equal(updated.key, 'readingTable');
+  assert.equal(updated.key, 'computersV2');
   assert.equal(updated.fit, 'cover');
-  assert.match(updated.alt, /open book/);
+  assert.match(updated.alt, /Public computer stations/);
   assert.equal(updated.url, undefined);
   assert.equal(updated.width, undefined);
   assert.equal(updated.height, undefined);
@@ -18,8 +18,8 @@ test('the old program artwork becomes a local photo with matching description an
   assert.strictEqual(refreshPhoto(updated), updated);
 });
 
-test('the rejected portrait and crowded display are replaced across local and CMS appearances', () => {
-  for (const key of ['mainStreetReaders', 'newReads', 'books', 'bookDonation']) {
+test('the crowded display and rejected exterior are replaced across local and CMS appearances', () => {
+  for (const key of ['newReads', 'books', 'bookDonation']) {
     assert.equal(refreshPhoto({key, alt: ''}).key, 'readingTable');
   }
   assert.equal(refreshPhoto({key: 'communityExterior', alt: ''}).key, 'storytimeFacebook');
@@ -43,7 +43,11 @@ test('new CMS uploads and other projects are never overridden, even with an old 
 });
 
 test('artwork, certificates, logos and unrelated images retain their original metadata', () => {
-  for (const key of ['watercolor', 'cattleDrivePainting', 'founders', 'foundersPortrait', 'countyCertificate', 'muralOrchard', 'firstFive', 'newsletter']) {
+  for (const asset of ['420d14d5696a4f17d16d5c0a5c00c491d9964d40-1800x1200.png', 'b534c0581733e7e3cb8829f6890af9bb4ed6c25a-1800x1200.png']) {
+    const image = { url: `https://cdn.sanity.io/images/2ou0xy2r/production/${asset}`, alt: 'Original program illustration', fit: 'contain' };
+    assert.strictEqual(refreshPhoto(image), image);
+  }
+  for (const key of ['mainStreetReaders', 'bookClub', 'watercolor', 'cattleDrivePainting', 'founders', 'foundersPortrait', 'countyCertificate', 'muralOrchard', 'firstFive', 'newsletter']) {
     const image = { key, alt: 'Original artwork', fit: 'contain', caption: 'Existing caption' };
     assert.strictEqual(refreshPhoto(image), image);
   }

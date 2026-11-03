@@ -14,8 +14,6 @@ const sale = photo('bookSaleV2', 'The wooden book-sale bookshelf in the library�
 const children = photo('childrensSaleV2', 'Children’s books on the library’s white book-sale shelves.');
 const market = photo('holidayMarketV2', 'Holiday Market’s timber-framed entrance and shopping carts.');
 const display = photo('readingTable', 'An open book and two closed books on a round library table beside burgundy chairs.', '50% 60%');
-const readers = display;
-const club = photo('readingNookV2', 'Wooden chairs and book-filled shelves in the library’s sunlit reading nook.');
 const community = photo('storytimeFacebook', 'A library volunteer sharing a picture book with children gathered in the Story Time corner.', '50% 55%');
 
 const byKey: Record<string, LibraryImage> = {
@@ -29,7 +27,6 @@ const byKey: Record<string, LibraryImage> = {
   holidayMarket: market,
   readingNook: photo('readingNookV2', 'Wooden chairs and a patterned armchair beside the library’s large shaded window.'),
   bookDrop: photo('bookDropV2', 'The outdoor book return with its hand-painted caterpillar and Bookdrop lettering.'),
-  mainStreetReaders: readers, bookClub: club,
   adventureMural: photo('adventureMuralOriginal', 'The full Adventure Awaits mural beside the children’s craft table.'),
 };
 
@@ -54,10 +51,6 @@ const byAsset: Record<string, LibraryImage> = {
   'b6c5f4f72162ff7ff2c13e53cb52827b3dc1627c-720x960.jpg': children,
   '66252c5440d8bee56631cb81e5686fdab72cc231-1080x1080.png': display,
   '4eedd966749ff80dce5bb377e26fca77e57fe359-2082x1152.jpg': market,
-  '420d14d5696a4f17d16d5c0a5c00c491d9964d40-1800x1200.png': readers,
-  '13d1b5cce4c01a439a8a04c368d8def38acbbb1c-1176x1178.png': readers,
-  'b534c0581733e7e3cb8829f6890af9bb4ed6c25a-1800x1200.png': club,
-  '249a439b39c885ff205e09d6a1fd6e17e1bb0ec6-1080x1080.png': club,
 };
 
 export function refreshPhoto(image: LibraryImage): LibraryImage {
