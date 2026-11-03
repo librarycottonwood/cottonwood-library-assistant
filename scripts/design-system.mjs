@@ -4,7 +4,7 @@
 //   node scripts/design-system.mjs docs    rewrite docs/design-system.md from tokens.ts and component usage blocks
 //   node scripts/design-system.mjs check   fail if that file is stale, or if new-system files break the spacing rules
 //
-// `pnpm check` runs `check`. Old pages (SiteLayout + global.css) are out of scope.
+// `pnpm check` runs `check`.
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';

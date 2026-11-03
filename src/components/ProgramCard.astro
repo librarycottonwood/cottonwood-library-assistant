@@ -1,7 +1,0 @@
----
-import FeatureCard from './FeatureCard.astro';
-import type { Program } from '../content/types';
-interface Props { program: Program; }
-const { program } = Astro.props;
----
-<FeatureCard title={program.title} image={program.image} note={program.schedule} href={`/librarynews/${program.id}/`} />

@@ -117,7 +117,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 
 | Component | Purpose |
 | --- | --- |
-| [BaseLayout](#baselayout) | The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link. |
+| [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
@@ -130,9 +130,10 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
+| [NewsletterIssue](#newsletterissue) | One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
-| [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text or plain paragraphs. Large muted text as on the About and event pages. |
+| [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
@@ -141,10 +142,10 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 
 ### BaseLayout
 
-`src/layouts/BaseLayout.astro` — The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link.
+`src/layouts/BaseLayout.astro` — The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link.
 
-- **Use for:** Wrapping every new page. Put Splits and Sections directly inside it.
-- **Don't use for:** Old pages that still use SiteLayout + global.css; don't mix the two systems on one page.
+- **Use for:** Wrapping every page. Put Splits and Sections directly inside it.
+- **Don't use for:** Page-level styles or spacing: build from src/components/site instead.
 
 ```ts
 interface Props {
@@ -427,6 +428,21 @@ interface Props { library: HomeContent['library']; }
 <Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
 ```
 
+### NewsletterIssue
+
+`src/components/site/NewsletterIssue.astro` — One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button.
+
+- **Use for:** The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
+- **Don't use for:** Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).
+
+```ts
+interface Props { newsletter: LibraryNewsletter; }
+```
+
+```astro
+<NewsletterIssue newsletter={newsletter} />
+```
+
 ### PageTitle
 
 `src/components/site/PageTitle.astro` — The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
@@ -472,7 +488,7 @@ interface Props {
 
 ### Prose
 
-`src/components/site/Prose.astro` — Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text or plain paragraphs. Large muted text as on the About and event pages.
+`src/components/site/Prose.astro` — Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages.
 
 - **Use for:** Article bodies (news posts, event descriptions), the About story, the privacy notice. Put it in a Section with width="text" and align="start".
 - **Don't use for:** Short introductions (use Text), text beside a photo (use Split), or hand-written facts.

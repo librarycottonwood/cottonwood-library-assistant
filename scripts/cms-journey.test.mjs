@@ -100,7 +100,7 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
       assert.ok(!html.includes('tel:+19999999999'));
       assert.ok(plain(html).includes('CMS rehearsal notice is active.'));
     }
-    const current=await readFile(path.join(output,'librarynews/newsletter/index.html'),'utf8');
+    const current=await readFile(path.join(output,'newsletter/index.html'),'utf8');
     const archive=await readFile(path.join(output,'newsletters/archive-rehearsal/index.html'),'utf8');
     assert.ok(plain(current).includes('Current rehearsal issue'));
     assert.ok(current.includes('/newsletters/archive-rehearsal/'));

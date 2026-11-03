@@ -1,8 +1,9 @@
 ---
-import SiteLayout from '../../layouts/SiteLayout.astro';
-import PageIntro from '../../components/PageIntro.astro';
-import Image from '../../components/OptimizedImage.astro';
-import Icon from '../../components/Icon.astro';
+// An earlier newsletter issue, on the new design. Built only from src/components/site; content from Sanity.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterIssue from '../../components/site/NewsletterIssue.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryNewsletter } from '../../content/types';
 export async function getStaticPaths() {
@@ -10,12 +11,9 @@ export async function getStaticPaths() {
 }
 interface Props { newsletter: LibraryNewsletter; }
 const { newsletter } = Astro.props;
+const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
-<SiteLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
-  <PageIntro title={`${newsletter.issue} newsletter`} description={newsletter.summary} back={[{ href: '/librarynews/', label: 'Events & news' }, { href: '/librarynews/newsletter/', label: 'Newsletter' }]} width="prose" />
-  <article class="container-prose section pt-0">
-    <h2 class="card-heading">{newsletter.title}</h2>
-    <a href={newsletter.fileUrl} class="button button-primary mt-6">Read the newsletter (PDF)<Icon name="download" class="size-4" /></a>
-    <div class="mt-12 max-w-sm rounded-[4px] bg-[#e1d9c4] p-6 sm:p-8"><Image width={600} quality={70} image={newsletter.cover} alt={newsletter.cover.alt} widths={[350, 600]} sizes="(max-width: 639px) 80vw, 320px" class="h-auto w-full shadow-md" /></div>
-  </article>
-</SiteLayout>
+<BaseLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
+  <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]}>{newsletter.summary}</PageTitle>
+  <NewsletterIssue newsletter={newsletter} />
+</BaseLayout>

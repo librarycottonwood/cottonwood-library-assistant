@@ -5,8 +5,9 @@ export default defineConfig({
   output: 'static',
   image: { remotePatterns: [{ protocol: 'https', hostname: 'cdn.sanity.io', pathname: '/images/**' }] },
   redirects: {
-    // Old address of the newsletter page, which now always shows the current issue.
-    '/librarynews/summer-2026/': '/librarynews/newsletter/',
+    // Old addresses of the newsletter page, which always shows the current issue.
+    '/librarynews/summer-2026/': '/newsletter/',
+    '/librarynews/newsletter/': '/newsletter/',
     // The old separate "Keep the library open" page; Support Us is now the only donation page.
     '/fundraising-events/library-fund/': '/donate/',
     '/donate/library-fund/': '/donate/',

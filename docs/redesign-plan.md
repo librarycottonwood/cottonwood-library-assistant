@@ -1,6 +1,8 @@
 # Redesign plan: every page on the new design
 
-Figma file `ZHygohymNhKRQyxIhQsQ2P`, page 0:1. Rules for building: `docs/design-system.md`. Old pages (`SiteLayout`) get no new work; each one is replaced, then deleted.
+Figma file `ZHygohymNhKRQyxIhQsQ2P`, page 0:1. Rules for building: `docs/design-system.md`.
+
+**Status (Nov 2, 2026): every page is on the new design.** `SiteLayout`, `PageLayout`, `global.css` and the old components are deleted. Old URLs redirect (table below). New blocks beyond the list below: `FundraiserForm` (Givebutter form on Support Us) and `NewsletterIssue`; `EventCards` got `fill`, `Prose` got `steps` and a slot. Not built: `ProgramCards` (plain `Card` + schedule `Badge` does the job) and `Signature` (no content for it).
 
 ## Phase 1 (this PR)
 
@@ -9,7 +11,6 @@ Figma file `ZHygohymNhKRQyxIhQsQ2P`, page 0:1. Rules for building: `docs/design-
 - `/donate/` (first version of Figma "Support Us"): page title + the giving block; its Donate button opens the Givebutter popup (`donate_page`).
 - New block: `PageTitle`.
 
-Until a page moves to the new design, its nav link points at the old page (Explore Services → `/visit/#services`, Events & News → `/librarynews/`, About Us → `/our-story/`). When a page ships, its PR changes the link and adds the redirect below.
 
 ## Components
 
@@ -41,7 +42,7 @@ BaseLayout, SiteHeader, SiteFooter, SiteNotices, NewsletterForm (added by the la
 | Index `1001:2` | `/` | `/` | none |
 | Explore Services `1002:423` | `/services/` | part of `/visit/` | none (old `#services` anchor just lands on Visit Us) |
 | Service View, Story Time | `/services/story-time/` | `/kids/` | `/kids/` → `/services/story-time/` |
-| Service View `1012:1243` | `/services/<id>/` (borrowing, computers, printing, story-time, …) | none | none |
+| Service View `1012:1243` | `/services/<program>/` (story-time, main-street-readers, book-club) | `/librarynews/<program>/` | each old program URL → its `/services/` page |
 | Events & News `1002:772` / alt `1026:2163` | `/events/` | `/librarynews/` | `/librarynews/` → `/events/` |
 | Event View `1021:1494` | `/events/<slug>/` (same URL) | `/events/<slug>/` | none |
 | (no frame) news post, Event View layout | `/news/<slug>/` | `/librarynews/<slug>/` | `/librarynews/[slug]` → `/news/[slug]` |
@@ -64,16 +65,17 @@ Redirects go in `astro.config.mjs` (`redirects`), like the existing ones. Hostin
 6. **Support Us** (full `/donate/`: other ways to help, fundraiser form; then redirect `/fundraising-events/`).
 7. **Leftovers**: newsletter, privacy, 404. Then delete `SiteLayout`, `global.css`, the old components and the Sanity "Main navigation" field.
 
-One PR, preview and review per step.
+Shipped as one PR (#67), one commit per page.
 
 ## Content gaps (Sanity)
 
-Pages only arrange Sanity content. These Figma pieces have no Sanity field yet, so each needs a schema addition (Studio change) before its page:
+Pages only arrange Sanity content. These Figma pieces have no Sanity field yet, so they are left out until a schema addition (Studio change) adds them:
 
-- Explore Services: per-service subsections ("Getting started", "Renewals & returns"), late-fee note, printing price rows, service photos.
-- About Us: three titled sections, founders photos, gallery (today: one heading, paragraphs, one photo).
-- Support Us "Other ways to help": the three texts exist (books & DVDs, book sale, WOW points); their photos don't.
-- Service View: what the three buttons and the empty right panel are.
+- Explore Services: per-service subsections ("Getting started", "Renewals & returns"), late-fee note, printing price rows, service photos (library photos stand in, by service icon).
+- Service pages: only regular programs (Story Time, Main Street Readers, Book Club) have pages; borrowing, computers and printing have just a title and one sentence, so they stay sections of `/services/`.
+- About Us: three titled sections, founders portrait, gallery. Today: one heading, two paragraphs, the founders plaque and the library painting.
+- Event View: no long description or event photo for the current events; pages show the summary, sessions and map.
+- News: current posts have no photos; library photos stand in on the list.
 
 ## Decisions (Jaden, after phase 1)
 
