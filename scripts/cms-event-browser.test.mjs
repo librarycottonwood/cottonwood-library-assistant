@@ -54,9 +54,10 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         const response=await page.goto(base+route,{waitUntil:'networkidle'});assert.equal(response.status(),200);
         const list=page.locator('[data-event-list]').first();
         const active=()=>list.locator('[data-event-expires]:visible');
-        // The first session has a photo, so it leads both pages as the featured event and the cards list the rest.
-        assert.equal(await active().count(),3,`${viewportName} ${route} before expiry`);
-        assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),true);
+        // The first session has a photo, so it leads the homepage as the featured event and its cards list the rest.
+        // The events page has no featured event: its cards list all four sessions.
+        assert.equal(await active().count(),route==='/'?3:4,`${viewportName} ${route} before expiry`);
+        if(route==='/')assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),true);
         if(route==='/events/'){
           assert.match(await list.locator('[data-event-day="2099-04-17"]').first().innerText(),/^Today/);
           assert.match(await list.locator('[data-event-day="2099-04-18"]').first().innerText(),/^Tomorrow/);
@@ -66,7 +67,7 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         assert.equal(await active().count(),3);
         assert.equal(await list.locator('[data-event-expires="2099-04-17T14:00:00-07:00"]').isVisible(),false);
         assert.equal(await active().filter({hasText:'Final evening event'}).count(),1,'the fourth occurrence shows within the three-item limit');
-        assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),false,'expired featured photo is no longer promoted');
+        if(route==='/')assert.equal(await page.locator('[data-event-feature-expires]').isVisible(),false,'expired featured photo is no longer promoted');
         const advance=async when=>{await page.clock.setSystemTime(new Date(when));await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));};
         // Resuming an older/background tab refreshes against the same source dates.
         await advance('2099-04-17T23:00:01Z');assert.equal(await active().count(),2);

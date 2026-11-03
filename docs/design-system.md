@@ -133,7 +133,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
-| [NewsletterIssue](#newsletterissue) | One newsletter issue: its whole cover page beside the issue, its summary and a "Read the newsletter (PDF)" button. The cover is a document page, so it is never cropped (unlike Split photos). |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
@@ -227,7 +226,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
-- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
+- **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
 - **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
 
 ```ts
@@ -240,6 +239,8 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
+  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  shape?: 'photo' | 'page';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -433,21 +434,6 @@ interface Props { library: HomeContent['library']; }
 
 ```astro
 <Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
-```
-
-### NewsletterIssue
-
-`src/components/site/NewsletterIssue.astro` — One newsletter issue: its whole cover page beside the issue, its summary and a "Read the newsletter (PDF)" button. The cover is a document page, so it is never cropped (unlike Split photos).
-
-- **Use for:** The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
-- **Don't use for:** Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).
-
-```ts
-interface Props { newsletter: LibraryNewsletter; }
-```
-
-```astro
-<NewsletterIssue newsletter={newsletter} />
 ```
 
 ### PageTitle

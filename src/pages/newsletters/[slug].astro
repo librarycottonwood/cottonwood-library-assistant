@@ -1,8 +1,11 @@
 ---
-// An earlier newsletter issue, on the new design. Built only from src/components/site; content from Sanity.
+// One newsletter issue (older links point here): its cover card, which opens the PDF. Built only from src/components/site; content from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import NewsletterIssue from '../../components/site/NewsletterIssue.astro';
+import Card from '../../components/site/Card.astro';
+import Grid from '../../components/site/Grid.astro';
+import IconLink from '../../components/site/IconLink.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
+import Section from '../../components/site/Section.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryNewsletter } from '../../content/types';
@@ -14,6 +17,11 @@ const { newsletter } = Astro.props;
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
 <BaseLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
-  <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]} />
-  <NewsletterIssue newsletter={newsletter} />
+  <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]}>{newsletter.summary}</PageTitle>
+  <Section>
+    <Grid as="ul" columns={3} balance={false}>
+      <Card as="li" shape="page" title={newsletter.issue} href={newsletter.fileUrl} image={newsletter.cover}>Read the newsletter (PDF).</Card>
+    </Grid>
+    <IconLink href="/newsletter/" iconEnd="arrow">All newsletters</IconLink>
+  </Section>
 </BaseLayout>

@@ -2,7 +2,7 @@
 /**
  * @component Card
  * Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
- * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this).
+ * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
  * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
  * @example
  * <Grid as="ul" columns={3}>
@@ -21,13 +21,15 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
+  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  shape?: 'photo' | 'page';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image, as: Tag = 'article', layout = 'stacked', ...attributes } = Astro.props;
+const { title, href, image, as: Tag = 'article', layout = 'stacked', shape = 'photo', ...attributes } = Astro.props;
 const hasBadge = Astro.slots.has('badge');
 ---
-<Tag class:list={['card', { 'card-adaptive': layout === 'adaptive' }]} {...attributes}>
+<Tag class:list={['card', { 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page' }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
@@ -48,6 +50,7 @@ const hasBadge = Astro.slots.has('badge');
     height: clamp(13rem, 19vw, 22.8125rem);
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
+  .card-page .card-media { height: auto; aspect-ratio: 8.5 / 11; }
   .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
   .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
