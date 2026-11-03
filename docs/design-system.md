@@ -85,6 +85,7 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 | --- | --- | --- | --- | --- |
 | `--width-content` | `95rem` (1520px) | Max width of section content (card grids). At 1920px this leaves the design’s 200px margins. | Text columns (use --width-copy). | `<Section width="content">` |
 | `--width-copy` | `38.875rem` (622px) | Readable text columns: hero copy, newsletter, split sections. | Card grids. | `<Section width="copy">` |
+| `--width-text` | `57.5rem` (920px) | Long reading on its own: FAQs, articles, the About story (Section width="text", Prose). | Text beside a photo (use --width-copy) or card grids. | `<Section width="text">` |
 | `--page-inset` | `var(--space-sm)` (20 → 60 → 100px) → `var(--space-lg)` from 48rem, `var(--space-xl)` from 100rem | Left and right space at the page edge. Section, Split, header and footer apply it. | Spacing inside content; pages never need it directly. | `padding-inline: var(--page-inset);` |
 | `--section-space` | `var(--space-lg)` (60 → 100px) → `var(--space-xl)` from 100rem | Space above and below each page section. Section and Split apply it. | Gaps inside a section (use --section-gap). | `padding-block: var(--section-space);` |
 | `--section-gap` | `var(--space-sm)` (20 → 30 → 60px) → `var(--space-md)` from 48rem, `var(--space-lg)` from 100rem | Space between a section’s heading, content and action. Section applies it by default. | Space inside cards or between buttons. | `gap: var(--section-gap);` |
@@ -120,15 +121,22 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
+| [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
+| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary). |
+| [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
+| [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
+| [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text or plain paragraphs. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
-| [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. |
+| [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
+| [WideImage](#wideimage) | One large rounded photo across the page, right under the page title (Figma Event View and About Us). |
 
 ### BaseLayout
 
@@ -236,6 +244,25 @@ interface Props {
 </Grid>
 ```
 
+### DetailList
+
+`src/components/site/DetailList.astro` — Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices.
+
+- **Use for:** Opening hours (inside a Split panel) and price lists such as printing costs. Values that mean "not available" (Closed) pass `muted`.
+- **Don't use for:** Long text in either column (use Text or Faq), or rows of links.
+
+```ts
+interface Props {
+  items: { label: string; value: string; muted?: boolean }[];
+  /** Accessible name for the list, e.g. "Opening hours". */
+  label?: string;
+}
+```
+
+```astro
+<DetailList items={library.hours.map(row => ({ label: row.days, value: row.hours, muted: /^closed$/i.test(row.hours) }))} />
+```
+
 ### EventCards
 
 `src/components/site/EventCards.astro` — The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written.
@@ -257,6 +284,46 @@ interface Props {
 
 ```astro
 <EventCards events={events} programs={programs} limit={3} />
+```
+
+### Faq
+
+`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
+
+- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Questions and answers come from Sanity.
+- **Don't use for:** Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
+
+```ts
+interface Props {
+  items: { question: string; answer: string }[];
+  /** Open the first question, as in Figma. */
+  openFirst?: boolean;
+}
+```
+
+```astro
+<Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
+  <Faq items={borrowing} />
+</Section>
+```
+
+### Gallery
+
+`src/components/site/Gallery.astro` — A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event.
+
+- **Use for:** Two or more photos that belong together, inside a Section. Photos and alt text come from Sanity.
+- **Don't use for:** A single photo (use WideImage or Split), or photos that need a title and description each (use Card).
+
+```ts
+interface Props {
+  images: LibraryImage[];
+  /** Columns from tablet width up. Phones get one column. */
+  columns?: 2 | 3;
+}
+```
+
+```astro
+<Section title="Gallery" headingId="gallery-heading"><Gallery images={story.gallery} /></Section>
 ```
 
 ### Grid
@@ -327,6 +394,21 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
 ```
 
+### MapCard
+
+`src/components/site/MapCard.astro` — The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead.
+
+- **Use for:** The "Find us" section on Visit Us, service pages and event pages: <Section title="Find us"><MapCard library={library} /></Section>.
+- **Don't use for:** More than one per page (the map is heavy), or as the only way to show the address.
+
+```ts
+interface Props { library: HomeContent['library']; }
+```
+
+```astro
+<Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
+```
+
 ### PageTitle
 
 `src/components/site/PageTitle.astro` — The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
@@ -351,6 +433,46 @@ interface Props {
 </PageTitle>
 ```
 
+### PostList
+
+`src/components/site/PostList.astro` — News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript).
+
+- **Use for:** The news list on Events & News. Pass the posts from contentRepository; they are sorted newest first here.
+- **Don't use for:** Events (use EventCards), or a short "latest news" teaser of one item (use Split).
+
+```ts
+interface Props {
+  posts: LibraryPost[];
+  /** How many show before "Load more news". */
+  initial?: number;
+}
+```
+
+```astro
+<Section title="Latest News" headingId="news-heading"><PostList posts={posts} /></Section>
+```
+
+### Prose
+
+`src/components/site/Prose.astro` — Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text or plain paragraphs. Large muted text as on the About and event pages.
+
+- **Use for:** Article bodies (news posts, event descriptions), the About story, the privacy notice. Put it in a Section with width="text" and align="start".
+- **Don't use for:** Short introductions (use Text), text beside a photo (use Split), or hand-written facts.
+
+```ts
+interface Props {
+  /** Sanity rich text. */
+  blocks?: RichTextBlock[];
+  /** Plain paragraphs, when the content has no rich text. */
+  paragraphs?: string[];
+}
+```
+
+```astro
+<Section width="text" align="start"><Prose blocks={post.body} /></Section>
+<Section width="text" align="start"><Prose paragraphs={story.paragraphs} /></Section>
+```
+
 ### Section
 
 `src/components/site/Section.astro` — One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below.
@@ -366,8 +488,8 @@ interface Props {
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
   align?: 'center' | 'start';
-  /** content: up to 1520px (default). copy: a 622px reading column. */
-  width?: 'content' | 'copy';
+  /** content: up to 1520px (default). text: a 920px column for FAQs and articles. copy: a 622px column. */
+  width?: 'content' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
   id?: string;
@@ -383,9 +505,9 @@ interface Props {
 
 ### Split
 
-`src/components/site/Split.astro` — A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text.
+`src/components/site/Split.astro` — A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
-- **Use for:** The opening hero, a featured event, a call to give or volunteer. At most one in a row, alternating media="end"/"start".
+- **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
 - **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped.
 
 ```ts
@@ -393,8 +515,12 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
-  /** Photo aspect ratio. */
-  ratio?: '1314 / 652' | '16 / 9';
+  /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
+  ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
+  /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
+  panel?: boolean;
+  /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
+  inset?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -461,6 +587,28 @@ interface Props {
 
 ```astro
 <Text tone="muted" size="lead">{featured.summary}</Text>
+```
+
+### WideImage
+
+`src/components/site/WideImage.astro` — One large rounded photo across the page, right under the page title (Figma Event View and About Us).
+
+- **Use for:** The main photo of an event, news post or the About page. `bleed` lets it run off the right edge, as on About Us.
+- **Don't use for:** Photos beside text (use Split), several photos (use Gallery), or logos and posters that must not be cropped.
+
+```ts
+interface Props {
+  image: LibraryImage;
+  /** Run off the right page edge (About Us). */
+  bleed?: boolean;
+  /** Directly under the page title: less space above, and the photo loads immediately. */
+  first?: boolean;
+}
+```
+
+```astro
+<PageTitle title={event.title} />
+<WideImage image={event.image} first />
 ```
 
 ### Added by BaseLayout

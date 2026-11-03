@@ -1,0 +1,27 @@
+---
+/**
+ * @component DetailList
+ * Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices.
+ * @use Opening hours (inside a Split panel) and price lists such as printing costs. Values that mean "not available" (Closed) pass `muted`.
+ * @avoid Long text in either column (use Text or Faq), or rows of links.
+ * @example
+ * <DetailList items={library.hours.map(row => ({ label: row.days, value: row.hours, muted: /^closed$/i.test(row.hours) }))} />
+ */
+interface Props {
+  items: { label: string; value: string; muted?: boolean }[];
+  /** Accessible name for the list, e.g. "Opening hours". */
+  label?: string;
+}
+const { items, label } = Astro.props;
+---
+<dl class="detail-list" aria-label={label}>
+  {items.map(item => <div class="detail-row"><dt>{item.label}</dt><dd class:list={{ muted: item.muted }}>{item.value}</dd></div>)}
+</dl>
+<style>
+  .detail-list { display: flex; flex-direction: column; gap: var(--space-sm); width: 100%; margin: 0; color: var(--color-text-muted); font-size: var(--fluid-body); line-height: var(--leading-relaxed); }
+  .detail-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-md); }
+  .detail-row:not(:last-child) { padding-block-end: var(--space-sm); border-bottom: var(--border-thin) solid var(--border-image); }
+  dt { font-weight: var(--weight-medium); }
+  dd { margin: 0; font-weight: var(--weight-bold); }
+  dd.muted { font-weight: var(--weight-medium); }
+</style>

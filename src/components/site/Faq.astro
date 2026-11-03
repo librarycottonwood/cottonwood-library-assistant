@@ -1,0 +1,38 @@
+---
+/**
+ * @component Faq
+ * Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
+ * @use "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Questions and answers come from Sanity.
+ * @avoid Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
+ * @example
+ * <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
+ *   <Faq items={borrowing} />
+ * </Section>
+ */
+import Icon from '../Icon.astro';
+interface Props {
+  items: { question: string; answer: string }[];
+  /** Open the first question, as in Figma. */
+  openFirst?: boolean;
+}
+const { items, openFirst = true } = Astro.props;
+---
+<div class="faq">
+  {items.map((item, index) => <details open={openFirst && index === 0}>
+    <summary><span>{item.question}</span><Icon name="plus" class="faq-open" /><Icon name="close" class="faq-close" /></summary>
+    <p>{item.answer}</p>
+  </details>)}
+</div>
+<style>
+  .faq { display: flex; flex-direction: column; gap: var(--space-md); width: 100%; font-size: var(--fluid-lead); line-height: var(--leading-relaxed); }
+  details { display: flex; flex-direction: column; }
+  summary {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
+    min-height: 2.75rem; font-weight: var(--weight-bold); cursor: pointer; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover span { text-decoration-line: underline; }
+  summary :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; color: var(--color-text-muted); }
+  details[open] :global(.faq-open), details:not([open]) :global(.faq-close) { display: none; }
+  details p { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
+</style>

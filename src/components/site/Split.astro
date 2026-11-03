@@ -1,8 +1,8 @@
 ---
 /**
  * @component Split
- * A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text.
- * @use The opening hero, a featured event, a call to give or volunteer. At most one in a row, alternating media="end"/"start".
+ * A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+ * @use The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
  * @avoid Several similar items (use Grid + Card), or photos that must not be cropped.
  * @example
  * <Split media="start" image={photo} headingId="community-heading">
@@ -17,8 +17,12 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
-  /** Photo aspect ratio. */
-  ratio?: '1314 / 652' | '16 / 9';
+  /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
+  ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
+  /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
+  panel?: boolean;
+  /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
+  inset?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -28,10 +32,11 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { image, media = 'end', ratio = '1314 / 652', headingId, first = false, mediaId, ...attributes } = Astro.props;
+const { image, media = 'end', ratio: ratioProp, panel = false, inset = false, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, bleed: ratio === '1314 / 652' }]} {...attributes}>
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed: ratio === '1314 / 652' && !panel && !inset }]} {...attributes}>
   <div class="split-copy"><slot /></div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption }]}>
     <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class:list={['split-image', image.fit === 'contain' && 'is-contained']} style={`aspect-ratio: ${ratio}`} />
@@ -61,8 +66,18 @@ const hasCaption = Astro.slots.has('caption');
     font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight);
   }
 
+  /* Panel: the text column on pale indigo. On phones it is a rounded box inside the page inset. */
+  .panel .split-copy {
+    margin-inline: var(--page-inset); padding: var(--space-md);
+    border-radius: var(--radius-image); background: var(--color-primary-soft);
+  }
+  /* Inset: photo and text stay inside the content width; the photo keeps all four corners. */
+  .inset { max-width: var(--width-content); margin-inline: auto; box-sizing: content-box; padding-inline: var(--page-inset); }
+  .inset .split-copy, .inset .split-media { padding-inline: 0; }
+
   @media (min-width: 48rem) {
     .first { padding-block-start: var(--space-md); }
+    .panel .split-copy { padding: var(--space-lg); }
   }
   @media (min-width: 64rem) {
     .split { align-items: center; gap: var(--space-lg); }
@@ -74,6 +89,18 @@ const hasCaption = Astro.slots.has('caption');
     .media-end .split-media :global(.split-image) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
     .media-start .split-media :global(.split-image) { border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
     .split-caption { left: 0; right: auto; margin-inline-start: var(--space-md); }
+    /* Panel (Figma Visit Us): photo and panel share the row's height and meet with a 30px gap. */
+    .panel { align-items: stretch; gap: var(--space-md); padding-inline: 0; }
+    .panel.media-start { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    .panel.media-end { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
+    .panel .split-copy { justify-content: center; margin-inline: 0; }
+    .panel.media-start .split-copy { border-radius: var(--radius-image) 0 0 var(--radius-image); }
+    .panel.media-end .split-copy { border-radius: 0 var(--radius-image) var(--radius-image) 0; }
+    .panel .split-media { container-type: inline-size; }
+    .panel .split-media :global(.split-image) { height: 100%; min-height: calc(100cqi * 9 / 16); }
+    .inset { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .inset.media-end, .inset.media-start { padding-inline: var(--page-inset); }
+    .inset .split-media :global(.split-image) { border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image); }
     /* The hero photo touches the header, as in the design. */
     .first { padding-block-start: 0; }
     /* The design's 1314 × 652 photo runs past the page edge, so it is cropped there, not shrunk.
@@ -84,11 +111,11 @@ const hasCaption = Astro.slots.has('caption');
     .bleed.media-start .split-media :global(.split-image) { object-position: right center; }
   }
   @media (min-width: 90rem) {
-    .media-end { grid-template-columns: minmax(0, var(--width-copy)) minmax(0, 1fr); }
-    .media-start { grid-template-columns: minmax(0, 1fr) minmax(0, var(--width-copy)); }
+    .media-end:not(.panel, .inset) { grid-template-columns: minmax(0, var(--width-copy)) minmax(0, 1fr); }
+    .media-start:not(.panel, .inset) { grid-template-columns: minmax(0, 1fr) minmax(0, var(--width-copy)); }
   }
   @media (min-width: 100rem) {
-    .split { gap: var(--space-xl); }
+    .split:not(.panel) { gap: var(--space-xl); }
     .split-caption { margin-inline-start: var(--space-lg); }
   }
 </style>

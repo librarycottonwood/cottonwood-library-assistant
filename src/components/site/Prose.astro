@@ -1,0 +1,51 @@
+---
+/**
+ * @component Prose
+ * Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text or plain paragraphs. Large muted text as on the About and event pages.
+ * @use Article bodies (news posts, event descriptions), the About story, the privacy notice. Put it in a Section with width="text" and align="start".
+ * @avoid Short introductions (use Text), text beside a photo (use Split), or hand-written facts.
+ * @example
+ * <Section width="text" align="start"><Prose blocks={post.body} /></Section>
+ * <Section width="text" align="start"><Prose paragraphs={story.paragraphs} /></Section>
+ */
+import { safeHref } from '../../content/sanity.mjs';
+import type { RichTextBlock } from '../../content/types';
+interface Props {
+  /** Sanity rich text. */
+  blocks?: RichTextBlock[];
+  /** Plain paragraphs, when the content has no rich text. */
+  paragraphs?: string[];
+}
+const { blocks, paragraphs = [] } = Astro.props;
+const escape = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+const marks: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u', 'strike-through': 's', code: 'code' };
+const html: string[] = [];
+if (blocks) {
+  let list: 'ul' | 'ol' | undefined;
+  for (const block of blocks) {
+    const listTag = block.listItem === 'bullet' ? 'ul' : block.listItem === 'number' ? 'ol' : undefined;
+    if (list !== listTag) { if (list) html.push(`</${list}>`); if (listTag) html.push(`<${listTag}>`); list = listTag; }
+    const content = block.children.map(span => span.marks.reduce((value, mark) => {
+      if (marks[mark]) return `<${marks[mark]}>${value}</${marks[mark]}>`;
+      const link = block.markDefs.find(item => item._key === mark);
+      return link ? `<a href="${escape(safeHref(link.href))}">${value}</a>` : value;
+    }, escape(span.text).replace(/\n/g, '<br />'))).join('');
+    const tag = listTag ? 'li' : block.style === 'normal' ? 'p' : block.style;
+    html.push(`<${tag}>${content}</${tag}>`);
+  }
+  if (list) html.push(`</${list}>`);
+} else {
+  html.push(...paragraphs.map(paragraph => `<p>${escape(paragraph)}</p>`));
+}
+---
+<div class="prose" set:html={html.join('')} />
+<style>
+  .prose { display: flex; flex-direction: column; gap: var(--space-md); width: 100%; color: var(--color-text-muted); font-size: var(--fluid-lead); line-height: var(--leading-relaxed); overflow-wrap: anywhere; }
+  .prose :global(h2), .prose :global(h3) { color: var(--color-text); line-height: var(--leading-relaxed); }
+  .prose :global(h2) { padding-block-start: var(--space-md); font-size: var(--fluid-heading); }
+  .prose :global(h3) { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); }
+  .prose :global(:is(ul, ol, blockquote)) { margin: 0; padding-inline-start: var(--space-md); }
+  .prose :global(blockquote) { border-inline-start: var(--border-strong) solid var(--color-border); font-style: italic; }
+  .prose :global(a) { color: var(--color-primary-ink); text-decoration-line: underline; }
+  .prose :global(a:hover) { color: var(--color-text); }
+</style>

@@ -19,8 +19,8 @@ interface Props {
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
   align?: 'center' | 'start';
-  /** content: up to 1520px (default). copy: a 622px reading column. */
-  width?: 'content' | 'copy';
+  /** content: up to 1520px (default). text: a 920px column for FAQs and articles. copy: a 622px column. */
+  width?: 'content' | 'text' | 'copy';
   /** Space between heading, content and actions. Defaults to the responsive section gap (20/30/60px). */
   gap?: Space;
   id?: string;
@@ -38,7 +38,10 @@ const { title, headingId, align = 'center', width = 'content', gap, id } = Astro
   .section-inner { display: flex; flex-direction: column; margin-inline: auto; }
   .section-inner:not([data-gap]) { gap: var(--section-gap); }
   .width-content { max-width: var(--width-content); }
+  .width-text { max-width: var(--width-text); }
   .width-copy { max-width: var(--width-copy); }
+  /* Text and FAQ columns fill their width even when their lines are short. */
+  .width-text { width: 100%; }
   .align-center { align-items: center; }
   .align-center > :global(:is(h2, p)) { text-align: center; }
   .align-start { align-items: flex-start; }
