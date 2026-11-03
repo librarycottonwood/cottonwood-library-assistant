@@ -40,8 +40,12 @@ Short rules every page follows. The classes live in `src/styles/global.css` (`@l
 - `.panel` (meadow background, same padding) for hours, "When/Where" and step lists.
 
 ## Content and photos
-- Words, hours, services, events, programs and their pictures come from the CMS (Sanity; see `studio/README.md`). Pages only arrange them; never hard-code library facts in a layout.
-- Photos that belong to the page design itself (Visit entrance and service cards, Kids cards, Donate page, book drop) live in `src/content/images.ts` and must be prepared with `pnpm image:prepare`.
+- **Where content lives (Jaden, Nov 2026; replaces the old "never hard-code library facts" rule).**
+  - **Sanity** holds only content that changes often: events, news posts, newsletters, notices/banners, opening hours, fundraisers, and site-wide settings (address, phone, email, links). Hours always come from Sanity.
+  - **The page file** (`src/pages/…`) holds everything else: service descriptions, printing prices, late fees, renewal rules, computer and Wi-Fi help, About Us text, Support Us "Other ways to help", and the photos that belong to the page design. Write it with the Figma wording. Volunteers change it by asking for a pull request.
+  - Do **not** add new Sanity fields or document types for page content. Things already in Sanity (programs, services, borrowing questions, the story, giving texts) stay there until someone decides to move them.
+  - Still never invent facts: page content comes from Figma or from library staff, and anything copied from Figma that staff haven't confirmed (prices, fees, rules) is listed for them to check.
+- Page photos live in `src/assets/images/`, are registered in `src/content/images.ts`, and are prepared with `pnpm image:prepare`.
 
 ## Keep
 - Colours, Lora + DM Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.

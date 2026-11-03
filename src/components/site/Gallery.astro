@@ -2,7 +2,7 @@
 /**
  * @component Gallery
  * A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event.
- * @use Two or more photos that belong together, inside a Section. Photos and alt text come from Sanity.
+ * @use Two or more photos that belong together, inside a Section. Photos come from the page (or Sanity, for news posts); every photo needs real alt text.
  * @avoid A single photo (use WideImage or Split), or photos that need a title and description each (use Card).
  * @example
  * <Section title="Gallery" headingId="gallery-heading"><Gallery images={story.gallery} /></Section>

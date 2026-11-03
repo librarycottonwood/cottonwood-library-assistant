@@ -11,11 +11,12 @@ Read this before building or changing a page that uses `BaseLayout`. Old pages t
 3. Spacing has five steps: `--space-xs`, `--space-sm`, `--space-md`, `--space-lg`, `--space-xl`. No raw px/rem/em, no clamp()/calc() sizes, no other spacing tokens.
 4. Use color, type, corner and border tokens by their role (see "Use for"). Don't invent new values; if something is missing, ask Jaden or a board admin.
 5. If no component fits, add a small one in `src/components/site/` with a usage block (copy an existing one), then run `pnpm design:docs`. Keep it to what the page needs.
-6. Words, events and photos come from Sanity through `contentRepository`; never hard-code content.
+6. Sanity (through `contentRepository`) holds only content that changes often: events, news, newsletters, notices, hours, fundraisers, site settings. Everything else (service details, prices, fees, About Us, ways to help, page photos) is written in the page file in Figma's wording; never add Sanity fields for it. See docs/design-rules.md.
+7. Pages have no `<style>`, `style=` or `class=` of their own, and no raw colors, sizes or spacing. If Figma needs something new, extend a component with a prop or variant (never copy one) or add a reusable one. A Figma value that isn't a token is snapped to the nearest token and listed in the PR.
 
 Breakpoints used inside components (min-width): tablet `48rem` (768px), split `64rem` (1024px), desktop `90rem` (1440px), wide `100rem` (1600px).
 
-`pnpm check` enforces rules 2 and 3 on `src/styles/base.css`, `BaseLayout.astro`, `src/components/site/*` and every page that imports them, and checks that this file is up to date.
+`pnpm check` enforces rules 2, 3 and 7 on `src/styles/base.css`, `BaseLayout.astro`, `src/components/site/*` and every page that imports them, and checks that this file is up to date.
 
 ## Tokens
 
@@ -294,7 +295,7 @@ interface Props {
 
 `src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary).
 
-- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Questions and answers come from Sanity.
+- **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Pass the questions from Sanity (borrowing) or written in the page.
 - **Don't use for:** Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
 
 ```ts
@@ -330,7 +331,7 @@ interface Props { campaign: FundraisingCampaign; }
 
 `src/components/site/Gallery.astro` — A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event.
 
-- **Use for:** Two or more photos that belong together, inside a Section. Photos and alt text come from Sanity.
+- **Use for:** Two or more photos that belong together, inside a Section. Photos come from the page (or Sanity, for news posts); every photo needs real alt text.
 - **Don't use for:** A single photo (use WideImage or Split), or photos that need a title and description each (use Card).
 
 ```ts

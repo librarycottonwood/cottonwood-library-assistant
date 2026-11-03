@@ -5,24 +5,18 @@ export default defineConfig({
   output: 'static',
   image: { remotePatterns: [{ protocol: 'https', hostname: 'cdn.sanity.io', pathname: '/images/**' }] },
   redirects: {
-    // Old addresses of the newsletter page, which always shows the current issue.
-    '/librarynews/summer-2026/': '/newsletter/',
-    '/librarynews/newsletter/': '/newsletter/',
-    // The old separate "Keep the library open" page; Support Us is now the only donation page.
-    '/fundraising-events/library-fund/': '/donate/',
-    '/donate/library-fund/': '/donate/',
-    // Support Us moved from /fundraising-events/ to /donate/, with each way to help under it.
-    '/fundraising-events/': '/donate/',
-    '/fundraising-events/[slug]': '/donate/[slug]',
-    // Kids & families became the Story Time page under Explore Services.
-    '/kids/': '/services/story-time/',
-    // Events & News moved from /librarynews/: posts to /news/<post>/, regular programs to /services/<program>/.
-    '/librarynews/': '/events/',
-    '/librarynews/[slug]': '/news/[slug]',
+    // Pages of the old Square website (cottonwood-community-library.square.site/sitemap.xml, Nov 2026). Google,
+    // Facebook posts and printed material link to these; they reach this site once the domain moves here.
+    '/plan-your-visit': '/visit/',
+    '/our-story': '/about/',
+    '/librarynews': '/events/',
+    '/fundraising-events': '/donate/',
+    '/product/donate-to-the-library/1': '/donate/',
+    '/s/shop': '/donate/',
+    '/s/stories/story-title': '/events/',
+    // Still linked from Sanity's "Giving and acknowledgments" thank-you records. Drop once those links are updated.
     '/librarynews/story-time/': '/services/story-time/',
-    '/librarynews/main-street-readers/': '/services/main-street-readers/',
-    '/librarynews/book-club/': '/services/book-club/',
-    '/our-story/': '/about/',
+    '/fundraising-events/library-fund/': '/donate/',
   },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },

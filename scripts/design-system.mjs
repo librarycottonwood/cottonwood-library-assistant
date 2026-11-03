@@ -40,6 +40,8 @@ export async function scopedFiles(root = ROOT) {
 }
 
 export const isPage = file => file.startsWith('src/pages/');
+/** Site pages (not the /components reference pages), which may only compose components. */
+export const isSitePage = file => isPage(file) && !file.startsWith('src/pages/components/');
 
 // ---------- CSS extraction ----------
 
@@ -154,6 +156,13 @@ export function lintSource(source, file, locals) {
       if (classes.length) report(match.index, `Tailwind spacing classes (${classes.join(' ')}) aren't allowed; use components`);
     }
   }
+  // Pages only compose components: no styles, inline styles or class names of their own (rule 7).
+  if (isSitePage(file) && file.endsWith('.astro')) {
+    const template = source.replace(/^---[\s\S]*?\n---/, match => ' '.repeat(match.length));
+    for (const match of template.matchAll(/<style\b|\sstyle=|\sclass(?::list)?=/g)) {
+      report(match.index, `${match[0].trim()}: pages only compose components from src/components/site; add a prop or variant to a component instead`);
+    }
+  }
   return problems;
 }
 
@@ -218,11 +227,12 @@ export function renderReference(docs) {
     `3. Spacing has five steps: ${spaceSteps.map(step => `\`--space-${step}\``).join(', ')}. No raw px/rem/em, no clamp()/calc() sizes, no other spacing tokens.`,
     '4. Use color, type, corner and border tokens by their role (see "Use for"). Don\'t invent new values; if something is missing, ask Jaden or a board admin.',
     '5. If no component fits, add a small one in `src/components/site/` with a usage block (copy an existing one), then run `pnpm design:docs`. Keep it to what the page needs.',
-    '6. Words, events and photos come from Sanity through `contentRepository`; never hard-code content.',
+    '6. Sanity (through `contentRepository`) holds only content that changes often: events, news, newsletters, notices, hours, fundraisers, site settings. Everything else (service details, prices, fees, About Us, ways to help, page photos) is written in the page file in Figma\'s wording; never add Sanity fields for it. See docs/design-rules.md.',
+    '7. Pages have no `<style>`, `style=` or `class=` of their own, and no raw colors, sizes or spacing. If Figma needs something new, extend a component with a prop or variant (never copy one) or add a reusable one. A Figma value that isn\'t a token is snapped to the nearest token and listed in the PR.',
     '',
     `Breakpoints used inside components (min-width): ${Object.entries(breakpoints).map(([name, value]) => `${name} \`${value}\` (${parseFloat(value) * 16}px)`).join(', ')}.`,
     '',
-    '`pnpm check` enforces rules 2 and 3 on `src/styles/base.css`, `BaseLayout.astro`, `src/components/site/*` and every page that imports them, and checks that this file is up to date.',
+    '`pnpm check` enforces rules 2, 3 and 7 on `src/styles/base.css`, `BaseLayout.astro`, `src/components/site/*` and every page that imports them, and checks that this file is up to date.',
     '',
     '## Tokens',
     '',
