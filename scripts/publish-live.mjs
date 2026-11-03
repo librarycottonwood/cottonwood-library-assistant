@@ -12,7 +12,7 @@ import {inventory} from './release.mjs';
 import {revisionDigest, recordBuild, verifyBundle, preview, stageRelease, previousStage, promoteWithRollback, deploy, waitForHosted, checkHosting, checkFileInventory, LIVE_BRANCH} from './cms-publishing.mjs';
 import {verifyPublisher} from '../cms-publisher/src/deployment-readiness.mjs';
 import {REPOSITORY, LIVE_ORIGIN, sourcePattern, operationIdPattern} from '../cms-publisher/src/contract.mjs';
-import {siteDigest, compareContent, parseContentUpdate, isContentUpdatePath, parseRevisions, statusDescription, commentBody, COMMENT_MARKER} from './content-changes.mjs';
+import {siteDigest, compareContent, parseContentUpdate, isContentUpdatePath, parseRevisions, statusDescription, commentBody, checkPages, COMMENT_MARKER} from './content-changes.mjs';
 
 export const ARTIFACT = 'library-pr-checked-preview';
 const fail = message => {throw Error(message);};
@@ -287,13 +287,16 @@ async function deliver(env) {
     // after approval: the approved PR's checked artifact is the only source.
     const checked=await preview(operation,env);
     const changes=await contentChanges(pr.number,pr.head.sha,reviewed,env);
+    // Open each listed page on the preview, so the link given to the volunteer is one that works.
+    const pages=mainSha?[]:await checkPages(changes,checked.previewUrl);
+    const broken=pages.some(page=>!page.ok);
     if(mainSha)await setStatus(pr.head.sha,PREVIEW,checked.previewUrl,'Checked preview of the saved version.',env);
     else {
-      await upsertComment(pr.number,COMMENT_MARKER,commentBody(changes,{previewUrl:checked.previewUrl,contentMoved,sha:pr.head.sha}),env);
-      await setStatus(pr.head.sha,PREVIEW,checked.previewUrl,statusDescription(changes,{contentMoved}),env);
+      await upsertComment(pr.number,COMMENT_MARKER,commentBody(changes,{previewUrl:checked.previewUrl,contentMoved,sha:pr.head.sha,pages}),env);
+      await setStatus(pr.head.sha,PREVIEW,pages.length===1&&!broken?pages[0].url:checked.previewUrl,statusDescription(changes,{contentMoved,pages}),env,broken?'failure':'success');
     }
     if(mainSha){await publish(checked,reviewed,pr,mainSha,env);await setStatus(mainSha,LIVE,LIVE_ORIGIN,'Saved and verified on the live website.',env);}
-    const result={pullRequest:pr.number,sourceSha:checked.sourceSha,releaseDigest:checked.releaseDigest,previewRunId:checked.previewRunId,previewUrl:checked.previewUrl,liveWebsite:mainSha?LIVE_ORIGIN:null,contentMoved,otherChangesGoingLive:changes.notListed.length};
+    const result={pullRequest:pr.number,sourceSha:checked.sourceSha,releaseDigest:checked.releaseDigest,previewRunId:checked.previewRunId,previewUrl:checked.previewUrl,liveWebsite:mainSha?LIVE_ORIGIN:null,contentMoved,otherChangesGoingLive:changes.notListed.length,pages};
     await writeJson('output/publish-live-result.json',result);
     await summary(`[Website preview](${checked.previewUrl})\n\nPR #${pr.number}; checked source ${checked.sourceSha}.\n\n${mainSha?'Live website verified: '+LIVE_ORIGIN:statusDescription(changes,{contentMoved})}\n`,env);
     console.log(JSON.stringify(result,null,2));

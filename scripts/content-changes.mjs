@@ -55,6 +55,14 @@ export function siteDigest(snapshot) {
 }
 
 const TYPE_NAMES = {siteSettings: 'Library settings', givingSettings: 'Giving page', program: 'Program', event: 'Event', post: 'News post', newsletter: 'Newsletter', notice: 'Notice', 'sanity.imageAsset': 'Picture', 'sanity.fileAsset': 'File'};
+// A document's own page on the website. Keep in step with src/pages (news/[slug], events/[slug],
+// events/regular/[slug], newsletters/[slug]); settings, notices and pictures have no page of their own.
+const PAGE_ROUTES = {post: '/news/', event: '/events/', program: '/events/regular/', newsletter: '/newsletters/'};
+/** The website address of a document's own page, like /news/our-new-website/, or null. */
+export function pagePath(doc) {
+  const base = PAGE_ROUTES[doc?._type], slug = doc?.slug?.current;
+  return base && typeof slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? `${base}${slug}/` : null;
+}
 const clip = (value, size) => value.length > size ? value.slice(0, size - 1) + '…' : value;
 export function label(doc) {
   if (isAsset(doc)) return null;
@@ -84,7 +92,8 @@ export function compareContent({live, current, liveCheckedAt = null, listed = []
   const covered = new Set(listed);
   for (const id of listed) for (const ref of references(byId.get(id) ?? {})) if (byId.get(ref) && isAsset(byId.get(ref))) covered.add(ref);
   const entry = (doc, change) => ({id: doc._id ?? doc.id, type: doc._type ?? doc.type, typeName: TYPE_NAMES[doc._type ?? doc.type] ?? 'Document',
-    label: (doc._id ? label(doc) : doc.label) ?? (isAsset({_type: doc._type ?? doc.type}) ? doc.originalFilename ?? null : null), change, listed: covered.has(doc._id ?? doc.id)});
+    label: (doc._id ? label(doc) : doc.label) ?? (isAsset({_type: doc._type ?? doc.type}) ? doc.originalFilename ?? null : null), change, listed: covered.has(doc._id ?? doc.id),
+    ...(doc._id && pagePath(doc) ? {path: pagePath(doc)} : {})});
   let basis, changes = [];
   if (live) {
     basis = 'live-revisions';
@@ -105,12 +114,41 @@ export function compareContent({live, current, liveCheckedAt = null, listed = []
   return {schemaVersion: 1, basis, updateFiles, listedDocuments: listed, changes, notListed, listedButUnchanged: missing, problems};
 }
 
+const ENTITIES = {amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' '};
+const pageText = html => html.replace(/<[^>]*>/g, ' ').replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, code) => code[0] === '#'
+  ? String.fromCodePoint(code[1].toLowerCase() === 'x' ? parseInt(code.slice(2), 16) : Number(code.slice(1))) : ENTITIES[code.toLowerCase()] ?? whole).replace(/\s+/g, ' ');
+/**
+ * Opens the page of every listed post, event, program or newsletter on the preview and confirms it shows
+ * that title. The assistant gives volunteers these exact links, never addresses it builds itself.
+ */
+export async function checkPages(result, previewUrl, {fetcher = fetch, attempts = 3, wait = ms => new Promise(done => setTimeout(done, ms))} = {}) {
+  const pages = [];
+  for (const item of result.changes.filter(change => change.listed && change.path && change.change !== 'removed')) {
+    const url = new URL(item.path, previewUrl).href;
+    const title = item.label?.replace(/…$/, '');
+    let problem = 'did not load';
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      const response = await fetcher(url, {redirect: 'manual', signal: AbortSignal.timeout(30000)}).catch(() => null);
+      if (response?.status === 200) {
+        problem = !title || pageText(await response.text()).includes(title) ? null : `opens but does not show "${item.label}"`;
+        break;
+      }
+      problem = response ? `answers ${response.status}` : 'did not load';
+      if (attempt < attempts - 1) await wait(5000);
+    }
+    pages.push({id: item.id, typeName: item.typeName, label: item.label, url, ok: !problem, ...(problem ? {problem} : {})});
+  }
+  return pages;
+}
+
 const describe = item => `${item.typeName}${item.label ? ` "${item.label}"` : ''} (${item.change}) \`${item.id}\``;
 /** ≤140 characters for the commit status the assistant reads first. */
-export function statusDescription(result, {contentMoved = false} = {}) {
+export function statusDescription(result, {contentMoved = false, pages = []} = {}) {
   const others = result.notListed.length;
+  const broken = pages.find(page => !page.ok);
   let text;
-  if (contentMoved) text = 'Content changed while preparing. Refresh before saving. See PR comment.';
+  if (broken) text = `No working preview: the ${broken.typeName.toLowerCase()} page ${broken.problem}. See PR comment.`;
+  else if (contentMoved) text = 'Content changed while preparing. Refresh before saving. See PR comment.';
   else if (result.basis === 'unknown') text = 'Preview ready. Could not compare with live site; ask before saving. See PR comment.';
   else if (others) text = `Preview ready. ALSO puts ${others} other change${others === 1 ? '' : 's'} live. Read PR comment and ask first.`;
   else if (!result.updateFiles.length && result.changes.length === 0) text = 'Preview ready. No content differences from the live website.';
@@ -118,9 +156,13 @@ export function statusDescription(result, {contentMoved = false} = {}) {
   return clip(text, 140);
 }
 
-export function commentBody(result, {previewUrl, contentMoved = false, sha}) {
+export function commentBody(result, {previewUrl, contentMoved = false, sha, pages = []}) {
   const lines = [COMMENT_MARKER, '### What this save puts on the live website', ''];
   if (previewUrl) lines.push(`Preview: ${previewUrl}`, '');
+  if (pages.length) {
+    lines.push('**Pages checked on the preview.** Give the volunteer these exact links; never build an address yourself:');
+    lines.push(...pages.map(page => page.ok ? `- ${page.typeName}${page.label ? ` "${page.label}"` : ''}: ${page.url}` : `- **Problem:** ${page.typeName}${page.label ? ` "${page.label}"` : ''} ${page.problem}: ${page.url}`), '');
+  }
   if (sha) lines.push(`Checked version: \`${sha.slice(0, 7)}\``, '');
   if (contentMoved) lines.push('**Website content changed while this preview was being prepared.** Saving now would stop with "Published content changed after preview". Make a fresh preview first (push a new commit to this branch), then check this list again.', '');
   for (const problem of result.problems) lines.push(`**Problem:** ${problem}`, '');
@@ -136,6 +178,6 @@ export function commentBody(result, {previewUrl, contentMoved = false, sha}) {
     lines.push(...result.notListed.map(item => `- ${describe(item)}`));
     lines.push('', 'Ask the volunteer before saving: "This save will also put these other changes live: … Is that OK?" If not, undo them in the editor first, then make a fresh preview.');
   } else if (result.basis !== 'unknown') lines.push('No other changes will go live with this save.');
-  lines.push('', '<details><summary>Details for the assistant</summary>', '', '```json', JSON.stringify({basis: result.basis, notListed: result.notListed, listed: listed, listedButUnchanged: result.listedButUnchanged, contentMoved}, null, 1), '```', '</details>');
+  lines.push('', '<details><summary>Details for the assistant</summary>', '', '```json', JSON.stringify({basis: result.basis, notListed: result.notListed, listed: listed, listedButUnchanged: result.listedButUnchanged, contentMoved, pages}, null, 1), '```', '</details>');
   return lines.join('\n');
 }

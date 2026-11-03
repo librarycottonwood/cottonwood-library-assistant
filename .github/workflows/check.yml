@@ -26,7 +26,7 @@ jobs:
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs scripts/schedule.test.mjs
+      - run: node --test scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs scripts/schedule.test.mjs scripts/site-paths.test.mjs
       - run: python3 -m unittest discover -s scripts -p 'test_cms_artifacts.py'
       - run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
