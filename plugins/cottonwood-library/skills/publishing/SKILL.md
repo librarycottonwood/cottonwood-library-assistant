@@ -22,6 +22,14 @@ Read the actual CMS record, PR, its **Website preview**/**Live website** statuse
 - A private CMS draft is not published. Show its proposed content here and confirm facts before using the supported document publishing tool. Honor its write confirmation. The current website preview reads published records, not private drafts.
 - For code/design changes, follow the Codex PR workflow in `assistant/WORKFLOW.md`.
 
+## Change page text
+
+Only events, news, newsletters, notices, hours and fundraisers live in Sanity. All other words on the website (service descriptions, printing prices, late fees, About Us, Support Us and so on) are in the page files in `src/pages/`. To change them:
+
+1. Find the text in `src/pages/` on current `main`. Create a branch `page/<short-request-name>`, change only the words asked for, and keep the page's components and layout as they are.
+2. Open a PR into `main` titled with the request in plain words, then follow steps 3–9 of "Save it" below (preview, "Ready to save?", merge, live check). No content-update file is needed.
+3. If the request needs a new section or a layout change rather than new words, say it's a design change and offer to describe it for the website developer's agent instead of improvising.
+
 ## Save a content change
 
 Do every step yourself with the Sanity and GitHub tools in this chat, on `librarycottonwood/cottonwood-library-assistant`. Tell the volunteer only the preview link, the questions and the result.

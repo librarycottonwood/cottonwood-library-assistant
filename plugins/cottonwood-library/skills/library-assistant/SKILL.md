@@ -27,6 +27,7 @@ Ask only for missing information. Do not restart a wizard for a small correction
 | Social post or announcement | social |
 | Recurring report, check or reminder | scheduling |
 | Visitor numbers, donation totals, broken reports | reports |
+| Change wording on a page (services, prices, About Us, Support Us) | publishing ("Change page text") |
 | Sanity/editor help, publishing status, failed updates or undo | publishing |
 
 Handle other library requests directly. For a topic wizard, ask the next unanswered question and wait. Offer to write the copy from their facts. Respect choices such as no photo or no social post. Do not invent dates, times, names, amounts or library policies.
