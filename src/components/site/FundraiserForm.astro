@@ -20,13 +20,26 @@ const { campaign } = Astro.props;
 const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(await campaignAccount(campaign));
 ---
 <div id="give" class="fundraiser-form">
-  <givebutter-widget id={campaign.givebutter.formWidgetId}></givebutter-widget>
-  <p class="fundraiser-fallback"><IconLink href={campaign.url} iconEnd="external">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></IconLink></p>
+  <div class="fundraiser-slot">
+    <givebutter-widget id={campaign.givebutter.formWidgetId}></givebutter-widget>
+    <p class="fundraiser-fallback"><IconLink href={campaign.url} iconEnd="external">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></IconLink></p>
+  </div>
   {campaign.endsOn && <Text tone="muted">Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></Text>}
 </div>
 {script && <script is:inline async src={script}></script>}
 <style>
   .fundraiser-form { display: flex; flex-direction: column; gap: var(--space-sm); width: 100%; scroll-margin-block-start: var(--space-xl); }
+  /* The fallback link sits in the same spot as the form, so nothing moves when the form replaces it. */
+  .fundraiser-slot { display: grid; container-type: inline-size; }
+  .fundraiser-slot > * { grid-area: 1 / 1; align-self: start; }
   givebutter-widget { display: block; width: 100%; }
-  .fundraiser-form:has(givebutter-widget:defined) .fundraiser-fallback { display: none; }
+  .fundraiser-slot:has(givebutter-widget:defined) .fundraiser-fallback { display: none; }
+  /* Room for Givebutter's form before it loads, so the page doesn't jump down as it appears. These are the
+     form's first-step heights at each width (Givebutter's own layout, measured Nov 2026); without JavaScript
+     the form never loads, so no room is kept. If Givebutter changes its form, re-measure on /donate/. */
+  givebutter-widget { --form-height: 54.4375rem; }
+  @container (min-width: 15rem) { givebutter-widget { --form-height: 39.6875rem; } }
+  @container (min-width: 18.125rem) { givebutter-widget { --form-height: 38.1875rem; } }
+  @container (min-width: 24.375rem) { givebutter-widget { --form-height: 35.4375rem; } }
+  @media (scripting: enabled) { givebutter-widget { min-height: var(--form-height); } }
 </style>
