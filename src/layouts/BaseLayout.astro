@@ -49,9 +49,9 @@ const givebutterAccount = await sitewideGivebutterAccount();
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <SiteNotices notices={notices} />
-    <SiteHeader library={content.library} navigation={content.navigation} />
+    <SiteHeader library={content.library} />
     <main id="main" tabindex="-1"><slot /></main>
-    <SiteFooter library={content.library} navigation={content.navigation} />
+    <SiteFooter library={content.library} />
     <Analytics privacyLinks={false} />
     <CampaignExpiry />
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}

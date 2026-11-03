@@ -123,6 +123,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Split](#split) | A large photo beside a text column. On desktop the photo bleeds off the page edge; on phones the photo sits above the text. |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
@@ -323,6 +324,30 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 
 ```astro
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
+```
+
+### PageTitle
+
+`src/components/site/PageTitle.astro` — The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
+
+- **Use for:** The first block of every page except the homepage. Put it directly inside BaseLayout, before the first Split or Section. Give `trail` only on pages under a top-level page (a service, an event, a news post).
+- **Don't use for:** The homepage (its h1 is in the hero), section headings (use Section's title), or more than one per page.
+
+```ts
+interface Props {
+  /** The page title (the page's one h1). */
+  title: string;
+  /** Pages above this one, after Home. Leave out on top-level pages: the header shows where you are. */
+  trail?: NavLink[];
+  /** id for the h1. */
+  headingId?: string;
+}
+```
+
+```astro
+<PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/librarynews/' }]}>
+  <time datetime={event.startsAt}>{date}</time>
+</PageTitle>
 ```
 
 ### Section

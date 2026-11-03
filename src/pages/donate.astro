@@ -1,0 +1,28 @@
+---
+// Support Us (Figma "Support Us"), first version: the header Donate button lands here, and this page's
+// Donate button opens Givebutter's popup. The rest of the Figma page ("Other ways to help") comes in phase 2
+// (docs/redesign-plan.md). Built only from src/components/site (see docs/design-system.md).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/site/Button.astro';
+import Heading from '../components/site/Heading.astro';
+import PageTitle from '../components/site/PageTitle.astro';
+import Split from '../components/site/Split.astro';
+import Stack from '../components/site/Stack.astro';
+import Text from '../components/site/Text.astro';
+import { supportLink } from '../components/site/navigation';
+import { contentRepository } from '../content/repository';
+import { checkoutAttributes, getDonateLink } from '../content/donate';
+const [home, donate] = await Promise.all([contentRepository.getHome(), getDonateLink()]);
+const photo = home.givingImage ?? home.support.image;
+---
+<BaseLayout title={`${supportLink.label} | Cottonwood Community Library`} description={home.support.introduction}>
+  <PageTitle title={supportLink.label} />
+  <Split media="end" image={photo} headingId="give-heading" mediaId="give">
+    <Heading id="give-heading">{home.support.title}</Heading>
+    <Text tone="muted">{home.support.introduction}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="primary" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href="/fundraising-events/volunteer/" icon="user">Volunteer</Button>
+    </Stack>
+  </Split>
+</BaseLayout>

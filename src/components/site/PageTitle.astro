@@ -1,0 +1,57 @@
+---
+/**
+ * @component PageTitle
+ * The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
+ * @use The first block of every page except the homepage. Put it directly inside BaseLayout, before the first Split or Section. Give `trail` only on pages under a top-level page (a service, an event, a news post).
+ * @avoid The homepage (its h1 is in the hero), section headings (use Section's title), or more than one per page.
+ * @example
+ * <PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/librarynews/' }]}>
+ *   <time datetime={event.startsAt}>{date}</time>
+ * </PageTitle>
+ */
+import Heading from './Heading.astro';
+import Text from './Text.astro';
+import type { NavLink } from './navigation';
+interface Props {
+  /** The page title (the page's one h1). */
+  title: string;
+  /** Pages above this one, after Home. Leave out on top-level pages: the header shows where you are. */
+  trail?: NavLink[];
+  /** id for the h1. */
+  headingId?: string;
+}
+const { title, trail, headingId = 'page-title' } = Astro.props;
+const crumbs = trail && [{ label: 'Home', href: '/' }, ...trail];
+---
+<div class="page-title">
+  {crumbs && <nav aria-label="Breadcrumb" class="breadcrumb">
+    <ol>
+      {crumbs.map(crumb => <li><a href={crumb.href}>{crumb.label}</a><span aria-hidden="true">/</span></li>)}
+      <li aria-current="page">{title}</li>
+    </ol>
+  </nav>}
+  <Heading level={1} size="display" id={headingId}>{title}</Heading>
+  {Astro.slots.has('default') && <Text tone="muted" size="lead"><slot /></Text>}
+</div>
+<style>
+  /* Figma: 50px under the header at 1920px, then the next block's own top space. */
+  .page-title {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm);
+    padding: var(--space-md) var(--page-inset) 0;
+    overflow-wrap: anywhere;
+  }
+  .breadcrumb ol {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs);
+    margin: 0; padding: 0; list-style: none;
+    color: var(--color-text-muted); font-size: var(--fluid-body); line-height: var(--leading-snug);
+  }
+  .breadcrumb li { display: flex; align-items: baseline; gap: var(--space-xs); }
+  .breadcrumb a { text-decoration-line: none; }
+  .breadcrumb a:hover { color: var(--color-text); text-decoration-line: underline; }
+  @media (min-width: 48rem) {
+    .page-title { gap: var(--space-md); }
+  }
+  @media (min-width: 100rem) {
+    .page-title { padding-top: var(--space-lg); }
+  }
+</style>

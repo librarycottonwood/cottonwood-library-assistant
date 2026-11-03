@@ -6,20 +6,17 @@
  * @use Nothing on pages: BaseLayout adds it to every page.
  * @avoid Adding a second header or navigation to a page.
  * @example
- * <SiteHeader library={content.library} navigation={content.navigation} />
+ * <SiteHeader library={content.library} />
  */
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
 import Icon from '../Icon.astro';
 import Button from './Button.astro';
-import { checkoutAttributes, getDonateLink } from '../../content/donate';
+import { isCurrentPage, mainNavigation as links, supportLink } from './navigation';
 import type { HomeContent } from '../../content/types';
-interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
-const { library, navigation } = Astro.props;
-const donate = await getDonateLink();
-// The Donate button covers the giving page, so it isn't repeated as a menu link.
-const links = navigation.filter(item => item.href !== '/fundraising-events/');
-const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.startsWith(href);
+interface Props { library: HomeContent['library']; }
+const { library } = Astro.props;
+const isCurrent = (href: string) => isCurrentPage(href, Astro.url.pathname);
 ---
 <div class="hours-strip">
   <p><Icon name="clock" class="hours-icon" /><span><span class="sr-only">Library hours: </span>{library.hoursSummary}</span></p>
@@ -33,7 +30,8 @@ const isCurrent = (href: string) => !href.includes('#') && Astro.url.pathname.st
     {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
   </nav>
   <div class="header-actions">
-    <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_header" variant="primary" icon="heart">Donate</Button>
+    <!-- Goes to the Support Us page (its button opens Givebutter's popup). The click still counts as donate_header. -->
+    <Button href={supportLink.href} aria-current={isCurrent(supportLink.href) ? 'page' : undefined} data-analytics-event="donate_header" variant="primary" icon="heart">Donate</Button>
     <button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle" hidden>
       <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
     </button>

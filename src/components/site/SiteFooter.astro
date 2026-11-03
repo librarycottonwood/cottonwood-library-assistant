@@ -6,7 +6,7 @@
  * @use Nothing on pages: BaseLayout adds it to every page.
  * @avoid Adding another newsletter form or contact block to a page.
  * @example
- * <SiteFooter library={content.library} navigation={content.navigation} />
+ * <SiteFooter library={content.library} />
  */
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
@@ -16,9 +16,10 @@ import Text from './Text.astro';
 import InstagramIcon from '../InstagramIcon.astro';
 import FacebookIcon from '../FacebookIcon.astro';
 import NewsletterForm from './NewsletterForm.astro';
+import { footerNavigation } from './navigation';
 import type { HomeContent } from '../../content/types';
-interface Props { library: HomeContent['library']; navigation: HomeContent['navigation']; }
-const { library, navigation } = Astro.props;
+interface Props { library: HomeContent['library']; }
+const { library } = Astro.props;
 ---
 <Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
   <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
@@ -33,8 +34,7 @@ const { library, navigation } = Astro.props;
   <nav aria-labelledby="footer-explore" class="footer-column">
     <h2 id="footer-explore">Explore</h2>
     <ul>
-      <li><a href="/">Home</a></li>
-      {navigation.map(item => <li><a href={item.href}>{item.label}</a></li>)}
+      {footerNavigation.map(item => <li><a href={item.href}>{item.label}</a></li>)}
       <li><a href={library.catalogUrl} data-analytics-event="catalog_footer">Library Catalog<Icon name="external" class="footer-external" /></a></li>
     </ul>
   </nav>
