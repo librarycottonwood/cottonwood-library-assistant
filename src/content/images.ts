@@ -31,8 +31,10 @@ import countyCertificate from '../assets/images/county-10th-anniversary-certific
 import caterpillarNote from '../assets/images/caterpillar-mural-thank-you-note.jpg';
 import muralOrchard from '../assets/images/childrens-mural-orchard.jpg';
 import muralPicnic from '../assets/images/childrens-mural-picnic.jpg';
+// Cropped from the Figma About Us frame (the Square site had no copy).
+import muralPicnicTable from '../assets/images/childrens-mural-picnic-table.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, caterpillarNote, muralOrchard, muralPicnic };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, caterpillarNote, muralOrchard, muralPicnic, muralPicnicTable };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

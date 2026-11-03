@@ -1,7 +1,7 @@
 ---
 // Support Us (Figma 1012:1364): the active fundraiser and its Givebutter form (or the general giving block),
-// other ways to help, and the library's published thank-yous. Built only from src/components/site
-// (see docs/design-system.md); every text comes from Sanity.
+// then other ways to help. Built only from src/components/site (see docs/design-system.md). The fundraiser
+// comes from Sanity; "Other ways to help" is written here in Figma's wording (docs/design-rules.md).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
 import Card from '../../components/site/Card.astro';
@@ -18,6 +18,7 @@ import { supportLink } from '../../components/site/navigation';
 import { activeCampaign } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import { checkoutAttributes, dayAfter, getDonateLink } from '../../content/donate';
+import { otherWaysToHelp } from './_other-ways';
 const [home, support, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), getDonateLink()]);
 const { library } = home;
 const photo = home.givingImage ?? home.support.image;
@@ -27,7 +28,7 @@ const campaign = activeCampaign(support.campaigns);
 const after = campaign?.endsOn ? await getDonateLink(dayAfter(campaign.endsOn)) : undefined;
 const general = campaign ? after : donate;
 const volunteer = support.initiatives.find(item => item.category === 'volunteering');
-const otherWays = support.initiatives.filter(item => item.category === 'community');
+const otherWays = otherWaysToHelp(support.initiatives);
 ---
 <BaseLayout title={`${supportLink.label} | Cottonwood Community Library`} description={home.support.introduction}>
   <PageTitle title={supportLink.label} />
@@ -57,11 +58,6 @@ const otherWays = support.initiatives.filter(item => item.category === 'communit
   {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
     <Grid as="ul" columns={3}>
       {otherWays.map(item => <Card as="li" title={item.title} href={`/donate/${item.id}/`} image={item.image}>{item.summary}</Card>)}
-    </Grid>
-  </Section>}
-  {support.updates.length > 0 && <Section title="Thank you" headingId="thanks-heading" id="thanks">
-    <Grid as="ul" columns={3}>
-      {support.updates.map(update => <Card as="li" title={update.title} href={update.href} image={update.image}>{update.body}</Card>)}
     </Grid>
   </Section>}
 </BaseLayout>

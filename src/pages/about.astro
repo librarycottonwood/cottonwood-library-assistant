@@ -1,27 +1,55 @@
 ---
-// About Us (Figma 1012:122): the library painting, then the library's story beside the founders plaque.
-// Built only from src/components/site (see docs/design-system.md); text and photos come from Sanity.
+// About Us (Figma 1012:122): the Main Street painting, the library's story in three parts, a thank-you with
+// the Donate button, then the gallery. Built only from src/components/site (see docs/design-system.md).
+// The text is written here in Figma's wording (docs/design-rules.md, "Where content lives").
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/site/Button.astro';
-import Heading from '../components/site/Heading.astro';
+import Gallery from '../components/site/Gallery.astro';
 import PageTitle from '../components/site/PageTitle.astro';
 import Prose from '../components/site/Prose.astro';
-import Split from '../components/site/Split.astro';
-import Text from '../components/site/Text.astro';
+import Section from '../components/site/Section.astro';
+import Signature from '../components/site/Signature.astro';
 import WideImage from '../components/site/WideImage.astro';
 import { mainNavigation, supportLink } from '../components/site/navigation';
-import { contentRepository } from '../content/repository';
-const { story, support } = await contentRepository.getHome();
+import type { LibraryImage } from '../content/types';
 const title = mainNavigation.find(link => link.href === '/about/')!.label;
+
+const beginnings = 'Cottonwood was once home to the southern-most branch of the Shasta County Library system. Unfortunately, due to budget cuts during the 1980s, the Cottonwood branch was severed from the county system. Cottonwood, home to a modern-day pioneer spirit, would not settle for a town without a library. In 1995 a grassroots board was formed, comprised of the former librarian, Sharon Thomas, Gayle Harrington (who served as director from 2007 to 2023), and others from the community. This group petitioned the Board of Supervisors to turn over the library books that had originally belonged to the Cottonwood branch. They were successful, and in May of 1996 a makeshift library in a rented portion of a downtown building was opened to much fanfare and celebration in the town.';
+const placeOfOurOwn = 'Dr. James Reifert was the first town doctor and a pillar of the community. After retiring, he and his wife Mary donated the property on which the library currently stands. Thanks to their generous donation, creative fundraising, and community partnerships, we hold the title free and clear to a 3,000 square foot library building. There was a grand opening on August 4, 2007. Aside from a temporary closure April to June 2020 due to the coronavirus pandemic, we’ve been serving the community ever since!';
+const hereForYou = 'Cottonwood Community library is and always has been a community-supported library; we receive no government funding of any kind. Aside from a part-time director who oversees the day to day running of the library, we depend completely on our volunteers to process donations, do the shelving, cataloging, check-ins, check-outs, pre-k story time, and much much more! The entire library revenue is raised through fundraisers, grants, and support from patrons and business partners in our rural area. This is the very reason why each and every dollar that we receive counts.';
+
+const painting: LibraryImage = { key: 'cattleDrivePainting', alt: 'Painting of a cattle drive down an old Cottonwood main street, past the hardware store and the 1903 building.' };
+const founders: LibraryImage[] = [
+  { key: 'foundersPortrait', alt: 'Painted portrait of Dr. James Reifert in a straw hat.' },
+  { key: 'founders', alt: 'Bronze plaque reading “Dr. James & Mary Reifert, Founders”.' },
+];
+const gallery: LibraryImage[] = [
+  { key: 'founders', alt: 'Bronze plaque reading “Dr. James & Mary Reifert, Founders”.' },
+  { key: 'libraryBuilding', alt: 'The Cottonwood Community Library building on a sunny day, with its wooden sign, flagpole and a flowering bush.' },
+  { key: 'countyCertificate', alt: 'Shasta County Board of Supervisors certificate recognizing Cottonwood Community Library on its 10th anniversary, August 5, 2017.' },
+  // The files behind these keys are named differently from what they show (see the lead's images.ts):
+  // muralOrchard is the framed thank-you note, muralPicnic is the orchard mural.
+  { key: 'muralOrchard', alt: 'Framed note thanking artist Virginia Gilcrease for the “Very Hungry Caterpillar” mural in the children’s section, 2013.' },
+  { key: 'muralPicnic', alt: 'Part of the children’s mural: fruit trees under a blue sky, with a caterpillar on a trunk.' },
+  { key: 'muralPicnicTable', alt: 'Part of the children’s mural: a picnic table of cake, pie, cupcakes and watermelon under the trees.' },
+];
 ---
-<BaseLayout title={`${title} | Cottonwood Community Library`} description={story.paragraphs[0]}>
+<BaseLayout title={`${title} | Cottonwood Community Library`} description="How Cottonwood got its library back, and the neighbors and volunteers who keep it open.">
   <PageTitle title={title} />
-  {/* The painting fills the wide frame (cropped top and bottom) instead of sitting small inside it. */}
-  <WideImage image={{ ...support.image, fit: 'cover' }} bleed first />
-  <Split media="start" inset image={story.image} headingId="story-heading">
-    <Heading id="story-heading">{story.heading}</Heading>
-    <Prose paragraphs={story.paragraphs} />
-    {story.image.caption && <Text tone="muted">{story.image.caption}</Text>}
+  <WideImage image={painting} bleed first />
+  <Section width="text" align="start">
+    <Prose paragraphs={[beginnings]} />
+  </Section>
+  <Section title="A place of our own" headingId="place-heading" width="text" align="start">
+    <Gallery images={founders} columns={2} />
+    <Prose paragraphs={[placeOfOurOwn]} />
+  </Section>
+  <Section title="We are here for you!" headingId="here-heading" width="text" align="start">
+    <Prose paragraphs={[hereForYou]} />
+    <Signature>Thank you for your support!</Signature>
     <Button href={supportLink.href} variant="primary" icon="heart">Donate</Button>
-  </Split>
+  </Section>
+  <Section title="Gallery" headingId="gallery-heading">
+    <Gallery images={gallery} />
+  </Section>
 </BaseLayout>
