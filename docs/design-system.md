@@ -124,6 +124,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
 | [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Works without JavaScript (details/summary). |
+| [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
@@ -182,7 +183,7 @@ interface Props {
 ```
 
 ```astro
-<Badge href="/fundraising-events/" iconEnd="external">
+<Badge href="/donate/" iconEnd="external">
   <Image slot="start" image={campaign.image} alt="" width={50} height={50} />
   {campaign.title}
 </Badge>
@@ -307,6 +308,21 @@ interface Props {
 <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
   <Faq items={borrowing} />
 </Section>
+```
+
+### FundraiserForm
+
+`src/components/site/FundraiserForm.astro` — The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead.
+
+- **Use for:** Only on Support Us (/donate/), inside the fundraiser's Split. Pass the campaign from activeCampaign().
+- **Don't use for:** Other pages (use a Donate Button with checkoutAttributes, which opens the same checkout as a popup), or typing totals by hand: the total always comes from Givebutter.
+
+```ts
+interface Props { campaign: FundraisingCampaign; }
+```
+
+```astro
+<FundraiserForm campaign={campaign} />
 ```
 
 ### Gallery
@@ -467,6 +483,8 @@ interface Props {
   blocks?: RichTextBlock[];
   /** Plain paragraphs, when the content has no rich text. */
   paragraphs?: string[];
+  /** Numbered steps after the text (how to give books, how to volunteer). */
+  steps?: string[];
 }
 ```
 
@@ -540,7 +558,7 @@ interface Props {
 <Split media="start" image={photo} headingId="community-heading">
   <Heading id="community-heading">Keep your library open.</Heading>
   <Text tone="muted">No county or taxpayer funding.</Text>
-  <Stack direction="row" gap="xs" wrap><Button href="/fundraising-events/" variant="accent" icon="heart">Donate</Button></Stack>
+  <Stack direction="row" gap="xs" wrap><Button href="/donate/" variant="accent" icon="heart">Donate</Button></Stack>
 </Split>
 ```
 

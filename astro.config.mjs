@@ -7,8 +7,12 @@ export default defineConfig({
   redirects: {
     // Old address of the newsletter page, which now always shows the current issue.
     '/librarynews/summer-2026/': '/librarynews/newsletter/',
-    // The old separate "Keep the library open" page; the Donate page is now the only donation page.
-    '/fundraising-events/library-fund/': '/fundraising-events/',
+    // The old separate "Keep the library open" page; Support Us is now the only donation page.
+    '/fundraising-events/library-fund/': '/donate/',
+    '/donate/library-fund/': '/donate/',
+    // Support Us moved from /fundraising-events/ to /donate/, with each way to help under it.
+    '/fundraising-events/': '/donate/',
+    '/fundraising-events/[slug]': '/donate/[slug]',
     // Kids & families became the Story Time page under Explore Services.
     '/kids/': '/services/story-time/',
     // Events & News moved from /librarynews/: posts to /news/<post>/, regular programs to /services/<program>/.

@@ -15,8 +15,10 @@ interface Props {
   blocks?: RichTextBlock[];
   /** Plain paragraphs, when the content has no rich text. */
   paragraphs?: string[];
+  /** Numbered steps after the text (how to give books, how to volunteer). */
+  steps?: string[];
 }
-const { blocks, paragraphs = [] } = Astro.props;
+const { blocks, paragraphs = [], steps = [] } = Astro.props;
 const escape = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 const marks: Record<string, string> = { strong: 'strong', em: 'em', underline: 'u', 'strike-through': 's', code: 'code' };
 const html: string[] = [];
@@ -37,6 +39,7 @@ if (blocks) {
 } else {
   html.push(...paragraphs.map(paragraph => `<p>${escape(paragraph)}</p>`));
 }
+if (steps.length) html.push('<ol>', ...steps.map(step => '<li>' + escape(step) + '</li>'), '</ol>');
 ---
 <div class="prose" set:html={html.join('')} />
 <style>

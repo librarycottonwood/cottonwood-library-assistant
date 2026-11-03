@@ -40,7 +40,7 @@ export async function campaignAccount(campaign: FundraisingCampaign): Promise<st
 }
 
 /** On-site spot where the active fundraiser's donation form is shown. */
-export const DONATE_PAGE_HREF = '/fundraising-events/';
+export const DONATE_PAGE_HREF = '/donate/';
 /** The general giving initiative. The Donate page replaces its old separate page, which redirects there. */
 export const DONATE_INITIATIVE_ID = 'library-fund';
 export const FUNDRAISER_FORM_HREF = `${DONATE_PAGE_HREF}#give`;
