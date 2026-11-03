@@ -17,6 +17,7 @@ export default defineConfig({
     '/librarynews/story-time/': '/services/story-time/',
     '/librarynews/main-street-readers/': '/services/main-street-readers/',
     '/librarynews/book-club/': '/services/book-club/',
+    '/our-story/': '/about/',
   },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },

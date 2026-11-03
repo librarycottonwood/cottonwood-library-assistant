@@ -12,7 +12,7 @@ export const mainNavigation: NavLink[] = [
   { label: 'Explore Services', href: '/services/' },
   { label: 'Events & News', href: '/events/' },
   { label: 'Visit Us', href: '/visit/' },
-  { label: 'About Us', href: '/our-story/' },
+  { label: 'About Us', href: '/about/' },
 ];
 
 /** The Support Us page. The header Donate button links here; its own button opens Givebutter's popup. */
