@@ -53,7 +53,7 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
 5. Read the PR comment **"What this save puts on the live website"**. It lists every website document that differs from the live website and marks the ones this save did not list.
    - If it lists **other changes that will also go live**, tell the volunteer before asking: "Someone else's change is also waiting: … If we save now, it goes on the website too. Include it, or wait?" Name each one (for example "the Main Street Readers photo"). If they want to wait, do not merge. Those changes belong to another save or person: look for an open `content/*` PR that lists them and ask whether to finish or undo that one first. Undo someone else's change in Sanity only when the volunteer clearly asks; then push a new commit for a fresh preview and read the list again.
    - If it says content changed while preparing, or it could not compare with the live website, get a fresh preview (push a new commit) before asking.
-6. Open the preview and confirm the change is there. Share the link and ask **"Ready to save?"**
+6. Open the preview and confirm the change is there. Share the link and ask **"Ready to save?"** If you show a picture in this reply, show only the one you uploaded for this change. Never show pictures from a web search here; volunteers will think that picture is going on the website.
 7. After a clear yes, re-check right before merging:
    - the PR is still open;
    - nothing was merged to `main` since the preview;
