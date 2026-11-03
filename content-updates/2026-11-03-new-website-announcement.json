@@ -1,0 +1,19 @@
+{
+  "request": "Publish the new library website launch announcement without a photo.",
+  "sanityDocuments": [
+    {
+      "id": "2cc8ec23-3852-4fb3-a8cd-366b4d8da85e",
+      "revision": "8CbCs03I9dVGDdhpP54Gg7",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-03"
+}
