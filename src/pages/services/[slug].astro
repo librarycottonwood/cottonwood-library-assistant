@@ -23,9 +23,8 @@ interface Props { program: Program; }
 const { program } = Astro.props;
 const { library } = await contentRepository.getHome();
 const services = mainNavigation.find(link => link.href === '/services/')!;
-// Page photos from Figma. Programs without one show their Sanity picture, filling the frame like every page photo.
+// Programs use their shared card photo unless a page-specific photo is listed here.
 const photos: Record<string, LibraryImage> = {
-  'story-time': { key: 'storyTimeSession', alt: 'Story Time in the children’s corner: a volunteer reads a picture book to children sitting on the alphabet rug and cushions.' },
   'book-club': { key: 'bookClubMeeting', alt: 'Book Club members talking around a table in the library.' },
 };
 // More photos from the program, shown under the panel.

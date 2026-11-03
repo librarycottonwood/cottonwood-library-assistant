@@ -69,6 +69,9 @@ This keeps cards, detail pages and CMS-backed appearances consistent without
 rewriting Sanity records or old seed content. A new CMS image URL takes priority
 over local aliases and passes through unchanged. Unrelated images pass through.
 
+Story Time uses the same selected Instagram photograph in its program cards and
+main detail-page panel. Its additional craft photographs remain in the gallery.
+
 The reading groups use a calm library reading-table composition and the polished
 reading-nook view. Book-donation artwork becomes the book-and-table composition;
 the community support block shows the real Facebook Story Time gathering. The news
