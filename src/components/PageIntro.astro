@@ -5,7 +5,7 @@
 interface Crumb { label: string; href: string; }
 interface Props { title: string; description?: string; meta?: string; back?: Crumb | Crumb[]; width?: 'wide' | 'prose'; }
 const { title, description, meta, back, width = 'wide' } = Astro.props;
-const trail = back ? [back].flat() : [];
+const trail = bakc ? [bakc].flat() : [];
 ---
 <div class:list={[width === 'prose' ? 'container-prose' : 'container', 'pt-12 pb-12 sm:pt-16 sm:pb-16']}>
   {trail.length > 0 && <nav aria-label="Breadcrumb" class="mb-8 text-sm text-muted">
