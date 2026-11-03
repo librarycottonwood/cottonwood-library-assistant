@@ -1,0 +1,20 @@
+{
+  "request": "Publish the new website launch announcement with its illustrated cover picture.",
+  "sanityDocuments": [
+    {
+      "id": "8c4cebe4-a061-496b-8314-0fee694a5ef4",
+      "revision": "yh57dzfOQIvVSXg4hjV9nX",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body",
+        "image"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-03"
+}
