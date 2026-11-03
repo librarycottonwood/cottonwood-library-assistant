@@ -1,0 +1,20 @@
+---
+/**
+ * @component NewsletterIssue
+ * One newsletter issue: its cover beside the issue title and a "Read the newsletter (PDF)" button.
+ * @use The newsletter page (/newsletter/) and each earlier issue's page (/newsletters/<id>/).
+ * @avoid Signing up (the layout already shows the newsletter sign-up), or news posts (use PostList).
+ * @example
+ * <NewsletterIssue newsletter={newsletter} />
+ */
+import Button from './Button.astro';
+import Heading from './Heading.astro';
+import Split from './Split.astro';
+import type { LibraryNewsletter } from '../../content/types';
+interface Props { newsletter: LibraryNewsletter; }
+const { newsletter } = Astro.props;
+---
+<Split media="start" inset image={{ ...newsletter.cover, fit: 'contain' }} headingId="issue-heading">
+  <Heading id="issue-heading">{newsletter.title}</Heading>
+  <Button href={newsletter.fileUrl} variant="primary" icon="download">Read the newsletter (PDF)</Button>
+</Split>

@@ -1,0 +1,26 @@
+---
+/**
+ * @component Signature
+ * A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!").
+ * @use The end of a long text such as the About Us story, inside the same Section as the Prose, before its Donate button.
+ * @avoid Page headers or footers (they have their own logo), or more than one per page.
+ * @example
+ * <Signature>Thank you for your support!</Signature>
+ */
+import { Image } from 'astro:assets';
+import Text from './Text.astro';
+import logo from '../../assets/logos/library-tree.png';
+---
+<div class="signature">
+  {Astro.slots.has('default') && <Text tone="muted" size="lead"><slot /></Text>}
+  <p class="signature-mark">
+    <Image src={logo} alt="" width={77} densities={[1, 2]} loading="lazy" class="signature-logo" />
+    <span>Cottonwood<br />Community Library</span>
+  </p>
+</div>
+<style>
+  .signature { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+  .signature-mark { display: flex; align-items: center; gap: var(--space-xs); margin: 0; font-size: var(--fluid-body); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  /* Figma: 77 × 71. */
+  .signature-mark :global(.signature-logo) { width: 4.8125rem; height: auto; flex-shrink: 0; }
+</style>

@@ -84,8 +84,14 @@ test('inline styles and Tailwind spacing classes are checked', () => {
 test('pages may not declare spacing at all, even with tokens', () => {
   const page = `---\nimport BaseLayout from '../layouts/BaseLayout.astro';\n---\n<BaseLayout><div class="x">hi</div></BaseLayout>\n<style>.x { padding: var(--space-md); color: var(--color-text); }</style>`;
   const found = messages(page, 'src/pages/visit.astro');
-  assert.equal(found.length, 1);
-  assert.match(found[0], /pages don't set spacing/);
+  assert.ok(found.some(message => /pages don't set spacing/.test(message)));
+});
+
+test('pages only compose components: no style blocks, inline styles or classes', () => {
+  const page = `---\nimport BaseLayout from '../layouts/BaseLayout.astro';\nconst x = '<style>';\n---\n<BaseLayout><div class="x" style="color: red">hi</div><p class:list={['y']}>a</p></BaseLayout>\n<style>.x { color: var(--color-text); }</style>`;
+  const found = messages(page, 'src/pages/visit.astro').filter(message => /only compose components/.test(message));
+  assert.equal(found.length, 4);
+  assert.deepEqual(messages('---\n---\n<p class="lede">x</p>', 'src/pages/components/ui.astro'), []);
 });
 
 test('problems report the line they are on', () => {

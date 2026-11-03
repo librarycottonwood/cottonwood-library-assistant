@@ -1,9 +1,9 @@
 ---
 /**
  * @component BaseLayout
- * The page shell for every new page: fonts, tokens, notices, header, footer, analytics and the skip link.
- * @use Wrapping every new page. Put Splits and Sections directly inside it.
- * @avoid Old pages that still use SiteLayout + global.css; don't mix the two systems on one page.
+ * The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link.
+ * @use Wrapping every page. Put Splits and Sections directly inside it.
+ * @avoid Page-level styles or spacing: build from src/components/site instead.
  * @example
  * <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
  *   <Section title="Visit us" headingId="visit-heading">…</Section>
@@ -49,9 +49,9 @@ const givebutterAccount = await sitewideGivebutterAccount();
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <SiteNotices notices={notices} />
-    <SiteHeader library={content.library} navigation={content.navigation} />
+    <SiteHeader library={content.library} />
     <main id="main" tabindex="-1"><slot /></main>
-    <SiteFooter library={content.library} navigation={content.navigation} />
+    <SiteFooter library={content.library} />
     <Analytics privacyLinks={false} />
     <CampaignExpiry />
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}

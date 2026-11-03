@@ -1,0 +1,49 @@
+---
+// A news post, laid out like Event View (Figma 1021:1494): title and date, cover photo, the text, more photos.
+// Built only from src/components/site (see docs/design-system.md); everything comes from Sanity.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/site/Button.astro';
+import EventCards from '../../components/site/EventCards.astro';
+import Gallery from '../../components/site/Gallery.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import Prose from '../../components/site/Prose.astro';
+import Section from '../../components/site/Section.astro';
+import Stack from '../../components/site/Stack.astro';
+import WideImage from '../../components/site/WideImage.astro';
+import { mainNavigation } from '../../components/site/navigation';
+import { checkoutAttributes, getDonateLink } from '../../content/donate';
+import { postDate, upcomingEvents } from '../../content/feeds';
+import { contentRepository } from '../../content/repository';
+import type { LibraryPost } from '../../content/types';
+import { eventPhoto, postsWithPhotos } from '../_photos';
+export async function getStaticPaths() {
+  // Same photo as on the Events & News list (a library photo when Sanity has none).
+  const posts = postsWithPhotos(await contentRepository.getPosts());
+  return posts.filter(post => post.href === `/news/${post.id}/`).map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+interface Props { post: LibraryPost; }
+const { post } = Astro.props;
+const [{ programs }, donate] = await Promise.all([contentRepository.getHome(), getDonateLink()]);
+const related = post.eventIds?.length ? upcomingEvents(await contentRepository.getEvents()).filter(event => event.documentId && post.eventIds!.includes(event.documentId)).map(event => ({ ...event, image: eventPhoto(event, programs) })) : [];
+const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
+const date = postDate(post);
+---
+<BaseLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
+  <PageTitle title={post.title} trail={[eventsLink]}>
+    {date && <time datetime={post.publishedAt ?? undefined}>{date}</time>}
+  </PageTitle>
+  {post.image && <WideImage image={post.image} first />}
+  <Section width="text" align="start">
+    <Prose blocks={post.body} paragraphs={post.paragraphs} />
+    <Stack direction="row" gap="xs" wrap>
+      {post.externalUrl && <Button href={post.externalUrl} iconEnd="external">Read at {post.sourceLabel ?? 'the source'}</Button>}
+      <Button href={donate.href} {...checkoutAttributes(donate)} variant="primary" icon="heart">Support your library</Button>
+    </Stack>
+  </Section>
+  {post.gallery && post.gallery.length > 0 && <Section title="Photos" headingId="photos-heading">
+    <Gallery images={post.gallery} />
+  </Section>}
+  {related.length > 0 && <Section title="Related events" headingId="related-heading">
+    <EventCards events={related} programs={programs} fill={false} />
+  </Section>}
+</BaseLayout>

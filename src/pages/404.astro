@@ -1,10 +1,18 @@
 ---
-import PageLayout from '../layouts/PageLayout.astro';
+// Page not found, on the new design. Built only from src/components/site.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/site/Button.astro';
+import PageTitle from '../components/site/PageTitle.astro';
+import Section from '../components/site/Section.astro';
+import Stack from '../components/site/Stack.astro';
+import { mainNavigation } from '../components/site/navigation';
 ---
-<PageLayout title="Page not found | Cottonwood Community Library">
-  <main id="main" class="container-prose flex min-h-screen flex-col items-start justify-center py-20" tabindex="-1">
-    <h1 class="section-heading">This page isn’t on the shelf</h1>
-    <p class="mt-5 max-w-lg text-muted">Let’s get you back to library hours, books, and what’s happening in our community.</p>
-    <a href="/" class="button button-primary mt-7">Back to the library</a>
-  </main>
-</PageLayout>
+<BaseLayout title="Page not found | Cottonwood Community Library">
+  <PageTitle title="This page isn’t on the shelf">Let’s get you back to library hours, books, and what’s happening in our community.</PageTitle>
+  <Section align="start">
+    <Stack direction="row" gap="xs" wrap>
+      <Button href="/" variant="primary" iconEnd="arrow">Back to the library</Button>
+      {mainNavigation.map(link => <Button href={link.href}>{link.label}</Button>)}
+    </Stack>
+  </Section>
+</BaseLayout>

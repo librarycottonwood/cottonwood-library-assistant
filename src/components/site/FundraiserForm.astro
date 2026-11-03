@@ -1,0 +1,32 @@
+---
+/**
+ * @component FundraiserForm
+ * The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead.
+ * @use Only on Support Us (/donate/), inside the fundraiser's Split. Pass the campaign from activeCampaign().
+ * @avoid Other pages (use a Donate Button with checkoutAttributes, which opens the same checkout as a popup), or typing totals by hand: the total always comes from Givebutter.
+ * @example
+ * <FundraiserForm campaign={campaign} />
+ */
+import IconLink from './IconLink.astro';
+import Text from './Text.astro';
+import { formatDay } from '../../content/feeds';
+import { campaignAccount, givebutterScriptSrc, sitewideGivebutterAccount } from '../../content/donate';
+import type { FundraisingCampaign } from '../../content/types';
+interface Props { campaign: FundraisingCampaign; }
+const { campaign } = Astro.props;
+// Ids are validated (letters, digits, _ and -) before any page renders. BaseLayout already loads Givebutter's
+// script when the Donate buttons open its popup; otherwise this loads it, so a page never gets two copies.
+// Privacy: Givebutter's widget script is functional, separate from the consent-gated Analytics.
+const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(await campaignAccount(campaign));
+---
+<div id="give" class="fundraiser-form">
+  <givebutter-widget id={campaign.givebutter.formWidgetId}></givebutter-widget>
+  <p class="fundraiser-fallback"><IconLink href={campaign.url} iconEnd="external">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></IconLink></p>
+  {campaign.endsOn && <Text tone="muted">Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></Text>}
+</div>
+{script && <script is:inline async src={script}></script>}
+<style>
+  .fundraiser-form { display: flex; flex-direction: column; gap: var(--space-sm); width: 100%; scroll-margin-block-start: var(--space-xl); }
+  givebutter-widget { display: block; width: 100%; }
+  .fundraiser-form:has(givebutter-widget:defined) .fundraiser-fallback { display: none; }
+</style>

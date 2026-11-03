@@ -69,7 +69,7 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
     const built=runBuild(environment);
     assert.equal(built.status,0,built.log);
     const home=await readFile(path.join(output,'index.html'),'utf8');
-    const events=await readFile(path.join(output,'librarynews/index.html'),'utf8');
+    const events=await readFile(path.join(output,'events/index.html'),'utf8');
     const detail=await readFile(path.join(output,'events/cms-rehearsal-book-swap/index.html'),'utf8');
     for(const [label,html] of [['home',home],['events',events],['detail',detail]]){
       assert.ok(plain(html).includes(marker),`${label} should show the requested event title`);
@@ -78,11 +78,11 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
       assert.ok(plain(html).includes('Bring one book and find another.'),`${label} should show the one canonical summary`);
       assert.ok(!html.includes('October 16–17 · 10 a.m.–2 p.m.'),`${label} must not carry the hardcoded sale promotion`);
     }
-    assert.match(events,/data-agenda-day="2099-04-17"/);
-    assert.match(events,/data-agenda-day="2099-04-18"/);
+    assert.match(events,/datetime="2099-04-17T10:00:00-07:00"/);
+    assert.match(events,/data-event-day="2099-04-18"/);
     assert.match(events,/href="\/events\/cms-rehearsal-book-swap\/"/);
     assert.match(home,/href="\/events\/cms-rehearsal-book-swap\/"/);
-    const article=await readFile(path.join(output,'librarynews/cms-rehearsal-report/index.html'),'utf8');
+    const article=await readFile(path.join(output,'news/cms-rehearsal-report/index.html'),'utf8');
     assert.match(article,/<h2>Our rehearsal report heading<\/h2>/);
     assert.match(article,/<strong>Volunteer-approved rehearsal wording\. <\/strong>/);
     assert.match(article,/<a href="\/events\/cms-rehearsal-book-swap\/">See this event\.<\/a>/);
@@ -100,7 +100,7 @@ test('CMS request rehearsal renders the same edited event, rich post, hours, not
       assert.ok(!html.includes('tel:+19999999999'));
       assert.ok(plain(html).includes('CMS rehearsal notice is active.'));
     }
-    const current=await readFile(path.join(output,'librarynews/newsletter/index.html'),'utf8');
+    const current=await readFile(path.join(output,'newsletter/index.html'),'utf8');
     const archive=await readFile(path.join(output,'newsletters/archive-rehearsal/index.html'),'utf8');
     assert.ok(plain(current).includes('Current rehearsal issue'));
     assert.ok(current.includes('/newsletters/archive-rehearsal/'));

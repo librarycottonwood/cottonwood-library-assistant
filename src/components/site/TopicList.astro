@@ -1,0 +1,32 @@
+---
+/**
+ * @component TopicList
+ * Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns").
+ * @use Two to four sub-topics inside a Split or Section, under that block's Heading: how to get started, renewals, connecting to Wi-Fi.
+ * @avoid Questions people click to open (use Faq), label-and-value rows such as prices or hours (use DetailList), or a single paragraph (use Text).
+ * @example
+ * <TopicList items={[
+ *   { title: 'Getting started', text: 'Bring photo ID and proof of residence.' },
+ *   { title: 'Renewals & returns', text: 'Renew items up to two times, in person or by phone.' },
+ * ]} />
+ */
+interface Props {
+  items: { title: string; text: string }[];
+  /** Heading level of each sub-heading: 3 under a section's h2 (default), 4 under an h3. */
+  level?: 3 | 4;
+}
+const { items, level = 3 } = Astro.props;
+const Tag = `h${level}` as 'h3' | 'h4';
+---
+<div class="topic-list">
+  {items.map(item => <section class="topic">
+    <Tag>{item.title}</Tag>
+    <p>{item.text}</p>
+  </section>)}
+</div>
+<style>
+  .topic-list { display: flex; flex-direction: column; gap: var(--space-md); width: 100%; font-size: var(--fluid-body); line-height: var(--leading-relaxed); }
+  .topic { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .topic :is(h3, h4) { margin: 0; font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: inherit; }
+  .topic p { margin: 0; color: var(--color-text-muted); font-weight: var(--weight-medium); }
+</style>

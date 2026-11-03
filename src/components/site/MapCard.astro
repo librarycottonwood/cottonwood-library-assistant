@@ -1,0 +1,96 @@
+---
+/**
+ * @component MapCard
+ * The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead.
+ * @use The "Find us" section on Visit Us, service pages and event pages: <Section title="Find us"><MapCard library={library} /></Section>.
+ * @avoid More than one per page (the map is heavy), or as the only way to show the address.
+ * @example
+ * <Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
+ */
+import Icon from '../Icon.astro';
+import type { HomeContent } from '../../content/types';
+interface Props { library: HomeContent['library']; }
+const { library } = Astro.props;
+// The library building on Main Street. The address itself comes from Sanity; the map needs a point.
+const LIBRARY_POINT = [-122.2805738, 40.3873866];
+---
+<div class="map-card" data-map-card data-point={LIBRARY_POINT.join(',')}>
+  <p class="map-pills">
+    <a href={library.directionsUrl} data-analytics-event="directions_click"><Icon name="pin" />{library.address}, Cottonwood</a>
+    <a href={library.phoneHref}><Icon name="phone" />{library.phone}</a>
+  </p>
+  <div class="map-frame">
+    <div class="map-fallback">
+      <Icon name="pin" />
+      <p>{library.address}<br />{library.locality}</p>
+    </div>
+    <div class="map-canvas" data-map-canvas role="region" aria-label={`Map showing ${library.name} at ${library.address}`}></div>
+  </div>
+</div>
+<style>
+  /* The pills sit on the map's top edge: half above it, half over it. */
+  /* Phones: the pills sit above the map. From tablet width they sit on its top edge, half over it. */
+  .map-card { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; max-width: var(--width-wide); margin-inline: auto; }
+  .map-pills {
+    z-index: 2;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs);
+    padding-inline: var(--space-sm);
+    font-size: var(--fluid-body); font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
+  }
+  .map-pills a {
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-pill); background: var(--color-background); color: var(--color-primary-ink);
+    text-decoration-line: none;
+  }
+  .map-pills a:hover { text-decoration-line: underline; }
+  .map-pills :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; }
+  .map-frame {
+    position: relative; overflow: hidden; aspect-ratio: 4 / 3;
+    border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+    background: var(--color-surface);
+  }
+  .map-fallback {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-xs);
+    height: 100%; color: var(--color-text-muted); text-align: center;
+  }
+  .map-fallback :global(svg) { width: 2rem; height: 2rem; }
+  [data-map-ready] .map-fallback { visibility: hidden; }
+  .map-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
+  [data-map-ready] .map-canvas { opacity: 1; }
+  .map-canvas :global(.maplibregl-canvas) { filter: saturate(0.4); }
+  @media (min-width: 48rem) {
+    .map-frame { aspect-ratio: 1320 / 652; }
+    .map-card { display: block; padding-block-start: var(--space-md); }
+    .map-pills { position: absolute; top: 0; left: 0; right: 0; }
+  }
+</style>
+<script>
+  import 'maplibre-gl/dist/maplibre-gl.css';
+  for (const card of document.querySelectorAll<HTMLElement>('[data-map-card]')) {
+    const host = card.querySelector<HTMLElement>('[data-map-canvas]');
+    const point = card.dataset.point?.split(',').map(Number) as [number, number] | undefined;
+    if (!host || !point) continue;
+    const start = async () => {
+      try {
+        const [{ Map, Marker, NavigationControl, setWorkerUrl }, { default: workerUrl }] = await Promise.all([
+          import('maplibre-gl'), import('maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'),
+        ]);
+        setWorkerUrl(workerUrl);
+        const response = await fetch('https://tiles.openfreemap.org/styles/positron');
+        if (!response.ok) return;
+        const style = await response.json();
+        if (style?.version !== 8 || !style.sources || !Array.isArray(style.layers)) return;
+        const map = new Map({ container: host, style, center: point, zoom: 14.5, scrollZoom: false, cooperativeGestures: true, attributionControl: { compact: true } });
+        new Marker({ color: '#1b2040' }).setLngLat(point).addTo(map);
+        map.addControl(new NavigationControl({ showCompass: false }), 'bottom-right');
+        map.once('idle', () => { card.dataset.mapReady = 'true'; });
+        map.on('error', () => { /* The address stays visible if tiles fail. */ });
+      } catch { /* No WebGL or network: the address fallback stays. */ }
+    };
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); void start(); }
+    }, { rootMargin: '200px' });
+    observer.observe(card);
+  }
+</script>

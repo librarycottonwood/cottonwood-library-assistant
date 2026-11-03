@@ -7,7 +7,7 @@ import { homeContent } from './seed';
  *     id: 'story-time-returns', title: 'Story Time is back',
  *     publishedAt: '2026-10-09', category: 'Library news',
  *     summary: 'Wednesdays at 11:30 a.m. for preschoolers and their grown-ups.',
- *     href: '/librarynews/story-time-returns/',
+ *     href: '/news/story-time-returns/',
  *     paragraphs: ['First paragraph.', 'Second paragraph.'],
  *     image: { key: 'storytime', alt: 'The Story Time corner with its alphabet rug.' },
  *     gallery: [
@@ -23,7 +23,7 @@ export const bookSaleDateLabel = 'October 16–17 · 10 a.m.–2 p.m.';
 export const libraryEvents: LibraryEvent[] = ['16', '17'].map(day => ({
   id: `book-sale-october-${day}`, title: 'Quarterly book sale',
   startsAt: `2026-10-${day}T10:00:00-07:00`, endsAt: `2026-10-${day}T14:00:00-07:00`,
-  summary: 'Back-door entry · Cash only', href: '/fundraising-events/book-sale/',
+  summary: 'Back-door entry · Cash only', href: '/donate/book-sale/',
 }));
 
 // September 29 copy is a proposed library update based on Jaden's meeting notes.
@@ -35,14 +35,14 @@ export const libraryPosts: LibraryPost[] = [
     // Date this draft notice was prepared, not the old site's publication date.
     publishedAt: '2026-10-05', category: 'Library news',
     summary: 'Friday and Saturday, 10 a.m.–2 p.m. Back-door entry; cash sales only.',
-    href: '/librarynews/october-book-sale/',
+    href: '/news/october-book-sale/',
     paragraphs: ['Our next quarterly book sale is Friday and Saturday, October 16–17, from 10 a.m. to 2 p.m. at Cottonwood Community Library.', 'Please enter through the back door. Sales are cash only. Your purchases support our independent community library.'],
   },
   {
     id: 'community-library', title: 'A library powered by neighbors',
     publishedAt: '2026-09-29', category: 'Your support matters',
     summary: 'No county or taxpayer funding. Your gifts keep this independent library open.',
-    href: '/librarynews/community-library/',
+    href: '/news/community-library/',
     paragraphs: [
       'Cottonwood Community Library receives no county or taxpayer funding. Community donations keep its books, computers and programs available to our neighbors.',
       'Our larger book sales happen roughly quarterly, when storage fills up. Shop the sales or make a financial gift to help keep the doors open.',
@@ -53,6 +53,6 @@ export const libraryPosts: LibraryPost[] = [
     id: 'newsletter', title: homeContent.newsletter.title, publishedAt: null,
     dateLabel: homeContent.newsletter.issue, category: 'Newsletter',
     summary: homeContent.newsletter.summary,
-    href: '/librarynews/newsletter/', paragraphs: [],
+    href: '/newsletter/', paragraphs: [],
   },
 ];

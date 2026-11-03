@@ -17,7 +17,7 @@ export function credentialFreeMcpCall(request, ctx) {
   };
 }
 // Tracked button clicks on the library website (see src/components/Analytics.astro).
-export const CLICK_EVENTS = ['catalog_header','catalog_mobile','catalog_footer','catalog_quick','donate_header','donate_quick','directions_click'];
+export const CLICK_EVENTS = ['catalog_header','catalog_mobile','catalog_footer','catalog_quick','donate_header','donate_quick','donate_page','directions_click'];
 const eventFilter = values => ({ filter: { fieldName: 'eventName', inListFilter: { values, caseSensitive: true } } });
 // Each report is a fixed aggregate query: callers choose a report and dates, never fields.
 export const REPORTS = {
