@@ -28,10 +28,8 @@ interface Props {
   emptyMessage?: string;
   /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
   fill?: boolean;
-  /** Two events: center them at the 3-up card width (default), or split the row between them so the list lines up with both page edges (a page whose first block is this list, right under its title). */
-  pair?: 'center' | 'split';
 }
-const { programs = [], limit = 3, fill = true, pair = 'center', emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const { programs = [], limit = 3, fill = true, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
 const zone = 'America/Los_Angeles';
 const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
 const shortDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
@@ -59,7 +57,7 @@ for (const event of events) {
 const today = dayKey.format(new Date());
 const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:00`));
 ---
-<div data-event-list data-event-pair={pair} data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
+<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
   <Grid as="ul" columns={3} balance={false} hidden={events.length + fillers.length === 0} data-event-rows>
     {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
@@ -136,9 +134,6 @@ const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:0
     .event-list[data-event-count='2'] :global(.grid) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     .event-list[data-event-count='2'] :global(.card) { grid-column: span 2; }
     .event-list[data-event-count='2'] :global(.card:nth-child(1 of :not([hidden]))) { grid-column: 2 / span 2; }
-    /* pair="split": the two events share the row, half each. */
-    .event-list[data-event-pair='split'][data-event-count='2'] :global(.card),
-    .event-list[data-event-pair='split'][data-event-count='2'] :global(.card:nth-child(1 of :not([hidden]))) { grid-column: span 3; }
   }
   /* A program badge reads as one line, "Nov 4 · 11:30 a.m.": no flex gap between the date and its time. */
   .event-list :global(.badge[data-schedule]) { column-gap: 0; }

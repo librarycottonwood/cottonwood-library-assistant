@@ -1,5 +1,5 @@
 ---
-// Events & News: upcoming events, latest news, then regular programs. The homepage already features the next event.
+// Events & News (Figma alt frame 1026:2163): the next event with a photo, upcoming events, regular programs, and news.
 // Built only from src/components/site (see docs/design-system.md); everything comes from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/site/Badge.astro';
@@ -7,27 +7,41 @@ import Button from '../../components/site/Button.astro';
 import Card from '../../components/site/Card.astro';
 import EventCards from '../../components/site/EventCards.astro';
 import Grid from '../../components/site/Grid.astro';
+import Heading from '../../components/site/Heading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import PostList from '../../components/site/PostList.astro';
 import Section from '../../components/site/Section.astro';
+import Split from '../../components/site/Split.astro';
+import Stack from '../../components/site/Stack.astro';
+import Text from '../../components/site/Text.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import { eventPhoto, postsWithPhotos } from '../_photos';
-const [{ programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
+const [{ library, programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
 const title = mainNavigation.find(link => link.href === '/events/')!.label;
 const events = upcomingEvents(allEvents);
-// Events without a photo in Sanity get the same library photo here as on their own page.
-const upcoming = events.map(event => ({ ...event, image: eventPhoto(event, programs) }));
+// The next event leads the page (Figma's photo-and-panel block); the browser hides it once it ends.
+const featured = events[0];
+const featuredImage = featured && eventPhoto(featured, programs);
+// Events and posts without a photo in Sanity get the same library photo here as on their own page.
+const laterEvents = events.slice(1).map(event => ({ ...event, image: eventPhoto(event, programs) }));
+const featuredInPerson = featured && !/online/i.test(featured.location ?? '');
+const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
   <PageTitle title={title} />
-  <Section id="upcoming">
-    <EventCards events={upcoming} programs={programs} fill={false} limit={9} pair="split" />
-  </Section>
-  {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
-    <PostList posts={postsWithPhotos(posts)} />
-    <Button href="/news/" iconEnd="arrow">All news</Button>
+  {featured && featuredImage && <Split media="start" panel image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+    <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
+    <Heading id="featured-heading">{featured.title}</Heading>
+    <Text tone="muted" size="lead">{featured.summary}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      {featuredInPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
+      <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow">Read more</Button>
+    </Stack>
+  </Split>}
+  {laterEvents.length > 0 && <Section title="Upcoming Events" headingId="events-heading" id="upcoming">
+    <EventCards events={laterEvents} programs={programs} fill={false} limit={9} />
   </Section>}
   {programs.length > 0 && <Section title="Regular Events" headingId="regular-heading" id="regular">
     <Grid as="ul" columns={3}>
@@ -36,5 +50,9 @@ const upcoming = events.map(event => ({ ...event, image: eventPhoto(event, progr
         {program.description}
       </Card>)}
     </Grid>
+  </Section>}
+  {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
+    <PostList posts={postsWithPhotos(posts)} />
+    <Button href="/news/" iconEnd="arrow">All news</Button>
   </Section>}
 </BaseLayout>

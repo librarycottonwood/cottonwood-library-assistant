@@ -289,8 +289,6 @@ interface Props {
   emptyMessage?: string;
   /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
   fill?: boolean;
-  /** Two events: center them at the 3-up card width (default), or split the row between them so the list lines up with both page edges (a page whose first block is this list, right under its title). */
-  pair?: 'center' | 'split';
 }
 ```
 
