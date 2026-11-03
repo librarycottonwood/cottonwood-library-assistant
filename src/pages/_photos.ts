@@ -18,28 +18,33 @@ const rotation = [
 function byTopic(text: string): LibraryImage | undefined {
   if (/book sale/i.test(text)) return photo('bookSale', 'Book-sale shelves in the library’s back hall.');
   if (/roof|building/i.test(text)) return photo('exterior', 'The Cottonwood Community Library building.');
-  if (/volunteer|neighbo|communit/i.test(text)) return rotation[1];
+  if (/volunteer|neighbo/i.test(text)) return rotation[1];
   if (/story ?time|kids|children|little readers/i.test(text)) return rotation[2];
-  if (/new (books|reads)|computer/i.test(text)) return rotation[0];
+  if (/new (books|reads)|computer|website|online/i.test(text)) return rotation[0];
   return undefined;
 }
 
-/** News posts, newest first, each with a photo: its own, one that fits, or the next in Figma's order (never the same as the post above). */
+/** News posts, newest first, each with a photo: its own, one that fits, or the next in Figma's order. A library
+ * photo isn't repeated in the list while another is still free (photos are told apart by key). */
 export function postsWithPhotos(posts: LibraryPost[]): LibraryPost[] {
-  let previous: LibraryImage | undefined;
+  const used = new Set<string>();
   return newestPosts(posts).map((post, index) => {
     const fitting = byTopic(`${post.title} ${post.summary}`);
-    const image = post.image ?? (fitting && fitting !== previous ? fitting : rotation.map((_, step) => rotation[(index + step) % rotation.length]!).find(picture => picture !== previous)!);
-    previous = image;
+    const next = rotation.map((_, step) => rotation[(index + step) % rotation.length]!);
+    const image = post.image ?? (fitting && !used.has(fitting.key!) ? fitting : next.find(picture => !used.has(picture.key!)) ?? next[0]!);
+    if (image.key) used.add(image.key);
     return { ...post, image };
   });
 }
 
 /** An event's photo: its own, its program's, or a sharp, wide library photo that fits (it runs page-wide on the event page). */
 export function eventPhoto(event: LibraryEvent, programs: HomeContent['programs']): LibraryImage {
-  const own = event.image ?? programs.find(program => program.id === event.programId)?.image;
-  if (own) return own;
-  const about = `${event.title} ${event.summary}`;
+  return event.image ?? programs.find(program => program.id === event.programId)?.image ?? fallbackPhoto(event.title, event.summary);
+}
+
+/** The library photo for an event with no photo of its own or of its program (the homepage uses it too). */
+export function fallbackPhoto(...text: (string | undefined)[]): LibraryImage {
+  const about = text.join(' ');
   if (/book sale/i.test(about)) return photo('bookSale', 'Book-sale shelves in the library’s back hall.');
   if (/roof|building/i.test(about)) return photo('exterior', 'The Cottonwood Community Library building.');
   return photo('interior', 'Inside the Cottonwood Community Library.');
