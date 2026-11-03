@@ -12,6 +12,7 @@
 import Image from '../OptimizedImage.astro';
 import IconLink from './IconLink.astro';
 import type { LibraryImage } from '../../content/types';
+import { refreshPhoto } from '../../content/photography';
 interface Props {
   title: string;
   /** Makes the whole card one link (the title is the link text). */
@@ -24,7 +25,8 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image, as: Tag = 'article', layout = 'stacked', ...attributes } = Astro.props;
+const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', ...attributes } = Astro.props;
+const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
 ---
 <Tag class:list={['card', { 'card-adaptive': layout === 'adaptive' }]} {...attributes}>

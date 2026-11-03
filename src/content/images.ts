@@ -35,8 +35,26 @@ import storyTimeCorner from '../assets/images/story-time-corner.jpg';
 import muralPicnicTable from '../assets/images/childrens-mural-picnic-table.jpg';
 // Cropped from the Figma Events & News frame (the Square site had no copy).
 import adventureMural from '../assets/images/adventure-awaits-mural.jpg';
+// November photography refresh. Originals remain available for recovery and artwork.
+import borrowingV2 from '../assets/images/borrowing-shelves-v2.jpg';
+import computersV2 from '../assets/images/computers-wifi-v2.jpg';
+import copyRoomV2 from '../assets/images/copy-room-v2.jpg';
+import entranceV2 from '../assets/images/library-entrance-v2.jpg';
+import storytimeRoomV2 from '../assets/images/storytime-room-v2.jpg';
+import exteriorV2 from '../assets/images/library-exterior-v2.jpg';
+import bookSaleV2 from '../assets/images/book-sale-shelves-v2.jpg';
+import childrensSaleV2 from '../assets/images/childrens-book-sale-v2.jpg';
+import readingNookV2 from '../assets/images/reading-nook-v2.jpg';
+import bookDropV2 from '../assets/images/book-drop-v2.jpg';
+import holidayMarketV2 from '../assets/images/holiday-market-v2.jpg';
+import storytimeSession from '../assets/images/storytime-session.jpg';
+import communityExterior from '../assets/images/library-community-exterior.jpg';
+import readersSession from '../assets/images/main-street-readers-session.jpg';
+import bookClubSession from '../assets/images/book-club-session.jpg';
+import storytimeFacebook from '../assets/images/storytime-facebook.jpg';
+import adventureMuralOriginal from '../assets/images/adventure-mural-original.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural };
+const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorV2, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, communityExterior, readersSession, bookClubSession, storytimeFacebook, adventureMuralOriginal };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

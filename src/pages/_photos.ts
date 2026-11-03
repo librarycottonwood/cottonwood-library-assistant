@@ -5,13 +5,13 @@ import { newestPosts } from '../content/feeds';
 import type { HomeContent, LibraryEvent, LibraryImage, LibraryPost } from '../content/types';
 
 const photo = (key: string, alt: string): LibraryImage => ({ key, alt });
-// The photos Figma's Latest News uses, in its order. The mural is a crop from the Figma frame (small), so it
-// only comes up as the fourth photo in a run of posts, never by topic.
+// Current library photography for news without its own image. Keep historical
+// artwork on its own pages; use actual library activities for these fallbacks.
 const rotation = [
   photo('computerRoom', 'The library’s computer room.'),
-  photo('watercolor', 'A watercolor painting of the Cottonwood Community Library.'),
+  photo('communityExterior', 'The library’s wooden sign and flowering tree.'),
   photo('storytime', 'The Story Time corner.'),
-  photo('adventureMural', 'The “Adventure Awaits” mural in the children’s area.'),
+  photo('storytimeFacebook', 'A library volunteer shares a picture book with children at Story Time.'),
 ];
 
 /** A photo that fits what the item is about, or undefined when nothing fits. */

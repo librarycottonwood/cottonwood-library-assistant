@@ -13,6 +13,7 @@
  */
 import Image from '../OptimizedImage.astro';
 import type { LibraryImage } from '../../content/types';
+import { refreshPhoto } from '../../content/photography';
 interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
@@ -34,7 +35,8 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { image, media = 'end', ratio: ratioProp, panel = false, inset = false, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, inset = false, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
 ---

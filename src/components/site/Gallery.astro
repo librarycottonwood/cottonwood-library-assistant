@@ -9,12 +9,14 @@
  */
 import Image from '../OptimizedImage.astro';
 import type { LibraryImage } from '../../content/types';
+import { refreshPhoto } from '../../content/photography';
 interface Props {
   images: LibraryImage[];
   /** Columns from tablet width up. Phones get one column. */
   columns?: 2 | 3;
 }
-const { images, columns = 3 } = Astro.props;
+const { images: originalImages, columns = 3 } = Astro.props;
+const images = originalImages.map(refreshPhoto);
 ---
 <ul class:list={['gallery', `columns-${columns}`]}>
   {images.map(image => <li>
