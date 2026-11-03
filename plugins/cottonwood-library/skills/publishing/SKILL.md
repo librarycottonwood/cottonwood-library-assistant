@@ -28,7 +28,7 @@ Only events, news, newsletters, notices, hours and fundraisers live in Sanity. A
 
 1. Find the text in `src/pages/` on current `main`. Create a branch `page/<short-request-name>`, change only the words asked for, and keep the page's components and layout as they are.
 2. Open a PR into `main` titled with the request in plain words, then follow steps 3–9 of "Save it" below (preview, "Ready to save?", merge, live check). No content-update file is needed.
-3. If the request needs a new section or a layout change rather than new words, say it's a design change and offer to describe it for the website developer's agent instead of improvising.
+3. If the request needs a new section or a layout change rather than new words, it's a design change: follow the code/design workflow in `AGENTS.md` and `assistant/WORKFLOW.md`, and build it only from the existing components in `/components` and the rules in `docs/design-system.md`.
 
 ## Save a content change
 
