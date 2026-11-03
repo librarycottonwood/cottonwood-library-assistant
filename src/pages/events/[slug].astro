@@ -14,7 +14,7 @@ import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryEvent } from '../../content/types';
 import { checkoutAttributes, getDonateLink } from '../../content/donate';
-import { fallbackPhoto } from '../_photos';
+import { eventPhoto } from '../_photos';
 export async function getStaticPaths() {
   const events = await contentRepository.getEvents();
   return [...new Set(events.flatMap(event => event.slug ? [event.slug] : []))].map(slug => ({ params: { slug }, props: { sessions: events.filter(event => event.slug === slug) } }));
@@ -25,11 +25,13 @@ const event = sessions[0]!;
 const [{ library, programs }, donate] = await Promise.all([contentRepository.getHome(), getDonateLink()]);
 const program = programs.find(program => program.id === event.programId);
 // No photo in Sanity: the program's photo, or a fitting library photo (never an empty box).
-const image = event.image ?? program?.image ?? fallbackPhoto(event.title, event.summary);
+const image = eventPhoto(event, programs);
 const inPerson = !/online/i.test(event.location ?? '');
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 const zone = 'America/Los_Angeles';
 const day = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: zone });
+// Figma's title line shows just the date; the list below adds the weekday and times.
+const date = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: zone });
 const clock = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: zone });
 // The library writes times as "10 a.m." and "2:30 p.m.".
 const time = { format: (date: Date) => clock.format(date).replace(':00', '').replace(' AM', ' a.m.').replace(' PM', ' p.m.') };
@@ -37,7 +39,7 @@ const when = sessions.map(session => ({ label: day.format(new Date(session.start
 ---
 <BaseLayout title={`${event.title} | ${library.name}`} description={event.summary}>
   <PageTitle title={event.title} trail={[eventsLink]}>
-    {sessions.map((session, index) => <>{index > 0 && ' · '}<time datetime={session.startsAt}>{day.format(new Date(session.startsAt))}</time></>)}
+    {sessions.map((session, index) => <>{index > 0 && ' · '}<time datetime={session.startsAt}>{date.format(new Date(session.startsAt))}</time></>)}
   </PageTitle>
   <WideImage image={image} first />
   <Section width="text" align="start">
