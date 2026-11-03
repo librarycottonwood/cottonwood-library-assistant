@@ -40,14 +40,16 @@ h1, h2, h3, p { margin: 0; }
 h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 
+/* Absolute, not fixed, until focused: Safari 26 colors its toolbar from fixed elements at the top of the page,
+ * and would pick up this hidden white pill. */
 .skip-link {
-  position: fixed; top: var(--space-xs); left: var(--space-xs); z-index: 100;
+  position: absolute; top: var(--space-xs); left: var(--space-xs); z-index: 100;
   padding: var(--space-xs) var(--space-sm);
   background: var(--color-surface); border-radius: var(--radius-pill);
   font-weight: var(--weight-bold); text-decoration-line: none;
   transform: translateY(-200%);
 }
-.skip-link:focus { transform: none; }
+.skip-link:focus { position: fixed; transform: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Gap props on Stack, Grid and Section (gap="xs" … gap="xl") render as data-gap. */

@@ -1,0 +1,20 @@
+---
+// All news posts, newest first: library news written in Sanity and links to articles about the library elsewhere
+// (a post with an external link goes straight to that article). Built only from src/components/site.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageTitle from '../../components/site/PageTitle.astro';
+import PostList from '../../components/site/PostList.astro';
+import Section from '../../components/site/Section.astro';
+import Text from '../../components/site/Text.astro';
+import { mainNavigation } from '../../components/site/navigation';
+import { contentRepository } from '../../content/repository';
+import { postsWithPhotos } from '../_photos';
+const posts = await contentRepository.getPosts();
+const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
+---
+<BaseLayout title="News | Cottonwood Community Library" description="News from the Cottonwood Community Library, and stories about the library from around the community.">
+  <PageTitle title="News" trail={[eventsLink]} />
+  <Section>
+    {posts.length > 0 ? <PostList posts={postsWithPhotos(posts)} initial={12} /> : <Text tone="muted">No news has been posted yet.</Text>}
+  </Section>
+</BaseLayout>

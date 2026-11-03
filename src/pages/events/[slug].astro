@@ -13,7 +13,6 @@ import WideImage from '../../components/site/WideImage.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryEvent } from '../../content/types';
-import { checkoutAttributes, getDonateLink } from '../../content/donate';
 import { eventPhoto } from '../_photos';
 export async function getStaticPaths() {
   const events = await contentRepository.getEvents();
@@ -22,7 +21,7 @@ export async function getStaticPaths() {
 interface Props { sessions: LibraryEvent[]; }
 const { sessions } = Astro.props;
 const event = sessions[0]!;
-const [{ library, programs }, donate] = await Promise.all([contentRepository.getHome(), getDonateLink()]);
+const { library, programs } = await contentRepository.getHome();
 const program = programs.find(program => program.id === event.programId);
 // No photo in Sanity: the program's photo, or a fitting library photo (never an empty box).
 const image = eventPhoto(event, programs);
@@ -45,13 +44,12 @@ const when = sessions.map(session => ({ label: day.format(new Date(session.start
   <Section width="text" align="start">
     <Text size="lead">{event.summary}</Text>
     <DetailList label="Dates and times" items={[...when, { label: 'Where', value: event.location ?? `${library.address}, ${library.locality}` }]} />
-    <Stack direction="row" gap="xs" wrap>
+    {(inPerson || program) && <Stack direction="row" gap="xs" wrap>
       {inPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
       {program && <Button href={`/services/${program.id}/`} icon="book">About {program.title}</Button>}
-      <Button href={donate.href} {...checkoutAttributes(donate)} variant="primary" icon="heart">Support your library</Button>
-    </Stack>
+    </Stack>}
   </Section>
-  {inPerson && <Section title="Find us" headingId="map-heading" width="text">
+  {inPerson && <Section title="Find us" headingId="map-heading">
     <MapCard library={library} />
   </Section>}
 </BaseLayout>

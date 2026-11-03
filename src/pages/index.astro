@@ -37,8 +37,10 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
       <Image slot="start" src={campaign.image ? undefined : fundraiserHouse} image={campaign.image} alt="" width={50} height={50} />
       {campaign.badgeLabel ?? campaign.title}
     </Badge>}
-    <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
-    <Text tone="muted">{hero.introduction}</Text>
+    <Stack gap="sm">
+      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
+      <Text tone="muted" size="lead">{hero.introduction}</Text>
+    </Stack>
     <Stack direction="row" gap="xs" wrap>
       <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
       <Button href={library.catalogUrl} data-analytics-event="catalog_quick" icon="book">Catalog</Button>
