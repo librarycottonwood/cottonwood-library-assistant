@@ -17,6 +17,7 @@ import { upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import { DONATE_INITIATIVE_ID } from '../../content/donate';
 import type { SupportInitiative } from '../../content/types';
+import { otherWaysToHelp } from './_other-ways';
 export async function getStaticPaths() {
   const { initiatives } = await contentRepository.getSupport();
   // The general giving initiative has no page of its own: Support Us is the donation page.
@@ -27,7 +28,7 @@ const { initiative } = Astro.props;
 const [{ initiatives }, events] = await Promise.all([contentRepository.getSupport(), contentRepository.getEvents()]);
 const action = initiative.action;
 const details = initiative.paragraphs.filter(text => text !== initiative.summary);
-const others = initiatives.filter(item => item.id !== initiative.id && item.id !== DONATE_INITIATIVE_ID && item.category !== 'volunteering').slice(0, 3);
+const others = otherWaysToHelp(initiatives, initiative.id);
 // The book-sale page names the next dated sale from the event records, if one is scheduled.
 const nextSale = initiative.id === 'book-sale' ? upcomingEvents(events).find(event => /book sale/i.test(event.title)) : undefined;
 const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' });
