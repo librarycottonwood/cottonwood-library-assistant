@@ -6,31 +6,40 @@ import type { LibraryImage } from './types';
 const photo = (key: string, alt: string, position?: string): LibraryImage => ({
   key, alt, fit: 'cover', ...(position ? { position } : {}),
 });
-const exterior = photo('exteriorV2', 'Cottonwood Community Library, with its wooden sign, flagpole and covered entrance.');
+const exterior = photo('exteriorV3', 'Cottonwood Community Library, with its wooden sign, three narrow windows and covered entrance.');
 const computers = photo('computersV2', 'Public computer stations along the wood-framed window in the library’s computer room.');
 const shelves = photo('borrowingV2', 'Book-filled library shelves beside a round wooden table and burgundy chairs.');
-const storytime = photo('storytimeSession', 'A library volunteer reads a picture book to children in the Story Time corner.', '50% 35%');
+const storytime = photo('storytimeSession', 'A library volunteer reads a picture book to children in the Story Time corner.', '50% 0%');
 const sale = photo('bookSaleV2', 'The wooden book-sale bookshelf in the library’s back hall.');
 const children = photo('childrensSaleV2', 'Children’s books on the library’s white book-sale shelves.');
 const market = photo('holidayMarketV2', 'Holiday Market’s timber-framed entrance and shopping carts.');
-const display = photo('newReads', 'Chapter books displayed on the library’s wooden table in front of the shelves.');
-const readers = photo('readersSession', 'A Main Street Readers participant sharing a book at the library.', '50% 20%');
-const club = photo('bookClubSession', 'Book Club participants seated around a table at the library.', '50% 0%');
-const community = photo('communityExterior', 'The library’s wooden sign, flowering tree and small American flags.');
+const display = photo('readingTable', 'An open book and two closed books on a round library table beside burgundy chairs.', '50% 60%');
+const readers = display;
+const club = photo('readingNookV2', 'Wooden chairs and book-filled shelves in the library’s sunlit reading nook.');
+const community = photo('storytimeFacebook', 'A library volunteer sharing a picture book with children gathered in the Story Time corner.', '50% 55%');
 
 const byKey: Record<string, LibraryImage> = {
   exterior, libraryBuilding: exterior, computerLab: computers, computerRoom: computers,
+  communityExterior: community,
   interior: shelves, borrowingShelves: shelves,
   copyRoom: photo('copyRoomV2', 'The library’s white copier beside the wooden windows and reading table.'),
   entrance: photo('entranceV2', 'The library’s tree emblem and Cottonwood sign beside the entrance to the book stacks.'),
   storytime, storyTimeCorner: photo('storytimeRoomV2', 'The Story Time room with wooden chairs, a teal reading chair, an alphabet rug and hanging clouds.'),
-  bookSale: sale, childrensBookSale: children, bookDonation: display, books: display,
+  bookSale: sale, childrensBookSale: children, bookDonation: display, books: display, newReads: display,
   holidayMarket: market,
   readingNook: photo('readingNookV2', 'Wooden chairs and a patterned armchair beside the library’s large shaded window.'),
   bookDrop: photo('bookDropV2', 'The outdoor book return with its hand-painted caterpillar and Bookdrop lettering.'),
   mainStreetReaders: readers, bookClub: club,
   adventureMural: photo('adventureMuralOriginal', 'The full Adventure Awaits mural beside the children’s craft table.'),
 };
+
+/** A roof fundraiser should show the real building rather than an arbitrary book display. */
+export function eventTopicPhoto(...text: (string | undefined)[]): LibraryImage | undefined {
+  if (/roof|building/i.test(text.join(' '))) {
+    return photo('roofExterior', 'The library’s existing roof, solar panels and covered entrance.', '50% 30%');
+  }
+  return undefined;
+}
 
 // Exact published assets observed in the current CMS snapshot, not filename or
 // topic guesses. Preserve unrelated images and newly uploaded replacements.

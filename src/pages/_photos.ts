@@ -2,6 +2,7 @@
 // news post that has none in Sanity, so Events & News, event pages and news posts never show an empty box.
 // The list and the item's own page use the same helper, so a post or event keeps one photo everywhere.
 import { newestPosts } from '../content/feeds';
+import { eventTopicPhoto } from '../content/photography';
 import type { HomeContent, LibraryEvent, LibraryImage, LibraryPost } from '../content/types';
 
 const photo = (key: string, alt: string): LibraryImage => ({ key, alt });
@@ -9,15 +10,16 @@ const photo = (key: string, alt: string): LibraryImage => ({ key, alt });
 // artwork on its own pages; use actual library activities for these fallbacks.
 const rotation = [
   photo('computerRoom', 'The library’s computer room.'),
-  photo('communityExterior', 'The library’s wooden sign and flowering tree.'),
-  photo('storytime', 'The Story Time corner.'),
   photo('storytimeFacebook', 'A library volunteer shares a picture book with children at Story Time.'),
+  photo('storytime', 'The Story Time corner.'),
+  photo('readingTable', 'Books on a round library reading table.'),
 ];
 
 /** A photo that fits what the item is about, or undefined when nothing fits. */
 function byTopic(text: string): LibraryImage | undefined {
   if (/book sale/i.test(text)) return photo('bookSale', 'Book-sale shelves in the library’s back hall.');
-  if (/roof|building/i.test(text)) return photo('exterior', 'The Cottonwood Community Library building.');
+  const topic = eventTopicPhoto(text);
+  if (topic) return topic;
   if (/volunteer|neighbo/i.test(text)) return rotation[1];
   if (/story ?time|kids|children|little readers/i.test(text)) return rotation[2];
   if (/new (books|reads)|computer|website|online/i.test(text)) return rotation[0];
@@ -46,6 +48,7 @@ export function eventPhoto(event: LibraryEvent, programs: HomeContent['programs'
 export function fallbackPhoto(...text: (string | undefined)[]): LibraryImage {
   const about = text.join(' ');
   if (/book sale/i.test(about)) return photo('bookSale', 'Book-sale shelves in the library’s back hall.');
-  if (/roof|building/i.test(about)) return photo('exterior', 'The Cottonwood Community Library building.');
+  const topic = eventTopicPhoto(about);
+  if (topic) return topic;
   return photo('interior', 'Inside the Cottonwood Community Library.');
 }

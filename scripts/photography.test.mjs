@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { refreshPhoto } from '../src/content/photography.ts';
+import { refreshPhoto, eventTopicPhoto } from '../src/content/photography.ts';
 
 test('the old program artwork becomes a local photo with matching description and crop', () => {
   const original = {
@@ -8,14 +8,28 @@ test('the old program artwork becomes a local photo with matching description an
     alt: 'Lamp-lit book illustration', fit: 'contain', width: 1800, height: 1200,
   };
   const updated = refreshPhoto(original);
-  assert.equal(updated.key, 'readersSession');
+  assert.equal(updated.key, 'readingTable');
   assert.equal(updated.fit, 'cover');
-  assert.match(updated.alt, /participant sharing a book/);
+  assert.match(updated.alt, /open book/);
   assert.equal(updated.url, undefined);
   assert.equal(updated.width, undefined);
   assert.equal(updated.height, undefined);
   assert.equal(original.fit, 'contain');
   assert.strictEqual(refreshPhoto(updated), updated);
+});
+
+test('the rejected portrait and crowded display are replaced across local and CMS appearances', () => {
+  for (const key of ['mainStreetReaders', 'newReads', 'books', 'bookDonation']) {
+    assert.equal(refreshPhoto({key, alt: ''}).key, 'readingTable');
+  }
+  assert.equal(refreshPhoto({key: 'communityExterior', alt: ''}).key, 'storytimeFacebook');
+  assert.equal(refreshPhoto({key: 'exterior', alt: ''}).key, 'exteriorV3');
+});
+
+test('roof and building events get the real roof photograph, unrelated events retain normal fallbacks', () => {
+  assert.equal(eventTopicPhoto('Under One Roof', 'Protecting our library').key, 'roofExterior');
+  assert.equal(eventTopicPhoto('Building fundraiser').key, 'roofExterior');
+  assert.equal(eventTopicPhoto('Volunteer meeting'), undefined);
 });
 
 test('new CMS uploads and other projects are never overridden, even with an old local key', () => {

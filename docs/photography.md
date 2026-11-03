@@ -31,7 +31,8 @@ and book covers can differ. Do not use them to establish library facts or prices
 | copy-room-v2.jpg | [Drive copier room](https://drive.google.com/file/d/1n_A7ij4ayDhRQZYuSVzn-p8AM3Jneaxj/view) |
 | library-entrance-v2.jpg | [Drive entrance](https://drive.google.com/file/d/1E6Psu0o1GzszNLHvTAxFU-ZU5ti7zre3/view) |
 | storytime-room-v2.jpg | [Drive Story Time setup](https://drive.google.com/file/d/1HOtJQjXBKySYix0BWi5GgEg-amUqxhr6/view) |
-| library-exterior-v2.jpg | [Drive building with existing solar panels](https://drive.google.com/file/d/1KcWd87_JRDerE3cIhFNfdt1q9-kxPht_/view) |
+| library-exterior-v3.jpg | Faithful retouch of [Drive CCL.jpeg](https://drive.google.com/file/d/1FvsI5fI2QxC0slpyjH5r1q7k_0deKLLn/view), retaining the source camera view and actual asymmetrical building geometry |
+| reading-table-v3.jpg | Calm book-and-table composition referenced to the [Drive library interior](https://drive.google.com/file/d/1G2aAPoxIyJbGNqfxbsHBWohC-WQH8OVA/view) |
 | book-sale-shelves-v2.jpg | Existing back-hall-bookshelf.jpeg |
 | childrens-book-sale-v2.jpg | Existing book-sale-childrens.jpeg |
 | reading-nook-v2.jpg | [Drive reading nook](https://drive.google.com/file/d/1uNluPrLGzMi0RNlFHmHKOUhyuy38gCUK/view) |
@@ -44,15 +45,15 @@ people, faces or artwork:
 | Prepared asset | Source and context |
 | --- | --- |
 | storytime-session.jpg | [Instagram Story Time](https://www.instagram.com/cottonwoodcommunitylibrary/p/Dd2xjaRm_Qw/), a volunteer reading to children |
-| main-street-readers-session.jpg | [Instagram Main Street Readers, August 30](https://www.instagram.com/cottonwoodcommunitylibrary/p/DcrZ3IQklP6/), participant sharing a book |
-| library-community-exterior.jpg | [Instagram library exterior](https://www.instagram.com/cottonwoodcommunitylibrary/p/DdnhQdDm_IP/), sign, flowering tree and small flags |
-| book-club-session.jpg | [Drive Book Club](https://drive.google.com/file/d/1QjeCOSNH7fJHMSfhddavAPfffpPlVK4r/view), participants at the table |
+| library-roof-original.jpg | [Drive actual roof and entrance](https://drive.google.com/file/d/1KcWd87_JRDerE3cIhFNfdt1q9-kxPht_/view), used for the roof fundraiser |
 | storytime-facebook.jpg | [Facebook June 24 photo](https://www.facebook.com/photo.php?fbid=961347140271185), volunteer reading to children |
 | adventure-mural-original.jpg | [Drive full mural photograph](https://drive.google.com/file/d/1m6h_licjfExXICSM640FRTQdmMOD1xzu/view), replaces the tiny Figma screenshot crop |
 
-The existing junior-readers-display.jpg remains the real chapter-book display.
-A generated variant introduced an unverified window and wall picture, so it was
-rejected. No generated version of it is registered or served.
+The generated junior-book variant and first generated exterior were rejected
+for unverified architecture. Neither is registered or served. The crowded junior
+display, Main Street Readers portrait and close exterior were also rejected
+during preview review; their page appearances now use the reading table, actual
+community Story Time photograph and revised exterior.
 
 ## How replacements work
 
@@ -63,12 +64,15 @@ This keeps cards, detail pages and CMS-backed appearances consistent without
 rewriting Sanity records or old seed content. A new CMS image URL takes priority
 over local aliases and passes through unchanged. Unrelated images pass through.
 
-The original illustrations for the two reading groups become actual program
-photos, book-donation artwork becomes the real book display, and the generated
-community exterior with sculptures becomes the real Instagram exterior. The news
+The reading groups use a calm library reading-table composition and the polished
+reading-nook view. Book-donation artwork becomes the book-and-table composition;
+the community support block shows the real Facebook Story Time gathering. The news
 fallback rotation uses library places and activities instead of repeating artwork.
 The historical About Us paintings, portraits, plaque, certificates and murals are
-preserved; the gallery's low-resolution exterior is refreshed.
+preserved; the gallery's low-resolution exterior is refreshed. Roof fundraisers
+use the actual building/roof photograph consistently in event cards and detail
+pages, rather than a randomly selected book display. Later CMS event uploads
+still take priority.
 
 ## Generation records
 
