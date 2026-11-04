@@ -26,7 +26,7 @@
     "account": "Library Cloudflare account e05729fd6b6fad329e31896d8b1c2da9 only. Deploy scripts refuse any other CLOUDFLARE_ACCOUNT_ID or a missing library token; no local or personal-account deploy path remains.",
     "project": "cottonwood-library (production branch production)",
     "workflows": "publish-live.yml (PR preview + live save), cms.yml (CMS preview + administrator recovery), live-hosting-setup.yml (one-time project creation)",
-    "domain": "cottonwoodcommunitylibrary.com is attached to this project at the public launch (Tuesday, November 3, 2026); see assistant/DOMAIN-LAUNCH.md.",
+    "domain": "cottonwoodcommunitylibrary.com is attached to this project at the public launch (by Thursday, November 5, 2026; moved from November 3); see assistant/DOMAIN-LAUNCH.md.",
     "status": "First verified live save October 24: PR #40 merged as 48d30939; publish-live run 40160373342 published the exact checked PR artifact (release 6b00c9b49bd9f5d7040064c2a99329472aec56da32c60b02ada49bda57c6de35, preview https://acf77744.cottonwood-library.pages.dev/) to the production deployment and recorded it in the CMS ledger. live-hosting-setup run 40160161567 created the project on the library account. CMS preview run 40160353204 also succeeded on the new project.",
     "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
     "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) is retired and awaits deletion after the live website is verified; no redirects are kept.",

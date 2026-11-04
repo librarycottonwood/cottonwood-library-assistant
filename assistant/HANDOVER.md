@@ -7,7 +7,7 @@ The library owns its ChatGPT Plus, GitHub implementation repository and library 
 - Chat: questions, writing and connected reports. Analytics remains a read-only connector; Givebutter reports use the existing official plugin.
 - Work with Sanity: supported content drafting/corrections. Actual Studio: https://cottonwood-community-library.sanity.studio/ . Content remains in project `2ou0xy2r` / `production`.
 - Codex: the existing **cottonwood-library-editor** and maintained repository. Each website request gets a new worktree/branch/PR and a current-content preview URL. Ask “Ready to save?”, then handle conflicts, merge after explicit approval, verify the live website and clean up task-owned work. Details: `WORKFLOW.md`.
-- Live website: https://cottonwood-library.pages.dev/ . The cottonwoodcommunitylibrary.com domain is attached to it at the public launch on Tuesday, November 3, 2026.
+- Live website: https://cottonwood-library.pages.dev/ . The cottonwoodcommunitylibrary.com domain is attached to it at the public launch, moved from Tuesday, November 3 to Thursday, November 5, 2026 at the latest.
 - Weekly summary: the existing Monday-afternoon cloud task; verify its actual binding and result in setup-status.json.
 
 ## Restoration status — October 22
