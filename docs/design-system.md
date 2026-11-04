@@ -114,6 +114,17 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
+### Motion
+
+Three speeds and one easing curve. Motion only confirms what the visitor did or eases content in; nothing loops or waits. base.css and the components switch it all off for visitors who ask for reduced motion.
+
+| Token | Value | Use for | Don't use for | Example |
+| --- | --- | --- | --- | --- |
+| `--motion-quick` | `150ms` | Hover and press feedback: button colors, arrows nudging, a button pressing in. | Anything that opens or moves into place (use --motion-smooth). | `transition: background-color var(--motion-quick) var(--ease-out);` |
+| `--motion-smooth` | `300ms` | Things opening or changing place: the phone menu, a FAQ answer, a card photo zooming, page-to-page fades. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
+| `--motion-entrance` | `600ms` | The homepage-style hero easing in when a page loads. | Anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
+| `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and animation: starts quickly, settles gently. | Linear or bouncy curves; they read as mechanical or playful. | `transition-timing-function: var(--ease-out);` |
+
 ## Components
 
 Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each component's usage block in its file is the source for this section.

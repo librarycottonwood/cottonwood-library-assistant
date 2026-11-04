@@ -41,8 +41,8 @@ const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
 ---
 <section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed: ratio === '1314 / 652' && !panel && !inset }]} {...attributes}>
-  <div class="split-copy"><slot /></div>
-  <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption }]}>
+  <div class:list={['split-copy', { reveal: !first }]}><slot /></div>
+  <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption, reveal: !first }]}>
     <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class="split-image" style={`--split-ratio: ${ratio}`} />
     {hasCaption && <p class="split-caption"><slot name="caption" /></p>}
   </div>
@@ -134,6 +134,15 @@ const hasCaption = Astro.slots.has('caption');
   @media (min-width: 90rem) {
     .media-end:not(.panel, .inset) { grid-template-columns: minmax(0, var(--width-copy)) minmax(0, 1fr); }
     .media-start:not(.panel, .inset) { grid-template-columns: minmax(0, 1fr) minmax(0, var(--width-copy)); }
+  }
+  /* The opening block eases in once on load: the text rises line by line and the photo settles from a slight zoom
+   * (no fade on the photo, so it still shows the moment it loads). Other blocks fade up on scroll (.reveal, base.css). */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .first .split-copy > :global(*) { animation: rise var(--motion-entrance) var(--ease-out) both; }
+    .first .split-copy > :global(:nth-child(2)) { animation-delay: 75ms; }
+    .first .split-copy > :global(:nth-child(3)) { animation-delay: 150ms; }
+    .first .split-copy > :global(:nth-child(n + 4)) { animation-delay: 225ms; }
+    .first .split-media :global(.split-image) { animation: settle calc(var(--motion-entrance) * 2) var(--ease-out) both; }
   }
   @media (min-width: 100rem) {
     .split:not(.panel) { gap: var(--space-xl); }

@@ -41,6 +41,19 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
   summary :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; color: var(--color-text-muted); }
   details[open] :global(.faq-open), details:not([open]) :global(.faq-close) { display: none; }
   details p { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports selector(::details-content) {
+      details { interpolate-size: allow-keywords; }
+      details::details-content {
+        /* min-block-size: details is a flex column, and a flex item never shrinks below its content otherwise. */
+        block-size: 0; min-block-size: 0; overflow: clip; opacity: 0;
+        transition: block-size var(--motion-smooth) var(--ease-out), opacity var(--motion-smooth) var(--ease-out), content-visibility var(--motion-smooth) allow-discrete;
+      }
+      details[open]::details-content { block-size: auto; opacity: 1; }
+    }
+    details[open] summary :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
+  }
+  @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
   .faq-ask { padding-block-start: var(--space-sm); color: var(--color-text-muted); text-align: center; }
   .faq-ask a { color: var(--color-text); font-weight: var(--weight-bold); text-decoration-line: underline; }
   /* Figma (1920): questions 105px apart, the answer 30px below its question. */

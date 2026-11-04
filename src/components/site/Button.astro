@@ -28,7 +28,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 const { href, variant = 'outline', icon, iconEnd, type = 'button', ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
-<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`]} {...attributes}>{icon && <Icon name={icon} />}<slot />{iconEnd && <Icon name={iconEnd} />}</Tag>
+<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`]} {...attributes}>{icon && <Icon name={icon} class={`button-icon icon-${icon}`} />}<slot />{iconEnd && <Icon name={iconEnd} class={`button-icon-end icon-${iconEnd}`} />}</Tag>
 <style>
   .button {
     display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
@@ -40,7 +40,8 @@ const Tag = href ? 'a' : 'button';
     font: inherit; font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
     /* Labels stay on one line unless the screen is too narrow (large text on small phones). */
     max-width: 100%; text-align: center; text-decoration-line: none; cursor: pointer;
-    transition: background-color 0.15s, color 0.15s;
+    transition-property: background-color, border-color, color, transform;
+    transition-duration: var(--motion-quick); transition-timing-function: var(--ease-out);
   }
   /* Figma's button icons are slightly larger than the text and drawn bold; match that so bold labels don't outweigh them. */
   .button :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; stroke-width: 2.5; }
@@ -49,4 +50,15 @@ const Tag = href ? 'a' : 'button';
   .button-accent:hover { background: var(--color-surface); }
   .button-primary { border: var(--border-strong) solid var(--color-primary); background: var(--color-primary); color: var(--color-surface); }
   .button-primary:hover { background: var(--color-primary-ink); border-color: var(--color-primary-ink); }
+  /* Micro-interactions: the button presses in, an end arrow nudges the way it points, and Donate's heart beats once. */
+  .button :global(svg) { transition: transform var(--motion-quick) var(--ease-out); }
+  .button:active { transform: scale(0.97); }
+  @media (hover: hover) {
+    .button:hover :global(.icon-arrow) { transform: translateX(0.2em); }
+    .button:hover :global(.icon-external) { transform: translate(0.15em, -0.15em); }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .button:hover :global(.icon-heart) { animation: heartbeat var(--motion-entrance) var(--ease-out); }
+  }
+  @keyframes heartbeat { 30% { transform: scale(1.25); } 60% { transform: scale(0.95); } }
 </style>
