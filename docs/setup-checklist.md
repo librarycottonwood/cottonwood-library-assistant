@@ -4,7 +4,7 @@ Moving the library from ChatGPT to Claude Code. **On hold (Oct 29):** staff keep
 
 **AI Expo: Tuesday, November 3, 2026. Public launch: by Thursday, November 5, 2026** (moved from November 3, which replaced the earlier November 16 plan).
 
-## Status (updated November 4, 2026)
+## Status (updated November 5, 2026)
 
 Done:
 - Givebutter API key created (account 170378, named `Library website newsletter`; the name is only a nickname, the key has full account access).
@@ -12,7 +12,7 @@ Done:
 - Roof fundraiser found in Givebutter: **Under One Roof**, campaign code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Active. Form widget ID `jwyYlq`.
 
 Still open before launch:
-- [ ] **Deploy and test the newsletter.** The key only works after the next deployment. Then sign up with an approved test address (see 4b). Nobody has tested it yet.
+- [x] **Deploy and test the newsletter.** Website sign-up tested end to end October 30, 2026; Givebutter email delivery tested October 21, 2026. Unsubscribe test: November 5, result pending.
 - [x] **Roof fundraiser on the website** (`/donate/`).
 - [x] **Auction date:** Saturday, November 14. Settled; follow the library's public posts.
 - [x] **Domain.** Access to the Squarespace domain is confirmed. Keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
@@ -60,7 +60,7 @@ The website's own newsletter form sends sign-ups to Givebutter with an API key. 
 
 - [x] In Givebutter (Admin role): **Settings → Integrations → API Keys → Create New API Key**, named `Library website newsletter`. Copy it once; don't paste it into chat, GitHub or any file. *(Done October 27.)*
 - [x] In Cloudflare (library account): **Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets → Add**. Type **Secret**, name `GIVEBUTTER_API_KEY`, paste the key, environment **Production** (add it to **Preview** too if previews should be able to subscribe real people). Save. *(Done October 27, Production only.)*
-- [ ] It applies from the next website save (publish), and the form itself ships with the `claude/fresh-setup` merge. Then sign up on the live site with a test address and check that the contact appears in Givebutter with the **Library Newsletter** tag and email subscription on.
+- [x] It applies from the next website save (publish), and the form itself ships with the `claude/fresh-setup` merge. Then sign up on the live site with a test address and check that the contact appears in Givebutter with the **Library Newsletter** tag and email subscription on. *(Tested end to end October 30.)*
 - [ ] In Givebutter Engage, make the newsletter audience **tag = Library Newsletter** (keep the old *Widget form sign-ups → Library Newsletter* people too), excluding unsubscribed.
 - To replace a leaked or old key: create a new one, replace the Cloudflare secret, then delete the old key in Givebutter.
 
@@ -84,7 +84,7 @@ The website's own newsletter form sends sign-ups to Givebutter with an API key. 
 - [x] Turnstile widget "Cottonwood newsletter form" created (Managed, hostname `cottonwood-library.pages.dev`). Add the new domain to it at the domain switch.
 - [x] Site key is in `src/content/newsletter-signup.json` (it's public).
 - [x] Secret key saved in Cloudflare → `cottonwood-library` → Variables and Secrets → Production as `TURNSTILE_SECRET_KEY`. Never paste it in a chat.
-- [ ] After the next publish, sign up with a test address and check it reaches Givebutter.
+- [x] After the next publish, sign up with a test address and check it reaches Givebutter. *(October 30 sign-up test. Whether the server checks the Turnstile answer is still open in `assistant/ROADMAP.md`.)*
 
 ## 4g. After launch
 

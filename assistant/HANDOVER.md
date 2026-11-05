@@ -10,12 +10,26 @@ The library owns its ChatGPT Plus, GitHub implementation repository and library 
 - Live website: https://cottonwood-library.pages.dev/ . The cottonwoodcommunitylibrary.com domain is attached to it at the public launch, moved from Tuesday, November 3 to Thursday, November 5, 2026 at the latest.
 - Weekly summary: the existing Monday-afternoon cloud task; verify its actual binding and result in setup-status.json.
 
-## Status — November 4, 2026
+## Status — November 5, 2026
 
 - Content saves work end to end in the library ChatGPT: Sanity edit → `content/*` PR → **Website preview** → “Ready to save?” → merge → **Live website**.
 - Codex in the library account works for code changes (tested November 2 in Safari, environment `cottonwood-library-editor`): a plain-words request opened a PR with a preview and asked “Ready to save?”. The second environment, `cottonwood-library-editor-recovery`, is an untested backup.
 - The automatic repair job (`upkeep.yml`) was restored and rehearsed on November 2. The weekly report also flags GitHub-only alarms (needs-attention issues, failed repairs, auto-closed saves).
 - Changing files under `plugins/` does not update the installed ChatGPT plugin; upload the new version after it merges. PR #68 (launch prep) bumps it to 0.2.21 and is uploaded at launch.
+- The old trial Cloudflare Pages project (`cottonwood-library-trial-preview`) was deleted November 5. The live project `cottonwood-library` is unaffected.
+
+## Wizard tests — November 5, 2026
+
+Each guided request was tried in the library ChatGPT.
+
+- Closure notice, then undoing it: **passed** (PRs #100 and #101).
+- Newsletter email draft: **passed**.
+- Fundraiser: got stuck when the Givebutter Form code wasn't known. Fixed in PR #102.
+- Undo: left a hidden Sanity draft behind. Fixed in PR #102.
+- Monday reminder: was set up without asking first, and “stop” only paused it. Fixed in PR #102.
+- Putting a newsletter issue on the website: being tested today; result pending.
+
+Volunteers get the #102 fixes only when the ChatGPT plugin is uploaded at launch (0.2.21, with PR #68).
 
 ## Connected work to preserve
 
@@ -25,6 +39,6 @@ Buffer has the library Facebook channel and an unscheduled test draft. Instagram
 
 ## Remaining handoff gates
 
-Open items and dates are in `ROADMAP.md`: launch-day checks, the newsletter unsubscribe test, CMS backups and a restore rehearsal, a backup library administrator, the Sanity nonprofit decision, and volunteers running the workflow without Jaden. Preserve “Allow read-only tools”; do not grant all tools.
+Accounts the website depends on, and who owns them: `ACCOUNTS.md` (draft for the board to review). Open items and dates are in `ROADMAP.md`: launch-day checks, the newsletter unsubscribe test, CMS backups and a restore rehearsal, a backup library administrator, the Sanity nonprofit decision, and volunteers running the workflow without Jaden. Preserve “Allow read-only tools”; do not grant all tools.
 
 Canonical volunteer instructions live in `plugins/cottonwood-library/skills/`; `CODEX.md` holds account wording and `START.md` the editing entry point. `setup-status.json` separates installed/deployed state from proposals and historical evidence. `MAINTENANCE.md` retains the bounded repair policy. Never overwrite another task's worktree.
