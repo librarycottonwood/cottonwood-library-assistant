@@ -1,0 +1,53 @@
+name: Weekly CMS backup
+on:
+  schedule:
+    # Sundays, 02:13 Pacific standard time / 03:13 Pacific daylight time.
+    - cron: '13 10 * * 0'
+  workflow_dispatch:
+# Read-only: exports Sanity records, pictures and PDFs to a private artifact. It never
+# changes Sanity, the website or other artifacts (check.yml's cleanup keeps the newest four).
+permissions:
+  contents: read
+concurrency:
+  group: library-cms-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+      SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Export records, pictures and PDFs
+        id: export
+        env:
+          # Optional Viewer token: adds unpublished drafts and original picture files.
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+        run: |
+          set -o pipefail
+          name="sanity-backup-$(date -u +%Y-%m-%d).tar.gz"
+          node scripts/sanity-backup.mjs --out "output/backup/$name" | tee "$RUNNER_TEMP/backup-summary.json"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          {
+            echo "### CMS backup saved"
+            echo "Download **library-cms-backup** below. Restore steps: assistant/MAINTENANCE.md → CMS backups."
+            echo '```'
+            head -n 1 "$RUNNER_TEMP/backup-summary.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: library-cms-backup
+          path: output/backup/${{ steps.export.outputs.name }}
+          retention-days: 90
+          compression-level: 0
+          if-no-files-found: error
