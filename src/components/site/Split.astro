@@ -142,6 +142,8 @@ const hasCaption = Astro.slots.has('caption');
     .first .split-copy > :global(:nth-child(2)) { animation-delay: 75ms; }
     .first .split-copy > :global(:nth-child(3)) { animation-delay: 150ms; }
     .first .split-copy > :global(:nth-child(n + 4)) { animation-delay: 225ms; }
+    /* Clipped to its frame so the zoom never widens the page (the photo touches the screen edge). */
+    .first .split-media { overflow: clip; }
     .first .split-media :global(.split-image) { animation: settle calc(var(--motion-entrance) * 2) var(--ease-out) both; }
   }
   @media (min-width: 100rem) {
