@@ -20,7 +20,7 @@ The original cloud editor completed a coding request and hosted a preview. Safar
 
 ## Connected work to preserve
 
-General donations use **Support Your Local Library**, campaign `655849` / `R62NJU`. Newsletter signup uses **Library Newsletter**, widget `L4EVDm`. Checkout opening, signup and one expressly approved inbox delivery passed; no payment or bulk email was sent. Actual sender/audience details are in `COMMUNICATIONS.md`.
+General donations use **Support Your Local Library**, campaign `655849` / `R62NJU`. Newsletter signup is the website's own form, which tags contacts **Library Newsletter** (the old widget `L4EVDm` is retired). Checkout opening, signup and one expressly approved inbox delivery passed; no payment or bulk email was sent. Actual sender/audience details are in `COMMUNICATIONS.md`.
 
 Buffer has the library Facebook channel and an unscheduled test draft. Instagram remains the board's later action. Squarespace registrar access was recovered; DNS, nameservers and forwarding remain unchanged. Keep registration at Squarespace for the documented launch plan; no transfer is implied. See `DOMAIN-LAUNCH.md` and the existing December handoff roadmap.
 

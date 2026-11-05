@@ -475,7 +475,7 @@
       "sender": "newsletter@cottonwoodlibrary.givebutter-mail.com",
       "signupSource": "src/content/newsletter-signup.json",
       "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter); October 21 test segment for the old widget",
-      "audience": "Contacts tagged Library Newsletter (added by the website form, functions/api/newsletter.ts), plus earlier Widget form sign-ups → Library Newsletter (old widget L4EVDm, no longer on the site), excluding unsubscribed"
+      "audience": "Contacts tagged Library Newsletter (added by the website form, functions/api/newsletter.ts), excluding unsubscribed. One list; the old widget L4EVDm (no longer on the site) was setup testing, not a second audience"
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
     "assistant": "Installed 0.2.10 read back in Safari with ten skills enabled. Earlier actual donation report, newsletter draft and unscheduled Facebook draft passed; fresh 0.2.10 routing question correctly selected Codex for design and Work/Sanity for news. No public social or bulk email send."
