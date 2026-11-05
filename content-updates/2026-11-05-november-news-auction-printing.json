@@ -1,0 +1,114 @@
+{
+  "request": "Update Under One Roof auction time and link, add four dated news posts, and correct Printing & copying pricing in one website save.",
+  "sanityDocuments": [
+    {
+      "id": "e0598479-e086-450f-a57a-84821d544b4f",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "summary",
+        "sessions",
+        "href"
+      ],
+      "before": {
+        "summary": "Join our online auction on Saturday, November 14, 2026, to support a new roof for Cottonwood Community Library. Bidding is open all day, from 12:00 a.m. to 11:59 p.m. Pacific. Auction items or donations can be dropped off at the library through Monday, November 9, 2026.",
+        "sessions": [
+          {
+            "_key": "nov14-2026",
+            "_type": "eventSession",
+            "startsAt": "2026-11-14T00:00:00-08:00",
+            "endsAt": "2026-11-14T23:59:00-08:00"
+          }
+        ],
+        "href": null
+      }
+    },
+    {
+      "id": "c917178d-72af-46b0-9952-3cc80836a98c",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    },
+    {
+      "id": "43d9e461-3351-4cbb-b63a-2d57dbc4ec7e",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    },
+    {
+      "id": "78e09135-b4cc-4a03-b7ca-4a5a15c95768",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    },
+    {
+      "id": "ea9af97b-18e2-4f44-b164-3bd772b56285",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "title",
+        "slug",
+        "publishedAt",
+        "category",
+        "summary",
+        "body"
+      ],
+      "before": null
+    },
+    {
+      "id": "library-settings",
+      "revision": "NoJPWpDzR8mqD2ki4mi7Se",
+      "fields": [
+        "services"
+      ],
+      "before": {
+        "services": [
+          {
+            "_key": "item0",
+            "_type": "libraryService",
+            "description": "Browse our collection of books and other materials to find your next read.",
+            "icon": "book",
+            "id": "borrowing",
+            "title": "Library Catalog"
+          },
+          {
+            "_key": "item1",
+            "_type": "libraryService",
+            "description": "Use a library computer or connect your own device to Wi-Fi during your visit.",
+            "icon": "computer",
+            "id": "computers",
+            "title": "Computers & Wi-Fi"
+          },
+          {
+            "_key": "item2",
+            "_type": "libraryService",
+            "description": "Print documents or make copies at the library. Ask staff for help and pricing.",
+            "icon": "printer",
+            "id": "printing",
+            "title": "Printing & copying"
+          }
+        ]
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
