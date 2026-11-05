@@ -1,0 +1,25 @@
+{
+  "request": "Undo: Show the temporary website test notice through November 5, 2026.",
+  "sanityDocuments": [
+    {
+      "id": "8821d2a4-1cda-4511-8f9b-6b837dd93628",
+      "revision": "XqD2Y4IF4G6tcn4EeSOajm",
+      "fields": [
+        "slug",
+        "message",
+        "startsOn",
+        "endsOn"
+      ],
+      "before": {
+        "slug": {
+          "_type": "slug",
+          "current": "website-test-2026-11-05"
+        },
+        "message": "Website test, please ignore — this notice will be removed shortly.",
+        "startsOn": "2026-11-05",
+        "endsOn": "2026-11-05"
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
