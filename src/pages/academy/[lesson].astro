@@ -1,0 +1,17 @@
+---
+import AcademyLayout from '../../layouts/AcademyLayout.astro';
+import LessonBody from '../../components/academy/LessonBody.astro';
+import { lessons } from './_guide';
+export function getStaticPaths() { return lessons.map((lesson, index) => ({ params: { lesson: lesson.slug }, props: { lesson, index } })); }
+const { lesson, index } = Astro.props;
+const previous = lessons[index - 1];
+const next = lessons[index + 1];
+---
+<AcademyLayout title={lesson.title} active={lesson.slug}>
+  <header class="lesson-header"><p class="eyebrow">Lesson {index + 1} of {lessons.length}</p><h1>{lesson.title}</h1><p class="lead">{lesson.summary}</p></header>
+  <LessonBody lesson={lesson} />
+  <nav class="lesson-pagination" aria-label="Next and previous lessons">
+    <a href={previous ? `/academy/${previous.slug}/` : '/academy/'}>← {previous ? previous.title : 'Academy home'}</a>
+    <a href={next ? `/academy/${next.slug}/` : '/academy/quick-reference/'}>{next ? next.title : 'Keep your desk guide'} →</a>
+  </nav>
+</AcademyLayout>

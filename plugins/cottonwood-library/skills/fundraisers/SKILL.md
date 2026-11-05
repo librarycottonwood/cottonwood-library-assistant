@@ -9,7 +9,7 @@ Follow library-assistant for conversation and the current CMS publishing route. 
 
 Read `assistant/COMMUNICATIONS.md` for the library's current general donation campaign and verified setup. Then read the actual CMS settings and Givebutter state. Do not restart one-time setup or ask for identifiers already saved there. General donations use **Support Your Local Library**; a new fundraiser is a separate request.
 
-How it works: once set up, **every Donate button on the site opens Givebutter's checkout right on our website**, so donors never leave the page. A fundraiser shows Givebutter's donation form with its live goal bar, so the total is always current and nobody updates it by hand. While a fundraiser runs, the Donate buttons give to it; ending it through the checked website update returns them to general library donations. After the end date the website stops showing the fundraiser by itself. To remove it from the site's records, say "end the fundraiser" any time after.
+How it works: once set up, **every Donate button on the site opens Givebutter's checkout right on our website**, so donors never leave the page. A fundraiser shows Givebutter's donation form with its live goal bar, which reads the campaign total from Givebutter when its service loads; nobody updates that number by hand. While a fundraiser runs, the Donate buttons give to it; ending it through the checked website update returns them to general library donations. After the end date the website stops showing the fundraiser by itself. To remove it from the site's records, say "end the fundraiser" any time after.
 
 Volunteers can just paste Givebutter's code to you. Take only the ids from it (the repository file shows how) and never put the pasted code itself on the site.
 
@@ -65,3 +65,9 @@ Confirm which one, then ask: "Want a thank-you post with the final total?" (news
 ## Donate buttons only
 
 If the Donate buttons were never set up with Givebutter, offer the one-time setup above. If they want a different campaign for general donations, run that setup again with the new campaign. If they only have a plain donation link (no Givebutter), ask for it, confirm it opens a real donation page, then preview and save.
+
+## Cash/check gifts and checkout problems
+
+An already-received cash/check gift is recorded by an authorized person in Givebutter, not by editing a website total. The chat's connection is read-only. Use the current official offline-transaction guide for the person's steps; do not create a transaction or promise a payout. Have them verify the campaign, received date, amount, payment method, donor visibility and receipt choice, and check for an existing entry before saving. A missing role is a board access issue.
+
+For a failed checkout or possible duplicate charge, use troubleshooting. Never submit a test payment or tell a donor to keep trying. Refunds and donor-record corrections need the authorized Givebutter role.

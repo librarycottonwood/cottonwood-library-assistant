@@ -19,6 +19,8 @@ Ask only for missing information. Do not restart a wizard for a small correction
 
 | Request | Skill |
 | --- | --- |
+| Learning ChatGPT, the volunteer academy, safe practice | onboarding |
+| Urgent platform trouble, a suspicious message, exposed private data, website unavailable | troubleshooting |
 | News, announcements, thank-yous, event recaps | news |
 | Add, move, change or cancel an event | events |
 | Donations, Donate buttons, fundraisers | fundraisers |
@@ -49,12 +51,15 @@ Use the tools actually available in this chat. Instructions do not establish a w
 
 Do the whole job in this chat. Volunteers never open Sanity, GitHub or Codex, and never need to sign in to them.
 
-- **Content** (posts, events, programs, notices, newsletters, hours, page text, photos, including the homepage picture) lives in Sanity. Edit it with the Sanity tools here, then save it with the GitHub tools here, following the publishing skill's "Save a content change". Never send content work to Codex or the website editor.
+- **Frequently changing content** (events, news, newsletters, notices, hours, fundraisers and site-wide settings) lives in Sanity. Edit it with the Sanity tools here, then save it with the GitHub tools here, following the publishing skill's "Save a content change". Preserve existing CMS-backed programs and fields.
+- **Page-file content** (service details, prices, fees, About Us, ways to help, academy lessons and page-design photos) follows the code PR workflow. Read the current page and `docs/design-rules.md` before routing; do not add Sanity fields for it.
 - **Code, layout or design** changes go to Codex with the prepared library environment and `assistant/WORKFLOW.md`. If Codex is not available in this chat, say so plainly and give one step.
+
+For any request marked practice, training, simulation or role-play, use onboarding: keep the exercise in chat with no connected writes or sends. A pretend approval is not approval for a real save.
 
 Gather facts with the topic wizard and reuse existing event/program references. Show proposed content here and confirm facts before publishing a Sanity record. Never substitute old sample content or edit old seed files.
 
-When someone attaches a photo, upload that file to Sanity with its upload tool, give it a real description and use it in the requested field. Upload photos before publishing the records that use them.
+For a CMS photo, upload the attachment to Sanity with its upload tool, give it a real description and use it in the requested field. Upload photos before publishing records that use them. Page-design photos follow WORKFLOW.md and `pnpm image:prepare` in the code request.
 
 - Only JPG, PNG or WebP. For an iPhone HEIC photo, ask them to send it as a JPG (or a screenshot of it).
 - Phone photos can contain the place they were taken, and uploaded photos can be opened by anyone with the link. If you can't remove that information before uploading, ask for a screenshot of the photo instead.

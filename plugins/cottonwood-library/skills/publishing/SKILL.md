@@ -13,7 +13,7 @@ Find out what they are trying to change, then use the relevant topic wizard. Rea
 
 If Sanity is disconnected, use its actual reconnect screen. Give one step with its link, then wait. Never ask for credentials. After reconnecting, repeat the original read or edit. Do not ask them to install an already installed plugin, buy a service, or move routine content into GitHub.
 
-If the connected tools cannot do the edit, offer the actual editor as a fallback and guide them through it using the field labels in `assistant/content/`. Ask only the next missing question. Routine editing does not need project, dataset or account changes. A broader administrator identity is not permission to change those settings.
+If the connected tools cannot do the edit, preserve the request and explain the missing capability. Volunteers do not sign in to Sanity or GitHub. An explicitly chosen administrator recovery may use Studio and the field labels in `assistant/content/`; otherwise give the documented board contact and one plain next step. Routine editing does not authorize project, dataset or account changes.
 
 ## Where is my change?
 
@@ -79,7 +79,7 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 
 - "Website content changed after the preview", "another save reached main first", or still pending after 15 minutes with no publish run still going: make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments` (keep their `before` values), open a PR and follow steps 3–9 (including the list of other changes).
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
-- Anything else, or the refresh save stops the same way: tell the volunteer "Your change is merged but isn't on the website yet. The website still shows the previous version and works. A board admin needs to look at this: <run link>."
+- Anything else, or the refresh save stops the same way: tell the volunteer "Your change is merged but isn't on the website yet. A board admin needs to look at this: <run link>." Add "The previous website still works" only if you actually checked it. Do not assume a rollback worked.
 
 Save PRs with no activity for 14 days are closed automatically with a comment. Nothing from them went live, but what they published in Sanity stays published and goes live with the next save, so check that comment's list.
 

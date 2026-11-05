@@ -1,0 +1,16 @@
+---
+import { services } from '../../pages/academy/_guide';
+import { contentRepository } from '../../content/repository';
+const { library } = await contentRepository.getHome();
+---
+<section aria-labelledby="services-heading">
+  <h2 id="services-heading">Your platform map</h2>
+  <p>Know the purpose of every service. Use only the access assigned to your role.</p>
+  <div class="service-grid">{services.map(service => <article class="service-card">
+    <p class="eyebrow">{service.role}</p>
+    <h3><a href={service.name === 'Facebook and Instagram' ? library.facebookUrl : service.href}>{service.name} ↗</a></h3>
+    <p>{service.purpose}</p><p><strong>Access:</strong> {service.access}</p><p class="small">{service.connection}</p>
+    {service.name === 'Facebook and Instagram' && library.instagramUrl && <p><a href={library.instagramUrl}>Library Instagram ↗</a></p>}
+    {service.name === 'Gmail and Google Drive' && <p><a href="https://mail.google.com/">Open Gmail ↗</a></p>}
+  </article>)}</div>
+</section>

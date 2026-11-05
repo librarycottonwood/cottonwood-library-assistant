@@ -32,6 +32,6 @@ Show the drafts and ask "Look good?" before creating them in Buffer.
 
 Use Buffer for posting. Don't suggest or install other social media tools or plugins.
 
-## Setting up Buffer (one-time)
+## Connection or access problems
 
-If they ask how to connect: a board member signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.
+Read current `assistant/COMMUNICATIONS.md` and check the available channels. If an existing connection expired, give its actual reconnect step and verify a read afterward. Adding accounts/channels, granting permissions or changing a plan belongs to Todd under library-assistant. Do not offer account setup as routine social drafting. When disconnected, provide the copy-ready draft without claiming it is in Buffer.
