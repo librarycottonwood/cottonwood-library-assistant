@@ -22,6 +22,10 @@ const { title, active, print = false } = Astro.props;
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="academy-header">
       <a class="academy-brand" href="/academy/">Cottonwood <span>Volunteer academy</span></a>
+      <nav class="academy-print-links" aria-label="Print a copy">
+        <a href="/academy/quick-reference/" title="Print the one-page quick guide"><Printer size={16} aria-hidden="true" />Quick guide</a>
+        <a href="/academy/print/" title="Print the complete handbook"><BookOpen size={16} aria-hidden="true" />Handbook</a>
+      </nav>
       <a class="library-link" href="/">Library website <ArrowUpRight size={15} aria-hidden="true" /></a>
     </header>
     <div class="academy-shell">
