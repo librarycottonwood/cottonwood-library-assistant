@@ -24,7 +24,7 @@ Only when Jaden says “launch”:
 - [ ] Board approves the relaunch Facebook post and newsletter, then they go out.
 - [x] Unsubscribe: not tested by us; accepted November 5. Givebutter adds its own Unsubscribe link to every newsletter (test sends show a placeholder), and the website form never re-subscribes someone who unsubscribed (tested in code).
 - [x] Newsletter spam check (Turnstile) verified working November 5. Cloudflare's “siteverify isn't being called” banner only covers the last 24 hours.
-- [ ] Fix the backup Codex environment's setup so `pnpm install` works (it failed creating `~/.local/share/pnpm`).
+- [x] Backup Codex environment fixed and tested November 5 (`pnpm install` and `pnpm check` pass).
 - [ ] Board connects Instagram when ready; verify a draft before claiming it works.
 
 ## Before handoff
