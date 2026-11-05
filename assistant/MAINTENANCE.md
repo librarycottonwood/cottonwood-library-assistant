@@ -87,6 +87,6 @@ Use the existing weekly Maintenance review as the required delivery path. A ledg
 
 The earlier isolated website repair/check/save/publish rehearsal passed. The connector's expiry/revocation/permission scenarios and real-browser redirect are tested with fixtures; hosted reconnect and protected endpoints were verified. The complete live Google grant → ChatGPT report → scheduled report → real connector failure/repair/rollback chain remains pending approval/installation. Do not describe these fixtures as a successful live integration.
 
-`assistant/ANALYTICS-CONNECTOR.md` retains connector-specific evidence. Current account status is in setup-status.json; older rehearsal narratives are retained in Git history.
+`connector/README.md` holds the connector's setup, recovery and evidence. Current account status is in setup-status.json; older rehearsal narratives are retained in Git history.
 
 CMS unit, compiled-schema, built-site, and local Worker runtime checks are separate from the required library-account rehearsal. Before handoff, test the actual ChatGPT request → Sanity change → checked preview → human approval → hosted verification path, plus correction/unpublish, one deliberate failure, bounded technical repair, restoration, and an understandable library-facing report. No current local test alone proves that account-level chain or future automatic recovery.

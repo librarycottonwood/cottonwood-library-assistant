@@ -1,5 +1,4 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   output: 'static',
@@ -15,6 +14,5 @@ export default defineConfig({
     '/s/shop': '/donate/',
     '/s/stories/story-title': '/events/',
   },
-  vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },
 });

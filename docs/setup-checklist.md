@@ -4,7 +4,7 @@ Moving the library from ChatGPT to Claude Code. **On hold (Oct 29):** staff keep
 
 **AI Expo: Tuesday, November 3, 2026. Public launch: by Thursday, November 5, 2026** (moved from November 3, which replaced the earlier November 16 plan).
 
-## Status (checked October 27, 2026)
+## Status (updated November 4, 2026)
 
 Done:
 - Givebutter API key created (account 170378, named `Library website newsletter`; the name is only a nickname, the key has full account access).
@@ -13,8 +13,8 @@ Done:
 
 Still open before launch:
 - [ ] **Deploy and test the newsletter.** The key only works after the next deployment. Then sign up with an approved test address (see 4b). Nobody has tested it yet.
-- [ ] **Roof fundraiser on the website** (see 4c). Turn the goal bar on in its Form widget first; it was off.
-- [ ] **Auction dates.** Givebutter's auction (unpublished) says Nov 2, 1:00 a.m. to Nov 5, 9:00 a.m.; Donna's letter and the website calendar say Saturday, Nov 14. Confirm with the library which is right before anyone changes either.
+- [x] **Roof fundraiser on the website** (`/donate/`).
+- [x] **Auction date:** Saturday, November 14. Settled; follow the library's public posts.
 - [x] **Domain.** Access to the Squarespace domain is confirmed. Keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
 - [ ] **Claude nonprofit/Team setup** (sections 1 to 3).
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see 4d).
