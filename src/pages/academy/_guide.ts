@@ -212,10 +212,6 @@ export const lessons: Lesson[] = [
         text: ['This exercise lets you see the questions ChatGPT asks before making an event page. Answer with made-up details. At the end, ask to see the finished wording.'],
         prompt: practicePrefix + 'Walk me through adding a book sale to the website. Ask me one question at a time, then show me the event description.',
       },
-      {
-        title: 'When you want to make a real update',
-        text: ['Start a new Work conversation and describe the actual event or announcement. Use the “Changing the website” lesson to review the preview and save it.'],
-      },
     ],
   },
 ];
