@@ -5,13 +5,16 @@
  *   rise    Fades up as it scrolls into view (cards, photos).
  *   group   Each direct child rises, a beat apart (Section content, Split text, page titles). A child that has its
  *           own data-motion inside it (a grid of cards) is left to its cards.
- *   settle  A photo settles from a slight zoom when the page opens (the opening photo). Never hidden.
- * Blocks that arrive together are staggered top to bottom, left to right. Fundraiser forms and embedded frames are
- * never animated (an animated block becomes their containing block and traps Givebutter's popups).
+ *   settle  A photo eases out of a slight zoom when the page opens. Only on a photo inside a clipping frame that owns
+ *           the rounded corners (Split's opening photo, like Card's hover zoom); never hidden.
+ * Blocks that arrive together are staggered top to bottom, left to right. Blocks holding a Givebutter widget are never
+ * animated (an animated block becomes the containing block of its popups and traps them under the sticky header).
+ * The first screen of a page arrives quicker than blocks scrolled to later, so clicking a link never feels slow.
  *
  * To animate something new, give its component one of these attributes. Need a new kind of motion? Add a preset
  * to `presets` below (and to PRESETS in scripts/motion.test.mjs); don't call animate() from a component.
- * Hover and press feedback stays in CSS with the --motion-* tokens.
+ * Hover and press feedback stays in CSS with the --motion-* tokens. Scale a photo only inside a frame that owns the
+ * rounded corners; scaling a photo that has its own rounded corners cuts them square while it moves.
  *
  * Before this script runs, base.css hides rise/group blocks only when BaseLayout set html.motion (motion allowed,
  * JavaScript on). If this script never starts, BaseLayout's fallback removes html.motion and everything shows.
@@ -27,14 +30,16 @@ export const springs = {
 } as const;
 
 export const presets = {
+  settle: { keyframes: { scale: [1.05, 1] }, transition: { type: 'spring', visualDuration: 1.2, bounce: 0 } },
   rise: { keyframes: { opacity: [0, 1], y: [24, 0] }, transition: { ...springs.enter, opacity: { duration: 0.5, ease: 'easeOut' } } },
-  settle: { keyframes: { scale: [1.04, 1] }, transition: { type: 'spring', visualDuration: 1.2, bounce: 0 } },
+  /** rise for the first screen when a page opens: shorter and closer, so the page is readable almost at once. */
+  riseOnLoad: { keyframes: { opacity: [0, 1], y: [12, 0] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
 } as const;
 
 /** Seconds between blocks that arrive together, and the most blocks that wait their turn. */
 const STAGGER = 0.08;
 const MAX_STAGGERED = 5;
-const SKIP = 'form, iframe, givebutter-widget';
+const SKIP = 'givebutter-widget';
 
 export const motionAllowed = () => document.documentElement.classList.contains('motion');
 
@@ -59,19 +64,25 @@ function targets(): HTMLElement[] {
 }
 
 let queue: HTMLElement[] = [];
+let startedAt = 0;
 function flush() {
+  const onLoad = performance.now() - startedAt < 500;
+  const { keyframes, transition } = onLoad ? presets.riseOnLoad : presets.rise;
+  const stagger = onLoad ? STAGGER / 2 : STAGGER;
   const arriving = queue.sort((a, b) => { const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(); return ra.top - rb.top || ra.left - rb.left; });
   queue = [];
   arriving.forEach((element, index) => {
     element.style.opacity = '0';
     element.dataset.motionDone = '';
-    const { keyframes, transition } = presets.rise;
-    animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * STAGGER });
+    // Clear the finished styles so a shown block keeps no transform (no stacking context or containing block left).
+    animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * stagger })
+      .then(() => { element.style.removeProperty('opacity'); element.style.removeProperty('transform'); });
   });
 }
 
 function start() {
   document.documentElement.dataset.motionReady = '';
+  startedAt = performance.now();
   if (!motionAllowed()) return;
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="settle"]')) {
     const { keyframes, transition } = presets.settle;

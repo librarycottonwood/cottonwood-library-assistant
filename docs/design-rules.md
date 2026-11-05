@@ -51,12 +51,12 @@ Short rules every page follows. The classes live in `src/styles/global.css` (`@l
 
 Motion makes the site feel calm and responsive; it never decorates, loops or makes anyone wait.
 
-- **Entrances use Motion** (the `motion` package, docs at https://motion.dev) through one file, `src/scripts/motion.ts`. Components opt in with `data-motion`: `rise` (one block fades up as it scrolls into view: cards, photos), `group` (each child rises a beat apart: Section content, Split text, page titles) or `settle` (the opening photo eases out of a slight zoom). Section, Split, Card and PageTitle already do this, so a new page built from them animates with no extra work.
+- **Entrances use Motion** (the `motion` package, docs at https://motion.dev) through one file, `src/scripts/motion.ts`. Components opt in with `data-motion`: `rise` (one block fades up as it scrolls into view: cards, photos), `group` (each child rises a beat apart: Section content, Split text, page titles) or `settle` (a photo eases out of a slight zoom inside its frame: the homepage's opening photo). Section, Split, Card and PageTitle already do this, so a new page built from them animates with no extra work.
 - **A new component** gets motion by adding one of those attributes to its root.
 - **New kinds of animation are welcome** when the library asks (a slide in from the side, a pop, a counter ticking up). Add each one as a named preset in `motion.ts` with Motion (look up its docs at motion.dev), add the name to `scripts/motion.test.mjs`, and use it through `data-motion`. Keep it in that one file, never `animate()` or entrance `@keyframes` inside a component and never a second animation library, so every animation shares the same feel and the reduced-motion and no-JavaScript safety.
 - **Hover and press feedback is CSS** with the `--motion-*` tokens: colors fade, the button presses in, arrows nudge, card photos zoom slightly. Only on devices that hover.
 - **Opening and closing** (FAQ answers) uses `slide()` from `motion.ts`, so both directions animate.
-- **Always:** springs without bounce; nothing over about a second; never animate a fundraiser form, Givebutter widget or embedded frame; everything still works and shows with JavaScript off or reduced motion on (base.css hides blocks only under `html.motion`).
+- **Always:** springs without bounce; zoom a photo only inside a frame that owns its rounded corners and border, as Card and Split's opening photo do (a photo with its own rounded corners gets them cut square while it zooms); nothing over about a second; never animate a block holding a Givebutter widget (its popups would get trapped under the header); everything still works and shows with JavaScript off or reduced motion on (base.css hides blocks only under `html.motion`).
 
 ## Keep
 - Colours, Lora + DM Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.
