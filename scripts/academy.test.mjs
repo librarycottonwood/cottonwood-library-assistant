@@ -74,9 +74,14 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
       }
     }
     await page.goto(origin + '/academy/accounts-and-tools/');
-    assert.equal(await page.locator('details.service-card').count(), 16);
-    await page.locator('details.service-card summary').first().click();
-    assert.equal(await page.locator('.service-detail a').first().isVisible(), true);
+    assert.equal(await page.locator('article.service-card').count(), 8);
+    assert.equal(await page.locator('main details').count(), 0, 'service information is visible without opening anything');
+    assert.equal(await page.locator('.service-open').count(), 8);
+    for (const link of await page.locator('.service-open').all()) assert.equal(await link.isVisible(), true);
+    assert.equal(await page.locator('.service-icon img').count(), 6);
+    assert.equal(await page.locator('.service-icon img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'service logos load locally');
+    assert.doesNotMatch(await page.locator('main').innerText(), /Cloudflare|Sanity|GitHub|Codex|Squarespace|Library Analytics|What are agents/, 'volunteer directory excludes administrator tools and jargon');
+    assert.equal(await page.locator('.academy-sidebar').evaluate(node => getComputedStyle(node).backgroundColor), 'rgb(255, 255, 255)');
     await page.setViewportSize({ width: 375, height: 844 });
     await page.goto(origin + '/academy/practice-with-a-buddy/');
     await page.getByText('Browse lessons', { exact: true }).click();
@@ -84,8 +89,8 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.getByText('Browse lessons', { exact: true }).click();
     await page.getByRole('button', { name: 'Copy message' }).first().click();
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    assert.ok(copied.startsWith('This is a practice exercise.'));
-    assert.match(copied, /do not change the library’s website or accounts/);
+    assert.ok(copied.startsWith('Let’s practice.'));
+    assert.match(copied, /without changing the website or sending anything/);
     assert.match(await page.getByRole('status').first().innerText(), /Copied/);
     await page.evaluate(() => { Object.defineProperty(navigator.clipboard, 'writeText', { value: async () => { throw new Error('Denied'); } }); });
     await page.getByRole('button', { name: 'Copy message' }).first().click();
@@ -99,7 +104,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await page.locator('.desk-guide').isVisible(), true);
     await page.goto(origin + '/academy/print/');
     assert.equal(await page.locator('.print-lesson').count(), 6);
-    assert.equal(await page.locator('.service-card').count(), 16);
+    assert.equal(await page.locator('.service-card').count(), 8);
     const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 844 } });
     const plain = await noJS.newPage();
     await plain.goto(origin + '/academy/practice-with-a-buddy/');
@@ -107,8 +112,8 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.ok(await plain.locator('[data-prompt-text]').first().isVisible());
     assert.equal(await plain.locator('[data-copy-prompt]').first().isVisible(), false);
     await plain.goto(origin + '/academy/accounts-and-tools/');
-    await plain.locator('details.service-card summary').first().click();
-    assert.equal(await plain.locator('.service-detail a').first().isVisible(), true);
+    assert.equal(await plain.locator('.service-open').first().isVisible(), true);
+    assert.equal(await plain.locator('main details').count(), 0);
     assert.deepEqual(errors, []);
   } finally { await browser?.close(); await new Promise(resolve => server.close(resolve)); }
 });

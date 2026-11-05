@@ -1,33 +1,38 @@
 ---
+import { Image } from 'astro:assets';
+import { Mail, BookOpen, ArrowUpRight } from '@lucide/astro';
 import { services } from '../../pages/academy/_guide';
 import { contentRepository } from '../../content/repository';
+import { resolveImage } from '../../content/images';
+import libraryLogo from '../../assets/logos/library-tree.png';
 interface Props { print?: boolean; }
 const { print = false } = Astro.props;
 const { library } = await contentRepository.getHome();
-const groups = ['Writing, website and communications', 'Catalog, meetings and reports', 'Website administration'];
-const serviceHref = (service: typeof services[number]) => service.name === 'Facebook and Instagram' ? library.facebookUrl : service.href;
+const Heading = print ? 'h3' : 'h2';
+const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', drive: 'academyDrive', buffer: 'academyBuffer', zoom: 'academyZoom' };
 ---
-<section class="service-map" aria-labelledby="services-heading">
-  <h2 id="services-heading">The library’s tools</h2>
-  <p>{print ? 'What each service does and where to open it.' : 'Select a service for its link and a short explanation.'}</p>
-  {groups.map(group => <section class="service-group">
-    <h3>{group}</h3>
-    {services.filter(service => service.group === group).map(service => print ? <article class="service-card">
-      <h4>{service.name}</h4>
-      <p>{service.purpose} {service.access}</p>
-      <p>{service.connection}</p>
-      <p class="service-url"><a href={serviceHref(service)}>{serviceHref(service)}</a>
-        {service.name === 'Facebook and Instagram' && library.instagramUrl && <> · <a href={library.instagramUrl}>Instagram: {library.instagramUrl}</a></>}
-        {service.name === 'Gmail and Google Drive' && <> · <a href="https://mail.google.com/">Gmail: mail.google.com</a></>}
-      </p>
-    </article> : <details class="service-card">
-      <summary><span><strong>{service.name}</strong><span>{service.purpose}</span></span></summary>
-      <div class="service-detail"><p>{service.access}</p><p>{service.connection}</p>
-        <p><a href={serviceHref(service)}>Open {service.name === 'Facebook and Instagram' ? 'Facebook' : service.name} ↗</a>
-          {service.name === 'Facebook and Instagram' && library.instagramUrl && <> · <a href={library.instagramUrl}>Instagram ↗</a></>}
-          {service.name === 'Gmail and Google Drive' && <> · <a href="https://mail.google.com/">Gmail ↗</a></>}
-        </p>
+<section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">
+  <div class="service-grid">
+    {services.map(service => <article class="service-card" id={`website-${service.id}`}>
+      <div class="service-heading">
+        <span class="service-icon" aria-hidden="true">
+          {logos[service.id] ? <Image src={resolveImage(logos[service.id])} alt="" width={28} height={28} />
+            : service.id === 'website' ? <Image src={libraryLogo} alt="" width={30} height={30} fit="contain" />
+            : service.id === 'email' ? <Mail size={26} stroke-width={1.6} /> : <BookOpen size={26} stroke-width={1.6} />}
+        </span>
+        <Heading>{service.name}</Heading>
       </div>
-    </details>)}
-  </section>)}
+      <p class="service-purpose">{service.purpose}</p>
+      <p class="service-signin">{service.signin}</p>
+      {service.id === 'buffer' && <div class="service-social-links">
+        <span>View the library’s pages:</span>
+        <a href={library.facebookUrl}>Facebook <ArrowUpRight size={14} aria-hidden="true" /></a>
+        {library.instagramUrl && <a href={library.instagramUrl}>Instagram <ArrowUpRight size={14} aria-hidden="true" /></a>}
+      </div>}
+      <div class="service-actions">
+        <a class="service-open" href={service.href}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></a>
+        {print && <span class="service-url">{service.href}</span>}
+      </div>
+    </article>)}
+  </div>
 </section>

@@ -60,7 +60,14 @@ import storytimeSession from '../assets/images/storytime-session.jpg';
 import storytimeFacebook from '../assets/images/storytime-facebook.jpg';
 import adventureMuralOriginal from '../assets/images/adventure-mural-original.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
+// Service logos from their official websites; see docs/academy-images.md.
+import academyChatgpt from '../assets/images/academy-chatgpt.png';
+import academyGivebutter from '../assets/images/academy-givebutter.png';
+import academyBuffer from '../assets/images/academy-buffer.png';
+import academyDrive from '../assets/images/academy-drive.png';
+import academyZoom from '../assets/images/academy-zoom.png';
+
+const images: Record<string, ImageMetadata> = { academyChatgpt, academyGivebutter, academyBuffer, academyDrive, academyZoom, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

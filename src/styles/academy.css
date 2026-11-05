@@ -20,14 +20,14 @@ li { margin-block: .4rem; }
 .academy-brand span { color: #646870; border-left: 1px solid #d9dce2; padding-left: 1rem; font-weight: 450; font-size: .85rem; }
 .library-link { color: #646870; text-decoration: none; font-size: .8rem; }
 .academy-shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); max-width: 1440px; margin: 0 auto; }
-.academy-sidebar { position: sticky; top: 64px; height: calc(100dvh - 64px); overflow-y: auto; border-right: 1px solid #e7e8ec; padding: 2rem 1rem; background: #fafafb; }
+.academy-sidebar { position: sticky; top: 64px; height: calc(100dvh - 64px); overflow-y: auto; border-right: 1px solid #e7e8ec; padding: 2rem 1rem; background: #fff; }
 .lesson-menu > summary { display: none; }
 .lesson-menu nav { font-size: .85rem; line-height: 1.5; }
 .lesson-menu ol { list-style: none; margin: 0; padding: 0; }
 .lesson-menu li { margin: 2px 0; }
 .lesson-menu a { display: block; padding: .6rem .8rem; border-radius: 5px; text-decoration: none; color: #565b65; }
 .lesson-menu a:hover { background: #eff0f3; color: #17191e; }
-.lesson-menu a[aria-current] { background: var(--color-primary-soft); color: var(--color-primary-ink); font-weight: 600; }
+.lesson-menu a[aria-current] { background: #f1f1f1; color: #17191e; font-weight: 600; }
 .nav-label { margin: 1.8rem .8rem .5rem; color: #292d35; font-size: .75rem; font-weight: 650; }
 .academy-content { min-width: 0; width: 100%; max-width: 880px; padding: 2.75rem 3.5rem 0; }
 main { min-width: 0; }
@@ -45,9 +45,10 @@ main { min-width: 0; }
 .print-panel { margin-top: 2rem; }
 .print-panel h2 { font-size: 1rem; margin-bottom: .5rem; }
 .print-panel p { font-size: .875rem; }
-.lesson-topics { border: 1px solid #e7e8ec; border-radius: 5px; font-size: .875rem; margin-bottom: 2rem; }
-.lesson-topics summary { padding: .65rem 1rem; cursor: pointer; font-weight: 550; }
-.lesson-topics ul { margin: 0 1rem 1rem; padding-left: 1.2rem; }
+.lesson-topics { padding: 0 0 1.25rem; border-bottom: 1px solid #e7e8ec; font-size: .85rem; margin-bottom: 2rem; }
+.lesson-topics p { color: #646870; font-size: .75rem; font-weight: 600; margin-bottom: .5rem; }
+.lesson-topics ul { display: flex; flex-wrap: wrap; gap: .45rem 1.25rem; list-style: none; padding: 0; margin: 0; }
+.lesson-topics li { margin: 0; }
 .lesson-part { margin-block: 2.5rem; scroll-margin-top: 90px; }
 .lesson-part p, .lesson-part li { max-width: 68ch; }
 .steps { padding-left: 1.4rem; }
@@ -61,20 +62,23 @@ main { min-width: 0; }
 .prompt .copy-status { padding-top: 0; font-size: .75rem; color: #646870; }
 .copy-status:empty { display: none; }
 .reference-links { list-style: none; padding: 0; font-size: .85rem; }
-.service-map { margin-top: 2.5rem; }
-.service-group { margin-top: 1.5rem; }
-.service-group > h3 { font-size: .85rem; margin-block: 1.5rem .5rem; color: #646870; }
-.service-card { border-bottom: 1px solid #e7e8ec; padding-block: .75rem; }
-.service-card summary { display: grid; grid-template-columns: 1fr auto; gap: .5rem; list-style: none; align-items: center; cursor: pointer; min-height: 44px; }
-.service-card summary::-webkit-details-marker { display: none; }
-.service-card summary::after { content: '+'; color: #646870; }
-.service-card[open] summary::after { content: '−'; }
-.service-card summary strong { display: block; font-size: .95rem; font-weight: 600; }
-.service-card summary span span { display: block; color: #646870; margin-top: .2rem; font-size: .85rem; }
-.service-url { overflow-wrap: anywhere; }
-.service-card h4 { margin: 0 0 .3rem; }
-.service-detail { padding-top: 1rem; font-size: .9rem; }
-.service-detail p:last-child { margin: 0; }
+.service-map { margin-block: 1.5rem 2.5rem; }
+.service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.service-card { min-width: 0; border: 1px solid #e2e4e7; border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; scroll-margin-top: 90px; }
+.service-heading { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+.service-heading h2, .service-heading h3 { font: 650 1rem/1.35 var(--font-body); margin: 0; letter-spacing: -.015em; }
+.service-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid #e9eaed; border-radius: 10px; background: white; color: #454b52; }
+.service-icon img { display: block; object-fit: contain; }
+.service-purpose { font-size: .9rem; line-height: 1.6; margin-bottom: .75rem; }
+.service-signin { font-size: .85rem; line-height: 1.6; color: #656a72; margin-bottom: 1.25rem; }
+.service-actions { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.service-open { display: inline-flex; align-items: center; justify-content: space-between; gap: .75rem; min-height: 42px; padding: .45rem .8rem; border: 1px solid #dadddf; border-radius: 6px; background: #fff; color: #292d32; font-size: .8rem; font-weight: 550; text-decoration: none; }
+.service-open:hover { background: #f6f7f8; border-color: #aeb3b9; }
+.service-social-links { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .75rem; border-top: 1px solid #eceef0; margin: 0 0 1rem; padding-top: .75rem; font-size: .8rem; }
+.service-social-links > span { flex-basis: 100%; color: #656a72; }
+.service-social-links a { display: inline-flex; gap: .15rem; align-items: center; }
+.service-social-links p { margin: .15rem 0 0; font-size: .7rem; color: #656a72; }
+.service-url { overflow-wrap: anywhere; font-size: .75rem; }
 .lesson-pagination { display: flex; justify-content: space-between; gap: 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e7e8ec; font-size: .85rem; }
 .lesson-pagination a { max-width: 46%; }
 .lesson-pagination a:last-child { text-align: right; }
@@ -101,6 +105,7 @@ main { min-width: 0; }
   .lesson-menu nav { padding-bottom: 1rem; }
   .nav-label { margin-top: 1rem; }
   .academy-content { padding: 1.75rem 1.25rem 0; }
+  .service-grid { grid-template-columns: minmax(0, 1fr); }
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.2rem; }
   .lesson-part { margin-block: 2rem; }
@@ -136,12 +141,19 @@ main { min-width: 0; }
   .prompt { padding: 10pt; border-radius: 10pt; margin-block: 12pt; break-inside: avoid; }
   .prompt-heading { margin-bottom: 6pt; padding: 0; border: 0; }
   .prompt p { font-size: 10.5pt; padding: 0; }
-  .service-map { break-before: page; margin: 0; }
-  .service-group > h3 { font: 600 11pt/1.5 var(--font-body); margin-block: 14pt 8pt; }
-  .service-card { padding-block: 9pt; break-inside: avoid; }
-  .service-card h4 { font-size: 11pt; margin: 0 0 3pt; }
-  .service-card p { font-size: 10pt; margin-bottom: 4pt; }
-  .service-card .service-url { font-size: 8pt; }
+  .service-map { margin-block: 12pt; }
+  .service-grid { display: block; }
+  .service-card { display: block; padding: 10pt 0; border: 0; border-bottom: 1px solid #ddd; border-radius: 0; break-inside: avoid; }
+  .service-heading { gap: 8pt; margin-bottom: 5pt; }
+  .service-heading h3 { font-size: 12pt; }
+  .service-icon { width: 28pt; height: 28pt; flex-basis: 28pt; border: 0; }
+  .service-icon img, .service-icon svg { width: 22pt; height: 22pt; }
+  .service-card p { font-size: 10pt; margin-bottom: 5pt; }
+  .service-actions { display: block; }
+  .service-open { display: none; }
+  .service-url { font-size: 8pt; }
+  .service-social-links { padding: 0; margin-top: 5pt; border: 0; }
+  .service-social-links p { font-size: 8pt; }
   .reference-links { font-size: 9pt; }
   .desk-guide h1 { font-size: 28pt; margin-bottom: 8pt; }
   .desk-guide dl { margin-block: 12pt; }
