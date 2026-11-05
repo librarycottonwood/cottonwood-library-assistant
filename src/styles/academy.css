@@ -161,6 +161,7 @@ summary { cursor: pointer; min-height: 44px; }
   .handbook-cover + .print-lesson { margin: 0; padding: 0; border: 0; }
   .print-title { font-size: 30pt; margin-bottom: 14pt; }
   .lesson-part { margin-block: 12pt; break-inside: avoid; }
+  .print-lesson > .lesson-part:last-of-type { break-after: avoid; }
   .steps li { margin-block: 7pt; }
   .prompt { padding: 10pt; border-radius: 10pt; margin-block: 12pt; break-inside: avoid; }
   .prompt-heading { margin-bottom: 6pt; }
