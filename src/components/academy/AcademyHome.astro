@@ -1,0 +1,28 @@
+---
+import Button from '../site/Button.astro';
+import Image from '../OptimizedImage.astro';
+import { refreshPhoto } from '../../content/photography';
+import { lessons } from '../../pages/academy/_guide';
+const photo = refreshPhoto({ key: 'computerRoom', alt: 'Computers at the library.' });
+---
+  <header class="academy-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">For Cottonwood volunteers</p>
+      <h1>Volunteer<br />academy</h1>
+      <p class="lead">Get to know the library’s tools, practice with ChatGPT, and find help during a shift.</p>
+      <Button href="/academy/start-here/" variant="accent" iconEnd="arrow">Start with ChatGPT</Button>
+    </div>
+    <Image image={photo} alt={photo.alt} width={900} height={680} loading="eager" class="academy-photo" />
+  </header>
+  <section class="course-section" aria-labelledby="lessons-heading">
+    <div class="course-intro"><h2 id="lessons-heading">Choose a lesson.</h2><p>Start at the beginning, or open the lesson you need. Keep ChatGPT beside you and try the examples as you go.</p></div>
+    <ol class="lesson-list">{lessons.map((lesson, index) => <li><a href={`/academy/${lesson.slug}/`}>
+      <span class="lesson-number" aria-hidden="true">{index + 1}</span>
+      <span><h3>{lesson.title}</h3><p>{lesson.summary}</p></span>
+      <span class="lesson-arrow" aria-hidden="true">↗</span>
+    </a></li>)}</ol>
+  </section>
+  <section class="print-panel" aria-labelledby="paper-heading">
+    <div><h2 id="paper-heading">Keep a copy nearby.</h2><p>A quick reminder for the desk, or the lessons to read on paper.</p></div>
+    <div class="actions"><Button href="/academy/quick-reference/" variant="accent">Desk guide</Button><a href="/academy/print/">Print all lessons →</a></div>
+  </section>

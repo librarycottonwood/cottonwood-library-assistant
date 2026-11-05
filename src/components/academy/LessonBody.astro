@@ -6,7 +6,7 @@ interface Props { lesson: Lesson; print?: boolean; }
 const { lesson, print = false } = Astro.props;
 const PartHeading = print ? 'h3' : 'h2';
 ---
-<p class="lesson-goal"><strong>By the end:</strong> {lesson.goal}</p>
+
 {lesson.parts.map(part => <section class="lesson-part">
   <PartHeading class="part-heading">{part.title}</PartHeading>
   {part.text.map(text => <p>{text}</p>)}
@@ -14,9 +14,9 @@ const PartHeading = print ? 'h3' : 'h2';
   {part.prompt && <Prompt text={part.prompt} />}
   {part.links && <ul class="reference-links">{part.links.map(link => <li><a href={link.href}>{link.label} ↗</a></li>)}</ul>}
 </section>)}
-{lesson.slug === 'accounts-and-tools' && <ServiceMap />}
+{lesson.slug === 'accounts-and-tools' && !print && <ServiceMap print={print} />}
 <aside class="knowledge-check">
-  <p class="eyebrow">Check your understanding</p>
+  <p class="eyebrow">Before you move on</p>
   <PartHeading>{lesson.check}</PartHeading>
-  {print ? <p>{lesson.answer}</p> : <details><summary>Show the answer</summary><p>{lesson.answer}</p></details>}
+  {print ? <p>{lesson.answer}</p> : <details><summary>See the answer</summary><p>{lesson.answer}</p></details>}
 </aside>

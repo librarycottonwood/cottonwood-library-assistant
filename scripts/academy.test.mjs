@@ -7,7 +7,7 @@ import path from 'node:path';
 import { launchBrowser } from './browser.mjs';
 
 const root = path.resolve('dist');
-const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
+const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg' };
 
 test('academy navigation, copy/fallback, knowledge checks, privacy and print views', async () => {
   const server = createServer(async (req, res) => {
@@ -52,17 +52,34 @@ test('academy navigation, copy/fallback, knowledge checks, privacy and print vie
         }
       }
     }
+    for (const width of [375, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      for (const route of ['/components/', '/components/ui/', '/components/type-sizes/']) {
+        assert.ok((await page.goto(origin + route)).ok());
+        await page.evaluate(() => document.fonts.ready);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: ${route}`);
+        const name = route.split('/').filter(Boolean).join('-');
+        await page.screenshot({ path: `output/academy/${width}-${name}.png`, fullPage: true });
+        await page.locator('.catalog-index summary').click();
+        assert.equal(await page.locator('.catalog-nav a').last().isVisible(), true);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: expanded catalog`);
+      }
+    }
+    await page.goto(origin + '/academy/accounts-and-tools/');
+    assert.equal(await page.locator('details.service-card').count(), 16);
+    await page.locator('details.service-card summary').first().click();
+    assert.equal(await page.locator('.service-detail a').first().isVisible(), true);
     await page.setViewportSize({ width: 375, height: 844 });
     await page.goto(origin + '/academy/practice-with-a-buddy/');
-    await page.getByText('Browse all six lessons', { exact: true }).click();
-    assert.equal(await page.locator('.mobile-lessons a').last().isVisible(), true);
-    await page.getByText('Browse all six lessons', { exact: true }).click();
+    await page.getByText('Browse lessons', { exact: true }).click();
+    assert.equal(await page.locator('.lesson-menu a').last().isVisible(), true);
+    await page.getByText('Browse lessons', { exact: true }).click();
     await page.getByRole('button', { name: 'Copy prompt' }).first().click();
     const copied = await page.evaluate(() => navigator.clipboard.readText());
     assert.ok(copied.startsWith('PRACTICE ONLY.'));
-    assert.match(copied, /Do not create, change, publish, send, schedule, or delete/);
+    assert.match(copied, /Do not use connected services or create, change, publish, send, schedule or delete/);
     assert.match(await page.getByRole('status').first().innerText(), /Copied/);
-    await page.getByText('Show the answer', { exact: true }).click();
+    await page.getByText('See the answer', { exact: true }).click();
     assert.equal(await page.locator('.knowledge-check details').getAttribute('open'), '');
     await page.evaluate(() => { Object.defineProperty(navigator.clipboard, 'writeText', { value: async () => { throw new Error('Denied'); } }); });
     await page.getByRole('button', { name: 'Copy prompt' }).first().click();
@@ -83,7 +100,7 @@ test('academy navigation, copy/fallback, knowledge checks, privacy and print vie
     await plain.goto(origin + '/academy/practice-with-a-buddy/');
     assert.ok(await plain.locator('[data-prompt-text]').first().isVisible());
     assert.equal(await plain.locator('[data-copy-prompt]').first().isVisible(), false);
-    await plain.getByText('Show the answer', { exact: true }).click();
+    await plain.getByText('See the answer', { exact: true }).click();
     assert.equal(await plain.locator('.knowledge-check details').getAttribute('open'), '');
     assert.deepEqual(errors, []);
   } finally { await browser?.close(); await new Promise(resolve => server.close(resolve)); }

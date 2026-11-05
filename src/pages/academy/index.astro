@@ -1,25 +1,5 @@
 ---
 import AcademyLayout from '../../layouts/AcademyLayout.astro';
-import Prompt from '../../components/academy/Prompt.astro';
-import { lessons, practicePrefix } from './_guide';
+import AcademyHome from '../../components/academy/AcademyHome.astro';
 ---
-<AcademyLayout title="Welcome" active="home">
-  <div class="academy-hero">
-    <p class="eyebrow">A little practice. A lot more confidence.</p>
-    <h1>Your library.<br />Your tools.<br /><em>You’ve got this.</em></h1>
-    <p class="lead">Learn to work with the library assistant, find the right tools, and know what to do when something goes wrong.</p>
-    <div class="actions"><a class="button primary" href="/academy/start-here/">Start with ChatGPT <span aria-hidden="true">→</span></a><a class="button" href="/academy/quick-reference/">I need the desk guide</a></div>
-  </div>
-  <section class="intro-panel" aria-labelledby="learn-heading">
-    <h2 id="learn-heading">Learn with ChatGPT beside you</h2>
-    <p>Read a short lesson, try its prompt, then check your understanding. You can learn on a phone, at a computer, or with a printed copy and a buddy.</p>
-    <Prompt text={practicePrefix + 'Help me work through the Cottonwood Volunteer Academy. Start with the basics, ask one question at a time, and let me set the pace.'} />
-  </section>
-  <section aria-labelledby="lessons-heading">
-    <div class="section-heading"><h2 id="lessons-heading">Six small steps</h2><span class="small">Start at 1, or jump to what you need.</span></div>
-    <div class="lesson-grid">{lessons.map((lesson, index) => <a class="lesson-card" href={`/academy/${lesson.slug}/`}>
-      <span class="lesson-number">{String(index + 1).padStart(2, '0')}</span><h3>{lesson.title}</h3><p>{lesson.summary}</p><span class="card-link">Open lesson <span aria-hidden="true">↗</span></span>
-    </a>)}</div>
-  </section>
-  <section class="print-panel" aria-labelledby="paper-heading"><h2 id="paper-heading">A copy for the desk, too.</h2><p>Print the one-page desk guide for the moments when you need a quick reminder. The full handbook uses the same lessons you see here, with a layout made for paper.</p><div class="actions"><a class="button" href="/academy/print/">Full handbook</a><a class="button" href="/academy/quick-reference/">One-page desk guide</a></div><p class="small">Use your browser’s Print command to print or save a PDF. Check the review date on older copies.</p></section>
-</AcademyLayout>
+<AcademyLayout title="Volunteer academy" active="home"><AcademyHome /></AcademyLayout>

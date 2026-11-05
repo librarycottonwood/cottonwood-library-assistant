@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/logos/library-tree.png';
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
 import { lessons, reviewed } from '../pages/academy/_guide';
 import '../styles/academy.css';
@@ -19,21 +21,27 @@ const { title, active, print = false } = Astro.props;
   <body class:list={[{ 'print-edition': print }]}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="academy-header">
-      <a class="academy-brand" href="/academy/">Cottonwood <span>Volunteer Academy</span></a>
-      <nav aria-label="Quick links"><a href="/academy/when-something-goes-wrong/">Need help?</a><a href="/academy/quick-reference/">Desk guide</a><a href="/">Library website ↗</a></nav>
-    </header>
-    <div class="academy-shell">
-      <nav class="academy-nav" aria-label="Academy lessons">
-        <p class="eyebrow">Your field guide</p>
-        <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}>Welcome</a>
-        <ol class="desktop-lessons">{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{lesson.title}</a></li>)}</ol>
-        <details class="mobile-lessons"><summary>Browse all six lessons</summary><ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{lesson.title}</a></li>)}</ol></details>
-        <a href="/academy/print/">Print the handbook</a>
-        <p class="small">Work at your own pace.<br />Keep ChatGPT open beside this guide.</p>
+      <a class="academy-brand" href="/" aria-label="Cottonwood Community Library home">
+        <Image src={logo} alt="" width={64} densities={[1, 2]} loading="eager" />
+        <span>Cottonwood<br />Community Library</span>
+      </a>
+      <nav aria-label="Quick links">
+        <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}>Academy</a>
+        <a href="/academy/when-something-goes-wrong/">Need help?</a>
+        <a href="/">Library website <span aria-hidden="true">↗</span></a>
       </nav>
+    </header>
+    <div class:list={['academy-shell', { 'academy-home': active === 'home' }]}>
+      {active && active !== 'home' && <nav class="academy-nav" aria-label="Academy lessons">
+        <a href="/academy/">← All lessons</a>
+        <details class="lesson-menu"><summary>Browse lessons</summary><ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{lesson.title}</a></li>)}</ol></details>
+      </nav>}
       <main id="main" tabindex="-1"><slot /></main>
     </div>
-    <footer class="academy-footer">Cottonwood Community Library · Guidance reviewed {reviewed}.<br />This guide is public. Account access details stay with the board.</footer>
+    <footer class="academy-footer">
+      <p>Cottonwood Community Library<br /><span>Volunteer academy · Updated {reviewed}</span></p>
+      <nav aria-label="Guide formats"><a href="/academy/quick-reference/">Desk guide</a><a href="/academy/print/">Printable handbook</a></nav>
+    </footer>
     <script>
       for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-prompt]')) {
         button.hidden = false;

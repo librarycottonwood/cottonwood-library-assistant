@@ -1,74 +1,104 @@
-/* A quiet reference shell, like /components, using the library's shared foundations. */
+/* The academy shares the library's type, colour and spacing foundations. */
 * { box-sizing: border-box; }
-html { color: var(--color-text); background: var(--color-background); font-family: var(--font-body); font-size: 16px; line-height: 1.65; }
+html { color: var(--color-text); background: var(--color-background); font: 17px/1.65 var(--font-body); }
 body { margin: 0; }
-a { color: var(--color-primary-ink); text-underline-offset: .2em; }
+a { color: inherit; text-underline-offset: .22em; }
 a:hover { text-decoration-thickness: 2px; }
 button { font: inherit; cursor: pointer; }
 button[hidden] { display: none; }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 4px; }
-h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); line-height: 1.15; }
-h1 { font-size: clamp(2.4rem, 5vw, 4.25rem); margin: 0 0 var(--space-md); letter-spacing: -.025em; }
-h2 { font-size: 2rem; margin: 0 0 var(--space-sm); }
-h3 { font-size: 1.25rem; line-height: 1.35; margin: 0 0 var(--space-xs); }
-p { margin: 0 0 var(--space-sm); }
+h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); line-height: 1.12; }
+h1 { font-size: clamp(2.7rem, 5vw, 4.5rem); margin: 0 0 var(--space-sm); }
+h2 { font-size: clamp(1.85rem, 3vw, 2.7rem); margin: 0 0 var(--space-sm); }
+h3 { font-size: 1.12rem; line-height: 1.4; margin: 0 0 .35em; }
+p { margin: 0 0 1em; }
 li { margin-block: .4em; }
 .skip-link { position: absolute; left: -10000px; }
 .skip-link:focus { left: var(--space-sm); top: var(--space-sm); z-index: 2; background: white; padding: var(--space-xs); }
-.academy-header { display: flex; justify-content: space-between; align-items: center; gap: var(--space-md); padding: var(--space-sm) var(--space-lg); border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
-.academy-brand { font-family: var(--font-display); font-size: 1.5rem; text-decoration: none; line-height: 1.25; }
-.academy-brand span { display: block; font: 500 .85rem var(--font-body); color: var(--color-text-muted); margin-top: .3em; }
-.academy-header nav { display: flex; gap: var(--space-md); flex-wrap: wrap; font-size: .9rem; }
-.academy-shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); max-width: 1440px; margin: auto; }
-.academy-nav { padding: var(--space-lg) var(--space-md); font-size: .95rem; border-right: 1px solid var(--color-border); }
-.mobile-lessons { display: none; }
-.academy-nav ol { padding-left: var(--space-sm); margin-block: var(--space-md); }
-.academy-nav li { padding-left: .3rem; margin-bottom: var(--space-sm); }
-.academy-nav a { text-decoration: none; }
-.academy-nav a[aria-current] { color: var(--color-primary); font-weight: 700; text-decoration: underline; }
-.academy-nav .small { margin-top: var(--space-lg); }
-main { min-width: 0; padding: var(--space-lg); max-width: 1050px; }
-.eyebrow { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--color-primary-ink); }
-.lead { font-size: 1.2rem; max-width: 42rem; }
-.small { color: var(--color-text-muted); font-size: .9rem; }
-.academy-hero { margin-bottom: var(--space-lg); }
-.academy-hero h1 em { font-style: normal; color: var(--color-primary); }
-.actions { display: flex; gap: var(--space-xs); flex-wrap: wrap; margin-top: var(--space-md); }
-.button { display: inline-flex; justify-content: center; align-items: center; gap: var(--space-sm); min-height: 48px; border: 1px solid var(--color-primary-ink); border-radius: .6rem; padding: var(--space-xs) var(--space-sm); background: transparent; text-decoration: none; font-weight: 600; color: var(--color-primary-ink); }
-.button.primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-surface); }
-.intro-panel, .print-panel { background: var(--color-primary-soft); padding: var(--space-md); border-radius: 1rem; margin-block: var(--space-lg); }
-.print-panel { background: var(--color-accent); }
-.section-heading { margin-block: var(--space-lg) var(--space-md); }
-.lesson-grid, .service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); }
-.lesson-card { display: flex; flex-direction: column; padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; text-decoration: none; }
-.lesson-card:hover { border-color: var(--color-primary); }
-.lesson-card p { color: var(--color-text-muted); font-size: .95rem; }
-.lesson-number { color: var(--color-primary); font-family: var(--font-display); font-size: 2rem; margin-bottom: var(--space-sm); }
-.card-link { margin-top: auto; font-weight: 600; font-size: .9rem; }
-.lesson-header { border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-md); padding-bottom: var(--space-sm); }
-.lesson-goal { padding: var(--space-sm); background: var(--color-primary-soft); border-radius: .6rem; }
+.academy-header, .academy-footer { max-width: 1440px; margin-inline: auto; padding: var(--space-md) var(--page-inset); display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
+.academy-brand { display: flex; align-items: center; gap: var(--space-xs); text-decoration: none; font-size: .9rem; font-weight: 700; line-height: 1.25; }
+.academy-brand img { width: 60px; height: auto; }
+.academy-header nav { display: flex; gap: var(--space-md); font-size: .9rem; font-weight: 600; }
+.academy-header nav a { text-decoration: none; padding-block: var(--space-xs); }
+.academy-header nav a:hover, .academy-header nav a[aria-current] { text-decoration: underline; }
+.academy-shell { max-width: 880px; margin-inline: auto; padding: 0 var(--space-md); }
+.academy-shell.academy-home { max-width: 1440px; padding-inline: var(--page-inset); }
+main { min-width: 0; padding-block: var(--space-lg); }
+.academy-home main { padding-top: var(--space-md); }
+.academy-nav { display: flex; align-items: start; justify-content: space-between; gap: var(--space-sm); margin-top: var(--space-md); font-size: .9rem; }
+.academy-nav > a { padding-block: .5rem; }
+.lesson-menu { max-width: 24rem; text-align: right; }
+.lesson-menu summary { padding-block: .5rem; }
+.lesson-menu ol { text-align: left; padding: var(--space-sm) var(--space-md); background: var(--color-primary-soft); border-radius: var(--radius-image); margin: var(--space-xs) 0 0; }
+.lesson-menu li { padding-block: .2rem; }
+.lesson-menu a[aria-current] { font-weight: 700; }
+.eyebrow { font-size: .9rem; font-weight: 600; color: var(--color-primary); margin-bottom: var(--space-sm); }
+.lead { font-size: 1.15rem; line-height: 1.65; color: var(--color-text-muted); max-width: 42rem; }
+.small { color: var(--color-text-muted); font-size: .85rem; }
+.academy-hero { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--space-lg); align-items: center; margin-bottom: var(--space-xl); }
+.hero-copy { padding-block: var(--space-md); }
+.hero-copy .lead { margin-block: var(--space-md); max-width: 30rem; }
+.academy-photo { display: block; width: 100%; height: auto; aspect-ratio: 1.25; object-fit: cover; border-radius: var(--radius-image); }
+.course-section { display: grid; grid-template-columns: 1fr 1.7fr; gap: var(--space-lg); margin-bottom: var(--space-xl); }
+.course-intro p { max-width: 28ch; color: var(--color-text-muted); }
+.lesson-list { list-style: none; margin: 0; padding: 0; }
+.lesson-list li { margin: 0; border-top: 1px solid var(--color-border); }
+.lesson-list li:last-child { border-bottom: 1px solid var(--color-border); }
+.lesson-list a { display: grid; grid-template-columns: 2rem 1fr auto; align-items: baseline; gap: var(--space-sm); padding-block: var(--space-md); text-decoration: none; }
+.lesson-list a:hover h3 { text-decoration: underline; text-underline-offset: .2em; }
+.lesson-number { font: 1.6rem/1 var(--font-display); color: var(--color-primary); }
+.lesson-list p { color: var(--color-text-muted); font-size: .95rem; margin: .3em 0 0; }
+.lesson-arrow { color: var(--color-primary); font-size: 1.4rem; }
+.print-panel { display: flex; justify-content: space-between; gap: var(--space-md); align-items: center; background: var(--color-primary-soft); border-radius: var(--radius-image); padding: var(--space-lg); }
+.print-panel h2 { font-size: 2rem; }
+.print-panel p { margin: 0; max-width: 35ch; }
+.actions { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+.print-panel .actions { flex-direction: column; flex-shrink: 0; }
+.lesson-header { margin-bottom: var(--space-lg); }
+.lesson-header .eyebrow { margin-bottom: var(--space-xs); }
+.lesson-header h1 { max-width: 17ch; }
 .lesson-part { margin-block: var(--space-lg); }
-.lesson-part p, .lesson-part li { max-width: 70ch; }
-.steps { padding-left: var(--space-md); }
-.steps li { padding-left: .5em; margin-block: var(--space-sm); }
-.prompt { border-left: 3px solid var(--color-primary); background: var(--color-surface); padding: var(--space-sm); margin-block: var(--space-sm); border-radius: 0 .6rem .6rem 0; }
-.prompt-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: var(--space-xs); color: var(--color-primary-ink); }
-.prompt button { background: var(--color-primary-soft); border: 0; border-radius: .4rem; padding: .5rem .75rem; min-height: 44px; color: var(--color-primary-ink); font-size: .85rem; }
-.prompt p { font-size: .95rem; margin-bottom: 0; }
-.prompt .copy-status { font-size: .8rem; color: var(--color-text-muted); }
+.lesson-part h2 { font-size: 1.9rem; }
+.lesson-part p, .lesson-part li { max-width: 68ch; }
+.steps { padding-left: 1.4rem; }
+.steps li { padding-left: .4em; margin-block: .8em; }
+.steps li::marker { color: var(--color-primary); font-weight: 700; }
+.prompt { background: var(--color-primary-soft); padding: var(--space-md); margin-block: var(--space-md); border-radius: var(--radius-image); }
+.prompt-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-sm); }
+.prompt-heading strong { font-size: .9rem; color: var(--color-primary-ink); }
+.prompt button { background: transparent; border: 1px solid var(--color-primary-ink); border-radius: var(--radius-pill); padding: .4rem .9rem; min-height: 44px; color: var(--color-primary-ink); font-size: .8rem; white-space: nowrap; }
+.prompt p { margin-bottom: 0; }
+.prompt .copy-status { font-size: .8rem; color: var(--color-text-muted); margin-top: var(--space-xs); }
 .copy-status:empty { display: none; }
-.reference-links { padding-left: var(--space-sm); font-size: .9rem; }
-.knowledge-check { background: var(--color-accent); padding: var(--space-md); border-radius: 1rem; margin-top: var(--space-lg); }
-.knowledge-check h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: 600; line-height: 1.5; }
-summary { cursor: pointer; min-height: 44px; font-weight: 600; }
-.service-card { background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-sm); border-radius: .6rem; }
-.service-card p { font-size: .9rem; }
+.reference-links { list-style: none; padding: 0; font-size: .9rem; }
+.knowledge-check { margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--color-border); }
+.knowledge-check .eyebrow { margin-bottom: var(--space-xs); }
+.knowledge-check h2, .knowledge-check h3 { font-family: var(--font-body); font-size: 1.1rem; font-weight: 600; line-height: 1.55; }
+.knowledge-check details { margin-top: var(--space-sm); }
+.knowledge-check details p { margin-top: var(--space-sm); }
+summary { cursor: pointer; min-height: 44px; }
+.service-map { margin-top: var(--space-lg); }
+.service-group { margin-top: var(--space-md); }
+.service-group > h3 { font-size: 1rem; color: var(--color-primary); margin-block: var(--space-md) var(--space-sm); }
+.service-card { border-top: 1px solid var(--color-border); padding-block: var(--space-sm); }
+.service-card:last-child { border-bottom: 1px solid var(--color-border); }
+.service-card summary { display: grid; grid-template-columns: 1fr auto; gap: var(--space-xs); list-style: none; align-items: center; }
+.service-card summary::-webkit-details-marker { display: none; }
+.service-card summary::after { content: '+'; font-size: 1.5rem; color: var(--color-primary); }
+.service-card[open] summary::after { content: '−'; }
+.service-card summary strong { display: block; font-size: 1.1rem; }
+.service-card summary span span { display: block; color: var(--color-text-muted); margin-top: .2rem; font-size: .9rem; }
+.service-url { overflow-wrap: anywhere; }
+.service-card h4 { margin: 0 0 .3em; }
+.service-detail { padding-top: var(--space-sm); font-size: .95rem; }
+.service-detail p:last-child { margin: 0; }
 .lesson-pagination { display: flex; justify-content: space-between; gap: var(--space-md); margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--color-border); font-size: .9rem; }
 .lesson-pagination a { max-width: 45%; }
-.academy-footer { max-width: 1440px; margin: auto; padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--color-border); font-size: .8rem; color: var(--color-text-muted); }
-.print-edition .academy-nav { display: none; }
-.print-edition .academy-shell { display: block; }
-.print-edition main { margin: auto; }
+.academy-footer { border-top: 1px solid var(--color-border); font-size: .85rem; margin-top: var(--space-md); }
+.academy-footer p { margin: 0; }
+.academy-footer span { color: var(--color-text-muted); font-size: .75rem; }
+.academy-footer nav { display: flex; gap: var(--space-md); }
+.handbook-mark { display: block; width: 72px; height: auto; margin-bottom: var(--space-md); }
 .print-lesson { border-top: 1px solid var(--color-border); padding-top: var(--space-lg); margin-top: var(--space-lg); }
 .print-title { font-size: 2.8rem; }
 .desk-guide dl { margin-block: var(--space-md); }
@@ -77,66 +107,77 @@ summary { cursor: pointer; min-height: 44px; font-weight: 600; }
 .desk-guide dd { margin: 0; }
 .contact-lines { margin-block: var(--space-md); }
 @media (max-width: 63.99rem) {
-  .academy-header { padding: var(--space-sm); }
-  .academy-shell { grid-template-columns: 210px minmax(0, 1fr); }
-  main { padding: var(--space-md); }
-  .academy-nav { padding: var(--space-md) var(--space-sm); }
-  .lesson-grid, .service-grid { grid-template-columns: 1fr; }
+  .academy-hero { gap: var(--space-md); }
+  .course-section { grid-template-columns: 1fr 1.5fr; gap: var(--space-md); }
+  .print-panel { padding: var(--space-md); }
 }
 @media (max-width: 47.99rem) {
-  .academy-header { align-items: start; flex-direction: column; gap: var(--space-sm); }
-  .academy-header nav { gap: var(--space-sm); }
-  .academy-shell { display: block; }
-  .academy-nav { padding-block: var(--space-sm); border-right: 0; border-bottom: 1px solid var(--color-border); }
-  .academy-nav .desktop-lessons { display: none; }
-  .mobile-lessons { display: block; margin-block: var(--space-xs); }
-  .mobile-lessons summary { padding-block: var(--space-xs); }
-  .academy-nav li { margin-block: var(--space-sm); }
-  .academy-nav .eyebrow, .academy-nav .small { display: none; }
-  main { padding: var(--space-md) var(--space-sm); }
+  html { font-size: 16px; }
+  .academy-header { padding: var(--space-sm); flex-wrap: wrap; gap: var(--space-sm); }
+  .academy-brand img { width: 44px; }
+  .academy-header nav { width: 100%; justify-content: space-between; gap: var(--space-xs); font-size: .85rem; }
+  .academy-shell, .academy-shell.academy-home { padding-inline: var(--space-sm); }
+  main { padding-block: var(--space-md); }
+  .academy-nav { margin-top: var(--space-xs); }
+  .lesson-menu { max-width: 65%; }
+  .academy-hero, .course-section { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg); }
+  .hero-copy { padding: 0; }
+  .academy-photo { aspect-ratio: 1.65; }
+  .course-intro p { max-width: 40ch; }
+  .course-intro h2 br { display: none; }
+  .lesson-list a { grid-template-columns: 1.5rem 1fr auto; gap: var(--space-xs); padding-block: var(--space-sm); }
+  .print-panel { align-items: start; flex-direction: column; padding: var(--space-md); }
+  .print-panel .actions { align-items: start; }
+  .lesson-header { margin-bottom: var(--space-md); }
   .lesson-part { margin-block: var(--space-md); }
-  .intro-panel, .print-panel, .lesson-card, .knowledge-check { padding: var(--space-sm); }
-  h2 { font-size: 1.7rem; }
-  .academy-footer { padding: var(--space-sm); }
+  .prompt { padding: var(--space-sm); }
+  .prompt-heading { gap: var(--space-xs); }
+  .academy-footer { padding: var(--space-md) var(--space-sm); align-items: start; flex-direction: column; }
+  .academy-footer nav { flex-wrap: wrap; gap: var(--space-sm); }
   .desk-guide dl div { display: block; }
   .desk-guide dt { margin-bottom: .3rem; }
   .contact-lines { overflow-wrap: anywhere; }
 }
-@page { size: auto; margin: 13mm; }
+@page { size: auto; margin: 15mm; }
 @media print {
-  html { background: white; color: black; font-size: 10.5pt; line-height: 1.35; }
+  html { background: white; color: #1b2040; font-size: 11pt; line-height: 1.42; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .academy-header, .academy-nav, .academy-footer, .screen-only, .skip-link, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
-  .academy-shell { display: block; }
+  .academy-shell { display: block; padding: 0; max-width: none; }
   main { padding: 0; margin: 0; max-width: none; }
-  h1 { font-size: 30pt; }
-  h2 { font-size: 18pt; }
-  h3 { font-size: 12pt; }
-  .part-heading { font-family: var(--font-display); font-weight: 400; font-size: 18pt; }
+  h1 { font-size: 36pt; }
+  h2 { font-size: 24pt; }
+  h3, .part-heading { font: 16pt/1.2 var(--font-display); }
   h1, h2, h3, .eyebrow, dt { break-after: avoid; break-inside: avoid; }
   p, li { orphans: 3; widows: 3; }
   p { margin-bottom: 8pt; }
-  a { color: black; text-decoration: underline; overflow-wrap: anywhere; }
+  a { color: inherit; text-decoration: underline; overflow-wrap: anywhere; }
   .lead { font-size: 12pt; }
-  .eyebrow, .small { color: black; font-size: 9pt; }
-  .handbook-cover { padding-top: 20mm; break-after: page; }
-  .print-lesson { padding: 18pt 0 0; margin-top: 18pt; border-top: 1px solid #777; }
-  .handbook-cover + .print-lesson { padding: 0; margin: 0; border: 0; }
-  .print-title { font-size: 26pt; }
-  .lesson-part { margin-block: 12pt; }
+  .eyebrow, .small { font-size: 9pt; }
+  .handbook-cover { padding-top: 25mm; break-after: page; }
+  .handbook-cover h1 { max-width: 10ch; margin-block: 16pt; }
+  .handbook-cover ol { padding-left: 15pt; margin-top: 25pt; }
+  .handbook-cover li { padding-block: 5pt; }
+  .print-lesson { padding: 22pt 0 0; margin: 22pt 0 0; border-top: 1px solid var(--color-border); }
+  .handbook-cover + .print-lesson { margin: 0; padding: 0; border: 0; }
+  .print-title { font-size: 30pt; margin-bottom: 14pt; }
+  .lesson-part { margin-block: 12pt; break-inside: avoid; }
   .steps li { margin-block: 7pt; }
-  .lesson-goal, .prompt, .knowledge-check, .service-card { background: white; border: 1px solid #777; border-radius: 0; padding: 8pt; }
-  .prompt { break-inside: avoid; }
-  .prompt p { font-size: 10pt; }
-  .knowledge-check { margin-top: 10pt; break-inside: avoid; }
-  .service-grid { display: block; }
-  .service-card { margin-block: 10pt; break-inside: avoid; }
-  .service-card p { font-size: 10pt; margin-bottom: 5pt; }
+  .prompt { padding: 10pt; border-radius: 10pt; margin-block: 12pt; break-inside: avoid; }
+  .prompt-heading { margin-bottom: 6pt; }
+  .prompt p { font-size: 10.5pt; }
+  .knowledge-check { margin-top: 12pt; padding-top: 8pt; break-inside: avoid; }
+  .knowledge-check h3 { font: 600 11pt/1.5 var(--font-body); }
+  .service-map { break-before: page; margin: 0; }
+  .service-group > h3 { font: 600 11pt/1.5 var(--font-body); margin-block: 14pt 8pt; }
+  .service-card { padding-block: 9pt; break-inside: avoid; }
+  .service-card h4 { font-size: 11pt; margin: 0 0 3pt; }
+  .service-card p { font-size: 10pt; margin-bottom: 4pt; }
+  .service-card .service-url { font-size: 8pt; }
   .reference-links { font-size: 9pt; }
-  .service-card h3 a::after { content: " (" attr(href) ")"; display: block; font: 8pt var(--font-body); margin-top: 3pt; }
   .reference-links a::after { content: ' (' attr(href) ')'; }
-  .desk-guide h1 { font-size: 26pt; margin-bottom: 8pt; }
+  .desk-guide h1 { font-size: 28pt; margin-bottom: 8pt; }
   .desk-guide dl { margin-block: 12pt; }
-  .desk-guide dl div { display: grid; grid-template-columns: 110pt 1fr; gap: 10pt; padding-block: 7pt; break-inside: avoid; }
-  .desk-guide p { font-size: 10pt; }
+  .desk-guide dl div { display: grid; grid-template-columns: 100pt 1fr; gap: 10pt; padding-block: 7pt; break-inside: avoid; }
+  .desk-guide p, .desk-guide dl { font-size: 10pt; }
   .contact-lines { margin-block: 12pt; }
 }
