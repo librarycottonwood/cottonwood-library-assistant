@@ -1,28 +1,18 @@
 ---
-import Button from '../site/Button.astro';
-import Image from '../OptimizedImage.astro';
-import { refreshPhoto } from '../../content/photography';
 import { lessons } from '../../pages/academy/_guide';
-const photo = refreshPhoto({ key: 'computerRoom', alt: 'Computers at the library.' });
 ---
-  <header class="academy-hero">
-    <div class="hero-copy">
-      <p class="eyebrow">For Cottonwood volunteers</p>
-      <h1>Volunteer<br />academy</h1>
-      <p class="lead">How to use ChatGPT, update the website, send newsletters and record donations.</p>
-      <Button href="/academy/start-here/" variant="accent" iconEnd="arrow">Start with ChatGPT</Button>
-    </div>
-    <Image image={photo} alt={photo.alt} width={900} height={680} loading="eager" class="academy-photo" />
-  </header>
-  <section class="course-section" aria-labelledby="lessons-heading">
-    <div class="course-intro"><h2 id="lessons-heading">Choose a lesson.</h2><p>New to ChatGPT? Start with the first lesson. For a specific task, choose from the list.</p></div>
-    <ol class="lesson-list">{lessons.map((lesson, index) => <li><a href={`/academy/${lesson.slug}/`}>
-      <span class="lesson-number" aria-hidden="true">{index + 1}</span>
-      <span><h3>{lesson.title}</h3><p>{lesson.summary}</p></span>
-      <span class="lesson-arrow" aria-hidden="true">↗</span>
-    </a></li>)}</ol>
-  </section>
-  <section class="print-panel" aria-labelledby="paper-heading">
-    <div><h2 id="paper-heading">Print the guide.</h2><p>Print a one-page list of common tasks or the complete instructions.</p></div>
-    <div class="actions"><Button href="/academy/quick-reference/" variant="accent">Quick guide</Button><a href="/academy/print/">Print all lessons →</a></div>
-  </section>
+<header class="lesson-header">
+  <h1>Volunteer academy</h1>
+  <p class="lead">How to use ChatGPT and the library’s websites.</p>
+</header>
+<section aria-labelledby="lessons-heading">
+  <h2 id="lessons-heading">Guides</h2>
+  <ol class="lesson-list">{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`}>
+    <h3>{lesson.title}<span aria-hidden="true"> →</span></h3>
+    <p>{lesson.summary}</p>
+  </a></li>)}</ol>
+</section>
+<section class="print-panel" aria-labelledby="paper-heading">
+  <h2 id="paper-heading">Print a copy</h2>
+  <p><a href="/academy/quick-reference/">One-page quick guide</a> · <a href="/academy/print/">Complete handbook</a></p>
+</section>

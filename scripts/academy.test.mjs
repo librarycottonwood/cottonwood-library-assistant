@@ -32,6 +32,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.goto(origin + '/academy/');
     const routes = await page.locator('a[href^="/academy/"]').evaluateAll(links => [...new Set(links.map(a => a.getAttribute('href')))]);
     assert.equal(routes.length, 9, 'home, six lessons, handbook and desk guide');
+    assert.equal(await page.locator('main img').count(), 0, 'the guide index has no decorative imagery');
     for (const width of [375, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
       for (const route of routes) {
@@ -39,6 +40,13 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.ok(response.ok(), route);
         await page.evaluate(() => document.fonts.ready);
         assert.equal(await page.locator('h1').count(), 1, route);
+        assert.equal(await page.locator('.lesson-menu').getAttribute('open') !== null, width >= 768, 'sidebar is open on desktop and collapsed on phone');
+        if (route !== '/academy/print/' && route !== '/academy/quick-reference/') {
+          const title = await page.locator('h1').boundingBox();
+          assert.ok(title.y < 180, 'content starts near the top, without a hero');
+          assert.equal(await page.locator('.academy-sidebar a[aria-current="page"]').count(), 1, 'current guide is identified in navigation');
+        }
+
         assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, nofollow');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: ${route}`);
         const text = await page.locator('body').innerText();
@@ -95,6 +103,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 844 } });
     const plain = await noJS.newPage();
     await plain.goto(origin + '/academy/practice-with-a-buddy/');
+    assert.equal(await plain.locator('.lesson-menu a').last().isVisible(), true, 'navigation works without JavaScript');
     assert.ok(await plain.locator('[data-prompt-text]').first().isVisible());
     assert.equal(await plain.locator('[data-copy-prompt]').first().isVisible(), false);
     await plain.goto(origin + '/academy/accounts-and-tools/');
