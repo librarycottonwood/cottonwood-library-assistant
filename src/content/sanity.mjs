@@ -283,7 +283,8 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
     const eventImage = doc.image ? image(doc.image, field('Event picture', 'image')) : undefined;
     const location = doc.location && String(doc.location).trim() ? text(doc.location, field('Location', 'location')) : undefined;
     const programId = program ? within(program, () => slug(program.slug?.current, field('Page address', 'slug'))) : undefined;
-    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title, summary, href: `/events/${eventSlug}/`, startsAt: session.startsAt, endsAt: session.endsAt, ...(eventImage ? { image: eventImage } : {}), ...(location ? { location } : {}), ...(programId ? { programId } : {}) }));
+    const link = doc.href && String(doc.href).trim() ? safeHref(doc.href, field('Optional destination link', 'href'), warn) : undefined;
+    return sessions.map(session => ({ id: `${eventSlug}--${session._key}`, documentId: doc._id, slug: eventSlug, title, summary, href: `/events/${eventSlug}/`, startsAt: session.startsAt, endsAt: session.endsAt, ...(eventImage ? { image: eventImage } : {}), ...(location ? { location } : {}), ...(programId ? { programId } : {}), ...(link ? { link } : {}) }));
   })), 'id', 'events');
   const posts = unique(docs.filter(doc => doc._type === 'post').map(doc => within(doc, () => {
     const postSlug = slug(doc.slug?.current, field('Page address', 'slug'));
