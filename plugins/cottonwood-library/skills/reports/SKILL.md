@@ -25,7 +25,7 @@ Use the Givebutter tools for totals, goals and counts (for example number of don
 
 ## When reports stop working — one step at a time
 
-Investigate quietly first. Use the available connection-status tool and the current recovery guidance in the repository's `assistant/ANALYTICS-CONNECTOR.md`. Identify whether the problem is ChatGPT sign-in, the underlying report account, provider access or a temporary outage before asking the volunteer to do anything. Use the current account and reconnect links there; do not assume an old account identifier or interface still applies.
+Investigate quietly first. Use the available connection-status tool and the current recovery guidance in the repository's `connector/README.md`. Identify whether the problem is ChatGPT sign-in, the underlying report account, provider access or a temporary outage before asking the volunteer to do anything. Use the current account and reconnect links there; do not assume an old account identifier or interface still applies.
 
 Give one clear step with its link, then wait for their reply. For an expired connection, point to the affected plugin's reconnect screen. For removed report access, explain which library account and property need attention using verified current information. Do not ask for broader permissions as a workaround or send them unrelated sign-in steps.
 

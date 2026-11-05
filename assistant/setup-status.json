@@ -73,7 +73,7 @@
     "givebutter": "Library admin access verified; official plugin connected and reports tested",
     "facebook": "Board reports Page access; connection needs authorized Page access",
     "domain": "Recovered and dashboard verified; registrar transfer not started",
-    "checklist": "assistant/ACCESS.md"
+    "checklist": "Recovery finished in October; the old checklist is in Git history (assistant/ACCESS.md)"
   },
   "themeRefresh": {
     "digest": "3b78fb9825fa51ad20c1545809e8ec73abfdab98c1b0ffca4498fea3a6718f48",

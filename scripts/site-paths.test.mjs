@@ -22,8 +22,7 @@ test('assistant instructions never point at retired page addresses', async () =>
   // Old addresses of this site's own pages (programs moved under Events & News).
   const retired = [...redirects, '/services/story-time', '/services/main-street-readers', '/services/book-club'];
   const pattern = new RegExp(`(?<![\\w.-])(${retired.map(item => item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?=[/\`'")\\s<]|$)`);
-  // docs/redesign-plan.md is the record of the move itself, so it names old addresses on purpose.
-  const instructions = [...await files('assistant'), ...await files('plugins'), ...await files('docs'), 'AGENTS.md', 'README.md'].filter(file => file !== path.join('docs', 'redesign-plan.md'));
+  const instructions = [...await files('assistant'), ...await files('plugins'), ...await files('docs'), 'AGENTS.md', 'README.md'];
   const stale = [];
   for (const file of instructions) {
     const text = await readFile(file, 'utf8').catch(() => '');
