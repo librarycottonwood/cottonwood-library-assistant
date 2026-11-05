@@ -56,7 +56,7 @@ const LIBRARY_POINT = [-122.2805738, 40.3873866];
   }
   .map-fallback :global(svg) { width: 2rem; height: 2rem; }
   [data-map-ready] .map-fallback { visibility: hidden; }
-  .map-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
+  .map-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity var(--motion-smooth) var(--ease-out); }
   [data-map-ready] .map-canvas { opacity: 1; }
   .map-canvas :global(.maplibregl-canvas) { filter: saturate(0.4); }
   @media (min-width: 48rem) {

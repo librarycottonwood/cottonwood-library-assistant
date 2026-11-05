@@ -23,7 +23,7 @@ interface Props {
 const { title, trail, headingId = 'page-title' } = Astro.props;
 const crumbs = trail && [{ label: 'Home', href: '/' }, ...trail];
 ---
-<div class="page-title">
+<div class="page-title" data-motion="group">
   {crumbs && <nav aria-label="Breadcrumb" class="breadcrumb">
     <ol>
       {crumbs.map(crumb => <li><a href={crumb.href}>{crumb.label}</a><span aria-hidden="true">/</span></li>)}

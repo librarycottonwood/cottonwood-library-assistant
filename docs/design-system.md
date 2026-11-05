@@ -114,6 +114,17 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
+### Motion
+
+CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.
+
+| Token | Value | Use for | Don't use for | Example |
+| --- | --- | --- | --- | --- |
+| `--motion-quick` | `150ms` | Hover and press feedback: button colors, arrows nudging, a button pressing in. | Anything that opens or moves into place (use --motion-smooth). | `transition: background-color var(--motion-quick) var(--ease-out);` |
+| `--motion-smooth` | `300ms` | CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
+| `--motion-entrance` | `600ms` | A slower CSS change the visitor watches happen once. | Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
+| `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and animation: starts quickly, settles gently. | Linear or bouncy curves; they read as mechanical or playful. | `transition-timing-function: var(--ease-out);` |
+
 ## Components
 
 Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each component's usage block in its file is the source for this section.
@@ -126,7 +137,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
-| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary). |
+| [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary). |
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
@@ -298,7 +309,7 @@ interface Props {
 
 ### Faq
 
-`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary).
+`src/components/site/Faq.astro` — Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary).
 
 - **Use for:** "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Each page asks its own questions: borrowing (Sanity) on Explore Services, visiting on Visit Us, the program on its service page.
 - **Don't use for:** Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).

@@ -40,6 +40,9 @@ const hasStart = Astro.slots.has('start');
   .has-start { padding-inline-start: var(--space-xs); }
   .badge > :global(img) { order: -1; width: 1.5625rem; height: 1.5625rem; object-fit: cover; border-radius: 0.25rem; flex-shrink: 0; }
   .badge-surface { background: var(--color-surface); }
+  .badge-link { transition: background-color var(--motion-quick) var(--ease-out); }
   .badge-link:hover { background: var(--color-surface); }
+  .badge-link :global(.badge-icon) { transition: transform var(--motion-quick) var(--ease-out); }
+  @media (hover: hover) { .badge-link:hover :global(.badge-icon) { transform: translate(0.15em, -0.15em); } }
   .badge :global(.badge-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-text-muted); }
 </style>

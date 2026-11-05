@@ -38,6 +38,9 @@ pre { margin: 6px 0 0; padding: 12px; overflow-x: auto; background: var(--color-
 .preview-text span { color: var(--color-text); }
 .preview-bar span { display: block; height: 16px; max-width: 100%; background: var(--color-primary); }
 .preview-box span { width: 96px; height: 72px; background: var(--color-accent); }
+/* Motion: hover the entry to watch the square travel at that speed or curve. */
+.preview-motion span { width: 48px; height: 48px; border-radius: 12px; background: var(--color-accent); transition-property: transform; transition-duration: var(--motion-smooth); transition-timing-function: var(--ease-out); }
+.entry:hover .preview-motion span { transform: translateX(160px); }
 
 @media (max-width: 760px) {
   .catalog-nav { position: static; width: auto; border-right: 0; border-bottom: 1px solid var(--color-border); }

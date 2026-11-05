@@ -135,6 +135,16 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'underline-offset', label: 'Underline gap', value: '0.25em', useFor: 'Space between a link’s text and its underline, so the thicker line clears letters like g and y.', avoid: 'Spacing between elements (use the spacing steps).', example: 'text-underline-offset: var(--underline-offset);' }),
     ],
   },
+  {
+    slug: 'motion', title: 'Motion', property: 'transition-duration',
+    note: 'CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.',
+    tokens: [
+      token({ name: 'motion-quick', label: 'Quick', value: '150ms', useFor: 'Hover and press feedback: button colors, arrows nudging, a button pressing in.', avoid: 'Anything that opens or moves into place (use --motion-smooth).', example: 'transition: background-color var(--motion-quick) var(--ease-out);' }),
+      token({ name: 'motion-smooth', label: 'Smooth', value: '300ms', useFor: 'CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×.', avoid: 'Hover colors; they feel sluggish (use --motion-quick).', example: 'transition: transform var(--motion-smooth) var(--ease-out);' }),
+      token({ name: 'motion-entrance', label: 'Entrance', value: '600ms', useFor: 'A slower CSS change the visitor watches happen once.', avoid: 'Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it.', example: 'animation: rise var(--motion-entrance) var(--ease-out) both;' }),
+      token({ name: 'ease-out', label: 'Ease out', value: 'cubic-bezier(0.22, 1, 0.36, 1)', useFor: 'Every transition and animation: starts quickly, settles gently.', avoid: 'Linear or bouncy curves; they read as mechanical or playful.', example: 'transition-timing-function: var(--ease-out);' }),
+    ],
+  },
 ];
 
 /** Every spacing custom property a component may use in margin, padding, gap or inset. */

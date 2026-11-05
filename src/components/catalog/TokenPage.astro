@@ -14,6 +14,7 @@ const preview = (token: Token) => {
     case 'spacing': return { kind: 'bar', style: `width: ${v}` };
     case 'layout': return { kind: 'bar', style: token.steps ? `width: ${v}` : `width: calc(${v} / 4)` };
     case 'corners': return { kind: 'box', style: `border-radius: ${v}` };
+    case 'motion': return { kind: 'motion', style: token.name.startsWith('--ease-') ? `transition-timing-function: ${v}` : `transition-duration: ${v}` };
     default: return token.name === '--underline-thickness'
       ? { kind: 'text', style: `text-decoration: underline; text-decoration-thickness: ${v}; text-underline-offset: var(--underline-offset)`, text: 'Visit the library' }
       : token.name === '--underline-offset'
