@@ -16,14 +16,15 @@ Only when Jaden says “launch”:
 
 - [x] Closure notice and its undo passed (PRs #100/#101). Newsletter email draft passed.
 - [x] Fixed in PR #102: fundraiser dead end without the Givebutter Form code; undo leaving a hidden Sanity draft; Monday reminder created without asking, and “stop” only pausing it.
-- [ ] Newsletter issue upload: being tested today; result pending.
+- [x] Newsletter issue upload passed up to the preview (PR #105, not saved, cleaned up). Its “email Todd to close the PR” dead end is fixed in this PR.
 - [ ] Volunteers get the #102 fixes when the ChatGPT plugin is uploaded at launch (0.2.21, with PR #68).
 
 ## Launch week
 
 - [ ] Board approves the relaunch Facebook post and newsletter, then they go out.
 - [ ] Unsubscribe test: November 5, result pending. It must pass before any bulk newsletter send.
-- [ ] Find out why the newsletter form's spam check (Turnstile) is never verified on the server.
+- [x] Newsletter spam check (Turnstile) verified working November 5. Cloudflare's “siteverify isn't being called” banner only covers the last 24 hours.
+- [ ] Fix the backup Codex environment's setup so `pnpm install` works (it failed creating `~/.local/share/pnpm`).
 - [ ] Board connects Instagram when ready; verify a draft before claiming it works.
 
 ## Before handoff

@@ -84,6 +84,8 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
 - Anything else, or the refresh save stops the same way: tell the volunteer "Your change is merged but isn't on the website yet. The website still shows the previous version and works. A board admin needs to look at this: <run link>."
 
+If the volunteer decides not to save, close the PR and delete its branch yourself. If your tools can't close it, leave it: tell the volunteer “Nothing went on the website. It closes by itself in 14 days.” Never ask a volunteer or board member to close PRs, delete branches or remove previews.
+
 Save PRs with no activity for 14 days are closed automatically with a comment. Nothing from them went live, but what they published in Sanity stays published and goes live with the next save, so check that comment's list.
 
 ## Values that break the website (check before every publish)

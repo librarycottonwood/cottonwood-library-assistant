@@ -13,7 +13,7 @@ The library owns its ChatGPT Plus, GitHub implementation repository and library 
 ## Status — November 5, 2026
 
 - Content saves work end to end in the library ChatGPT: Sanity edit → `content/*` PR → **Website preview** → “Ready to save?” → merge → **Live website**.
-- Codex in the library account works for code changes (tested November 2 in Safari, environment `cottonwood-library-editor`): a plain-words request opened a PR with a preview and asked “Ready to save?”. The second environment, `cottonwood-library-editor-recovery`, is an untested backup.
+- Codex in the library account works for code changes (tested November 2 in Safari, environment `cottonwood-library-editor`): a plain-words request opened a PR with a preview and asked “Ready to save?”. The backup environment, `cottonwood-library-editor-recovery`, was tested November 5: it can push a branch and open a PR, but `pnpm install` fails there (`ENOENT … mkdir '/home/agent/.local/share/pnpm'`), so it can't run checks until its setup script is fixed.
 - The automatic repair job (`upkeep.yml`) was restored and rehearsed on November 2. The weekly report also flags GitHub-only alarms (needs-attention issues, failed repairs, auto-closed saves).
 - Changing files under `plugins/` does not update the installed ChatGPT plugin; upload the new version after it merges. PR #68 (launch prep) bumps it to 0.2.21 and is uploaded at launch.
 - The old trial Cloudflare Pages project (`cottonwood-library-trial-preview`) was deleted November 5. The live project `cottonwood-library` is unaffected.
@@ -27,7 +27,8 @@ Each guided request was tried in the library ChatGPT.
 - Fundraiser: got stuck when the Givebutter Form code wasn't known. Fixed in PR #102.
 - Undo: left a hidden Sanity draft behind. Fixed in PR #102.
 - Monday reminder: was set up without asking first, and “stop” only paused it. Fixed in PR #102.
-- Putting a newsletter issue on the website: being tested today; result pending.
+- Putting a newsletter issue on the website: **passed** up to the preview (test PDF, not saved, then cleaned up; PR #105 closed). Problems: two “blocked by safety checks” publish failures before it worked, 5 “Allow” prompts, jargon, and it couldn't close its own PR, so it told the volunteer to email Todd. The retry fix is in PR #102; the PR-closing fix is in this PR.
+- Spam check on the newsletter form (Turnstile): **working** (checked November 5; server rejects sign-ups without it, and the new domain is already allowed).
 
 Volunteers get the #102 fixes only when the ChatGPT plugin is uploaded at launch (0.2.21, with PR #68).
 

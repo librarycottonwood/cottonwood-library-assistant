@@ -81,10 +81,10 @@ The website's own newsletter form sends sign-ups to Givebutter with an API key. 
 
 ## 4f. Newsletter spam protection (Cloudflare Turnstile, free)
 
-- [x] Turnstile widget "Cottonwood newsletter form" created (Managed, hostname `cottonwood-library.pages.dev`). Add the new domain to it at the domain switch.
+- [x] Turnstile widget "Cottonwood newsletter form" created (Managed, hostname `cottonwood-library.pages.dev`). The new domain (bare and `www.`) was already added.
 - [x] Site key is in `src/content/newsletter-signup.json` (it's public).
 - [x] Secret key saved in Cloudflare → `cottonwood-library` → Variables and Secrets → Production as `TURNSTILE_SECRET_KEY`. Never paste it in a chat.
-- [x] After the next publish, sign up with a test address and check it reaches Givebutter. *(October 30 sign-up test. Whether the server checks the Turnstile answer is still open in `assistant/ROADMAP.md`.)*
+- [x] After the next publish, sign up with a test address and check it reaches Givebutter. *(October 30 sign-up test. November 5: the server rejects sign-ups without a valid Turnstile answer, and `cottonwoodcommunitylibrary.com` and `www.` are already allowed hostnames.)*
 
 ## 4g. After launch
 
