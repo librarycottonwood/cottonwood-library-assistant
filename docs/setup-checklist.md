@@ -12,7 +12,7 @@ Done:
 - Roof fundraiser found in Givebutter: **Under One Roof**, campaign code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Active. Form widget ID `jwyYlq`.
 
 Still open before launch:
-- [x] **Deploy and test the newsletter.** Website sign-up tested end to end October 30, 2026; Givebutter email delivery tested October 21, 2026. Unsubscribe test: November 5, result pending.
+- [x] **Deploy and test the newsletter.** Website sign-up tested end to end October 30, 2026; Givebutter email delivery tested October 21, 2026. Unsubscribe: handled by Givebutter's built-in link; not tested by us (accepted November 5).
 - [x] **Roof fundraiser on the website** (`/donate/`).
 - [x] **Auction date:** Saturday, November 14. Settled; follow the library's public posts.
 - [x] **Domain.** Access to the Squarespace domain is confirmed. Keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.

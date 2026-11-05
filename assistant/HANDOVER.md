@@ -40,6 +40,6 @@ Buffer has the library Facebook channel and an unscheduled test draft. Instagram
 
 ## Remaining handoff gates
 
-Accounts the website depends on, and who owns them: `ACCOUNTS.md` (draft for the board to review). Open items and dates are in `ROADMAP.md`: launch-day checks, the newsletter unsubscribe test, CMS backups and a restore rehearsal, a backup library administrator, the Sanity nonprofit decision, and volunteers running the workflow without Jaden. Preserve “Allow read-only tools”; do not grant all tools.
+Accounts the website depends on, and who owns them: `ACCOUNTS.md` (draft for the board to review). Open items and dates are in `ROADMAP.md`: launch-day checks, CMS backups and a restore rehearsal, a backup library administrator, the Sanity nonprofit decision, and volunteers running the workflow without Jaden. Preserve “Allow read-only tools”; do not grant all tools.
 
 Canonical volunteer instructions live in `plugins/cottonwood-library/skills/`; `CODEX.md` holds account wording and `START.md` the editing entry point. `setup-status.json` separates installed/deployed state from proposals and historical evidence. `MAINTENANCE.md` retains the bounded repair policy. Never overwrite another task's worktree.

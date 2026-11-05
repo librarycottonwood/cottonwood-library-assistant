@@ -484,6 +484,6 @@
     "asOf": "2026-11-05 America/Los_Angeles",
     "websiteSignup": "Website's own sign-up form (functions/api/newsletter.ts) tested end to end October 30, 2026.",
     "emailDelivery": "Givebutter email delivery to an approved inbox tested October 21, 2026 (see communicationsOctober21).",
-    "unsubscribe": "Unsubscribe test: November 5, 2026, result pending."
+    "unsubscribe": "Unsubscribe: not tested by us; accepted November 5, 2026. Givebutter adds its own Unsubscribe link to every newsletter (test sends show a placeholder)."
   }
 }
