@@ -21,7 +21,7 @@ When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published
 | One blog post | News feed and article, rich text, cover/gallery, event references |
 | Newsletter PDF and cover | Current issue selected in settings; old issues remain in the archive |
 | Notice with Pacific first/last dates | Shared notice banner |
-| Library settings and hours | Shared contact details, map/address, navigation, page copy; phone link and hours summary derive automatically |
+| Library settings and hours | Shared contact details, map/address, page copy; phone link and hours summary derive automatically. The header and footer menus come from `src/components/site/navigation.ts` (a code change), not Sanity; the Settings "Main navigation" field is not used by the website |
 | Giving and acknowledgments | Ways to help, thank-yous and approved Givebutter widget identifiers |
 
 Each confirmed event date requires both a start and an end time, with the end later than the start. Upcoming agenda rows, day groups and featured pictures recheck the confirmed end time in the visitor's browser, including after a tab resumes. Events stay listed while they are happening and stop being promoted after they end, between builds; their historical detail pages remain available. This does not modify CMS records or replace the approved release.
