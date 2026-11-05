@@ -30,7 +30,7 @@ interface Props {
 const { title, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
 <section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
-  <div data-gap={gap} class:list={['section-inner', `align-${align}`, `width-${width}`]}>
+  <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>}
     <slot />
   </div>

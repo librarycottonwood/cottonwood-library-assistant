@@ -2,7 +2,7 @@
 
 Moving the library from ChatGPT to Claude Code. **On hold (Oct 29):** staff keep using ChatGPT for now; the launch items under Status still apply. When the move resumes, do these in order and keep ChatGPT working until the last step.
 
-**Public launch and AI Expo: Tuesday, November 3, 2026** (replaces the earlier November 16 plan).
+**AI Expo: Tuesday, November 3, 2026. Public launch: by Thursday, November 5, 2026** (moved from November 3, which replaced the earlier November 16 plan).
 
 ## Status (checked October 27, 2026)
 
@@ -23,7 +23,7 @@ Still open before launch:
 - [x] **Pipeline fixes:** PR #52 and #53 merged Oct 28; Studio deployed, ChatGPT plugin updated to 0.2.15, and #45 switched to one file per save.
 - [x] **Name a board admin**: Todd Haines (toddhaines7@gmail.com), named Oct 30. In `docs/library-facts.md`, the staff guide and the ChatGPT plugin.
 - [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
-- [ ] **Launch day:** add a Google Analytics annotation; numbers before Nov 3 are test traffic.
+- [ ] **Launch day:** add a Google Analytics annotation; numbers before launch day are test traffic.
 
 ## 1. Accounts
 

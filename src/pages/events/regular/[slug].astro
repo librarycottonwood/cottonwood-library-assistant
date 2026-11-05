@@ -1,7 +1,7 @@
 ---
 // Service View (Figma 1012:1243): one regular program (Story Time, reading groups) beside its photo, the map and
 // questions about the program. Programs are listed on Events & News ("Regular Events"), so their pages live under
-// /events/regular/ and the header highlights Events & News; /services/<id>/ redirects here (astro.config). Built only from src/components/site. Programs and questions come from Sanity.
+// /events/regular/ and the header highlights Events & News. There is no /services/<id>/ redirect; astro.config.mjs `redirects` lists the real ones. Built only from src/components/site. Programs and questions come from Sanity.
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/site/Button.astro';
 import DetailList from '../../../components/site/DetailList.astro';

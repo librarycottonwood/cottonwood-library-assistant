@@ -39,11 +39,17 @@ const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, in
 const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
+const bleed = ratio === '1314 / 652' && !panel && !inset;
+// The opening photo eases out of a slight zoom inside a frame that owns its rounded corners and border (as Card's
+// photos do on hover), so the corners never change shape while it moves.
+const framed = first && bleed && media === 'end';
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed: ratio === '1314 / 652' && !panel && !inset }]} {...attributes}>
-  <div class="split-copy"><slot /></div>
-  <div id={mediaId} tabindex={mediaId ? -1 : undefined} class:list={['split-media', { 'has-caption': hasCaption }]}>
-    <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class="split-image" style={`--split-ratio: ${ratio}`} />
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed }]} {...attributes}>
+  <div class="split-copy" data-motion="group"><slot /></div>
+  <div id={mediaId} tabindex={mediaId ? -1 : undefined} data-motion={first ? undefined : 'rise'} class:list={['split-media', { 'has-caption': hasCaption }]}>
+    {framed
+      ? <div class="split-frame"><Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading="eager" fetchpriority="high" class="split-image" style={`--split-ratio: ${ratio}`} data-motion="settle" /></div>
+      : <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class="split-image" style={`--split-ratio: ${ratio}`} />}
     {hasCaption && <p class="split-caption"><slot name="caption" /></p>}
   </div>
 </section>
@@ -139,4 +145,8 @@ const hasCaption = Astro.slots.has('caption');
     .split:not(.panel) { gap: var(--space-xl); }
     .split-caption { margin-inline-start: var(--space-lg); }
   }
+  /* Framed opening photo: the frame draws the rounded left corners and border and clips the zoom; the photo inside is
+   * square-cornered and borderless (it is the same shape at every width: bleed, photo on the right). */
+  .split-frame { overflow: hidden; border: var(--border-thin) solid var(--border-image); border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
+  .first.bleed .split-media .split-frame :global(.split-image) { display: block; border: 0; border-radius: 0; }
 </style>

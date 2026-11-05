@@ -51,7 +51,16 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Fragment>
   </Split>
 
-  {featured && featuredImage && <Split media="start" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+  <Split media="start" image={givingPhoto} headingId="community-heading">
+    <Heading id="community-heading">{home.support.title}</Heading>
+    <Text tone="muted">{home.support.introduction}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
+    </Stack>
+  </Split>
+
+  {featured && featuredImage && <Split media="end" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
     <Text tone="muted" size="lead">{featured.summary}</Text>
@@ -69,13 +78,4 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Grid>
     <Button href="/services/" iconEnd="arrow">Read more</Button>
   </Section>
-
-  <Split media="start" image={givingPhoto} headingId="community-heading">
-    <Heading id="community-heading">{home.support.title}</Heading>
-    <Text tone="muted">{home.support.introduction}</Text>
-    <Stack direction="row" gap="xs" wrap>
-      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
-      <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
-    </Stack>
-  </Split>
 </BaseLayout>

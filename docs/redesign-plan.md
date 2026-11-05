@@ -47,6 +47,8 @@ BaseLayout, SiteHeader, SiteFooter, SiteNotices, NewsletterForm (added by the la
 
 ## Pages and URLs
 
+Historical plan: many redirects below were never added or were later removed. The `redirects` list in `astro.config.mjs` is the source of truth.
+
 | Figma frame | New URL | Today | Redirect when it ships |
 | --- | --- | --- | --- |
 | Index `1001:2` | `/` | `/` | none |

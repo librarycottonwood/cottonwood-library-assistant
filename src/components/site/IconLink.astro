@@ -24,5 +24,6 @@ const { icon, iconEnd, ...attributes } = Astro.props;
   .icon-link { display: inline-flex; align-items: center; gap: var(--space-xs); text-decoration-line: none; }
   .icon-link:hover { text-decoration-line: underline; }
   .icon-link :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
-  .icon-link :global(.icon-end) { color: var(--color-text-muted); }
+  .icon-link :global(.icon-end) { color: var(--color-text-muted); transition: transform var(--motion-quick) var(--ease-out); }
+  @media (hover: hover) { .icon-link:hover :global(.icon-end) { transform: translateX(0.2em); } }
 </style>

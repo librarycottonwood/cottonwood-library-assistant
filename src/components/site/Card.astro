@@ -36,7 +36,7 @@ const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
 const titleStart = titleWords.join(' ');
 ---
-<Tag class:list={['card', { 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page' }]} {...attributes}>
+<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page' }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
@@ -59,7 +59,12 @@ const titleStart = titleWords.join(' ');
   }
   .card-page .card-media { height: auto; aspect-ratio: 8.5 / 11; }
   .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
-  .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; }
+  .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-smooth) var(--ease-out); }
+  /* Linked cards: hovering anywhere zooms the photo slightly inside its frame and nudges the title arrow. */
+  @media (hover: hover) {
+    .card-linked:hover .card-media :global(.card-image:not(.is-contained)) { transform: scale(1.04); }
+    .card-linked:hover .card-copy h3 :global(.icon-end) { transform: translateX(0.2em); }
+  }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
   /* right keeps a long schedule badge inside the photo at large text sizes; it wraps instead. */
   .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }

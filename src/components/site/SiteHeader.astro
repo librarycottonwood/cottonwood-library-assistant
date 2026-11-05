@@ -104,7 +104,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     padding: var(--space-xs) var(--page-inset);
     border-bottom: var(--border-thin) solid transparent;
     background: var(--color-background);
-    transition: border-color 0.15s;
+    transition: border-color var(--motion-quick) var(--ease-out);
     container: site-header / inline-size;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
@@ -138,6 +138,13 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   .mobile-nav { display: flex; flex-direction: column; flex-basis: 100%; padding-top: var(--space-xs); font-weight: var(--weight-semibold); }
   .mobile-nav a { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 0; border-top: var(--border-thin) solid var(--color-border); }
   .mobile-nav :global(.mobile-external) { width: 1em; height: 1em; }
+  .site-nav a, .mobile-nav a { transition: text-decoration-color var(--motion-quick) var(--ease-out); }
+  @media (prefers-reduced-motion: no-preference) {
+    .mobile-nav { animation: menu-open var(--motion-smooth) var(--ease-out); }
+    .menu-toggle :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
+  }
+  @keyframes menu-open { from { opacity: 0; transform: translateY(-0.5rem); } }
+  @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
   /* The phone menu starts closed before the script runs, so pages don't open with the menu showing and then jump
    * up. Without JavaScript the links simply stay listed and there is no menu button. */
   @media (scripting: enabled) { .site-header:has(.menu-toggle[aria-expanded='false']) .mobile-nav { display: none; } }
