@@ -79,25 +79,17 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 }
 #statistics-choice button:hover { background: var(--color-background); }
 
-/* Motion (tokens: --motion-*, --ease-out). Everything here is screen-only and skipped for visitors who ask for
- * reduced motion, and none of it hides content: browsers without these features simply show the page as it is. */
+/* Motion (tokens: --motion-*, --ease-out). Screen only, and off for visitors who ask for reduced motion.
+ * Entrances: BaseLayout adds html.motion only when motion is allowed and its script can run, then reveals each block
+ * (.reveal, Section children, cards) as it scrolls into view, a few at a time. The selector below must match
+ * REVEAL in BaseLayout. Fundraiser forms and embedded frames never animate (an animated block would trap
+ * Givebutter's popups under the sticky header). */
 @media screen and (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  /* Page to page: a short cross-fade instead of a white flash (Chrome, Edge and Safari 18.2+). The header keeps its
-   * own name so it stays still while the page under it changes. */
-  @view-transition { navigation: auto; }
-  ::view-transition-group(root) { animation-duration: var(--motion-smooth); animation-timing-function: var(--ease-out); }
-  /* Sections ease up as they scroll into view (scroll-driven, no JavaScript). The range is a fixed distance, so a
-   * long article is fully shown after its first lines, never half-faded while being read. */
-  @supports (animation-timeline: view()) {
-    /* Not around a fundraiser form or embedded frame: an animated block becomes their containing block, which would
-     * trap Givebutter's popups under the sticky header. */
-    :is(.reveal, .reveal-children > *):not(:has(givebutter-widget, iframe, form)) {
-      animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 10rem;
-    }
-  }
+  html.motion :is(.reveal, .reveal-children > :not(script, :has(.card)), .card):not(form, iframe, givebutter-widget, :has(givebutter-widget, iframe, form)):not(.shown) { opacity: 0; }
+  html.motion :is(.reveal, .reveal-children > :not(script, :has(.card)), .card):not(form, iframe, givebutter-widget, :has(givebutter-widget, iframe, form)).shown { animation: reveal var(--motion-entrance) var(--ease-out) var(--reveal-delay, 0ms) backwards; }
 }
-@keyframes reveal { from { opacity: 0; transform: translateY(1.5rem); } }
+@keyframes reveal { from { opacity: 0; translate: 0 2rem; } }
 @keyframes rise { from { opacity: 0; transform: translateY(1rem); } }
 @keyframes settle { from { transform: scale(1.04); } }
 

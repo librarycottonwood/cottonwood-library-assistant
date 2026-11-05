@@ -140,8 +140,8 @@ export const tokenGroups: TokenGroup[] = [
     note: 'Three speeds and one easing curve. Motion only confirms what the visitor did or eases content in; nothing loops or waits. base.css and the components switch it all off for visitors who ask for reduced motion.',
     tokens: [
       token({ name: 'motion-quick', label: 'Quick', value: '150ms', useFor: 'Hover and press feedback: button colors, arrows nudging, a button pressing in.', avoid: 'Anything that opens or moves into place (use --motion-smooth).', example: 'transition: background-color var(--motion-quick) var(--ease-out);' }),
-      token({ name: 'motion-smooth', label: 'Smooth', value: '300ms', useFor: 'Things opening or changing place: the phone menu, a FAQ answer, a card photo zooming, page-to-page fades.', avoid: 'Hover colors; they feel sluggish (use --motion-quick).', example: 'transition: transform var(--motion-smooth) var(--ease-out);' }),
-      token({ name: 'motion-entrance', label: 'Entrance', value: '600ms', useFor: 'The homepage-style hero easing in when a page loads.', avoid: 'Anything the visitor clicked; they would wait for it.', example: 'animation: rise var(--motion-entrance) var(--ease-out) both;' }),
+      token({ name: 'motion-smooth', label: 'Smooth', value: '300ms', useFor: 'Things opening or changing place: the phone menu, a FAQ answer sliding open, a card photo zooming.', avoid: 'Hover colors; they feel sluggish (use --motion-quick).', example: 'transition: transform var(--motion-smooth) var(--ease-out);' }),
+      token({ name: 'motion-entrance', label: 'Entrance', value: '600ms', useFor: 'Blocks easing in: the opening block when a page loads, and sections and cards as they scroll into view.', avoid: 'Anything the visitor clicked; they would wait for it.', example: 'animation: rise var(--motion-entrance) var(--ease-out) both;' }),
       token({ name: 'ease-out', label: 'Ease out', value: 'cubic-bezier(0.22, 1, 0.36, 1)', useFor: 'Every transition and animation: starts quickly, settles gently.', avoid: 'Linear or bouncy curves; they read as mechanical or playful.', example: 'transition-timing-function: var(--ease-out);' }),
     ],
   },

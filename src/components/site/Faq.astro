@@ -1,7 +1,7 @@
 ---
 /**
  * @component Faq
- * Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…). Works without JavaScript (details/summary).
+ * Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary).
  * @use "Frequently Asked Questions" on Visit Us, Explore Services and service pages, inside a Section with width="text". Each page asks its own questions: borrowing (Sanity) on Explore Services, visiting on Visit Us, the program on its service page.
  * @avoid Content everyone needs to see without clicking (hours, prices), or a single question (use Heading + Text).
  * @example
@@ -24,11 +24,46 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
 ---
 <div class="faq">
   {items.map((item, index) => <details name={group} open={openFirst && index === 0}>
-    <summary><span>{item.question}</span><Icon name="plus" class="faq-open" /><Icon name="close" class="faq-close" /></summary>
-    <p>{item.answer}</p>
+    <summary><span>{item.question}</span><Icon name="plus" class="faq-icon" /></summary>
+    <div class="faq-answer"><p>{item.answer}</p></div>
   </details>)}
   {email && <p class="faq-ask">Still have a question? <a href={`mailto:${email}`}>Email us</a>.</p>}
 </div>
+<script>
+  // Answers slide open and shut. The script takes over the one-open-at-a-time rule from name=…, because the browser
+  // would close the other answer instantly.
+  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+  const ms = (name: string) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || 300;
+  const easing = () => getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim() || 'ease-out';
+  function setOpen(details: HTMLDetailsElement, open: boolean) {
+    const answer = details.querySelector<HTMLElement>('.faq-answer');
+    if (!answer) return;
+    answer.getAnimations().forEach(animation => animation.cancel());
+    if (!motion.matches) { details.classList.remove('is-closing'); details.open = open; return; }
+    const timing = { duration: ms('--motion-smooth'), easing: easing() };
+    if (open) {
+      details.classList.remove('is-closing');
+      details.open = true;
+      answer.animate([{ height: '0px', opacity: 0 }, { height: `${answer.scrollHeight}px`, opacity: 1 }], timing);
+    } else {
+      details.classList.add('is-closing');
+      const closing = answer.animate([{ height: `${answer.offsetHeight}px`, opacity: 1 }, { height: '0px', opacity: 0 }], timing);
+      closing.onfinish = () => { details.open = false; details.classList.remove('is-closing'); };
+    }
+  }
+  for (const faq of document.querySelectorAll<HTMLElement>('.faq')) {
+    const items = [...faq.querySelectorAll<HTMLDetailsElement>('details')];
+    items.forEach(details => details.removeAttribute('name'));
+    for (const details of items) {
+      details.querySelector('summary')?.addEventListener('click', event => {
+        event.preventDefault();
+        const opening = !details.open || details.classList.contains('is-closing');
+        if (opening) items.forEach(other => { if (other !== details && other.open && !other.classList.contains('is-closing')) setOpen(other, false); });
+        setOpen(details, opening);
+      });
+    }
+  }
+</script>
 <style>
   .faq { display: flex; flex-direction: column; gap: var(--space-md); width: 100%; font-size: var(--fluid-lead); line-height: var(--leading-relaxed); }
   details { display: flex; flex-direction: column; }
@@ -39,21 +74,11 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
   summary::-webkit-details-marker { display: none; }
   summary:hover span { text-decoration-line: underline; }
   summary :global(svg) { width: 1.1em; height: 1.1em; flex-shrink: 0; color: var(--color-text-muted); }
-  details[open] :global(.faq-open), details:not([open]) :global(.faq-close) { display: none; }
+  /* The + turns 45° into × as the answer opens, and back as it closes (.is-closing while the answer slides shut). */
+  summary :global(.faq-icon) { transition: rotate var(--motion-smooth) var(--ease-out); }
+  details[open]:not(.is-closing) :global(.faq-icon) { rotate: 45deg; }
+  .faq-answer { overflow: hidden; }
   details p { padding-block-start: var(--space-sm); color: var(--color-text-muted); }
-  @media (prefers-reduced-motion: no-preference) {
-    @supports selector(::details-content) {
-      details { interpolate-size: allow-keywords; }
-      details::details-content {
-        /* min-block-size: details is a flex column, and a flex item never shrinks below its content otherwise. */
-        block-size: 0; min-block-size: 0; overflow: clip; opacity: 0;
-        transition: block-size var(--motion-smooth) var(--ease-out), opacity var(--motion-smooth) var(--ease-out), content-visibility var(--motion-smooth) allow-discrete;
-      }
-      details[open]::details-content { block-size: auto; opacity: 1; }
-    }
-    details[open] summary :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
-  }
-  @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
   .faq-ask { padding-block-start: var(--space-sm); color: var(--color-text-muted); text-align: center; }
   .faq-ask a { color: var(--color-text); font-weight: var(--weight-bold); text-decoration-line: underline; }
   /* Figma (1920): questions 105px apart, the answer 30px below its question. */

@@ -106,8 +106,6 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     background: var(--color-background);
     transition: border-color var(--motion-quick) var(--ease-out);
     container: site-header / inline-size;
-    /* Stays put while the page under it cross-fades (base.css). */
-    view-transition-name: site-header;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
   /* An open phone menu can be taller than a landscape or zoomed-in screen; let it scroll so every link is reachable. */
