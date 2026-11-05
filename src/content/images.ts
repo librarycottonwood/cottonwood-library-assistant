@@ -65,9 +65,15 @@ import academyChatgpt from '../assets/images/academy-chatgpt.png';
 import academyGivebutter from '../assets/images/academy-givebutter.png';
 import academyBuffer from '../assets/images/academy-buffer.png';
 import academyDrive from '../assets/images/academy-drive.png';
-import academyZoom from '../assets/images/academy-zoom.png';
 
-const images: Record<string, ImageMetadata> = { academyChatgpt, academyGivebutter, academyBuffer, academyDrive, academyZoom, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
+import academyGithub from '../assets/images/academy-github.png';
+import academyCloudflare from '../assets/images/academy-cloudflare.png';
+import academySanity from '../assets/images/academy-sanity.png';
+import academySquarespace from '../assets/images/academy-squarespace.png';
+import academyGmail from '../assets/images/academy-gmail.png';
+import academySquare from '../assets/images/academy-square.png';
+
+const images: Record<string, ImageMetadata> = { academyGithub, academyCloudflare, academySanity, academySquarespace, academyGmail, academySquare, academyChatgpt, academyGivebutter, academyBuffer, academyDrive, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

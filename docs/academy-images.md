@@ -8,6 +8,11 @@ Small product logos identify the websites in the volunteer directory. Downloaded
 | academy-givebutter.png | https://givebutter.com/favicon.ico |
 | academy-buffer.png | https://buffer.com/favicon.ico |
 | academy-drive.png | https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png |
-| academy-zoom.png | https://zoom.us/favicon.ico |
+| academy-github.png | https://github.com/favicon.ico |
+| academy-cloudflare.png | https://www.cloudflare.com/favicon.ico |
+| academy-sanity.png | https://www.sanity.io/favicon.ico |
+| academy-squarespace.png | https://www.squarespace.com/favicon.ico |
+| academy-gmail.png | https://mail.google.com/favicon.ico |
+| academy-square.png | https://squareup.com/favicon.ico |
 
-The library website uses the existing library tree logo. Email and the book catalog use the installed Lucide Mail and BookOpen icons. These are illustrations of their purpose, not product logos.
+Codex, Google Analytics, Facebook & Instagram, Follett Destiny and Spaceship use installed Lucide icons to illustrate their purpose. They are not product logos.

@@ -12,70 +12,146 @@ export interface Part {
   links?: { label: string; href: string }[];
 }
 export interface Lesson { slug: string; title: string; summary: string; parts: Part[]; }
+export const serviceGroups = [
+  { id: 'website', title: 'Website and assistant' },
+  { id: 'communications', title: 'Donations, social posts and files' },
+  { id: 'other', title: 'Other library accounts' },
+];
 export const services = [
   {
     "id": "chatgpt",
+    "group": "website",
     "name": "ChatGPT",
-    "purpose": "Write announcements, read flyers and ask for website changes.",
-    "signin": "Use the library’s ChatGPT account.",
+    "purpose": "The place to ask for a website change, write an announcement or get a report. The Cottonwood Library instructions tell it how the library handles these jobs.",
+    "signin": "Use the library’s ChatGPT account. Its library instructions and connected accounts are not in your personal ChatGPT account.",
     "href": "https://chatgpt.com/",
     "label": "Open ChatGPT"
   },
   {
+    "id": "codex",
+    "group": "website",
+    "name": "Codex",
+    "purpose": "The part of ChatGPT used to change the website’s layout, features and page files. For example, this academy’s design is changed with Codex.",
+    "signin": "Uses the same account as ChatGPT. The library has a prepared workspace called cottonwood-library-editor.",
+    "href": "https://chatgpt.com/codex/cloud",
+    "label": "Open Codex"
+  },
+  {
+    "id": "sanity",
+    "group": "website",
+    "name": "Sanity",
+    "purpose": "Stores the website’s events, news, hours, notices, photos and newsletter PDFs. When you ask ChatGPT to add an event, this is where the event details go.",
+    "signin": "The library signs in to Sanity through GitHub. Publishing content here prepares it for the next website save.",
+    "href": "https://cottonwood-community-library.sanity.studio/",
+    "label": "Open Sanity"
+  },
+  {
+    "id": "github",
+    "group": "website",
+    "name": "GitHub",
+    "purpose": "Keeps the website files and a history of changes. It checks an update and prepares a preview. A proposed change waiting to be saved is called a pull request.",
+    "signin": "The library has its own GitHub account. After you approve the preview, the save goes through GitHub to Cloudflare.",
+    "href": "https://github.com/librarycottonwood/cottonwood-library-assistant",
+    "label": "Open GitHub"
+  },
+  {
+    "id": "cloudflare",
+    "group": "website",
+    "name": "Cloudflare",
+    "purpose": "Runs the new library website so visitors can open it. It also provides Turnstile, the spam check on the newsletter signup form.",
+    "signin": "Has its own library account. GitHub sends approved website updates here; Cloudflare puts them online.",
+    "href": "https://dash.cloudflare.com/",
+    "label": "Open Cloudflare"
+  },
+  {
+    "id": "squarespace",
+    "group": "website",
+    "name": "Squarespace",
+    "purpose": "Manages the library’s web address, cottonwoodcommunitylibrary.com. This is where its registration is renewed and where the address is pointed to the website.",
+    "signin": "Has its own sign-in. Squarespace, Square and Cloudflare are different services; Todd manages the web-address account.",
+    "href": "https://account.squarespace.com/",
+    "label": "Open Squarespace"
+  },
+  {
+    "id": "analytics",
+    "group": "website",
+    "name": "Google Analytics",
+    "purpose": "Counts visits to the new website and shows which pages people read. Ask ChatGPT for these reports through its Library Analytics connection.",
+    "signin": "Uses the library’s Google account. Google Cloud supports the report connection; it is part of the Google setup, not another website editor.",
+    "href": "https://analytics.google.com/",
+    "label": "Open Google Analytics"
+  },
+  {
     "id": "givebutter",
+    "group": "communications",
     "name": "Givebutter",
-    "purpose": "Record donations, find newsletter subscribers and send the newsletter.",
-    "signin": "Use your Givebutter sign-in for the library.",
+    "purpose": "Holds donation records, fundraisers and newsletter subscribers. Engage is the email section inside Givebutter, where the newsletter is sent.",
+    "signin": "Givebutter and Engage use the same account. ChatGPT can read donation reports and write an email; you send that email from Engage.",
     "href": "https://dashboard.givebutter.com/",
     "label": "Open Givebutter"
   },
   {
-    "id": "drive",
-    "name": "Google Drive",
-    "purpose": "Find shared photos, newsletters and other library files.",
-    "signin": "Use the Google account that was invited to the shared folder.",
-    "href": "https://drive.google.com/",
-    "label": "Open Google Drive"
-  },
-  {
-    "id": "email",
-    "name": "Email",
-    "purpose": "Read and reply to library messages.",
-    "signin": "For the library’s regular mail, open its mail app. The library’s Gmail account has a separate inbox.",
-    "href": "https://mail.google.com/",
-    "label": "Open Gmail"
-  },
-  {
     "id": "buffer",
+    "group": "communications",
     "name": "Buffer",
-    "purpose": "Review Facebook posts and choose when to publish them.",
-    "signin": "Sign in to Buffer to post. For Facebook itself, use your own account with access to the library Page.",
+    "purpose": "Holds social posts before they go out. ChatGPT can put a Facebook draft here for you to review, publish or schedule.",
+    "signin": "Buffer has its own sign-in and connects to the library’s social pages. The post appears on Facebook after it is published.",
     "href": "https://publish.buffer.com/",
     "label": "Open Buffer"
   },
   {
-    "id": "website",
-    "name": "Library website",
-    "purpose": "See the events, hours and newsletters that visitors see.",
-    "signin": "No sign-in needed. Ask ChatGPT when you want to change something.",
-    "href": "https://cottonwood-library.pages.dev/",
-    "label": "Open the website"
+    "id": "social",
+    "group": "communications",
+    "name": "Facebook & Instagram",
+    "purpose": "The library’s public social pages, where people see posts and respond. A social post is separate from a news item on the library website.",
+    "signin": "Facebook Page access comes through a personal Facebook account added to the Page. Instagram has a separate sign-in; Todd can help with access.",
+    "href": "https://www.facebook.com/",
+    "label": "Open Facebook"
+  },
+  {
+    "id": "drive",
+    "group": "communications",
+    "name": "Google Drive",
+    "purpose": "Keeps shared files such as photos, working documents and newsletter PDFs. Download a file here when you want to attach it to a ChatGPT request.",
+    "signin": "Uses a Google account. Open a shared folder with the account that received its invitation.",
+    "href": "https://drive.google.com/",
+    "label": "Open Google Drive"
+  },
+  {
+    "id": "gmail",
+    "group": "communications",
+    "name": "Gmail",
+    "purpose": "The inbox for the library’s Google account, including messages about its online services. Google Drive uses the same Google sign-in.",
+    "signin": "Gmail is separate from the library’s regular contact mailbox. Todd has the sign-in details for each inbox.",
+    "href": "https://mail.google.com/",
+    "label": "Open Gmail"
   },
   {
     "id": "catalog",
-    "name": "Book catalog",
-    "purpose": "Look up a book in the library’s collection.",
-    "signin": "For checking books in or out, ask a circulation volunteer to show you the staff sign-in.",
+    "group": "other",
+    "name": "Follett Destiny",
+    "purpose": "The library’s book catalog and circulation system. This is where books are looked up and staff handle borrowing, rather than in the website editor.",
+    "signin": "Has its own staff sign-in. A circulation volunteer can show you the checkout screens and the account to use.",
     "href": "https://cottonlib.follettdestiny.com/",
-    "label": "Find a book"
+    "label": "Open Follett Destiny"
   },
   {
-    "id": "zoom",
-    "name": "Zoom",
-    "purpose": "Join an online library meeting.",
-    "signin": "Click the Zoom link in your meeting invitation. It has the meeting details you need.",
-    "href": "https://zoom.us/join",
-    "label": "Join a meeting"
+    "id": "square",
+    "group": "other",
+    "name": "Square",
+    "purpose": "The service used for the earlier library website at cottonwood-community-library.square.site. It is separate from Squarespace, which manages the web address.",
+    "signin": "The older site has its own account. Changes to the new Cloudflare website do not update this one.",
+    "href": "https://cottonwood-community-library.square.site/",
+    "label": "View the older Square site"
+  },
+  {
+    "id": "spaceship",
+    "group": "other",
+    "name": "Spaceship",
+    "purpose": "An account created while considering a move of the library’s web address. The recorded setup did not transfer the address; Squarespace still manages it.",
+    "signin": "An unused account in the platform records, not a step in the website-update process. Todd holds its account details.",
+    "href": "https://www.spaceship.com/",
+    "label": "Open Spaceship"
   }
 ];
 export const lessons: Lesson[] = [
@@ -112,7 +188,7 @@ export const lessons: Lesson[] = [
   },
   {
     slug: 'accounts-and-tools', title: 'Accounts and websites',
-    summary: 'Where to go and what to use it for.',
+    summary: 'What each service does, how it connects to the others, and where to sign in.',
     parts: [
       {
         title: 'Need help signing in?',

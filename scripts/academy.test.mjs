@@ -74,13 +74,19 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
       }
     }
     await page.goto(origin + '/academy/accounts-and-tools/');
-    assert.equal(await page.locator('article.service-card').count(), 8);
+    assert.equal(await page.locator('article.service-card').count(), 15);
     assert.equal(await page.locator('main details').count(), 0, 'service information is visible without opening anything');
-    assert.equal(await page.locator('.service-open').count(), 8);
+    assert.equal(await page.locator('.service-open').count(), 15);
     for (const link of await page.locator('.service-open').all()) assert.equal(await link.isVisible(), true);
-    assert.equal(await page.locator('.service-icon img').count(), 6);
+    assert.equal(await page.locator('.service-icon img').count(), 10);
     assert.equal(await page.locator('.service-icon img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'service logos load locally');
-    assert.doesNotMatch(await page.locator('main').innerText(), /Cloudflare|Sanity|GitHub|Codex|Squarespace|Library Analytics|What are agents/, 'volunteer directory excludes administrator tools and jargon');
+    for (const name of ['ChatGPT', 'Codex', 'Sanity', 'GitHub', 'Cloudflare', 'Squarespace', 'Google Analytics', 'Givebutter', 'Buffer', 'Facebook & Instagram', 'Google Drive', 'Gmail', 'Follett Destiny', 'Square', 'Spaceship']) {
+      assert.equal(await page.getByRole('heading', { name, exact: true }).count(), 1, `explains ${name}`);
+    }
+    assert.doesNotMatch(await page.locator('main').innerText(), /Zoom/);
+    for (const anchor of await page.locator('.platform-overview a[href^="#"], .service-group-links a').evaluateAll(links => links.map(a => a.getAttribute('href')))) {
+      assert.equal(await page.locator(anchor).count(), 1, 'platform explanation links to the named service');
+    }
     assert.equal(await page.locator('.academy-sidebar').evaluate(node => getComputedStyle(node).backgroundColor), 'rgb(255, 255, 255)');
     await page.setViewportSize({ width: 375, height: 844 });
     await page.goto(origin + '/academy/practice-with-a-buddy/');
@@ -104,7 +110,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await page.locator('.desk-guide').isVisible(), true);
     await page.goto(origin + '/academy/print/');
     assert.equal(await page.locator('.print-lesson').count(), 6);
-    assert.equal(await page.locator('.service-card').count(), 8);
+    assert.equal(await page.locator('.service-card').count(), 15);
     const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 844 } });
     const plain = await noJS.newPage();
     await plain.goto(origin + '/academy/practice-with-a-buddy/');
