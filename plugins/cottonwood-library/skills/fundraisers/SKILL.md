@@ -43,10 +43,16 @@ Ask one at a time; skip what they already said.
 
    If there's no goal bar switch, the campaign has no goal yet: set one on its **Details** tab first, then come back to step 2.
    Any form of the code is fine (with the script line or just the `<givebutter-widget …>` line). If what they pasted is clearly a Goal Bar or Button (for example a `<givebutter-goal-bar>` or `<givebutter-button>` tag), or they say they copied it from that box, kindly explain: "That one is the Goal Bar (or Button). For the fundraiser we need the **Form** one, the box next to it; it shows the goal bar and the donation form together." The plain `<givebutter-widget id="…">` line looks the same for every type, so ask which box it came from if you aren't sure.
+
+   The website can't show a fundraiser without this code. If they can't get it (no **Widgets** tab, no **Embed** button, or they're stuck), say: "That step needs someone with the Admin or Finance role in Givebutter. Ask them to send you the Form code, then paste it here and we'll finish." Keep their other answers so they don't have to repeat them.
 4. "Is there an end date?" — optional. After that date the website stops showing the fundraiser by itself; ending it properly ("end the fundraiser") can happen any time after.
 5. "Any photo for it?" — optional.
 
-Write a short, heartfelt description yourself. Preview, and ask them to open the preview link and check the form and goal bar appear. Then ask to save. Only one fundraiser can be active; if one is already running, ask whether this replaces it.
+Write a short, heartfelt description yourself. Preview, and ask them to open the preview link and check the form and goal bar appear. Then ask to save.
+
+The website shows one fundraiser at a time. If one is already running, ask: "The website shows one fundraiser at a time. Replace <current one> with this, or wait until it ends?" That is how the site works, not something to fix.
+
+A fundraiser is always a content change, finished in this chat. Never send it to Codex or a developer, and never offer a website code change to show two at once.
 
 ## How much have we raised?
 
