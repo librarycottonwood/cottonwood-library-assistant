@@ -4,12 +4,12 @@ import { contentRepository } from '../../content/repository';
 interface Props { print?: boolean; }
 const { print = false } = Astro.props;
 const { library } = await contentRepository.getHome();
-const groups = ['Everyday tools', 'Occasional tools', 'Behind the scenes'];
+const groups = ['Writing, website and communications', 'Catalog, meetings and reports', 'Website administration'];
 const serviceHref = (service: typeof services[number]) => service.name === 'Facebook and Instagram' ? library.facebookUrl : service.href;
 ---
 <section class="service-map" aria-labelledby="services-heading">
   <h2 id="services-heading">The library’s tools</h2>
-  <p>{print ? 'A reference to keep handy. The board supplies the sign-ins for your role.' : 'Open a name to see how to use it. The board supplies the sign-ins for your role.'}</p>
+  <p>{print ? 'What each service does and where to open it.' : 'Select a service for its link and a short explanation.'}</p>
   {groups.map(group => <section class="service-group">
     <h3>{group}</h3>
     {services.filter(service => service.group === group).map(service => print ? <article class="service-card">

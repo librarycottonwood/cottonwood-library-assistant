@@ -40,7 +40,7 @@ const { title, active, print = false } = Astro.props;
     </div>
     <footer class="academy-footer">
       <p>Cottonwood Community Library<br /><span>Volunteer academy · Updated {reviewed}</span></p>
-      <nav aria-label="Guide formats"><a href="/academy/quick-reference/">Desk guide</a><a href="/academy/print/">Printable handbook</a></nav>
+      <nav aria-label="Guide formats"><a href="/academy/quick-reference/">Quick guide</a><a href="/academy/print/">Printable handbook</a></nav>
     </footer>
     <script>
       for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-prompt]')) {
@@ -52,9 +52,9 @@ const { title, active, print = false } = Astro.props;
           if (!prompt || !status) return;
           try {
             await navigator.clipboard.writeText(prompt.innerText);
-            status.textContent = 'Copied. Paste this into your library chat.';
+            status.textContent = 'Copied. Paste it into ChatGPT.';
           } catch {
-            status.textContent = 'Select the prompt text and copy it, then paste it into your library chat.';
+            status.textContent = 'Select and copy the message, then paste it into ChatGPT.';
           }
         });
       }

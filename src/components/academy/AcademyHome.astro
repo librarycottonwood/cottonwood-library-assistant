@@ -9,13 +9,13 @@ const photo = refreshPhoto({ key: 'computerRoom', alt: 'Computers at the library
     <div class="hero-copy">
       <p class="eyebrow">For Cottonwood volunteers</p>
       <h1>Volunteer<br />academy</h1>
-      <p class="lead">Get to know the library’s tools, practice with ChatGPT, and find help during a shift.</p>
+      <p class="lead">How to use ChatGPT, update the website, send newsletters and record donations.</p>
       <Button href="/academy/start-here/" variant="accent" iconEnd="arrow">Start with ChatGPT</Button>
     </div>
     <Image image={photo} alt={photo.alt} width={900} height={680} loading="eager" class="academy-photo" />
   </header>
   <section class="course-section" aria-labelledby="lessons-heading">
-    <div class="course-intro"><h2 id="lessons-heading">Choose a lesson.</h2><p>Start at the beginning, or open the lesson you need. Keep ChatGPT beside you and try the examples as you go.</p></div>
+    <div class="course-intro"><h2 id="lessons-heading">Choose a lesson.</h2><p>New to ChatGPT? Start with the first lesson. For a specific task, choose from the list.</p></div>
     <ol class="lesson-list">{lessons.map((lesson, index) => <li><a href={`/academy/${lesson.slug}/`}>
       <span class="lesson-number" aria-hidden="true">{index + 1}</span>
       <span><h3>{lesson.title}</h3><p>{lesson.summary}</p></span>
@@ -23,6 +23,6 @@ const photo = refreshPhoto({ key: 'computerRoom', alt: 'Computers at the library
     </a></li>)}</ol>
   </section>
   <section class="print-panel" aria-labelledby="paper-heading">
-    <div><h2 id="paper-heading">Keep a copy nearby.</h2><p>A quick reminder for the desk, or the lessons to read on paper.</p></div>
-    <div class="actions"><Button href="/academy/quick-reference/" variant="accent">Desk guide</Button><a href="/academy/print/">Print all lessons →</a></div>
+    <div><h2 id="paper-heading">Print the guide.</h2><p>Print a one-page list of common tasks or the complete instructions.</p></div>
+    <div class="actions"><Button href="/academy/quick-reference/" variant="accent">Quick guide</Button><a href="/academy/print/">Print all lessons →</a></div>
   </section>

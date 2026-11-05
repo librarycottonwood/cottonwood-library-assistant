@@ -9,9 +9,10 @@ const next = lessons[index + 1];
 ---
 <AcademyLayout title={lesson.title} active={lesson.slug}>
   <header class="lesson-header"><p class="eyebrow">Lesson {index + 1} of {lessons.length}</p><h1>{lesson.title}</h1><p class="lead">{lesson.summary}</p></header>
+  {lesson.parts.some(part => part.id) && <nav class="lesson-topics" aria-label="In this lesson"><ul>{lesson.parts.filter(part => part.id).map(part => <li><a href={`#${part.id}`}>{part.title}</a></li>)}</ul></nav>}
   <LessonBody lesson={lesson} />
   <nav class="lesson-pagination" aria-label="Next and previous lessons">
     <a href={previous ? `/academy/${previous.slug}/` : '/academy/'}>← {previous ? previous.title : 'Academy home'}</a>
-    <a href={next ? `/academy/${next.slug}/` : '/academy/quick-reference/'}>{next ? next.title : 'Keep your desk guide'} →</a>
+    <a href={next ? `/academy/${next.slug}/` : '/academy/quick-reference/'}>{next ? next.title : 'Print the quick guide'} →</a>
   </nav>
 </AcademyLayout>

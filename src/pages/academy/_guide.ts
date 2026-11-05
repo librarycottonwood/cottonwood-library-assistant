@@ -1,73 +1,231 @@
-// Public teaching material only. Private account identities live in assistant/ACCOUNT-REGISTER.md.
-// Screen lessons and print views share this source so their instructions cannot drift apart.
+// Public lessons. Account names and sign-in details are in assistant/ACCOUNT-REGISTER.md.
+// The website and printable handbook use this same text.
 export const reviewed = 'November 5, 2026';
 export const academyUrl = 'https://cottonwood-library.pages.dev/academy/';
-export const practicePrefix = 'PRACTICE ONLY. Use made-up details and stay in this chat. Do not use connected services or create, change, publish, send, schedule or delete anything. ';
-export interface Part { title: string; text: string[]; steps?: string[]; prompt?: string; links?: { label: string; href: string }[]; }
-export interface Lesson { slug: string; title: string; summary: string; goal: string; parts: Part[]; check: string; answer: string; }
+export const practicePrefix = "This is a practice exercise. Keep it in this conversation; do not change the library’s website or accounts. ";
+export interface Part {
+  id?: string;
+  title: string;
+  text: string[];
+  steps?: string[];
+  prompt?: string;
+  links?: { label: string; href: string }[];
+}
+export interface Lesson { slug: string; title: string; summary: string; parts: Part[]; }
 export const services = [
-  { group: 'Everyday tools', name: 'ChatGPT + Cottonwood Library', href: 'https://chatgpt.com/', role: 'Start here', purpose: 'Ask for help, write announcements, update the website and request reports.', access: 'Use the library setup supplied by the board.', connection: 'The Cottonwood instructions guide the assistant. Connected tools let it work with other services.' },
-  { group: 'Everyday tools', name: 'The library website', href: 'https://cottonwood-library.pages.dev/', role: 'Everyone', purpose: 'Where visitors find events, hours, news and ways to help.', access: 'No sign-in needed. Use the current bookmark from the board.', connection: 'Check a preview before approving a change, then check the live page.' },
-  { group: 'Everyday tools', name: 'Givebutter', href: 'https://dashboard.givebutter.com/', role: 'Fundraising and email volunteers', purpose: 'Donation records, fundraising campaigns and newsletter email through Engage.', access: 'Use your board-approved access.', connection: 'ChatGPT can read connected reports. An authorized person handles money and email actions in Givebutter.' },
-  { group: 'Everyday tools', name: 'Buffer', href: 'https://publish.buffer.com/', role: 'Social volunteers', purpose: 'Prepare and review social posts.', access: 'Use your board-approved access.', connection: 'Check the connected channel, picture and time. A draft has not been posted; Instagram access is not yet confirmed.' },
-  { group: 'Everyday tools', name: 'Facebook and Instagram', href: 'https://www.facebook.com/', role: 'Social volunteers', purpose: 'Where neighbors see the library’s social announcements.', access: 'Use the board’s approved page or account access.', connection: 'A website correction does not update an existing social post. Check both.' },
-  { group: 'Everyday tools', name: 'Gmail and Google Drive', href: 'https://drive.google.com/', role: 'Authorized staff', purpose: 'Google mail and shared files, including pictures and newsletter documents.', access: 'Open shared folders with the Google account that was invited.', connection: 'A file in Drive is not automatically on the website. Patron lists are not newsletter subscription lists.' },
-  { group: 'Everyday tools', name: 'Library email', href: 'https://cottonwood-library.pages.dev/visit/', role: 'Authorized staff', purpose: 'The library’s contact mailbox, including replies to newsletters.', access: 'Use the mail app or sign-in supplied by the board.', connection: 'This mailbox is separate from the library’s Google account. Newsletter sending happens in Givebutter Engage.' },
-  { group: 'Everyday tools', name: 'Follett Destiny catalog', href: 'https://cottonlib.follettdestiny.com/', role: 'Readers and circulation staff', purpose: 'Look for books in the library catalog.', access: 'Learn staff sign-in and checkout procedures with a trained colleague; this guide has not verified them.', connection: 'The website assistant cannot check books in or out or change patron records.' },
-  { group: 'Behind the scenes', name: 'Sanity', href: 'https://cottonwood-community-library.sanity.studio/', role: 'Behind the scenes', purpose: 'Stores website events, news, hours, notices and newsletters.', access: 'Ask for changes in ChatGPT; volunteers do not need to sign in here.', connection: 'Content saved here still needs a website preview and an approved save.' },
-  { group: 'Behind the scenes', name: 'GitHub', href: 'https://github.com/', role: 'Behind the scenes', purpose: 'Keeps the website’s code, proposed changes and save history.', access: 'The assistant handles routine saves. No volunteer sign-in needed.', connection: 'A “pull request” is a proposed save. The assistant must check that it reaches the live website.' },
-  { group: 'Behind the scenes', name: 'Codex', href: 'https://chatgpt.com/', role: 'Website maintainer', purpose: 'Helps the maintainer change the website’s design and code.', access: 'Describe the change in your library chat.', connection: 'The assistant explains any handoff. You still review a preview before saving.' },
-  { group: 'Behind the scenes', name: 'Cloudflare', href: 'https://dash.cloudflare.com/', role: 'Board administrator', purpose: 'Hosts the new library website and supporting services.', access: 'The board manages this account.', connection: 'Routine website editing does not require a Cloudflare sign-in.' },
-  { group: 'Occasional tools', name: 'Google Analytics / Library Analytics', href: 'https://analytics.google.com/', role: 'Reports through ChatGPT', purpose: 'Reports website visits, pages viewed and button clicks.', access: 'Ask ChatGPT for a report and its date range.', connection: 'It counts consented activity. A donation-button click is not a completed gift.' },
-  { group: 'Behind the scenes', name: 'Squarespace', href: 'https://account.squarespace.com/', role: 'Board administrator', purpose: 'Manages the library’s registered web address.', access: 'The board handles renewals and address settings.', connection: 'The web address and the new website’s hosting are separate services.' },
-  { group: 'Behind the scenes', name: 'Square / the earlier website', href: 'https://cottonwood-community-library.square.site/', role: 'Legacy system', purpose: 'An earlier library website.', access: 'The board decides how to maintain or retire it.', connection: 'Square and Squarespace are different companies. Updating the new site does not update this one.' },
-  { group: 'Occasional tools', name: 'Zoom', href: 'https://zoom.us/join', role: 'Meeting participants', purpose: 'Join online meetings.', access: 'Use the current meeting invitation.', connection: 'Keep meeting links and passcodes in the invitation, not on the public website.' },
+  { group: 'Writing, website and communications', name: 'ChatGPT + Cottonwood Library', href: 'https://chatgpt.com/', purpose: 'Write announcements, change website content and ask questions about library reports.', access: 'Sign in to the library’s ChatGPT account. It has the Cottonwood instructions and connections to the library’s other tools.', connection: 'Start with a request such as “Add an event to the website.” ChatGPT will ask for the details.' },
+  { group: 'Writing, website and communications', name: 'The library website', href: 'https://cottonwood-library.pages.dev/', purpose: 'The pages visitors read: events, hours, services, news and newsletters.', access: 'Open the website to see what visitors see. There is no sign-in for reading it.', connection: 'To change something, copy the page’s address and paste it into ChatGPT with your request.' },
+  { group: 'Writing, website and communications', name: 'Givebutter', href: 'https://dashboard.givebutter.com/', purpose: 'Donation records, fundraisers and the newsletter mailing list.', access: 'Sign in to Givebutter for cash/check entries and newsletter emails. This is a separate account from ChatGPT.', connection: 'Transactions holds donations. Contacts holds the mailing list. Engage is where you write and send an email.' },
+  { group: 'Writing, website and communications', name: 'Buffer', href: 'https://publish.buffer.com/', purpose: 'Review and publish the library’s social posts.', access: 'Sign in to Buffer, then open Publish. Drafts contains unfinished posts; Queue contains scheduled posts; Sent contains published posts.', connection: 'ChatGPT can prepare a Facebook draft for you to review here. Instagram setup is still awaiting confirmation.' },
+  { group: 'Writing, website and communications', name: 'Facebook and Instagram', href: 'https://www.facebook.com/', purpose: 'The library’s public social pages.', access: 'Facebook Page access uses your own Facebook account after you have been added to the Page. Ask Todd if the library Page is missing from your account.', connection: 'The links below open the library’s pages. A post on Facebook is separate from an announcement on the website.' },
+  { group: 'Writing, website and communications', name: 'Gmail and Google Drive', href: 'https://drive.google.com/', purpose: 'Email, shared documents, newsletter files and photos.', access: 'A shared Drive folder opens with the Google account that received its invitation. Check which account is selected if a file says you need access.', connection: 'Download the photo or PDF you want to use, then attach it to your ChatGPT message.' },
+  { group: 'Writing, website and communications', name: 'Library email', href: 'https://cottonwood-library.pages.dev/visit/', purpose: 'The mailbox for library correspondence and newsletter replies.', access: 'Open the library’s existing mail app. Its contact mailbox is separate from Gmail.', connection: 'Use this mailbox to reply to an individual. Use Givebutter Engage to email the newsletter list.' },
+  { group: 'Catalog, meetings and reports', name: 'Follett Destiny catalog', href: 'https://cottonlib.follettdestiny.com/', purpose: 'Search the library’s books.', access: 'The link opens the catalog. Ask a circulation volunteer to show you the staff sign-in and book checkout screens.', connection: 'Book checkouts and patron records are handled in the catalog system, not in ChatGPT.' },
+  { group: 'Catalog, meetings and reports', name: 'Zoom', href: 'https://zoom.us/join', purpose: 'Online library meetings.', access: 'Open the Zoom link in the meeting invitation. If prompted, enter the passcode from that invitation.', connection: 'You can also choose Join in Zoom and enter the meeting ID.' },
+  { group: 'Catalog, meetings and reports', name: 'Google Analytics / Library Analytics', href: 'https://analytics.google.com/', purpose: 'See how many people visit the website and which pages they read.', access: 'Ask ChatGPT for the report. Library Analytics is the connection it uses to read Google Analytics.', connection: 'For example: “Which website pages were most popular last month?” Donation amounts come from Givebutter instead.' },
+  { group: 'Website administration', name: 'Sanity', href: 'https://cottonwood-community-library.sanity.studio/', purpose: 'Stores website text, event dates, photos and newsletter PDFs.', access: 'ChatGPT edits this content when you ask for a website update. You do not need to open Sanity for that.', connection: 'You may see its name while ChatGPT is working on an event or newsletter.' },
+  { group: 'Website administration', name: 'GitHub', href: 'https://github.com/', purpose: 'Keeps the website files and a history of changes.', access: 'ChatGPT uses GitHub to prepare and save website updates.', connection: 'A “pull request” is the proposed change being reviewed. Your part is to look at the website preview and decide whether it is ready.' },
+  { group: 'Website administration', name: 'Codex', href: 'https://chatgpt.com/', purpose: 'Makes changes to the website’s design and code.', access: 'Ask for the change in ChatGPT, such as “Make the text on this page larger.” The website maintainer uses Codex for the technical work.', connection: 'Routine events and news updates can be handled in the library conversation.' },
+  { group: 'Website administration', name: 'Cloudflare', href: 'https://dash.cloudflare.com/', purpose: 'Hosts the website so people can open it online.', access: 'Todd manages the library’s hosting account.', connection: 'You do not need this dashboard to update a page.' },
+  { group: 'Website administration', name: 'Squarespace', href: 'https://account.squarespace.com/', purpose: 'Manages the library’s registered web address.', access: 'Todd handles this account and the address renewal.', connection: 'The web address and the website itself are managed in different places: Squarespace and Cloudflare.' },
+  { group: 'Website administration', name: 'Square / the earlier website', href: 'https://cottonwood-community-library.square.site/', purpose: 'An earlier version of the library website.', access: 'This link is included so you can recognize an old bookmark.', connection: 'Square and Squarespace are different services. Changes made to the new website do not appear on this older one.' },
 ];
 export const lessons: Lesson[] = [
-  { slug: 'start-here', title: 'Start with ChatGPT', summary: 'Open a chat, ask for help and shape the answer.', goal: 'Start a conversation and ask for a useful first draft.', parts: [
-    { title: 'Open your library chat', text: ['Go to ChatGPT using the library setup from the board. Check the account name first; a personal account may not have the library tools. If sign-in fails, ask the board for help.', 'Choose New chat for a new job. To finish an earlier job, find that conversation in the sidebar and continue there.'], links: [{ label: 'Open ChatGPT', href: 'https://chatgpt.com/' }] },
-    { title: 'Type what you need', text: ['Use the message box as if you were asking a colleague. Say what you want, where it should go and the facts you know. You can say “Ask me one question at a time.”', 'Use the attachment button to add an approved photo or document. Wait for it to finish uploading, then send. The stop button pauses an answer if you need to interrupt.'], prompt: 'Help me get started with the Cottonwood Library tools. Tell me what you can do in this chat, then walk me through one small task. Ask one question at a time.' },
-    { title: 'Keep the conversation going', text: ['You can ask “Make it shorter,” “That date is wrong,” or “Show me the final wording.” There are no special commands to learn.', 'Read names, dates, times, amounts and links before approving. If a fact surprises you, ask “Where did that come from?” The assistant can make mistakes.'] },
-    { title: 'Choose what to share', text: ['Use approved library material. Leave passwords, verification codes, bank details and patron lists out of chat. Check photos for private details; if you cannot remove hidden location information, use a screenshot of the photo.'], links: [{ label: 'ChatGPT’s getting-started guide', href: 'https://learn.chatgpt.com/docs/quickstart' }] },
-  ], check: 'What if the draft includes a date you never supplied?', answer: 'Ask where it came from. Confirm the date with the person responsible before approving it.' },
-  { slug: 'accounts-and-tools', title: 'Find the right tool', summary: 'What each service does, and which ones you need.', goal: 'Know where to start and who can help with access.', parts: [
-    { title: 'Start in ChatGPT', text: ['You do not need to learn every website to help the library. Start with your task in ChatGPT. The service list below explains the names you may come across.', 'An agent is an assistant that can carry out steps. A skill gives it instructions; a connection gives it access to another service. The assistant should check that access before promising a result.'] },
-    { title: 'Use the sign-in you were given', text: ['Ask the board for the accounts needed for your role. It keeps the sign-in details privately, separate from this public guide.', '“Continue with Google” and “Continue with GitHub” use different accounts. Follow the board’s sign-in method, even if the email addresses look the same. Enter passwords and codes only on the service’s own sign-in screen.', 'Missing access? Ask the board. Do not borrow someone else’s password or create a replacement account. Sign out on a public or borrowed computer; ask about the procedure for the library’s shared computer.'] },
-  ], check: 'Do you need Sanity and GitHub accounts to correct an event?', answer: 'No. Ask in the library ChatGPT conversation. The assistant handles those steps; the board helps with account trouble.' },
-  { slug: 'preview-and-save', title: 'Update the website', summary: 'From your request to a checked, live page.', goal: 'Review a change and know when it is finished.', parts: [
-    { title: 'Make one change together', text: ['Describe what needs changing. The assistant handles the tools and asks for any missing facts.'], steps: ['Check the wording in chat. For an event, check the date, start and end times, place and cost.', 'Open the preview link. Try the links and look at the page on your phone if possible. Read any note about other changes included in this save.', 'When it is right, answer “Ready to save?” with “Yes, save this preview.” Otherwise say what to fix.', 'Wait for the assistant to confirm the live page was checked. Open it yourself to see the result.'] },
-    { title: 'A preview is not the live website', text: ['A preview lets you review the proposed website. Saving content to Sanity is also only one step; it does not mean the live page has changed.', 'Use only material that is safe to share publicly. Uploaded files, published content and preview links may be accessible before the final website save. If you cancel, ask the assistant to check what needs removing.'] },
-    { title: 'If you cannot find your change', text: ['Return to the same conversation. Ask the assistant to check what happened before trying again.'], prompt: 'Where is my change? Check the saved content, the latest save status and the live page. Tell me what is finished and what happens next. Do not make another change yet.' },
-    { title: 'If you need to undo it', text: ['Give the page link and describe the change. Undoing a website change also needs a preview and your approval. For exposed private information, contact the board immediately; an undo may not remove earlier copies.'], prompt: 'Help me undo [change] on [page link], saved around [date/time]. First show me what would be restored. Keep everyone else’s changes.' },
-  ], check: 'The content is saved in Sanity. Is the job finished?', answer: 'Not yet. Review the website preview, approve the save, then check the live page.' },
-  { slug: 'everyday-jobs', title: 'Try an everyday task', summary: 'Starting points for events, newsletters, donations and reports.', goal: 'Choose a prompt and fill in the facts for your job.', parts: [
-    { title: 'Add an event or share some news', text: ['Replace the brackets with confirmed details. For a recurring event, supply only confirmed dates. An event needs a start and end time; a news post can simply tell a story.'], prompt: 'Please prepare [an event / a news post] about [topic]. Here are the confirmed details: [date, start and end time in Pacific time, place, cost and other facts]. Use [the attached approved photo / no photo]. Show me the wording and a preview before saving.' },
-    { title: 'Share the newsletter', text: ['Upload the approved PDF to the website, then prepare the email. These are two separate jobs. An authorized person reviews and sends the email in Givebutter Engage.', 'Use the Library Newsletter audience, excluding people who unsubscribed or cannot receive mail. A donor list or patron spreadsheet is not a subscriber list.'], prompt: 'Put this approved newsletter PDF on the website and keep older issues available. Once the new issue is live, draft an email linking to it for our Library Newsletter audience. Do not send or schedule it.', links: [{ label: 'Open Givebutter', href: 'https://dashboard.givebutter.com/' }] },
-    { title: 'Prepare a social post', text: ['Check the account, picture, wording and time before a post goes out. If Buffer is unavailable, ask for text you can copy using the board’s approved process.'], prompt: 'Draft a Facebook post about [topic] using this page: [link]. Check which channel is connected. Show me the text before making a Buffer draft. Do not publish or schedule it.' },
-    { title: 'Check donations or record a received gift', text: ['Ask ChatGPT for current Givebutter figures. It can read connected reports, but cannot record gifts or issue refunds.', 'An authorized person records received cash or checks in Givebutter: Transactions → New Transaction. Check the campaign, amount, received date, method, donor privacy and receipt choice. Check the saved entry once to avoid counting it twice.', 'An offline entry counts toward the campaign. Givebutter does not collect or pay out that cash or check.'], prompt: 'Which Givebutter campaign is linked on our website, and what total does Givebutter report? Tell me when you checked. Do not change any records.', links: [{ label: 'How to record a cash or check gift', href: 'https://help.givebutter.com/en/articles/2705864-how-to-add-and-manage-offline-transactions' }] },
-    { title: 'Ask for a report', text: ['Name the dates and what you want to know. Visits, page views, donation clicks and completed gifts mean different things. If a connection fails, the figures are unavailable—not zero.', 'For a recurring report, ask the assistant to check for an existing reminder first. Agree on its schedule and check that the first report actually arrives.'], prompt: 'For the last complete calendar month, show website visits and donation-button clicks, plus Givebutter completed gifts for the same dates. Name each source and say what is unavailable. Do not change anything.' },
-  ], check: 'The newsletter PDF is on the website. Has the email gone out?', answer: 'No. Someone authorized to send email must review the message and audience, then send it in Givebutter Engage.' },
-  { slug: 'when-something-goes-wrong', title: 'Get help with a problem', summary: 'What to do first when a save, sign-in or service fails.', goal: 'Describe the problem and find the right next step.', parts: [
-    { title: 'Pause and note what happened', text: ['For immediate danger, follow the library’s emergency procedure. Do not wait for ChatGPT.', 'For a website or account problem, note the page, time, what you tried and the error. Hide private details before sharing a screenshot. Avoid repeated payments, saves or sends.'], prompt: 'Please help with [service/page]. I tried [action] at [time] and saw [error]. Check what has already happened before changing anything. Give me one next step.' },
-    { title: 'We need to close or cancel today', text: ['Give the exact date. Ask for a temporary notice, keeping regular hours unchanged. For a recurring event, identify the affected session.', 'Use the approved door notice or contact procedure while the website save runs. A website change does not notify attendees or update social posts.'], prompt: 'The library is closed on [exact date] because [approved reason]. Prepare a website notice through [end date] and a Facebook draft. Keep regular weekly hours unchanged. Confirm the dates and show me a preview. Do not publish social posts.' },
-    { title: 'A save failed or the page is wrong', text: ['Use the original conversation. A failed change does not necessarily mean the website is down. Ask the assistant to check the live page and save status; a fresh preview may be needed.'], prompt: 'The page [link] still shows [old detail]. We approved [new detail]. Check whether the save went live and tell me what to do next. Keep other people’s changes.' },
-    { title: 'The website, signup or Donate button fails', text: ['If other websites also fail, ask the person responsible for the library computer to check the connection. Otherwise, share the broken page link.', 'Do not use a real signup or payment as a test. For a payment already attempted, stop and ask an authorized Givebutter administrator to check it.'], prompt: 'The [website / signup form / Donate button] fails at [link]. Check it without making a payment, adding a subscriber or sending anything. Tell me what works and what needs the board’s help.' },
-    { title: 'You cannot sign in—or something looks suspicious', text: ['Ask which service needs attention, then use its genuine sign-in page. For an unexpected password request or exposed private information, contact the board through a known route. Do not follow the suspicious link or paste private material into chat.', 'The board handles account access, recovery, billing and web-address changes. Keep its contact details beside the computer so you can get help even when ChatGPT is unavailable.'], prompt: 'I need the board administrator’s help with [service and problem]. Give me the documented contact and one sentence I can send. Leave out passwords, codes and private records.' },
-  ], check: 'A save failed. Does that mean the website is down?', answer: 'No. Check the live website first, then find out which part of the save failed.' },
-  { slug: 'practice-with-a-buddy', title: 'Practice with a buddy', summary: 'Try a pretend task, then one real job together.', goal: 'Feel ready to work through a request with a colleague.', parts: [
-    { title: 'Try a pretend event', text: ['Sit with a colleague and use the prompt below. Everything stays in chat: no real drafts, uploads or sends. Take turns answering the assistant.'], prompt: practicePrefix + 'Help us practice adding an event. Give us a made-up scenario and ask one question at a time. Include a missing end time and a pretend preview for us to check.' },
-    { title: 'Try a small problem', text: ['Next, practice a failed save. Talk through how you would check the website and who you would ask for help.'], prompt: practicePrefix + 'Pretend a website save failed after I approved it. Ask how I would check whether the site still works, then help me with my answer. Do not investigate real accounts.' },
-    { title: 'Before your first solo task', text: ['Work through this list together. If something is unfamiliar, revisit that lesson.'], steps: ['Open the library ChatGPT and find an earlier conversation.', 'Attach a safe sample file and ask for a shorter draft.', 'Catch a wrong date, missing end time or extra change in a pretend preview.', 'Explain the difference between a newsletter PDF, an email draft and a sent email.', 'Find your assigned sign-ins, the desk guide and the board contact. Verify access on the library’s computer.'] },
-    { title: 'Do one real job together', text: ['Tell the assistant that practice has ended. Choose a genuine, approved task with your colleague. Check the facts, review the preview, approve it and open the live result.', 'Note what you tried and anything you still need help with. A successful practice builds familiarity; the real task checks that particular connection.'] },
-  ], check: 'Does finishing a pretend exercise prove the tools work?', answer: 'No. It helps you learn the steps. A supervised real task checks the connection and the result.' },
+  {
+    slug: 'start-here', title: 'Using ChatGPT',
+    summary: 'Start a conversation, attach a file and ask for changes.',
+    parts: [
+      {
+        title: 'Open a conversation',
+        text: ['ChatGPT is a program you can talk to by typing. It can write a first draft, explain something or carry out a task using the library’s connected tools.'],
+        steps: [
+          'Open chatgpt.com and sign in to the library’s account.',
+          'Choose New chat. For website updates, choose Work at the top of the new conversation. Chat is enough for questions or rewriting text.',
+          'Type your request in the message box and send it. When ChatGPT asks a question, answer in the same box.',
+        ],
+        prompt: 'Help me write an announcement for the library. Ask me what it is about.',
+        links: [{ label: 'Open ChatGPT', href: 'https://chatgpt.com/' }],
+      },
+      {
+        title: 'You can change the answer',
+        text: ['The first answer is a starting point. You can reply with “Make it two sentences,” “Use simpler words,” or “Add that admission is free.” You do not have to write the whole request again.', 'If ChatGPT gets a name, date or other detail wrong, tell it the correct information. Read the final wording before using it.'],
+      },
+      {
+        title: 'Add a photo, flyer or newsletter',
+        text: ['Click the attachment button beside the message box and choose the file from your computer. Once it appears in the message, tell ChatGPT what to do with it.'],
+        prompt: 'Read this flyer and pull out the event name, date, time and location. Show me what you found.',
+      },
+      {
+        title: 'Find an earlier conversation',
+        text: ['Open the sidebar to see your conversations. Select the one you want to continue; its earlier messages and attachments are still there.', 'Use the same conversation while revising one announcement. Start a new one when you move to a different task.'],
+        links: [{ label: 'More about using ChatGPT', href: 'https://learn.chatgpt.com/docs/use-chatgpt' }],
+      },
+    ],
+  },
+  {
+    slug: 'accounts-and-tools', title: 'Accounts and websites',
+    summary: 'What each service is for and where to open it.',
+    parts: [
+      {
+        title: 'The tools you will use most',
+        text: ['Use ChatGPT to write announcements and request website changes. Use Givebutter to record donations and send newsletter emails. Use Buffer to review Facebook posts. Google Drive holds shared files such as photos and newsletter PDFs.'],
+      },
+      {
+        title: 'Which account do I use?',
+        text: ['These services have separate sign-ins. The library’s account sheet lists the email address and sign-in method for each one. Todd has that sheet and can help you get access.', 'For Google Drive, use the Google account that received the folder invitation. For the library’s Facebook Page, use the Facebook account that was added to the Page.'],
+      },
+      {
+        title: 'What are agents, skills and connections?',
+        text: ['The agent is the assistant doing the work in ChatGPT. A skill is a set of instructions: the newsletter skill, for example, tells it how the library handles a new issue. A connection lets it use another service, such as Givebutter or the website editor.', 'You can ask “Add an event” or “Help with the newsletter.” You do not need to choose a skill yourself.'],
+      },
+    ],
+  },
+  {
+    slug: 'preview-and-save', title: 'Changing the website',
+    summary: 'Add an event, correct a page or upload the newsletter.',
+    parts: [
+      {
+        id: 'add-event', title: 'Add an event',
+        text: ['Open a new Work conversation in the library’s ChatGPT account. You can type the details or attach a flyer.'],
+        prompt: 'Add an event to the library website. Ask me for the details you need.',
+        steps: [
+          'Give the event’s name, date, start and end times, location and any cost. Attach a photo if you want one on the page.',
+          'Read the wording ChatGPT writes. Reply with any corrections.',
+          'Open the preview link. It shows how the page will look on the website.',
+          'When it looks right and ChatGPT asks “Ready to save?”, reply “Yes, save it.” Then open the website link it gives you.',
+        ],
+      },
+      {
+        id: 'correct-page', title: 'Change something already on a page',
+        text: ['Open the page you want to change and copy its address from the browser. Paste it into ChatGPT, then say which words, dates or pictures need changing.', 'For regular opening hours, give the days and new times. For a one-day closure, use the closure instructions in the next lesson about problems.'],
+        prompt: 'On this page, change [old wording] to [new wording]: [page link].',
+      },
+      {
+        id: 'newsletter-pdf', title: 'Put the new newsletter on the website',
+        text: ['Attach the newsletter PDF to a Work conversation. ChatGPT can read it and suggest a title and description.'],
+        prompt: 'Put this newsletter on the website as the latest issue. Keep the older issues in the archive.',
+        steps: ['Review the title and description.', 'Open the preview and click the newsletter to check that the right PDF opens.', 'Tell ChatGPT to save it. Keep the finished page’s link if you will also email the newsletter.'],
+      },
+      {
+        title: 'What does “preview” mean?',
+        text: ['A preview is a separate copy of the website showing your proposed change. You can look at it before it replaces the current page.', 'If ChatGPT says the save includes another person’s changes too, read that list before saying yes. If you want something changed, reply in the conversation and ask for another preview.'],
+      },
+    ],
+  },
+  {
+    slug: 'everyday-jobs', title: 'Newsletters, Facebook and donations',
+    summary: 'Send an email, find subscribers, record a gift and read reports.',
+    parts: [
+      {
+        id: 'send-newsletter', title: 'Email the newsletter',
+        text: ['ChatGPT writes the email; you send it from Givebutter. First put the PDF on the website using the previous lesson, so the email can link to it.'],
+        prompt: 'Write a short email introducing this newsletter: [newsletter link]. Include a subject line and a link to read the issue.',
+        steps: [
+          'Open Givebutter on a computer. Choose Engage, then Emails, then New Email.',
+          'Choose a template. Copy the subject and message from ChatGPT into the email, including the newsletter link.',
+          'Click Next to choose recipients. Filter by the Library Newsletter tag. This is the library’s subscriber list; Givebutter excludes unsubscribed or blocked addresses.',
+          'Review the email and recipient list. Choose Send now and Send, or Schedule for later if you want it to go out at another time.',
+        ],
+        links: [{ label: 'Open Givebutter', href: 'https://dashboard.givebutter.com/' }, { label: 'Givebutter’s email instructions', href: 'https://help.givebutter.com/en/articles/6523588-how-to-create-an-outbound-email' }],
+      },
+      {
+        id: 'subscribers', title: 'See who has signed up for the newsletter',
+        text: ['In Givebutter, open Contacts. Choose Filter, then Tags, and select Library Newsletter. People who sign up through the website are added to this group.', 'To check one person, search for their email address and open their contact record. A list of donors or library patrons is a different list from newsletter subscribers.'],
+      },
+      {
+        id: 'facebook', title: 'Make a Facebook post',
+        text: ['Give ChatGPT the event or news page you want to share. It can use the page’s details and photo.'],
+        prompt: 'Write a Facebook post about this: [page link].',
+        steps: [
+          'Read the post in ChatGPT and ask for any changes.',
+          'When you like it, ask ChatGPT to put the draft in Buffer.',
+          'Open Buffer → Publish → Drafts. Find the post and check that it is for the library’s Facebook Page.',
+          'Open the draft to publish it or choose when it should go out. Published posts appear under Sent; scheduled posts appear in Queue.',
+        ],
+        links: [{ label: 'Open Buffer', href: 'https://publish.buffer.com/' }, { label: 'Finding drafts and sent posts in Buffer', href: 'https://support.buffer.com/articles/how-to-use-the-all-channels-view-in-buffer-oqqE4Sdf3T' }],
+      },
+      {
+        id: 'cash-check', title: 'Record a cash or check donation',
+        text: ['Use Givebutter to record money the library has already received. You will need a Givebutter admin or editor account to add a transaction.'],
+        steps: [
+          'Open Transactions and click New Transaction.',
+          'Choose the campaign the donation belongs to, then select the donor or add a new contact.',
+          'Enter the amount and the date the donation was received. For Payment method, choose Cash or Check. A check entry also has fields for its number and deposit date.',
+          'Choose whether to email a receipt and whether the donor’s name and amount should appear publicly. Click Save.',
+        ],
+        links: [{ label: 'Open Givebutter', href: 'https://dashboard.givebutter.com/' }, { label: 'Givebutter’s cash and check instructions', href: 'https://help.givebutter.com/en/articles/2705864-how-to-add-and-manage-offline-transactions' }],
+      },
+      {
+        id: 'reports', title: 'Get figures for a meeting',
+        text: ['Ask ChatGPT for the dates and figures you need. It uses Givebutter for donation totals and Library Analytics for website visits.', 'A click on the Donate button means someone opened it. Givebutter tells you whether a donation was completed.'],
+        prompt: 'For last month, how much did the library receive in donations, how many people visited the website, and which pages were most popular?',
+      },
+    ],
+  },
+  {
+    slug: 'when-something-goes-wrong', title: 'Closures and website problems',
+    summary: 'Announce a closure, cancel an event or get a broken page fixed.',
+    parts: [
+      {
+        id: 'closure', title: 'The library needs to close for a day',
+        text: ['Tell ChatGPT the closure date and the reason you want displayed. It can put a notice across the website without changing the normal weekly hours.'],
+        prompt: 'The library will be closed on [date] because [reason]. Add a notice to the website for that day.',
+        steps: ['Review the notice and website preview, then tell ChatGPT to save it.', 'If you also want a Facebook announcement, say “Write a Facebook post about this closure too.” Review that draft in Buffer.'],
+      },
+      {
+        id: 'cancel-event', title: 'An event is canceled or rescheduled',
+        text: ['Send ChatGPT the event’s page link and identify the date being changed. For a repeating event, say whether this affects just one session or the whole series.'],
+        prompt: 'Cancel the [event name] session on [date]. Leave the other dates as they are.',
+      },
+      {
+        id: 'wrong-page', title: 'The website still shows the old information',
+        text: ['Refresh the page once. If it still shows the old text, open the ChatGPT conversation where you requested the change and paste the page link. Tell it the specific difference.'],
+        prompt: 'This page still has the old hours: [page link]. I asked you to change them earlier in this conversation. Can you finish the update?',
+      },
+      {
+        id: 'broken-link', title: 'A page or button does not work',
+        text: ['Copy the page’s address into ChatGPT and describe what you clicked and what happened. For example, “I clicked Donate, but nothing opened.” A screenshot is useful if there is an error message.'],
+        prompt: 'The Donate button on this page does not open when I click it: [page link]. Can you find out why?',
+      },
+      {
+        id: 'access', title: 'You cannot get into an account',
+        text: ['Check that you are opening the right service with the sign-in method on the library’s account sheet. If it still fails, contact Todd and tell him which account you cannot open.', 'If Givebutter says a donation failed but the donor thinks they were charged, ask the person handling donations to look up that transaction before attempting another payment.'],
+      },
+    ],
+  },
+  {
+    slug: 'practice-with-a-buddy', title: 'Try it in ChatGPT',
+    summary: 'Three exercises: rewrite an announcement, read a flyer and plan an event page.',
+    parts: [
+      {
+        title: 'Rewrite a short announcement',
+        text: ['Copy this message into ChatGPT. After it replies, ask “Make it one sentence.” Notice that you can keep revising the same answer.'],
+        prompt: practicePrefix + 'Write a short announcement saying our library is holding a book sale. Use no date or time yet.',
+      },
+      {
+        title: 'Read a flyer',
+        text: ['Attach a library flyer. Ask ChatGPT to find its details, then compare the answer with the flyer. If it misses something, point it out.'],
+        prompt: practicePrefix + 'Read this flyer and list the event name, date, start and end times, location and cost. If a detail is missing, tell me.',
+      },
+      {
+        title: 'Walk through adding an event',
+        text: ['This exercise lets you see the questions ChatGPT asks before making an event page. Answer with made-up details. At the end, ask to see the finished wording.'],
+        prompt: practicePrefix + 'Walk me through adding a book sale to the website. Ask me one question at a time, then show me the event description.',
+      },
+      {
+        title: 'When you want to make a real update',
+        text: ['Start a new Work conversation and describe the actual event or announcement. Use the “Changing the website” lesson to review the preview and save it.'],
+      },
+    ],
+  },
 ];
 export const quickReference = [
-  ['Start a job', 'Open the library ChatGPT. Say what you need, where it should go and the facts you know.'],
-  ['Save a website change', 'Check the wording → open the preview → check any extra changes → approve → open the live result.'],
-  ['Close or cancel today', 'Give exact dates. Ask for a notice and social draft. Use the approved door/contact procedure too.'],
-  ['Find a missing change', 'Ask “Where is my change? Check the save status and live page.” Continue in the original chat.'],
-  ['Send an email or post', 'A draft has not been sent. The authorized person checks the audience or channel and finishes in Givebutter or Buffer.'],
-  ['Report a broken button', 'Note the page, time and error. Ask for a check without a payment or test signup. Avoid repeated submissions.'],
-  ['Get account or privacy help', 'Contact the board through a known route. Keep passwords, codes and private records out of chat.'],
-  ['Work without ChatGPT', 'Use this sheet and your board contact. Write down the request to finish later.'],
+  ['Add an event', 'In ChatGPT: “Add an event to the website.” Give it the name, date, start and end times, location and cost.'],
+  ['Correct a page', 'Paste the page link into ChatGPT and say what to change. Open the preview, then reply “Yes, save it” when it is right.'],
+  ['Upload the newsletter', 'Attach the PDF in ChatGPT and say “Put this on the website as the latest newsletter.”'],
+  ['Email the newsletter', 'Ask ChatGPT to write the email. In Givebutter, open Engage → Emails → New Email. Paste the draft and choose recipients tagged Library Newsletter.'],
+  ['Find newsletter subscribers', 'In Givebutter, open Contacts → Filter → Tags → Library Newsletter.'],
+  ['Record cash or a check', 'In Givebutter, open Transactions → New Transaction. Choose the campaign and donor, enter the amount and date, select Cash or Check, then save.'],
+  ['Post on Facebook', 'Ask ChatGPT to write the post and put the draft in Buffer. Open Buffer → Publish → Drafts to review and publish it.'],
+  ['Announce a closure', 'In ChatGPT: “The library is closed on [date] because [reason]. Add a website notice for that day.”'],
 ];

@@ -3,7 +3,7 @@ interface Props { text: string; }
 const { text } = Astro.props;
 ---
 <aside class="prompt" data-prompt aria-label="Example message for ChatGPT">
-  <div class="prompt-heading"><strong>Try this in ChatGPT</strong><button type="button" data-copy-prompt hidden>Copy prompt</button></div>
+  <div class="prompt-heading"><strong>Try this in ChatGPT</strong><button type="button" data-copy-prompt hidden>Copy message</button></div>
   <p data-prompt-text>{text}</p>
   <p class="copy-status" role="status" aria-live="polite"></p>
 </aside>

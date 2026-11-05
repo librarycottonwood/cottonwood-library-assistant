@@ -7,7 +7,7 @@ const { lesson, print = false } = Astro.props;
 const PartHeading = print ? 'h3' : 'h2';
 ---
 
-{lesson.parts.map(part => <section class="lesson-part">
+{lesson.parts.map(part => <section class="lesson-part" id={part.id}>
   <PartHeading class="part-heading">{part.title}</PartHeading>
   {part.text.map(text => <p>{text}</p>)}
   {part.steps && <ol class="steps">{part.steps.map(step => <li>{step}</li>)}</ol>}
@@ -15,8 +15,3 @@ const PartHeading = print ? 'h3' : 'h2';
   {part.links && <ul class="reference-links">{part.links.map(link => <li><a href={link.href}>{link.label} ↗</a></li>)}</ul>}
 </section>)}
 {lesson.slug === 'accounts-and-tools' && !print && <ServiceMap print={print} />}
-<aside class="knowledge-check">
-  <p class="eyebrow">Before you move on</p>
-  <PartHeading>{lesson.check}</PartHeading>
-  {print ? <p>{lesson.answer}</p> : <details><summary>See the answer</summary><p>{lesson.answer}</p></details>}
-</aside>

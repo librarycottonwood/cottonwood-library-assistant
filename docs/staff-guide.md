@@ -1,22 +1,20 @@
-# Volunteer guide
+# Library tools guide
 
-Start with the [Volunteer Academy](https://cottonwood-library.pages.dev/academy/). Work through a lesson with ChatGPT open beside it, or jump straight to the job you need.
+Open the [Volunteer Academy](https://cottonwood-library.pages.dev/academy/).
 
-- [Start with ChatGPT](https://cottonwood-library.pages.dev/academy/start-here/) — open a chat and shape a draft.
-- [Find the right tool](https://cottonwood-library.pages.dev/academy/accounts-and-tools/) — what each service does and who uses it.
-- [Update the website](https://cottonwood-library.pages.dev/academy/preview-and-save/) — check a preview and save a change.
-- [Try an everyday task](https://cottonwood-library.pages.dev/academy/everyday-jobs/) — prompts for events, newsletters, donations and reports.
-- [Get help with a problem](https://cottonwood-library.pages.dev/academy/when-something-goes-wrong/) — a failed save, broken page or sign-in problem.
-- [Practice with a buddy](https://cottonwood-library.pages.dev/academy/practice-with-a-buddy/) — a pretend task, then a real one together.
+- [Using ChatGPT](https://cottonwood-library.pages.dev/academy/start-here/): start a conversation, attach a file and revise an answer.
+- [Accounts and websites](https://cottonwood-library.pages.dev/academy/accounts-and-tools/): what each service does and where to sign in.
+- [Changing the website](https://cottonwood-library.pages.dev/academy/preview-and-save/): add an event, correct a page or upload a newsletter.
+- [Newsletters, Facebook and donations](https://cottonwood-library.pages.dev/academy/everyday-jobs/): Givebutter email, subscriber lists, cash/check entries, Buffer drafts and reports.
+- [Closures and website problems](https://cottonwood-library.pages.dev/academy/when-something-goes-wrong/): closure notices, canceled events and broken pages.
+- [Try it in ChatGPT](https://cottonwood-library.pages.dev/academy/practice-with-a-buddy/): three practice exercises.
 
-Keep the [one-page desk guide](https://cottonwood-library.pages.dev/academy/quick-reference/) by the computer. If you prefer reading on paper, print the [handbook](https://cottonwood-library.pages.dev/academy/print/).
+Print the [one-page task guide](https://cottonwood-library.pages.dev/academy/quick-reference/) or the [complete handbook](https://cottonwood-library.pages.dev/academy/print/).
 
-Ask the board privately for the sign-ins needed for your role. The academy is public, so it does not list passwords, codes or private account details.
+Todd has the library account sheet with sign-in details.
 
-## For the person maintaining this guide
+## Maintaining the guide
 
-Until this PR is saved and deployed, use its checked preview links; the academy is not yet on the live website. The old experimental Claude guide has been replaced by these ChatGPT lessons.
+The academy is awaiting publication in PR #99. Use that PR’s checked preview until it is saved.
 
-Screen and print versions use the same lesson source: `src/pages/academy/_guide.ts`. Update that file through the website review process so the two versions stay together. Do not keep a separate PDF master or copy the lessons into Sanity.
-
-The private board handoff is `assistant/ACCOUNT-REGISTER.md`. Keep it off the public website; never add passwords or recovery codes to either guide.
+Edit `src/pages/academy/_guide.ts` to change the lessons in both the website and print versions. The private account sheet is `assistant/ACCOUNT-REGISTER.md`. Product help links are included beside the relevant instructions.
