@@ -11,7 +11,7 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 
 ## Website
 
-- Public launch and AI Expo: Tuesday, November 3, 2026. The domain is attached then (`docs/domain-launch.md`).
+- AI Expo: Tuesday, November 3, 2026. Public launch moved to Thursday, November 5, 2026 at the latest. The domain is attached at launch (`docs/domain-launch.md`).
 
 - Live: https://cottonwood-library.pages.dev/ (Cloudflare Pages project `cottonwood-library` on the library's Cloudflare account). Previews: `https://<8 hex>.cottonwood-library.pages.dev`.
 - Public domain `cottonwoodcommunitylibrary.com` (registered at Squarespace) is not attached yet. Plan: `docs/domain-launch.md`.

@@ -11,7 +11,7 @@ For email delivery, subscribers or a combined website/email/social request, also
 
 ## Email newsletter
 
-Gather the topic or approved issue, intended newsletter audience and any requested send time. Offer to write the subject and short message from those facts. Use the existing Givebutter **Library Newsletter** signup audience, excluding unsubscribed/suppressed contacts; donors and the contact spreadsheet are not automatically newsletter subscribers.
+Gather the topic or approved issue, intended newsletter audience and any requested send time. Offer to write the subject and short message from those facts. The audience is Givebutter contacts tagged **Library Newsletter** (the website's sign-up form adds this tag), plus earlier **Widget form sign-ups → Library Newsletter** (old widget `L4EVDm`), excluding unsubscribed/suppressed contacts; donors and the contact spreadsheet are not automatically newsletter subscribers.
 
 Show the exact draft and audience before a send. Check actual tools: the official Givebutter connection is documented for read access, not email sending. Without a supported write tool, prepare the copy and give the actual Engage link from `assistant/COMMUNICATIONS.md` for final review/sending. Never claim a draft was saved in Givebutter, scheduled or delivered without readback. Do not create a recurring cadence or send to all contacts from a general request to set up newsletters.
 
