@@ -1,5 +1,7 @@
 ---
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
+import { ArrowUpRight, House, BookOpen, Printer } from '@lucide/astro';
+import LessonIcon from '../components/academy/LessonIcon.astro';
 import { lessons, reviewed } from '../pages/academy/_guide';
 import '../styles/academy.css';
 interface Props { title: string; active?: string; print?: boolean; }
@@ -20,19 +22,19 @@ const { title, active, print = false } = Astro.props;
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="academy-header">
       <a class="academy-brand" href="/academy/">Cottonwood <span>Volunteer academy</span></a>
-      <a class="library-link" href="/">Library website ↗</a>
+      <a class="library-link" href="/">Library website <ArrowUpRight size={15} aria-hidden="true" /></a>
     </header>
     <div class="academy-shell">
       <aside class="academy-sidebar">
         <details class="lesson-menu" open>
           <summary>Browse lessons</summary>
           <nav aria-label="Academy lessons">
-            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}>Overview</a>
+            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
             <p class="nav-label">Learn</p>
-            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{lesson.title}</a></li>)}</ol>
+            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{lesson.title}</span></a></li>)}</ol>
             <p class="nav-label">Reference</p>
-            <a href="/academy/quick-reference/" aria-current={Astro.url.pathname.includes('quick-reference') ? 'page' : undefined}>Quick guide</a>
-            <a href="/academy/print/" aria-current={Astro.url.pathname.includes('/print') ? 'page' : undefined}>Printable handbook</a>
+            <a href="/academy/quick-reference/" aria-current={Astro.url.pathname.includes('quick-reference') ? 'page' : undefined}><BookOpen size={18} aria-hidden="true" /><span>Quick guide</span></a>
+            <a href="/academy/print/" aria-current={Astro.url.pathname.includes('/print') ? 'page' : undefined}><Printer size={18} aria-hidden="true" /><span>Printable handbook</span></a>
           </nav>
         </details>
       </aside>

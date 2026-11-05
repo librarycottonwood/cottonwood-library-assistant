@@ -1,5 +1,7 @@
 ---
 import { lessons } from '../../pages/academy/_guide';
+import { ArrowRight } from '@lucide/astro';
+import LessonIcon from './LessonIcon.astro';
 ---
 <header class="lesson-header">
   <h1>Volunteer academy</h1>
@@ -8,8 +10,9 @@ import { lessons } from '../../pages/academy/_guide';
 <section aria-labelledby="lessons-heading">
   <h2 id="lessons-heading">Guides</h2>
   <ol class="lesson-list">{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`}>
-    <h3>{lesson.title}<span aria-hidden="true"> →</span></h3>
-    <p>{lesson.summary}</p>
+    <span class="lesson-list-icon"><LessonIcon slug={lesson.slug} size={21} /></span>
+    <div><h3>{lesson.title}</h3><p>{lesson.summary}</p></div>
+    <ArrowRight size={18} aria-hidden="true" />
   </a></li>)}</ol>
 </section>
 <section class="print-panel" aria-labelledby="paper-heading">
