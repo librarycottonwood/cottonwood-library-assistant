@@ -34,7 +34,7 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 - Email: Givebutter Engage. Drafts and sending: https://dashboard.givebutter.com/accounts/170378/engage/email
 - Sender: Cottonwood Community Library <newsletter@cottonwoodlibrary.givebutter-mail.com>, replies to cottonlib@shasta.com.
 - Sign-ups: the website's own form (footer of every page and `/newsletter/`) posts to `/api/newsletter` (`functions/api/newsletter.ts`), which adds a Givebutter contact with email subscription on and the tag **Library Newsletter**. Needs the `GIVEBUTTER_API_KEY` secret in Cloudflare Pages (see `docs/setup-checklist.md`).
-- Audience: Contacts tagged **Library Newsletter**, plus earlier **Widget form sign-ups → Library Newsletter** (the old signup widget `L4EVDm`, no longer on the site), excluding unsubscribed. Donors are not automatically subscribers.
+- Audience: Contacts tagged **Library Newsletter**, excluding unsubscribed. That one tag is the whole list (the old signup widget `L4EVDm` was only used for setup testing and is not a second audience). Donors are not automatically subscribers.
 - Still open before the first bulk send: an unsubscribe test, and board approval of the first issue and audience.
 
 ## Social
