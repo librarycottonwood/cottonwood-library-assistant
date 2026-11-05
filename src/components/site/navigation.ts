@@ -1,9 +1,6 @@
-// Site navigation for the new design (SiteHeader and SiteFooter), as in Figma.
+// Site navigation (SiteHeader and SiteFooter), as in Figma.
 // It is site structure, not library facts, so it lives here rather than in Sanity: a page's address
-// only exists once its code does. Old SiteLayout pages keep the Sanity "Main navigation" until they move.
-//
-// While a page still uses the old design, its link goes to the old page's address. When the new page
-// ships (docs/redesign-plan.md), change `href` to the new address and redirect the old one in astro.config.
+// only exists once its code does. When a page moves, change `href` and redirect the old address in astro.config.
 
 export interface NavLink {
   label: string;

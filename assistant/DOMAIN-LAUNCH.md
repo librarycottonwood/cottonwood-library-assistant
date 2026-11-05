@@ -1,6 +1,6 @@
 # Domain launch plan
 
-Prepared October 21, 2026. Planning only: no DNS, nameserver, forwarding, registrar, billing or public-domain change was made.
+Prepared October 21, 2026; launch by Thursday, November 5, 2026. Until launch, no DNS, nameserver, forwarding, registrar or billing change is made.
 
 ## Verified baseline and rollback values
 
@@ -19,7 +19,7 @@ Authoritative nameservers: `ns-cloud-e1.googledomains.com`, `ns-cloud-e2.googled
 
 Keep registration and DNS at Squarespace for this release. Use **https://www.cottonwoodcommunitylibrary.com** as the canonical website, with the bare domain forwarding to it. Cloudflare Pages supports an external-DNS subdomain through a CNAME; hosting the bare apex directly on Pages requires moving its authoritative nameservers to Cloudflare. Keeping DNS avoids coupling this launch to registrar migration or a DNSSEC transition. A future apex-hosting decision is separate.
 
-The live website is the production deployment of the library-account Pages project `cottonwood-library` (https://cottonwood-library.pages.dev). Every checked PR/CMS save already publishes there with exact-artifact verification and verified rollback; previews are separate immutable uploads. The hosting guard allows exactly `cottonwoodcommunitylibrary.com` and `www.cottonwoodcommunitylibrary.com` as extra domains on that project; any other domain stops publishing. At launch, also update `assistant/analytics.json` so consent-gated Analytics covers the real domain.
+The live website is the production deployment of the library-account Pages project `cottonwood-library` (https://cottonwood-library.pages.dev). Every checked PR/CMS save already publishes there with exact-artifact verification and verified rollback; previews are separate immutable uploads. The hosting guard allows exactly `cottonwoodcommunitylibrary.com` and `www.cottonwoodcommunitylibrary.com` as extra domains on that project; any other domain stops publishing. At launch, also update `src/content/analytics.json` so consent-gated Analytics covers the real domain.
 
 ## Exact cutover sequence after website approval
 

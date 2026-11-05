@@ -1,6 +1,6 @@
 # Donations, newsletters and social updates
 
-Updated October 21, 2026. Read the current records and available tools before acting; dated setup evidence is not a permanent connection guarantee.
+Updated November 4, 2026. Read the current records and available tools before acting; dated setup evidence is not a permanent connection guarantee.
 
 ## One library workflow
 

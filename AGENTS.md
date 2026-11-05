@@ -4,7 +4,7 @@ Read `plugins/cottonwood-library/skills/library-assistant/SKILL.md`, then the re
 
 ## Work and authority
 
-Use the maintained `librarycottonwood/cottonwood-library-assistant` repository. Fetch main and create a new isolated worktree, branch and PR for each website request. Do not edit the separate redesign checkout or other tasks' worktrees.
+Use the maintained `librarycottonwood/cottonwood-library-assistant` repository. Fetch main and create a new isolated worktree, branch and PR for each website request. Do not edit other tasks' worktrees.
 
 Frequently changing content comes from Sanity: events, news posts, newsletters, notices, hours, fundraisers and site-wide settings. Everything else on a page (service details, prices, fees, About Us, ways to help) is written in the page file and changes through a PR; do not add Sanity fields for it (`docs/design-rules.md`, "Where content lives"). Use permitted tools for CMS drafts/corrections/publication and preserve unrelated records; do not overwrite live content with seed files. Layout/code changes belong on the request's branch. Animation follows `docs/design-rules.md`, "Motion": components opt in with `data-motion` (`src/scripts/motion.ts`). New kinds of animation are welcome; add each as a named preset in `motion.ts` (and `scripts/motion.test.mjs`) rather than animating inside a component or adding another library.
 

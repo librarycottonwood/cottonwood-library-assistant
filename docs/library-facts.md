@@ -1,6 +1,6 @@
 # Library facts and accounts
 
-Verified facts Claude and staff can rely on. Check the live record before acting on anything that may have changed. Last reviewed October 2026. No passwords or keys belong here.
+Verified facts the assistant and staff can rely on. Check the live record before acting on anything that may have changed. Last reviewed November 4, 2026. No passwords or keys belong here.
 
 ## The library
 
@@ -11,17 +11,17 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 
 ## Website
 
-- AI Expo: Tuesday, November 3, 2026. Public launch moved to Thursday, November 5, 2026 at the latest. The domain is attached at launch (`docs/domain-launch.md`).
+- AI Expo: Tuesday, November 3, 2026. Public launch moved to Thursday, November 5, 2026 at the latest. The domain is attached at launch (`assistant/DOMAIN-LAUNCH.md`).
 
 - Live: https://cottonwood-library.pages.dev/ (Cloudflare Pages project `cottonwood-library` on the library's Cloudflare account). Previews: `https://<8 hex>.cottonwood-library.pages.dev`.
-- Public domain `cottonwoodcommunitylibrary.com` (registered at Squarespace) is not attached yet. Plan: `docs/domain-launch.md`.
+- Public domain `cottonwoodcommunitylibrary.com` (registered at Squarespace) is not attached yet. Plan: `assistant/DOMAIN-LAUNCH.md`.
 - GitHub: `librarycottonwood/cottonwood-library-assistant`.
 - Sanity: project `2ou0xy2r`, dataset `production`. Editor: https://cottonwood-community-library.sanity.studio/
 - CMS publisher Worker (webhooks, admin recovery page): https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/
 
 ## Donations (Givebutter)
 
-- Fundraiser not yet on the website: **Under One Roof** (new roof), code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Form widget `jwyYlq` (turn its goal bar on first).
+- Fundraiser on the website (`/donate/`): **Under One Roof** (new roof), code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Form widget `jwyYlq`.
 
 - General donations campaign: **Support Your Local Library**, code `R62NJU`, page https://givebutter.com/support-your-local-library-r62nju
 - Public widget account `D4OkqF0zVDUb7Rdx`. These are saved in Sanity `library-settings` (`library.givebutter.account`, `library.givebutter.campaign`, `library.donationUrl`).
@@ -40,13 +40,13 @@ Verified facts Claude and staff can rely on. Check the live record before acting
 ## Social
 
 - Buffer (signed in with the library Google account) has the library Facebook page. Instagram is not connected yet.
-- Posts are created as Buffer drafts for a person to approve. Nothing is published straight from Claude.
+- Posts are created as Buffer drafts for a person to approve. Nothing is published straight from the assistant.
 
 ## Visitor statistics
 
-- Google Analytics demo property `557596091` (measurement ID in `src/content/analytics.json`), consent-gated, counting visits to the new site only.
-- The `connector/` Worker served these reports to ChatGPT. Whether Claude uses it is an open decision (see `connector/README.md`).
+- Google Analytics property `557596091`, "Cottonwood Community Library website" (measurement ID in `src/content/analytics.json`), consent-gated, counting visits to the new site only.
+- The `connector/` Worker serves these reports to the library's ChatGPT (see `connector/README.md`).
 
-## Open questions
+## Events
 
-- Under One Roof auction: Givebutter (unpublished) says Nov 2, 1:00 a.m. to Nov 5, 9:00 a.m.; Donna's letter and the website say Saturday, Nov 14. Ask before repeating either.
+- Under One Roof auction: Saturday, November 14, 2026. Settled: follow the library's public posts; don't raise the date again.
