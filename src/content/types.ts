@@ -157,7 +157,7 @@ export interface LibraryEvent {
   endsAt: string;
   summary: string;
   href: string;
-  /** Optional outside page for the event, such as the online auction on Givebutter. */
+  /** Optional outside https:// page for the event, such as the online auction on Givebutter. */
   link?: string;
 }
 

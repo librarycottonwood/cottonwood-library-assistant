@@ -47,7 +47,6 @@ const titleDate = (session: LibraryEvent) => {
   const start = new Date(session.startsAt), end = new Date(session.endsAt);
   return sameDay(start, end) ? date.format(start) : date.formatRange(start, end);
 };
-const external = event.link && /^https?:/.test(event.link);
 ---
 <BaseLayout title={`${event.title} | ${library.name}`} description={event.summary}>
   <PageTitle title={event.title} trail={[eventsLink]}>
@@ -58,7 +57,7 @@ const external = event.link && /^https?:/.test(event.link);
     <Text size="lead">{event.summary}</Text>
     <DetailList label="Dates and times" items={[...when, { label: 'Where', value: event.location ?? `${library.address}, ${library.locality}` }]} />
     {(inPerson || program || event.link) && <Stack direction="row" gap="xs" wrap>
-      {event.link && <Button href={event.link} data-analytics-event="event_link" variant={inPerson ? undefined : 'accent'} iconEnd={external ? 'external' : 'arrow'}>{inPerson ? 'More information' : 'Go to the event'}</Button>}
+      {event.link && <Button href={event.link} data-analytics-event="event_link" variant={inPerson ? undefined : 'accent'} iconEnd="external">{inPerson ? 'More information' : 'Go to the event'}</Button>}
       {inPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
       {program && <Button href={programHref(program.id)} icon="book">About {program.title}</Button>}
     </Stack>}

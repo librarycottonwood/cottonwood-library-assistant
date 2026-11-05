@@ -30,6 +30,8 @@ test('an event keeps its own page and carries its optional outside link separate
   const result = validateSanitySnapshot(snapshot);
   assert.deepEqual(result.events.map(event => event.href), ['/events/spring-sale/', '/events/spring-sale/']);
   assert.deepEqual(result.events.map(event => event.link), ['https://givebutter.com/c/underoneroof', 'https://givebutter.com/c/underoneroof']);
+  const internal = fixture(); doc(internal, 'event').href = '/fundraising-events/book-sale/';
+  assert.equal(validateSanitySnapshot(internal).events[0].link, undefined);
   const unsafe = fixture(); doc(unsafe, 'event').href = 'javascript:alert(1)';
   assert.throws(() => validateSanitySnapshot(unsafe));
 });
