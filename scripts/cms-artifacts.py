@@ -17,6 +17,10 @@ PR_PREVIEW = 'library-pr-checked-preview'
 NAMES = ('library-preview-and-screenshots', 'library-cms-checked-preview', PR_PREVIEW, 'library-publish-live-result', 'library-source-trial-result')
 LIMIT = 450 * 1024 * 1024
 RECENT_MERGE = datetime.timedelta(days=2)
+# Weekly CMS backups (sanity-backup.yml): the newest four are always kept and count against
+# the allowance first, so previews make room for them; older backups are deleted.
+BACKUP = 'library-cms-backup'
+BACKUP_KEEP = 4
 
 
 def order(artifact):
@@ -25,8 +29,9 @@ def order(artifact):
 
 def selection(artifacts, reserve=0, protected_heads=frozenset()):
     """Return (keep, remove). protected_heads: head SHAs whose previews may still go live."""
+    backups = sorted((a for a in artifacts if a['name'] == BACKUP and not a['expired']), key=order, reverse=True)
     active = sorted((a for a in artifacts if a['name'] in NAMES and not a['expired']), key=order, reverse=True)
-    protected, keep, remove = [], [], []
+    protected, keep, remove = list(backups[:BACKUP_KEEP]), [], list(backups[BACKUP_KEEP:])
     for artifact in active:
         if artifact['name'] != PR_PREVIEW:
             continue
@@ -75,7 +80,7 @@ def main():
         subprocess.run(['gh', 'api', f'repos/{REPO}/actions/artifacts/{identifier}', '-X', 'DELETE'], check=True)
     used = sum(a['size_in_bytes'] for a in keep)
     if used > LIMIT - reserve:
-        print(f'Warning: open PR previews alone use {used // (1024 * 1024)} MiB, over the {LIMIT // (1024 * 1024)} MiB allowance. Close stale saves.')
+        print(f'Warning: open PR previews and the latest CMS backups use {used // (1024 * 1024)} MiB, over the {LIMIT // (1024 * 1024)} MiB allowance. Close stale saves.')
     print(f'Retained {len(keep)} archives ({len(heads)} PR heads that can still go live); removed {len(remove)}. Expired/pruned approvals require a fresh preview.')
 
 
