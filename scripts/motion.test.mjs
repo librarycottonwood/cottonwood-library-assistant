@@ -34,3 +34,11 @@ test('the presets listed here are the ones motion.ts handles', async () => {
   const text = sources.find(({ file }) => file === MOTION_FILE).text;
   for (const name of PRESETS) assert.match(text, new RegExp(`\\b${name}\\b`), `${name} is missing from ${MOTION_FILE}`);
 });
+
+test('presets animate only opacity and transform, which the browser runs off the main thread', async () => {
+  const text = sources.find(({ file }) => file === MOTION_FILE).text;
+  const block = text.slice(text.indexOf('export const presets'), text.indexOf('} as const;', text.indexOf('export const presets')));
+  for (const match of block.matchAll(/keyframes:\s*\{([^}]*)\}/g)) {
+    for (const key of match[1].matchAll(/(\w+):/g)) assert.ok(['opacity', 'transform'].includes(key[1]), `preset keyframe "${key[1]}" is not opacity or transform (see docs/design-rules.md, "Motion")`);
+  }
+});

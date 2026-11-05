@@ -29,11 +29,15 @@ export const springs = {
   open: { type: 'spring', visualDuration: 0.35, bounce: 0 },
 } as const;
 
+/**
+ * Animate only opacity and a full `transform` string: Motion hands those to the browser, which runs them off the main
+ * thread. Motion's shorthand values (y, scale, x) are computed in JavaScript every frame and stutter while a page loads.
+ */
 export const presets = {
-  settle: { keyframes: { scale: [1.05, 1] }, transition: { type: 'spring', visualDuration: 1.2, bounce: 0 } },
-  rise: { keyframes: { opacity: [0, 1], y: [24, 0] }, transition: { ...springs.enter, opacity: { duration: 0.5, ease: 'easeOut' } } },
+  settle: { keyframes: { transform: ['scale(1.05)', 'scale(1)'] }, transition: { type: 'spring', visualDuration: 1.2, bounce: 0 } },
+  rise: { keyframes: { opacity: [0, 1], transform: ['translateY(24px)', 'translateY(0px)'] }, transition: { ...springs.enter, opacity: { duration: 0.5, ease: 'easeOut' } } },
   /** rise for the first screen when a page opens: shorter and closer, so the page is readable almost at once. */
-  riseOnLoad: { keyframes: { opacity: [0, 1], y: [12, 0] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
+  riseOnLoad: { keyframes: { opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
 } as const;
 
 /** Seconds between blocks that arrive together, and the most blocks that wait their turn. */
@@ -63,6 +67,15 @@ function targets(): HTMLElement[] {
   return found.filter(element => !element.matches(SKIP) && !element.querySelector(SKIP));
 }
 
+/**
+ * Clear an animation's finished styles, a frame later because Motion writes its end values just after it resolves.
+ * A shown block keeps no transform, so it leaves no stacking context or containing block behind.
+ */
+const clear = (element: HTMLElement) => requestAnimationFrame(() => {
+  element.style.removeProperty('opacity');
+  element.style.removeProperty('transform');
+});
+
 let queue: HTMLElement[] = [];
 let startedAt = 0;
 function flush() {
@@ -74,9 +87,7 @@ function flush() {
   arriving.forEach((element, index) => {
     element.style.opacity = '0';
     element.dataset.motionDone = '';
-    // Clear the finished styles so a shown block keeps no transform (no stacking context or containing block left).
-    animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * stagger })
-      .then(() => { element.style.removeProperty('opacity'); element.style.removeProperty('transform'); });
+    animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * stagger }).then(() => clear(element));
   });
 }
 
@@ -86,7 +97,7 @@ function start() {
   if (!motionAllowed()) return;
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="settle"]')) {
     const { keyframes, transition } = presets.settle;
-    animate(element, keyframes, transition);
+    animate(element, keyframes, transition).then(() => clear(element));
   }
   const waiting = new Set(targets());
   for (const element of waiting) {
