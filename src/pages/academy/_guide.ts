@@ -168,7 +168,6 @@ export const lessons: Lesson[] = [
           'Type a message and send it. If ChatGPT asks a question, type your answer in the same box.',
         ],
         prompt: 'Help me write an announcement for the library. Ask me what it is about.',
-        links: [{ label: 'Open ChatGPT', href: 'https://chatgpt.com/' }],
       },
       {
         title: 'You can change the answer',
@@ -296,7 +295,7 @@ export const lessons: Lesson[] = [
       {
         id: 'wrong-page', title: 'The website still shows the old information',
         text: ['Reload the page. If the old information is still there, go back to the conversation where you asked for the change. Paste the page link and say what is still wrong.'],
-        prompt: 'This page still has the old hours: [page link]. I asked you to change them earlier in this conversation. Can you finish the update?',
+        prompt: 'This page still has the old hours: [page link]. The hours should be [new hours]. Can you check and finish the update?',
       },
       {
         id: 'broken-link', title: 'A page or button does not work',

@@ -1,9 +1,19 @@
 ---
+import { ArrowUpRight } from '@lucide/astro';
 interface Props { text: string; }
 const { text } = Astro.props;
+// Use the same prefilled Work link as OpenAI's training examples:
+// https://developers.openai.com/training/walkthroughs/plugins-and-skills
+const chatgptUrl = new URL('https://chatgpt.com/');
+chatgptUrl.searchParams.set('surface', 'work');
+chatgptUrl.searchParams.set('prompt', text);
 ---
 <aside class="prompt" data-prompt aria-label="Example message for ChatGPT">
-  <div class="prompt-heading"><strong>Try this in ChatGPT</strong><button type="button" data-copy-prompt hidden>Copy message</button></div>
+  <div class="prompt-heading"><strong>Try this in ChatGPT</strong></div>
   <p data-prompt-text>{text}</p>
+  <div class="prompt-actions">
+    <a href={chatgptUrl.href} target="_blank" rel="noopener noreferrer" data-open-prompt aria-label="Open in ChatGPT (opens in a new tab)">Open in ChatGPT <ArrowUpRight size={15} aria-hidden="true" /></a>
+    <button type="button" data-copy-prompt hidden>Copy message</button>
+  </div>
   <p class="copy-status" role="status" aria-live="polite"></p>
 </aside>

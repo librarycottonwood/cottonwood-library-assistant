@@ -40,6 +40,19 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.ok(response.ok(), route);
         await page.evaluate(() => document.fonts.ready);
         assert.equal(await page.locator('h1').count(), 1, route);
+        for (const example of await page.locator('[data-prompt]').all()) {
+          const open = example.locator('[data-open-prompt]');
+          assert.equal(await open.count(), 1, 'every example has its own ChatGPT link');
+          const destination = new URL(await open.getAttribute('href'));
+          assert.equal(destination.origin, 'https://chatgpt.com');
+          assert.equal(destination.pathname, '/');
+          assert.equal(destination.searchParams.get('surface'), 'work');
+          assert.equal(destination.searchParams.get('prompt'), await example.locator('[data-prompt-text]').innerText(), 'full example survives URL encoding');
+          assert.deepEqual([...destination.searchParams.keys()].sort(), ['prompt', 'surface']);
+          assert.equal(await open.getAttribute('target'), '_blank');
+          assert.match(await open.getAttribute('rel'), /noopener/);
+        }
+
         assert.equal(await page.locator('.lesson-menu').getAttribute('open') !== null, width >= 768, 'sidebar is open on desktop and collapsed on phone');
         if (route !== '/academy/print/' && route !== '/academy/quick-reference/') {
           const title = await page.locator('h1').boundingBox();
@@ -110,6 +123,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await page.locator('.desk-guide').isVisible(), true);
     await page.goto(origin + '/academy/print/');
     assert.equal(await page.locator('.print-lesson').count(), 6);
+    assert.equal(await page.locator('.prompt-actions').first().isVisible(), false, 'print hides interactive actions');
     assert.equal(await page.locator('.service-card').count(), 15);
     const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 844 } });
     const plain = await noJS.newPage();
@@ -117,6 +131,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await plain.locator('.lesson-menu a').last().isVisible(), true, 'navigation works without JavaScript');
     assert.ok(await plain.locator('[data-prompt-text]').first().isVisible());
     assert.equal(await plain.locator('[data-copy-prompt]').first().isVisible(), false);
+    assert.equal(await plain.locator('[data-open-prompt]').first().isVisible(), true, 'prefill links work without JavaScript');
     await plain.goto(origin + '/academy/accounts-and-tools/');
     assert.equal(await plain.locator('.service-open').first().isVisible(), true);
     assert.equal(await plain.locator('main details').count(), 0);

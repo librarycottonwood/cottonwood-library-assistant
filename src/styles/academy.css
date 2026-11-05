@@ -57,6 +57,9 @@ main { min-width: 0; }
 .prompt { border: 1px solid #e1e3e9; background: #f7f8fa; margin-block: 1.25rem; border-radius: 6px; overflow: hidden; }
 .prompt-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .5rem .9rem; border-bottom: 1px solid #e1e3e9; }
 .prompt-heading strong { font-size: .75rem; color: #646870; font-weight: 550; }
+.prompt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: 0 1rem 1rem; }
+.prompt-actions a { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .75rem; min-height: 40px; background: #292d32; color: white; border: 1px solid #292d32; border-radius: 4px; font-size: .8rem; font-weight: 550; text-decoration: none; }
+.prompt-actions a:hover { background: #454a54; }
 .prompt button { background: white; border: 1px solid #d8dbe2; border-radius: 4px; padding: .35rem .6rem; min-height: 36px; color: #454a54; font-size: .75rem; white-space: nowrap; }
 .prompt p { padding: 1rem; margin: 0; font-size: .925rem; }
 .prompt .copy-status { padding-top: 0; font-size: .75rem; color: #646870; }
@@ -117,7 +120,7 @@ main { min-width: 0; }
 @page { size: auto; margin: 15mm; }
 @media print {
   html { background: white; color: #1b2040; font-size: 11pt; line-height: 1.42; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .academy-header, .academy-sidebar, .lesson-topics, .academy-footer, .screen-only, .skip-link, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
+  .academy-header, .academy-sidebar, .lesson-topics, .academy-footer, .screen-only, .skip-link, .prompt-actions, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
   .academy-shell { display: block; padding: 0; max-width: none; }
   .academy-content { max-width: none; padding: 0; }
   main { padding: 0; margin: 0; max-width: none; }
