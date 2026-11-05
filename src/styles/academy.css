@@ -51,6 +51,19 @@ main { min-width: 0; }
 .lesson-topics p { color: #646870; font-size: .75rem; font-weight: 600; margin-bottom: .5rem; }
 .lesson-topics ul { display: flex; flex-wrap: wrap; gap: .45rem 1.25rem; list-style: none; padding: 0; margin: 0; }
 .lesson-topics li { margin: 0; }
+.lesson-body { min-width: 0; }
+.lesson-body > .lesson-part:first-child { margin-top: 0; }
+@media (min-width: 1200px) {
+  .academy-content.with-page-index { max-width: none; padding-right: 2rem; }
+  .with-page-index .lesson-layout { display: grid; grid-template-columns: minmax(0, 1fr) 216px; column-gap: 3rem; }
+  .with-page-index .lesson-header { grid-column: 1; grid-row: 1; }
+  .with-page-index .lesson-body { grid-column: 1; grid-row: 2; }
+  .lesson-topics { grid-column: 2; grid-row: 1 / span 2; align-self: start; position: sticky; top: 100px; max-height: calc(100dvh - 124px); overflow-y: auto; padding: 0 0 0 1.25rem; margin: 0; border-bottom: 0; border-left: 1px solid #e7e8ec; }
+  .lesson-topics ul { display: block; }
+  .lesson-topics li + li { margin-top: .2rem; }
+  .lesson-topics a { display: block; padding-block: .4rem; color: #565b65; font-size: .8rem; line-height: 1.5; text-decoration: none; }
+  .lesson-topics a:hover { color: #17191e; text-decoration: underline; }
+}
 .lesson-part { margin-block: 2.5rem; scroll-margin-top: 90px; }
 .lesson-part p, .lesson-part li { max-width: 68ch; }
 .steps { padding-left: 1.4rem; }
@@ -127,7 +140,7 @@ main { min-width: 0; }
   .lesson-page-link { min-height: 84px; }
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.2rem; }
-  .lesson-part { margin-block: 2rem; }
+  .lesson-part { margin-block: 2rem; scroll-margin-top: 124px; }
   .lesson-header { margin-bottom: 1.5rem; }
   .desk-guide dl div { display: block; }
   .desk-guide dt { margin-bottom: .4rem; }
@@ -137,7 +150,8 @@ main { min-width: 0; }
   html { background: white; color: #1b2040; font-size: 11pt; line-height: 1.42; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .academy-header, .academy-sidebar, .lesson-topics, .academy-footer, .screen-only, .skip-link, .prompt-actions, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
   .academy-shell { display: block; padding: 0; max-width: none; }
-  .academy-content { max-width: none; padding: 0; }
+  .academy-content, .academy-content.with-page-index { max-width: none; padding: 0; }
+  .with-page-index .lesson-layout { display: block; }
   main { padding: 0; margin: 0; max-width: none; }
   h1 { font: 36pt/1.12 var(--font-display); letter-spacing: normal; }
   h2 { font: 24pt/1.12 var(--font-display); letter-spacing: normal; }

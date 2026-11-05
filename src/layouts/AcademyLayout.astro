@@ -4,8 +4,8 @@ import { ArrowUpRight, House, BookOpen, Printer } from '@lucide/astro';
 import LessonIcon from '../components/academy/LessonIcon.astro';
 import { lessons, reviewed } from '../pages/academy/_guide';
 import '../styles/academy.css';
-interface Props { title: string; active?: string; print?: boolean; }
-const { title, active, print = false } = Astro.props;
+interface Props { title: string; active?: string; print?: boolean; withPageIndex?: boolean; }
+const { title, active, print = false, withPageIndex = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -42,7 +42,7 @@ const { title, active, print = false } = Astro.props;
           </nav>
         </details>
       </aside>
-      <div class="academy-content">
+      <div class:list={['academy-content', { 'with-page-index': withPageIndex }]}>
         <main id="main" tabindex="-1"><slot /></main>
         <footer class="academy-footer">Cottonwood Community Library · Updated {reviewed}</footer>
       </div>
