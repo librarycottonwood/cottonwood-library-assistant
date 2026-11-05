@@ -35,6 +35,7 @@ The library does not read GitHub or its emails, so this report is how these reac
 
 - Open issues titled "Website check needs attention" or "Library visitor reports need attention": say what broke and whether it is fixed now.
 - A failed **Library automatic upkeep** run in the last 7 days, including the weekly sign-in renewal: automatic repairs are off until it is fixed. If the run says the sign-in was rejected or revoked, follow "Renew the repair sign-in" in assistant/MAINTENANCE.md and name Todd for the sign-in step.
+- No successful **Weekly CMS backup** run in the last 8 days: say this week's copy of the website's content and pictures did not save, that the earlier copies are still kept, and look into why (assistant/MAINTENANCE.md → CMS backups).
 - Save PRs closed by the stale-save cleanup in the last 7 days: say which change was dropped, that it never went on the website, and that it can be redone on request.
 
 ## Handle problems
