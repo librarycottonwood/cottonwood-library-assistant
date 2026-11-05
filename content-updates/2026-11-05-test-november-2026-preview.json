@@ -1,0 +1,33 @@
+{
+  "request": "Preview TEST – November 2026 dummy newsletter as current issue, without saving to the live website.",
+  "sanityDocuments": [
+    {
+      "id": "20e89093-6671-40c2-a5d2-251a90d06ae7",
+      "revision": "NoJPWpDzR8mqD2ki4mcKpQ",
+      "fields": [
+        "issue",
+        "title",
+        "slug",
+        "summary",
+        "file",
+        "cover"
+      ],
+      "before": null
+    },
+    {
+      "id": "library-settings",
+      "revision": "NoJPWpDzR8mqD2ki4mcLiy",
+      "fields": [
+        "currentNewsletter"
+      ],
+      "before": {
+        "currentNewsletter": {
+          "_type": "reference",
+          "_ref": "newsletter-current",
+          "_weak": true
+        }
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
