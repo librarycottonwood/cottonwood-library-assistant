@@ -116,13 +116,13 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 
 ### Motion
 
-Three speeds and one easing curve. Motion only confirms what the visitor did or eases content in; nothing loops or waits. base.css and the components switch it all off for visitors who ask for reduced motion.
+CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--motion-quick` | `150ms` | Hover and press feedback: button colors, arrows nudging, a button pressing in. | Anything that opens or moves into place (use --motion-smooth). | `transition: background-color var(--motion-quick) var(--ease-out);` |
-| `--motion-smooth` | `300ms` | Things opening or changing place: the phone menu, a FAQ answer sliding open, a card photo zooming. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
-| `--motion-entrance` | `600ms` | Blocks easing in: the opening block when a page loads, and sections and cards as they scroll into view. | Anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
+| `--motion-smooth` | `300ms` | CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
+| `--motion-entrance` | `600ms` | A slower CSS change the visitor watches happen once. | Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
 | `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and animation: starts quickly, settles gently. | Linear or bouncy curves; they read as mechanical or playful. | `transition-timing-function: var(--ease-out);` |
 
 ## Components

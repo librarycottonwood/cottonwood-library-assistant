@@ -79,19 +79,13 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 }
 #statistics-choice button:hover { background: var(--color-background); }
 
-/* Motion (tokens: --motion-*, --ease-out). Screen only, and off for visitors who ask for reduced motion.
- * Entrances: BaseLayout adds html.motion only when motion is allowed and its script can run, then reveals each block
- * (.reveal, Section children, cards) as it scrolls into view, a few at a time. The selector below must match
- * REVEAL in BaseLayout. Fundraiser forms and embedded frames never animate (an animated block would trap
- * Givebutter's popups under the sticky header). */
+/* Motion. Hover and press feedback is CSS (--motion-* tokens, in each component). Entrances run in
+ * src/scripts/motion.ts (Motion); until it shows a block, rise/group blocks wait hidden here, but only when BaseLayout
+ * set html.motion. The skipped elements match SKIP in motion.ts. */
 @media screen and (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  html.motion :is(.reveal, .reveal-children > :not(script, :has(.card)), .card):not(form, iframe, givebutter-widget, :has(givebutter-widget, iframe, form)):not(.shown) { opacity: 0; }
-  html.motion :is(.reveal, .reveal-children > :not(script, :has(.card)), .card):not(form, iframe, givebutter-widget, :has(givebutter-widget, iframe, form)).shown { animation: reveal var(--motion-entrance) var(--ease-out) var(--reveal-delay, 0ms) backwards; }
+  html.motion :is([data-motion='rise'], [data-motion='group'] > :not(script, :has([data-motion]))):not([data-motion-done], form, iframe, givebutter-widget, :has(form, iframe, givebutter-widget)) { opacity: 0; }
 }
-@keyframes reveal { from { opacity: 0; translate: 0 2rem; } }
-@keyframes rise { from { opacity: 0; transform: translateY(1rem); } }
-@keyframes settle { from { transform: scale(1.04); } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }

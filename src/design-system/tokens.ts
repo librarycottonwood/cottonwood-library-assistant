@@ -137,11 +137,11 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'motion', title: 'Motion', property: 'transition-duration',
-    note: 'Three speeds and one easing curve. Motion only confirms what the visitor did or eases content in; nothing loops or waits. base.css and the components switch it all off for visitors who ask for reduced motion.',
+    note: 'CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.',
     tokens: [
       token({ name: 'motion-quick', label: 'Quick', value: '150ms', useFor: 'Hover and press feedback: button colors, arrows nudging, a button pressing in.', avoid: 'Anything that opens or moves into place (use --motion-smooth).', example: 'transition: background-color var(--motion-quick) var(--ease-out);' }),
-      token({ name: 'motion-smooth', label: 'Smooth', value: '300ms', useFor: 'Things opening or changing place: the phone menu, a FAQ answer sliding open, a card photo zooming.', avoid: 'Hover colors; they feel sluggish (use --motion-quick).', example: 'transition: transform var(--motion-smooth) var(--ease-out);' }),
-      token({ name: 'motion-entrance', label: 'Entrance', value: '600ms', useFor: 'Blocks easing in: the opening block when a page loads, and sections and cards as they scroll into view.', avoid: 'Anything the visitor clicked; they would wait for it.', example: 'animation: rise var(--motion-entrance) var(--ease-out) both;' }),
+      token({ name: 'motion-smooth', label: 'Smooth', value: '300ms', useFor: 'CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×.', avoid: 'Hover colors; they feel sluggish (use --motion-quick).', example: 'transition: transform var(--motion-smooth) var(--ease-out);' }),
+      token({ name: 'motion-entrance', label: 'Entrance', value: '600ms', useFor: 'A slower CSS change the visitor watches happen once.', avoid: 'Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it.', example: 'animation: rise var(--motion-entrance) var(--ease-out) both;' }),
       token({ name: 'ease-out', label: 'Ease out', value: 'cubic-bezier(0.22, 1, 0.36, 1)', useFor: 'Every transition and animation: starts quickly, settles gently.', avoid: 'Linear or bouncy curves; they read as mechanical or playful.', example: 'transition-timing-function: var(--ease-out);' }),
     ],
   },

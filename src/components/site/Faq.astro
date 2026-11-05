@@ -30,26 +30,16 @@ const group = `faq-${[...items.map(item => item.question).join('')].reduce((sum,
   {email && <p class="faq-ask">Still have a question? <a href={`mailto:${email}`}>Email us</a>.</p>}
 </div>
 <script>
-  // Answers slide open and shut. The script takes over the one-open-at-a-time rule from name=…, because the browser
-  // would close the other answer instantly.
-  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
-  const ms = (name: string) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || 300;
-  const easing = () => getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim() || 'ease-out';
-  function setOpen(details: HTMLDetailsElement, open: boolean) {
+  // Answers slide open and shut (slide in src/scripts/motion.ts). The script takes over name=…'s one-open-at-a-time
+  // rule, because the browser would close the other answer instantly instead of letting it slide.
+  import { slide } from '../../scripts/motion';
+  async function setOpen(details: HTMLDetailsElement, open: boolean) {
     const answer = details.querySelector<HTMLElement>('.faq-answer');
     if (!answer) return;
-    answer.getAnimations().forEach(animation => animation.cancel());
-    if (!motion.matches) { details.classList.remove('is-closing'); details.open = open; return; }
-    const timing = { duration: ms('--motion-smooth'), easing: easing() };
-    if (open) {
-      details.classList.remove('is-closing');
-      details.open = true;
-      answer.animate([{ height: '0px', opacity: 0 }, { height: `${answer.scrollHeight}px`, opacity: 1 }], timing);
-    } else {
-      details.classList.add('is-closing');
-      const closing = answer.animate([{ height: `${answer.offsetHeight}px`, opacity: 1 }, { height: '0px', opacity: 0 }], timing);
-      closing.onfinish = () => { details.open = false; details.classList.remove('is-closing'); };
-    }
+    if (open) { details.classList.remove('is-closing'); details.open = true; await slide(answer, true); return; }
+    details.classList.add('is-closing');
+    await slide(answer, false);
+    if (details.classList.contains('is-closing')) { details.open = false; details.classList.remove('is-closing'); }
   }
   for (const faq of document.querySelectorAll<HTMLElement>('.faq')) {
     const items = [...faq.querySelectorAll<HTMLDetailsElement>('details')];

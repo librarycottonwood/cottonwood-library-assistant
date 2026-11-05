@@ -46,8 +46,12 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <title>{title}</title>
     <FoundationStyles />
     <script is:inline>
-      // Entrance animations (base.css) only when motion is allowed and this browser can reveal blocks again.
-      if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.classList.add('motion');
+      // Motion (src/scripts/motion.ts) only when the visitor allows it. If that script hasn't started within 3 seconds
+      // (blocked or failed), drop the flag so nothing stays hidden.
+      if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion');
+        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 3000);
+      }
     </script>
   </head>
   <body>
@@ -68,24 +72,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
         link.rel = 'noopener';
       });
     </script>
-    <script is:inline>
-      // Blocks ease up as they scroll into view, those arriving together a beat apart (base.css). REVEAL must match base.css.
-      (function () {
-        if (!document.documentElement.classList.contains('motion')) return;
-        var REVEAL = ':is(.reveal, .reveal-children > :not(script, :has(.card)), .card):not(form, iframe, givebutter-widget, :has(givebutter-widget, iframe, form))';
-        var show = function (el, delay) { el.style.setProperty('--reveal-delay', delay + 'ms'); el.classList.add('shown'); };
-        var observer = new IntersectionObserver(function (entries) {
-          var arriving = entries.filter(function (entry) {
-            if (entry.isIntersecting) return true;
-            // Already scrolled past (a restored scroll position or a #link): show it without animating.
-            if (entry.boundingClientRect.bottom < 0) { entry.target.classList.add('shown'); entry.target.style.animation = 'none'; observer.unobserve(entry.target); }
-            return false;
-          }).sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left; });
-          arriving.forEach(function (entry, index) { show(entry.target, Math.min(index, 4) * 90); observer.unobserve(entry.target); });
-        }, { rootMargin: '0px 0px -8% 0px' });
-        document.querySelectorAll(REVEAL).forEach(function (el) { observer.observe(el); });
-      })();
-    </script>
+    <script>import '../scripts/motion';</script>
     {givebutterAccount && <script is:inline async src={givebutterScriptSrc(givebutterAccount)}></script>}
   </body>
 </html>
