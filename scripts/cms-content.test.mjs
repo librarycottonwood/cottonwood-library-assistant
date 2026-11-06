@@ -24,6 +24,17 @@ test('one published event document becomes consistent sessions and post referenc
   assert.equal(result.posts[0].body[0].markDefs[0].href,result.events[0].href);
   assert.equal(result.home.newsletter.fileUrl,result.newsletters[0].fileUrl);
 });
+test('an event keeps its own page and carries its optional outside link separately', () => {
+  assert.equal(validateSanitySnapshot(fixture()).events[0].link, undefined);
+  const snapshot = fixture(); doc(snapshot, 'event').href = 'https://givebutter.com/c/underoneroof';
+  const result = validateSanitySnapshot(snapshot);
+  assert.deepEqual(result.events.map(event => event.href), ['/events/spring-sale/', '/events/spring-sale/']);
+  assert.deepEqual(result.events.map(event => event.link), ['https://givebutter.com/c/underoneroof', 'https://givebutter.com/c/underoneroof']);
+  const internal = fixture(); doc(internal, 'event').href = '/fundraising-events/book-sale/';
+  assert.equal(validateSanitySnapshot(internal).events[0].link, undefined);
+  const unsafe = fixture(); doc(unsafe, 'event').href = 'javascript:alert(1)';
+  assert.throws(() => validateSanitySnapshot(unsafe));
+});
 test('a correction changes every occurrence derived from that record without duplicate source records', () => {
   const snapshot=fixture();doc(snapshot,'event').title='Corrected sale title';doc(snapshot,'event').sessions[0].startsAt='2027-03-05T11:00:00-08:00';
   const result=validateSanitySnapshot(snapshot);
