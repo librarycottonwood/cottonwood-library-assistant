@@ -125,7 +125,7 @@ Completed history is pruned after 90 days / 500 completed records; waiting opera
 
 ## PR previews and saves
 
-Routine website updates follow the save flow in `.claude/skills/website-save/SKILL.md`: current-content PR preview URL, explicit chat approval, merge, and verified exact-asset publication through `publish-live.yml`. The reporting connector has no website tools/scopes or publisher service binding. PR35/36's in-chat MCP detour was retired without a successful account rehearsal. Do not reconnect Analytics to obtain publishing access.
+Routine website updates follow the save flow in `plugins/cottonwood-library/skills/publishing/SKILL.md`: current-content PR preview URL, explicit chat approval, merge, and verified exact-asset publication through `publish-live.yml`. The reporting connector has no website tools/scopes or publisher service binding. PR35/36's in-chat MCP detour was retired without a successful account rehearsal. Do not reconnect Analytics to obtain publishing access.
 
 The existing `cms.yml` ledger/review workflow remains available for explicitly chosen administrator CMS recovery. PR and CMS publication share the `library-live-publishing` lock and hosting/rollback helpers. `POST /source-release`, authenticated with the existing workflow callback token, records an already deployed PR release only: it checks current main, identical PR/main Git trees and the hosted status pins. It cannot approve or dispatch a publication. The status retains the preview source SHA and records `mergedSourceSha` separately. Reconciliation recognizes this verified merged tree, avoiding another approval for the same source/content.
 

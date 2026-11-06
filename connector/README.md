@@ -2,7 +2,7 @@
 
 > This Worker is a remote MCP server that answers visitor-report questions from the library's Google Analytics
 > property (`src/content/analytics.json`) for the library's ChatGPT. It is deployed by `analytics-deploy.yml` and
-> checked by `analytics.yml`. Using it from Claude is untested (the move to Claude is on hold).
+> checked by `analytics.yml`.
 > Everything below is the dated setup and verification record, oldest first.
 
 Status on October 7, 2026: **incomplete; infrastructure deployed, live reporting
