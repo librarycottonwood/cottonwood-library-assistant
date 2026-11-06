@@ -3,7 +3,10 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 node -e 'if (Number(process.versions.node.split(".")[0]) !== 24) throw Error("Select Node 24 before checking the CMS.")'
 # Entirely local compilation/rehearsal. No library account or remote mutations.
-pnpm exec playwright install chromium
+# scripts/browser.mjs uses a system Chromium when there is one (GitHub runners, the repair container).
+if [ ! -x /usr/bin/chromium ] && [ -z "${PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH:-}" ]; then
+  pnpm exec playwright install chromium
+fi
 pnpm cms:test
 pnpm --dir studio install --frozen-lockfile
 pnpm --dir studio check

@@ -25,21 +25,36 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - run: npm install --global pnpm@11.15.1
+      # Actions minutes are limited. A PR that only changes instructions/docs or
+      # content-update files skips the fixture browser, CMS and connector checks below:
+      # they cannot change. Pushes to main, daily and manual checks always run everything.
+      - name: Find what this PR changes
+        id: kind
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/change-kind.mjs
       - run: bash scripts/cloud-setup.sh
       - run: node --test scripts/motion.test.mjs scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs scripts/schedule.test.mjs scripts/site-paths.test.mjs scripts/sanity-backup.test.mjs
       - run: python3 -m unittest discover -s scripts -p 'test_cms_artifacts.py'
-      - run: node scripts/analytics.test.mjs
+      - if: steps.kind.outputs.kind == '' || steps.kind.outputs.kind == 'code'
+        run: node scripts/analytics.test.mjs
       - name: Verify CMS content, forms, and publisher without accounts or deployment
+        if: steps.kind.outputs.kind == '' || steps.kind.outputs.kind == 'code'
         env:
           SANITY_TELEMETRY_DISABLED: '1'
         run: bash scripts/cms-check.sh
       - name: Verify private Analytics connector without credentials
+        if: steps.kind.outputs.kind == '' || steps.kind.outputs.kind == 'code'
         run: |
           npm ci --prefix connector --ignore-scripts
           npm test --prefix connector
           node --test scripts/analytics-recovery-browser.test.mjs
           npm run build --prefix connector
       - name: Save and inspect a version
+        if: steps.kind.outputs.kind == '' || steps.kind.outputs.kind == 'code'
         run: |
           version=$(node scripts/release.mjs prepare)
           node scripts/capture.mjs "$version"
@@ -68,13 +83,31 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - run: npm install --global pnpm@11.15.1
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm cms:snapshot --out output/cms/snapshot.json
-      - run: pnpm check && pnpm build
-      - run: node scripts/publish-live.mjs bundle
+      # Instructions-only PRs change nothing on the website: no preview to build.
+      # publish-live.yml checks the PR's files again with trusted code before it accepts that.
+      - name: Find what this PR changes
+        id: kind
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/change-kind.mjs
+      - if: steps.kind.outputs.kind != 'docs'
+        run: npm install --global pnpm@11.15.1
+      - if: steps.kind.outputs.kind != 'docs'
+        run: pnpm install --frozen-lockfile
+      # GitHub's runner already has Chromium (scripts/browser.mjs uses it); download one only if it is missing.
+      - if: steps.kind.outputs.kind != 'docs'
+        run: if [ ! -x /usr/bin/chromium ]; then pnpm exec playwright install --with-deps chromium; fi
+      - if: steps.kind.outputs.kind != 'docs'
+        run: pnpm cms:snapshot --out output/cms/snapshot.json
+      # pnpm check runs in the verify job on this same PR; it does not depend on content.
+      - if: steps.kind.outputs.kind != 'docs'
+        run: pnpm build
+      - if: steps.kind.outputs.kind != 'docs'
+        run: node scripts/publish-live.mjs bundle
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: steps.kind.outputs.kind != 'docs'
         with:
           name: library-pr-checked-preview
           path: |

@@ -94,11 +94,12 @@ jobs:
         env:
           LIBRARY_CONTENT_SOURCE: sanity
           SANITY_SNAPSHOT_PATH: ${{ github.workspace }}/output/cms/snapshot.json
+        # pnpm check and pnpm cms:test do not read live content. They already passed in the
+        # verify job for this exact source, which the validate step above requires.
+        # GitHub's runner already has Chromium; download one only if it is missing.
         run: |
-          pnpm exec playwright install --with-deps chromium
-          pnpm check
+          if [ ! -x /usr/bin/chromium ]; then pnpm exec playwright install --with-deps chromium; fi
           pnpm build
-          pnpm cms:test
       - name: Save and inspect the immutable release
         run: |
           node scripts/cms-publishing.mjs build

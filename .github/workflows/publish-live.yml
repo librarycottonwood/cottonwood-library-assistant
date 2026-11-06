@@ -9,7 +9,12 @@ jobs:
   route:
     # Decides what this check result asks for, before any lock or hosting secret.
     # Scheduled checks, superseded heads and direct pushes stop here.
-    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.head_repository.full_name == github.repository
+    # Results route() always skips without a GitHub lookup (scheduled checks, cancelled PR
+    # checks, branch checks started by hand) do not start this job: each started job costs a minute.
+    if: >-
+      github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event.workflow_run.head_repository.full_name == github.repository &&
+      ((github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled' && github.event.workflow_run.conclusion != 'skipped') ||
+      (github.event.workflow_run.head_branch == 'main' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
