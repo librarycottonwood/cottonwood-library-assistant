@@ -10,6 +10,7 @@
  */
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
+import ContentImage from '../OptimizedImage.astro';
 import Icon from '../Icon.astro';
 import IconLink from './IconLink.astro';
 import Section from './Section.astro';
@@ -30,7 +31,6 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
   <IconLink href="/newsletter/" iconEnd="arrow">Read the latest newsletter</IconLink>
 </Section>
 <footer class="site-footer">
-  <Image src={logo} alt="" width={700} widths={[400, 700]} sizes="700px" loading="lazy" class="footer-watermark" />
   <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
     <Image src={logo} alt="" width={163} densities={[1, 2]} loading="lazy" class="footer-logo" />
     <span aria-hidden="true">Cottonwood<br />Community<br />Library</span>
@@ -59,23 +59,18 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
       <button id="privacy-choices" type="button" hidden>Privacy choices</button>
     </p>
   </div>
+  <div class="footer-art" aria-hidden="true">
+    <ContentImage image={{ key: 'crayonFooter', alt: '' }} alt="" width={960} widths={[320, 480, 720, 960]} sizes="(min-width: 90rem) 28vw, (min-width: 48rem) 42vw, 90vw" loading="lazy" />
+  </div>
 </footer>
 <style>
-  /* min-height leaves room for the whole tree box below the top padding, as in Figma. */
+  /* Art has its own column rather than sitting behind the contact links. */
   .site-footer {
-    position: relative; isolation: isolate; overflow: hidden;
-    display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--section-gap);
-    min-height: calc(var(--section-space) + min(41.3125rem, 35.9vw));
+    display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--section-gap);
     padding: var(--section-space) var(--page-inset) var(--space-xl);
   }
-  /* As in Figma, the tree is cut off at the footer's bottom edge: the box (829 × 661, Figma's frame) crops the
-   * bottom 14% of the image, so the ground and roots never show and the tree runs off the page. */
-  .site-footer :global(.footer-watermark) {
-    position: absolute; z-index: -1; right: var(--page-inset); bottom: 0;
-    width: min(51.8125rem, 45vw); height: auto; aspect-ratio: 829 / 661;
-    object-fit: cover; object-position: center top;
-    opacity: 0.06; pointer-events: none;
-  }
+  .footer-art { align-self: center; justify-self: center; width: 100%; max-width: 28rem; pointer-events: none; }
+  .footer-art :global(img) { display: block; width: 100%; height: auto; }
   .footer-brand {
     display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); width: 14.0625rem;
     font-weight: var(--weight-bold); line-height: var(--leading-tight); text-align: center; text-decoration-line: none;
@@ -98,10 +93,15 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
     text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);
   }
   /* Phones: one column, everything lined up on the left edge. */
-  @media (max-width: 40rem) {
-    .site-footer { flex-direction: column; }
+  @media (max-width: 47.99rem) {
     .footer-brand { width: 100%; align-items: flex-start; text-align: start; }
     .footer-column { width: 100%; }
-    .site-footer :global(.footer-watermark) { width: 85vw; }
+  }
+  @media (min-width: 48rem) {
+    .site-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 90rem) {
+    .site-footer { grid-template-columns: minmax(0, .85fr) minmax(0, .85fr) minmax(0, 1.2fr) minmax(0, 1.4fr); }
+    .footer-art { justify-self: end; }
   }
 </style>

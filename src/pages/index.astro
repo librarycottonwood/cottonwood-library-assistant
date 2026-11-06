@@ -76,12 +76,12 @@ const heroSecondEnd = heroSecondWords.pop();
     <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
   </Split>}
 
-  <Section title="Upcoming events" headingId="events-heading" illustration="playing">
+  <Section title="Upcoming events" headingId="events-heading" illustration="reading">
     <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
     <Button href="/events/" iconEnd="arrow">View all</Button>
   </Section>
 
-  <Section title="Library services" headingId="services-heading" illustration="reading">
+  <Section title="Library services" headingId="services-heading" illustration="computers">
     <Grid as="ul" columns={3}>
       {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} crayon>{service.description}</Card>)}
     </Grid>

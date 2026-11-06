@@ -466,11 +466,11 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 
 `src/components/site/LibraryIllustration.astro` — Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette.
 
-- **Use for:** Above a related heading: community for the support block, reading for services, playing for events, books for the newsletter.
+- **Use for:** Above a related heading: community for the support block, reading for events, computers for services, books for the newsletter.
 - **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
 
 ```ts
-interface Props { scene: 'reading' | 'playing' | 'books' | 'community'; }
+interface Props { scene: 'reading' | 'computers' | 'books' | 'community'; }
 ```
 
 ```astro
@@ -570,7 +570,7 @@ interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
-  illustration?: 'reading' | 'playing' | 'books' | 'community';
+  illustration?: 'reading' | 'computers' | 'books' | 'community';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
