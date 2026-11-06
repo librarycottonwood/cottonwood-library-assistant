@@ -1,0 +1,56 @@
+{
+  "request": "Write longer descriptions for Story Time, Book Club, Main Street Readers, the October book sale and the roof auction, from the library's own posts.",
+  "sanityDocuments": [
+    {
+      "id": "program-story-time",
+      "revision": "NoJPWpDzR8mqD2ki4mrWWk",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "Read, sing, dance, make a craft and enjoy some snacks!"
+      }
+    },
+    {
+      "id": "program-book-club",
+      "revision": "NoJPWpDzR8mqD2ki4mrWWk",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "Find your next great read and a lively conversation with fellow book lovers at our monthly book club."
+      }
+    },
+    {
+      "id": "program-main-street-readers",
+      "revision": "NoJPWpDzR8mqD2ki4mrWWk",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "Meet and discuss the books that you are reading."
+      }
+    },
+    {
+      "id": "event-quarterly-book-sale",
+      "revision": "NoJPWpDzR8mqD2ki4mrWWk",
+      "fields": [
+        "summary"
+      ],
+      "before": {
+        "summary": "Back-door entry · Cash only"
+      }
+    },
+    {
+      "id": "e0598479-e086-450f-a57a-84821d544b4f",
+      "revision": "NoJPWpDzR8mqD2ki4mrWWk",
+      "fields": [
+        "summary"
+      ],
+      "before": {
+        "summary": "Bid online from noon Saturday, November 14, through 3 p.m. Sunday, November 15, to help pay for a new library roof. You can preview the items starting Friday, November 13, and create your bidding account on Givebutter now. Auction items or donations can be dropped off at the library through Monday, November 9."
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
