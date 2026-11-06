@@ -6,7 +6,7 @@ The website of the [Cottonwood Community Library](https://cottonwood-library.pag
 
 Built with Astro, Sanity and Cloudflare Pages. Deploys come only from GitHub Actions.
 
-## Where things are
+## Layout
 
 - `src/`: the website
 - `studio/`: Sanity Studio (content editor)
@@ -14,7 +14,7 @@ Built with Astro, Sanity and Cloudflare Pages. Deploys come only from GitHub Act
 - `cms-publisher/`, `connector/`, `functions/`: Cloudflare Workers and the newsletter function
 - `assistant/`, `docs/`: workflow, handoff and design notes. Agents start at [AGENTS.md](AGENTS.md).
 
-## Develop
+## Development
 
 Node 24, pnpm 11.15.1.
 
