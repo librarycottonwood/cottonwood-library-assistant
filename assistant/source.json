@@ -1,5 +1,5 @@
 {
   "sourceRepository": "oobagi/cottonwood-community-library",
   "sourceCommit": "5f8df4c6eb6f0d9e652e9105833a45ea0d6cb0fe",
-  "purpose": "Isolated assistant demo; library facts need review before launch."
+  "purpose": "Library website assistant; library facts are reviewed in docs/library-facts.md."
 }

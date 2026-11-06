@@ -11,7 +11,7 @@ The library is small and mostly volunteer-supported, so replies may take a few d
 
 ## Scope
 
-- The website at https://cottonwood-library.pages.dev/ and cottonwoodcommunitylibrary.com
+- The website at https://www.cottonwoodcommunitylibrary.com/ (also served at cottonwood-library.pages.dev)
 - The code in this repository, including the Cloudflare Workers in `cms-publisher/` and `connector/` and the GitHub workflows
 
 Givebutter, Sanity, Cloudflare, Google and OpenAI are separate services; report problems in them to those companies.

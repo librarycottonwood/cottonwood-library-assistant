@@ -1,7 +1,7 @@
 import type { HomeContent } from './types';
 
 /** Source: research/site-inventory.md and the library's Summer 2026 newsletter.
- * Editorial headlines are prototype copy. Public facts need library review before launch.
+ * Starting copy only: the live website reads its content from Sanity, never from this file.
  * Keep program recurrences separate from project meetings; do not invent dated occurrences.
  */
 export const homeContent = {

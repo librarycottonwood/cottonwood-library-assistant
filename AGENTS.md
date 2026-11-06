@@ -39,7 +39,7 @@
 - Deploy only through the existing GitHub workflows on the library's Cloudflare account.
 - Never deploy locally, run `wrangler login`, or use a personal Cloudflare account.
 - Never give untrusted PR builds CMS-write or deploy credentials.
-- Live site: https://cottonwood-library.pages.dev (the public domain is attached at launch). The checked PR build is promoted without rebuilding; the previous build is kept for rollback.
+- Live site: https://www.cottonwoodcommunitylibrary.com (the same deployment also answers at https://cottonwood-library.pages.dev). The checked PR build is promoted without rebuilding; the previous build is kept for rollback.
 
 ## Hard limits
 

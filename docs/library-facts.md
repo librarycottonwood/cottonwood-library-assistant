@@ -11,10 +11,8 @@ Verified facts the assistant and staff can rely on. Check the live record before
 
 ## Website
 
-- AI Expo: Tuesday, November 3, 2026. Public launch moved to Thursday, November 5, 2026 at the latest. The domain is attached at launch (`assistant/DOMAIN-LAUNCH.md`).
-
-- Live: https://cottonwood-library.pages.dev/ (Cloudflare Pages project `cottonwood-library` on the library's Cloudflare account). Previews: `https://<8 hex>.cottonwood-library.pages.dev`.
-- Public domain `cottonwoodcommunitylibrary.com` (registered at Squarespace) is not attached yet. Plan: `assistant/DOMAIN-LAUNCH.md`.
+- Live: https://www.cottonwoodcommunitylibrary.com/ since November 5, 2026 (Cloudflare Pages project `cottonwood-library` on the library's Cloudflare account, also at https://cottonwood-library.pages.dev/). Previews: `https://<8 hex>.cottonwood-library.pages.dev`.
+- Domain `cottonwoodcommunitylibrary.com` is registered at Squarespace; the bare domain forwards to www. Setup and rollback: `assistant/DOMAIN.md`.
 - GitHub: `librarycottonwood/cottonwood-library-assistant`.
 - Sanity: project `2ou0xy2r`, dataset `production`. Editor: https://cottonwood-community-library.sanity.studio/
 - CMS publisher Worker (webhooks, admin recovery page): https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/

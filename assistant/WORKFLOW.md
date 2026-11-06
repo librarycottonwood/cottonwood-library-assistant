@@ -14,7 +14,7 @@ Use `librarycottonwood/cottonwood-library-assistant` and the prepared library Co
 8. Check the merged commit, workflow result and live `/_review/status.json`. The status retains the preview's `sourceSha` and adds `mergedSourceSha`; both commits must have the same tree. Match the content/release digests and confirm the existing CMS ledger recorded the verified deployment. A source merge alone is not a completed website save.
 9. After verification, remove only this task's completed worktree and branches. Archive managed worktrees using the app's archive tool; remove repository-explicit worktrees through Git. Preserve unrelated/open work, current previews and the previous verified recovery release. Declining leaves the live website unchanged.
 
-The flow is **preview → live**. The live website is https://cottonwood-library.pages.dev/ (production deployment of the library-account Pages project `cottonwood-library`). The cottonwoodcommunitylibrary.com domain is attached to that same project at launch; see DOMAIN-LAUNCH.md. Domain launch, billing, ownership, bulk email and social publishing require their own request.
+The flow is **preview → live**. The live website is https://www.cottonwoodcommunitylibrary.com/ , the production deployment of the library-account Pages project `cottonwood-library` (also at https://cottonwood-library.pages.dev/); see DOMAIN.md. Domain changes, billing, ownership, bulk email and social publishing require their own request.
 
 ## Preview and deployment boundaries
 
