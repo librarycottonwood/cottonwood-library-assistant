@@ -15,13 +15,13 @@ const [prefix, word, suffix] = match ? [match[1], match[2], match[3]] : ['', tex
 ---
 {prefix}<span class="highlight-word">{word}<svg class="highlight-swipe" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true" focusable="false">
   <path class="swipe-paper" d="M3 31 14 26 37 23 62 25 89 20 119 23 146 19 172 22 199 18 229 21 256 17 286 22 297 28 291 33 300 39 290 45 295 51 282 57 256 55 231 61 205 58 180 63 150 59 121 64 94 59 66 63 41 58 15 60 4 53 10 46 0 41Z" />
-  <path class="swipe-color" d="M7 34 34 29 64 31 92 27 120 30 148 25 177 28 206 23 236 26 264 23 291 28 286 37 259 34 233 38 204 35 175 40 145 35 118 40 90 35 61 40 33 36 10 42Z" opacity=".25" />
-  <path class="swipe-color" d="M8 44 36 39 65 42 94 37 124 41 153 36 182 40 210 35 240 39 267 34 294 39 285 48 261 46 232 51 205 47 175 53 147 48 119 54 90 49 62 54 35 49 12 54Z" opacity=".2" />
+  <path class="swipe-color" d="M7 34 34 29 64 31 92 27 120 30 148 25 177 28 206 23 236 26 264 23 291 28 286 37 259 34 233 38 204 35 175 40 145 35 118 40 90 35 61 40 33 36 10 42Z" opacity=".35" />
+  <path class="swipe-color" d="M8 44 36 39 65 42 94 37 124 41 153 36 182 40 210 35 240 39 267 34 294 39 285 48 261 46 232 51 205 47 175 53 147 48 119 54 90 49 62 54 35 49 12 54Z" opacity=".25" />
   <path class="swipe-grain" d="m22 31 14-2m15 6 25-1m11-7 18 1m25 2 16-2m19 6 29-2m24-4 17 1m17-6 19 1M17 47l18-1m18 2 22-2m18-3 16 1m22 3 19-2m24 1 22-1m17-3 15 1m21-3 24-1M43 55l18-2m41 2 23-1m44 2 17-2m45 1 21-2" />
 </svg></span>{suffix}
 <style>
   .highlight-word { display: inline-block; position: relative; isolation: isolate; max-width: 100%; }
-  .highlight-swipe { position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: .85em; transform: translateY(.16em) scaleX(1.035); z-index: -1; pointer-events: none; overflow: visible; }
+  .highlight-swipe { position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 1.1em; transform: translateY(.1em) scaleX(1.035); z-index: -1; pointer-events: none; overflow: visible; }
   .swipe-paper { fill: var(--color-primary-soft); }
   .swipe-color { fill: var(--color-primary); }
   .swipe-grain { fill: none; stroke: var(--color-background); stroke-width: 1.1; stroke-linecap: round; opacity: .65; }
