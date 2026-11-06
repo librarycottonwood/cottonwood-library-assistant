@@ -33,7 +33,7 @@ const givingPhoto = givingImage ?? home.support.image;
 const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
-<BaseLayout>
+<BaseLayout title="Cottonwood Community Library | Cottonwood, CA" description="Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.">
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
     {campaign && <Badge href={DONATE_PAGE_HREF} iconEnd="external" data-campaign-only data-campaign-ends={campaign.endsOn}>
       <Image slot="start" src={campaign.image ? undefined : fundraiserHouse} image={campaign.image} alt="" width={50} height={50} />
@@ -69,7 +69,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
     <Text tone="muted" size="lead">{featured.summary}</Text>
-    <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
+    <Button href={featured.href} variant="accent" iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
   </Split>}
 
   <Section title="Upcoming events" headingId="events-heading" illustration="reading">
@@ -81,6 +81,6 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Grid as="ul" columns={3}>
       {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} serviceIcon={service.icon}>{service.description}</Card>)}
     </Grid>
-    <Button href="/services/" iconEnd="arrow">Read more</Button>
+    <Button href="/services/" iconEnd="arrow" screenReaderText="about library services">Read more</Button>
   </Section>
 </BaseLayout>

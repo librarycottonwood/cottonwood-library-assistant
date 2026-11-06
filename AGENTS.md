@@ -29,6 +29,7 @@
 ## Code and layout changes
 
 - Use `librarycottonwood/cottonwood-library-assistant`. Fetch main and make a new worktree, branch and PR per request. Don't touch other tasks' worktrees.
+- New pages: give BaseLayout a unique title, description and photo (`docs/design-rules.md`, "Search and sharing").
 - Run `pnpm check`, `pnpm build`, affected tests, and phone + desktop captures. Check browser errors, affected navigation/forms and both screenshots.
 - Share the preview URL built from the exact PR head and current CMS content, then ask "Ready to save?".
 - Merge only after an explicit yes in chat. Before merging, refresh main, resolve conflicts keeping others' work, and rerun affected checks. If what was reviewed changed, get a new preview and a new yes.

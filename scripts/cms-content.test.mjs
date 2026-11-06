@@ -287,3 +287,18 @@ test('correction warnings print once per message by default and are returned wit
   assert.equal(printed.length, 1);
   assert.match(printed[0], /^Sanity content warning: In Library settings/);
 });
+test('a notice keeps its closed days (sorted, once each) or its "stays open" switch; older notices need neither', () => {
+  const withNotice = fields => { const snapshot = fixture(); snapshot.documents = snapshot.documents.filter(item => item._type !== 'notice'); snapshot.documents.push({_id:'notice-thanksgiving',_type:'notice',slug:{current:'holiday'},message:'Closed for Thanksgiving.',startsOn:'2026-11-16',endsOn:'2026-11-28',...fields}); return snapshot; };
+  const notice = fields => validateSanitySnapshot(withNotice(fields), undefined, { warn: () => {} }).notices[0];
+  assert.deepEqual(notice({}), {id:'holiday',message:'Closed for Thanksgiving.',startsOn:'2026-11-16',endsOn:'2026-11-28'});
+  assert.deepEqual(notice({closedDates:['2026-11-27','2026-11-26','2026-11-26']}).closedDates, ['2026-11-26','2026-11-27']);
+  assert.equal(notice({staysOpen:true}).staysOpen, true);
+  assert.equal('staysOpen' in notice({staysOpen:false}), false);
+  assert.equal('closedDates' in notice({closedDates:[]}), false);
+  const both = validateSanitySnapshot(withNotice({closedDates:['2026-11-26'],staysOpen:true}), undefined, { warn: () => {} });
+  assert.deepEqual(both.notices[0].closedDates, ['2026-11-26']);
+  assert.equal('staysOpen' in both.notices[0], false);
+  assert.match(both.warnings.join('\n'), /uses the closed days/);
+  assert.throws(() => validateSanitySnapshot(withNotice({closedDates:['Nov 26']})), /Days the library is closed/);
+  assert.throws(() => validateSanitySnapshot(withNotice({staysOpen:'yes'})), /on or off/);
+});

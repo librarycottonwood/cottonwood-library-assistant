@@ -16,6 +16,7 @@ import Stack from '../components/site/Stack.astro';
 import Text from '../components/site/Text.astro';
 import { contentRepository } from '../content/repository';
 import type { LibraryImage } from '../content/types';
+import { SITE_URL, faqNode } from '../content/seo.mjs';
 const { library } = await contentRepository.getHome();
 const entrance: LibraryImage = { key: 'entrance', alt: 'Inside the library entrance: the Cottonwood Community Library tree logo and a “Cottonwood, California” sign, with shelves of books beyond.' };
 const questions = [
@@ -27,7 +28,7 @@ const questions = [
 ];
 const hours = library.hours.map(row => ({ label: row.days, value: row.hours, muted: /^closed$/i.test(row.hours) }));
 ---
-<BaseLayout title="Visit Us | Cottonwood Community Library" description={`Hours, directions and borrowing at ${library.address}, ${library.locality}.`}>
+<BaseLayout title="Visit Us | Cottonwood Community Library" description={`Hours, directions and borrowing at ${library.address}, ${library.locality}.`} image={entrance} schema={[faqNode(questions, new URL(Astro.url.pathname, SITE_URL).href)]}>
   <PageTitle title="Visit Us" illustration="books" />
   <Split media="start" panel image={entrance} headingId="visit-heading" mediaId="visit">
     <Stack gap="xs">

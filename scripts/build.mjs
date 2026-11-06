@@ -5,6 +5,7 @@ import { sanityConfig, fetchSanitySnapshot } from '../src/content/sanity.mjs';
 import { readSnapshot, saveSnapshot, contentDigest } from './cms.mjs';
 import { check as checkImages, pruneUnusedBuiltImages } from './images.mjs';
 import { revisionList } from './content-changes.mjs';
+import { checkSearchTags } from './seo-pages.mjs';
 
 const mode=process.env.LIBRARY_CONTENT_SOURCE??'local';
 if (!['local','sanity'].includes(mode)) throw Error('LIBRARY_CONTENT_SOURCE must be local or sanity.');
@@ -41,3 +42,7 @@ await pruneUnusedBuiltImages({dist:relativeOutput});
 const problems=await checkImages({dist:relativeOutput});
 if(problems.length) throw Error('Picture check failed:\n- '+problems.join('\n- '));
 console.log('Picture check passed.');
+const search=await checkSearchTags({dist:relativeOutput});
+for (const warning of search.warnings) console.warn(`Search check warning: ${warning}`);
+if(search.errors.length) throw Error('Search check failed:\n- '+search.errors.join('\n- '));
+console.log('Search check passed.');

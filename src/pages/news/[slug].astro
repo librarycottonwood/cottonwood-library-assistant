@@ -14,6 +14,7 @@ import { postDate, upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import type { LibraryPost } from '../../content/types';
 import { eventPhoto, postsWithPhotos } from '../_photos';
+import { SITE_URL, articleNode } from '../../content/seo.mjs';
 export async function getStaticPaths() {
   // Same photo as on the Events & News list (a library photo when Sanity has none).
   const posts = postsWithPhotos(await contentRepository.getPosts());
@@ -26,7 +27,7 @@ const related = post.eventIds?.length ? upcomingEvents(await contentRepository.g
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 const date = postDate(post);
 ---
-<BaseLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary}>
+<BaseLayout title={`${post.title} | Cottonwood Community Library`} description={post.summary} image={post.image} type="article" schema={[articleNode(post, { url: new URL(Astro.url.pathname, SITE_URL).href })]}>
   <PageTitle title={post.title} trail={[eventsLink]}>
     {date && <time datetime={post.publishedAt ?? undefined}>{date}</time>}
   </PageTitle>

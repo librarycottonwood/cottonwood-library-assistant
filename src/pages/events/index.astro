@@ -37,7 +37,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Text tone="muted" size="lead">{featured.summary}</Text>
     <Stack direction="row" gap="xs" wrap>
       {featuredInPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
-      <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow">Read more</Button>
+      <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
     </Stack>
   </Split>}
   {laterEvents.length > 0 && <Section title="Upcoming Events" headingId="events-heading" id="upcoming">

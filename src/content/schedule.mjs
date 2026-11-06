@@ -51,3 +51,24 @@ export function nextScheduledDay(schedule, todayKey) {
   const day = candidates.filter(key => key >= todayKey).sort()[0];
   return day ? { day, ...(rule.time ? { time: rule.time } : {}) } : null;
 }
+
+/** A program's upcoming sessions as sentence pieces, grouped by month: "November 11, 18 and 25; December 2".
+ * Each date piece keeps its session so the page can wrap it in <time>. Shared by the build and the browser. */
+export function sessionPhrase(sessions) {
+  const months = [];
+  for (const session of sessions) {
+    const month = new Date(`${session.day}T12:00:00Z`).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+    if (months.at(-1)?.month !== month) months.push({ month, sessions: [] });
+    months.at(-1).sessions.push(session);
+  }
+  // "November 17, December 15 and January 19" when each month has one date; semicolons between months otherwise.
+  const single = months.every(group => group.sessions.length === 1);
+  const between = index => !index ? '' : !single ? '; ' : index === months.length - 1 ? ' and ' : ', ';
+  return months.flatMap((group, groupIndex) => [
+    { text: `${between(groupIndex)}${group.month} ` },
+    ...group.sessions.flatMap((session, index) => [
+      ...(index ? [{ text: index === group.sessions.length - 1 ? ' and ' : ', ' }] : []),
+      { text: String(Number(session.day.slice(8))), session },
+    ]),
+  ]);
+}

@@ -101,7 +101,7 @@ Save PRs with no activity for 14 days are closed automatically with a comment. N
 - **Links:** no spaces. Start with `https://`, or use `mailto:name@example.org`, or `tel:` followed by digits only (for example `tel:5303470000`). Pages on our own site start with `/`.
 - **Ids and page addresses (slugs):** lowercase letters and numbers separated by single hyphens, like `book-sale-2026`.
 - **Event times:** full date and time with seconds and the Pacific offset for the **event's** date, like `2026-11-14T10:00:00-08:00` (offsets are in `assistant/content/events.md`). The end must be after the start. Every event needs at least one date.
-- **Plain dates** (notices, end dates): `YYYY-MM-DD`.
+- **Plain dates** (notices and their closed days, end dates): `YYYY-MM-DD`. A notice's `staysOpen` is `true` or `false`, never text.
 - **Text:** one level of bullets only; no bullets inside bullets.
 - **Photos:** JPG, PNG or WebP, uploaded to Sanity, with a short description (alt text).
 - **Don't unpublish** a record that another record points to (an event used by a news post, a program used by an event, the current newsletter). Change or remove the pointer first.

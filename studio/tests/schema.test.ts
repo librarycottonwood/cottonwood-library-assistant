@@ -74,3 +74,11 @@ test('migration provenance is a known protected field and newsletter addresses a
   assert.equal(addressed.status, 'local_builtin_rules_passed');
   assert.deepEqual(addressed.warnings, []);
 });
+
+test('the compiled notice form accepts closed days separate from the banner dates and rejects a repeated day', async () => {
+  const notice = {...base, _id: 'notice-thanksgiving', _type: 'notice', slug: {_type: 'slug', current: 'thanksgiving'}, message: 'Closed Thursday, Nov 26 for Thanksgiving.', startsOn: '2026-11-16', endsOn: '2026-11-26', closedDates: ['2026-11-26']};
+  assert.deepEqual((await validateDocument({schema, document: notice})).markers, []);
+  assert.deepEqual((await validateDocument({schema, document: {...notice, closedDates: undefined, staysOpen: true}})).markers, []);
+  const repeated = await validateDocument({schema, document: {...notice, closedDates: ['2026-11-26', '2026-11-26']}});
+  assert.ok(repeated.markers.some((marker) => marker.path.includes('closedDates')));
+});
