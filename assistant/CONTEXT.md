@@ -1,7 +1,7 @@
 # Library context
 
 Cottonwood Community Library serves Cottonwood, California. Timezone: America/Los_Angeles.
-This repository holds the library's website and the instructions the library's ChatGPT assistant follows to keep it up to date. Staff ask for changes in plain words; every change gets a preview and is saved only after someone says it's ready. The website is live at https://cottonwood-library.pages.dev/ and moves onto cottonwoodcommunitylibrary.com at the public launch (by Thursday, November 5, 2026); until then the old Squarespace site stays on the domain.
+This repository holds the library's website and the instructions the library's ChatGPT assistant follows to keep it up to date. Staff ask for changes in plain words; every change gets a preview and is saved only after someone says it's ready. The website is live at https://www.cottonwoodcommunitylibrary.com/ (launched November 5, 2026; the same deployment also answers at https://cottonwood-library.pages.dev/).
 
 The website is static Astro with Node 24 and pnpm 11.15.1. Cloudflare Pages hosts the static output plus one Pages Function: the newsletter sign-up form posts to `/api/newsletter` (`functions/api/newsletter.ts`), which adds a Givebutter contact. Donations go through Givebutter checkout and widgets; the website itself stores no payments or donor data.
 

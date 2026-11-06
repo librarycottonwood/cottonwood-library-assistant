@@ -2,7 +2,7 @@
 
 Account and launch setup for the library website. Staff update the site through the library's ChatGPT (`plugins/cottonwood-library/`); the earlier plan to move to Claude was dropped on November 5, 2026.
 
-**AI Expo: Tuesday, November 3, 2026. Public launch: by Thursday, November 5, 2026** (moved from November 3, which replaced the earlier November 16 plan).
+**Public launch: Thursday, November 5, 2026.** The site is live at https://www.cottonwoodcommunitylibrary.com.
 
 ## Status (updated November 5, 2026)
 
@@ -11,18 +11,18 @@ Done:
 - Saved as the encrypted Cloudflare secret `GIVEBUTTER_API_KEY` in project `cottonwood-library`, **Production** only, and confirmed after a reload. Preview has no key.
 - Roof fundraiser found in Givebutter: **Under One Roof**, campaign code `CUDTG7`, https://givebutter.com/c/underoneroof, goal $28,000, Active. Form widget ID `jwyYlq`.
 
-Still open before launch:
+Launch items:
 - [x] **Deploy and test the newsletter.** Website sign-up tested end to end October 30, 2026; Givebutter email delivery tested October 21, 2026. Unsubscribe: handled by Givebutter's built-in link; not tested by us (accepted November 5).
 - [x] **Roof fundraiser on the website** (`/donate/`).
 - [x] **Auction date:** Saturday, November 14. Settled; follow the library's public posts.
-- [x] **Domain.** Access to the Squarespace domain is confirmed. Keep its DNS records before launch or any transfer. The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
+- [x] **Domain.** Access to the Squarespace domain is confirmed. The domain points to the website since November 5 (`assistant/DOMAIN.md`). The Spaceship account exists (username `cottonwoodcommunitylibrary`, librarycottonwood@gmail.com); no transfer started.
 - [ ] **Image generation**: an OpenAI API account and key for the picture skill (staff rely on this in ChatGPT; see section 4).
 - [ ] **The assistant creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
 - [x] **Spam protection for the newsletter form** (see section 6). Set up Oct 27; turns on when this PR goes live.
 - [x] **Pipeline fixes:** PR #52 and #53 merged Oct 28; Studio deployed, ChatGPT plugin updated to 0.2.15, and #45 switched to one file per save.
 - [x] **Name a board admin**: Todd Haines (toddhaines7@gmail.com), named Oct 30. In `docs/library-facts.md` and the ChatGPT plugin.
 - [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
-- [ ] **Launch day:** add a Google Analytics annotation; numbers before launch day are test traffic.
+- [x] **Launch day:** Google Analytics annotation added November 5; numbers before that day are test traffic.
 
 ## 1. GitHub
 

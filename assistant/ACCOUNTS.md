@@ -15,11 +15,11 @@ Board admin for account, billing and permission questions: Todd Haines (toddhain
 | **Library email** (cottonlib@shasta.com) | Library contact address; Givebutter login and domain registrant email | Board to confirm | Board to confirm | Board to confirm |
 | **ChatGPT / Codex** (handle @cottonwoodlibrary) | The library assistant: chat, Sanity edits, website changes (Codex environment `cottonwood-library-editor`), weekly review, automatic repair sign-in | librarycottonwood@gmail.com | Board to confirm | ChatGPT **Plus**, library-owned. Who pays: Board to confirm |
 | **Google Analytics** (account `410873133`, property `557596091`) | Visitor numbers for the new website | librarycottonwood@gmail.com (Administrator) | librarycottonwood@gmail.com; Jaden also still has access | No billing recorded. Google Cloud project `cottonwood-library-analytics` has no billing account |
-| **Domain** `cottonwoodcommunitylibrary.com` (Squarespace) | The public web address, attached at launch. Registration and DNS stay at Squarespace | Squarespace sign-in: Board to confirm. Registrant on file: Mary Ann Hasbrook, cottonlib@shasta.com | Board to confirm | Renews March 7, 2027 for $15, auto-renew on |
+| **Domain** `cottonwoodcommunitylibrary.com` (Squarespace) | The public web address (www points to the website since November 5, 2026). Registration and DNS stay at Squarespace | Squarespace sign-in: Board to confirm. Registrant on file: Mary Ann Hasbrook, cottonlib@shasta.com | Board to confirm | Renews March 7, 2027 for $15, auto-renew on |
 | **Spaceship** (username `cottonwoodcommunitylibrary`) | Account made for a possible later domain transfer; not used, no transfer started | librarycottonwood@gmail.com | Board to confirm | Board to confirm |
 | **Buffer** | Facebook (and later Instagram) post drafts for a person to approve | librarycottonwood@gmail.com | Board to confirm | Board to confirm |
 | **Facebook Page** | Library posts, published through Buffer | Board members manage it from their own accounts | Board to confirm | Board to confirm |
-| **Old Square website** (cottonwood-community-library.square.site) | Old site; the domain forwards there until launch | Board to confirm | Board to confirm | Has a subscription; cancel only with board approval after the new site is verified |
+| **Old Square website** (cottonwood-community-library.square.site) | Old site; no longer on the domain since November 5, 2026 | Board to confirm | Board to confirm | Has a subscription; cancel only with board approval after the new site is verified |
 
 Not set up yet: an OpenAI API account for picture generation. See `docs/setup-checklist.md`.
 
@@ -30,4 +30,4 @@ Not set up yet: an OpenAI API account for picture generation. See `docs/setup-ch
 - Whether Jaden's Google Analytics access and the `oobagi` GitHub access stay after handoff.
 - Who pays for each paid service after the semester.
 
-Sources: `setup-status.json`, `HANDOVER.md`, `CONTEXT.md`, `COMMUNICATIONS.md`, `DOMAIN-LAUNCH.md`, `analytics.json`, `docs/library-facts.md`, `docs/setup-checklist.md`, `cms-publisher/README.md`, `connector/README.md`.
+Sources: `setup-status.json`, `HANDOVER.md`, `CONTEXT.md`, `COMMUNICATIONS.md`, `DOMAIN.md`, `analytics.json`, `docs/library-facts.md`, `docs/setup-checklist.md`, `cms-publisher/README.md`, `connector/README.md`.

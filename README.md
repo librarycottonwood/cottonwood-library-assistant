@@ -2,7 +2,7 @@
 
 [![Verify library website](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/workflows/check.yml/badge.svg)](https://github.com/librarycottonwood/cottonwood-library-assistant/actions/workflows/check.yml)
 
-The website of the [Cottonwood Community Library](https://cottonwood-library.pages.dev/) in Cottonwood, California, and the ChatGPT assistant its staff use to update it. Staff ask for a change, check a preview and approve it before it goes live. Every change is a pull request and can be undone.
+The website of the [Cottonwood Community Library](https://www.cottonwoodcommunitylibrary.com/) in Cottonwood, California, and the ChatGPT assistant its staff use to update it. Staff ask for a change, check a preview and approve it before it goes live. Every change is a pull request and can be undone.
 
 Built with Astro, Sanity and Cloudflare Pages. Deploys come only from GitHub Actions.
 
