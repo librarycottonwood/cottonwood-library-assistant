@@ -17,12 +17,18 @@ import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 const isCurrent = (href: string) => { const link = [...links, supportLink].find(item => item.href === href); return link ? isCurrentSection(link, Astro.url.pathname) : false; };
-// The hours summary in groups ("Monday–Wednesday 11 a.m.–5 p.m.", "Saturday 11 a.m.–2 p.m."), so phones can show one per line.
+// Keep the full CMS summary for assistive technology; abbreviate only weekday names visually.
 const hoursParts = library.hoursSummary.split(/\s+·\s+/);
+const shortDays: Record<string, string> = { Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
+const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/g, day => shortDays[day]!);
 ---
 <div class="toolbar-tint" aria-hidden="true"></div>
 <div class="hours-strip">
-  <p><Icon name="clock" class="hours-icon" /><span><span class="sr-only">Library hours: </span>{hoursParts.map((part, index) => <>{index > 0 && <span class="hours-dot"> · </span>}<span class="hours-part">{part}</span></>)}</span></p>
+  <p>
+    <Icon name="clock" class="hours-icon" />
+    <span class="sr-only">Library hours: </span>
+    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part"><span class="sr-only">{part}{' '}</span><span aria-hidden="true">{compactHours(part)}</span></span>)}</span>
+  </p>
 </div>
 <header class="site-header">
   <a href="/" class="brand" aria-label="Cottonwood Community Library home">
@@ -93,7 +99,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   @supports (animation-timeline: scroll()) {
     .toolbar-tint {
       display: block; position: fixed; top: 0; right: 0; left: 0; z-index: 40;
-      height: 0.375rem; background: var(--color-primary); pointer-events: none;
+      height: 0.375rem; background: var(--color-primary-soft); pointer-events: none;
       animation: toolbar-tint-away linear both; animation-timeline: scroll(); animation-range: 0.625rem 0.6875rem;
     }
     :global(body:has(.library-notices:not([hidden]))) .toolbar-tint { background: var(--color-accent); }
@@ -102,19 +108,15 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   .hours-strip {
     display: flex; justify-content: center;
     padding: var(--space-xs) var(--page-inset);
-    background: var(--color-primary); color: var(--color-surface);
-    font-family: var(--font-body); font-size: var(--fluid-label); font-weight: var(--weight-medium); line-height: var(--leading-tight);
+    background: var(--color-primary-soft); color: var(--color-primary-ink);
+    font-family: var(--font-body); font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: var(--leading-relaxed);
     text-align: center;
   }
-  .hours-strip p { display: flex; align-items: center; gap: var(--space-xs); }
-  /* Phones: each group of days on its own line ("Monday–Wednesday …" / "Saturday …"), never split mid-group. */
-  .hours-part { white-space: nowrap; }
-  @media (max-width: 47.99rem) {
-    .hours-strip { line-height: var(--leading-snug); }
-    .hours-strip p > span { display: flex; flex-direction: column; }
-    .hours-dot { display: none; }
-  }
-  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-icon-muted); }
+  .hours-strip p { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; }
+  .hours-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs) var(--space-sm); min-width: 0; }
+  /* Schedules stay separate; their text can reflow when enlarged or on very narrow screens. */
+  .hours-part { max-width: 100%; }
+  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-primary); }
 
   /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */
   .site-header {
@@ -181,7 +183,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   @media (scripting: none) { .menu-toggle { display: none; } }
 
   @media (min-width: 48rem) {
-    .hours-strip, .site-header { padding-block: var(--space-sm); }
+    .site-header { padding-block: var(--space-sm); }
     .site-header, .brand { gap: var(--space-sm); }
     .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
     .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); }
@@ -194,7 +196,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     .menu-toggle, .mobile-nav, .mobile-nav[data-open] { display: none; }
   }
   @media (min-width: 100rem) {
-    .hours-strip, .site-header { padding-block: var(--space-md); }
+    .site-header { padding-block: var(--space-md); }
     .site-nav { gap: var(--space-lg); }
   }
 </style>

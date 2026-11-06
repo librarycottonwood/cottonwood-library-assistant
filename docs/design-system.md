@@ -27,9 +27,9 @@ Use the role names below. Do not add new colors or shades.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--color-primary` | `#4956a7` | Primary actions (Donate) and the opening-hours strip. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
+| `--color-primary` | `#4956a7` | Primary actions (Donate) and active accents. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
 | `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
-| `--color-primary-soft` | `#e3e7ff` | Panels beside a photo: opening hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
+| `--color-primary-soft` | `#e3e7ff` | The opening-hours strip and panels beside a photo: hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
@@ -54,11 +54,12 @@ Two self-hosted families. Headings use Bree Serif; everything else uses Mona San
 
 ### Type sizes
 
-Desktop sizes from the 1920px design. base.css scales them down on phones (--fluid-*); Heading and Text pick the right one.
+Body and heading sizes come from the 1920px design and scale down on phones (--fluid-*); Heading and Text pick the right one. Utility is the compact header label size.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--text-label` | `1.25rem` (20px) | Badges, dates, notices and opening hours. | Paragraphs people need to read. | `<Text size="label">` |
+| `--text-utility` | `0.875rem` (14px) | The compact opening-hours strip and short utility labels. | Body copy and main navigation. | `font-size: var(--text-utility);` |
+| `--text-label` | `1.25rem` (20px) | Badges, dates and notices. | Paragraphs people need to read. | `<Text size="label">` |
 | `--text-body` | `1.5rem` (24px) | Body copy, card titles, navigation and buttons. | Headings. | `<Text>` |
 | `--text-lead` | `1.875rem` (30px) | A short introduction under a heading, and the wordmark. | More than two sentences. | `<Text size="lead">` |
 | `--text-heading` | `3.125rem` (50px) | Section headings (h2). | Card titles (use <Heading size="title">). | `<Heading size="heading">` |
