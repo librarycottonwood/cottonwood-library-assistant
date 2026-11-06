@@ -1,6 +1,6 @@
 ---
 // Support Us (Figma 1012:1364): the active fundraiser and its Givebutter form (or the general giving block),
-// volunteering, then other ways to help. Built only from src/components/site (see docs/design-system.md). The fundraiser
+// volunteering, other ways to help, then thank-yous to the library's supporters. Built only from src/components/site (see docs/design-system.md). The fundraiser
 // comes from Sanity; "Other ways to help" is written here in Figma's wording (docs/design-rules.md).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/site/Button.astro';
@@ -56,6 +56,12 @@ const otherWays = otherWaysToHelp(support.initiatives);
   {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
     <Grid as="ul" columns={3}>
       {otherWays.map(item => <Card as="li" title={item.title} href={`/donate/${item.id}/`} image={item.image}>{item.summary}</Card>)}
+    </Grid>
+  </Section>}
+  {/* Community acknowledgments from Sanity ("Giving and acknowledgments"); the old site's "Thank You!" section. */}
+  {support.updates.length > 0 && <Section title="Thank you to our supporters" headingId="supporters-heading" id="supporters">
+    <Grid as="ul" columns={3}>
+      {support.updates.map(item => <Card as="li" title={item.title} image={item.image}>{item.body}</Card>)}
     </Grid>
   </Section>}
 </BaseLayout>
