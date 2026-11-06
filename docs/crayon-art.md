@@ -20,6 +20,6 @@ Main page titles reuse the same scenes in the space to the right: reading for Ev
 
 The footer's old low-opacity logo watermark is replaced by one full-color crayon reading scene. It occupies a separate fourth column on desktop, a normal grid cell on tablets, and follows the contact details on phones. The actual black library logo, all links and contact information remain intact. The scene is decorative, responsive and lazy-loaded.
 
-The separate `CrayonUnderline` is a small code-native shape: one continuous uneven stroke and a faint second pencil pass. It emphasizes the last word of the hero's second line and the community heading, preserving the CMS wording. It has no noise filter, loose flecks, decorative eyebrow marks, or animation.
+A broad indigo crayon highlight sits behind the final word of the hero and community headings. Its layered strokes and small paper-colored grain marks stay inside one continuous swatch. It uses the existing indigo palette and preserves the complete CMS wording. There are no detached underlines or floating marks.
 
 Photo frames share the `shadow-photo` and `shadow-photo-reverse` tokens: a small pale indigo or green offset, including the hero, event/service cards, split blocks, wide photos and galleries. The hero's clipping frame owns its inset, keeping the image's existing settling animation inside it. Logos, newsletter page cards and contained gallery artwork retain plain frames.

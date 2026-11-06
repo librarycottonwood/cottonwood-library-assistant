@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/site/Badge.astro';
 import Button from '../components/site/Button.astro';
 import Card from '../components/site/Card.astro';
-import CrayonUnderline from '../components/site/CrayonUnderline.astro';
+import CrayonHighlight from '../components/site/CrayonHighlight.astro';
 import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
 import Heading from '../components/site/Heading.astro';
@@ -32,10 +32,6 @@ const featuredImage = featured && eventPhoto(featured, programs);
 const givingPhoto = givingImage ?? home.support.image;
 const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
-const supportTitleWords = home.support.title.trim().split(/\s+/);
-const supportTitleEnd = supportTitleWords.pop();
-const heroSecondWords = hero.heading[1].trim().split(/\s+/);
-const heroSecondEnd = heroSecondWords.pop();
 ---
 <BaseLayout>
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
@@ -44,7 +40,7 @@ const heroSecondEnd = heroSecondWords.pop();
       {campaign.badgeLabel ?? campaign.title}
     </Badge>}
     <Stack gap="sm">
-      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{heroSecondWords.join(' ')}{' '}<CrayonUnderline>{heroSecondEnd}</CrayonUnderline></Heading>
+      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br /><CrayonHighlight text={hero.heading[1]} /></Heading>
       <Text tone="muted" size="lead">{hero.introduction}</Text>
     </Stack>
     <Stack direction="row" gap="xs" wrap>
@@ -60,7 +56,7 @@ const heroSecondEnd = heroSecondWords.pop();
   <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
     <Stack gap="sm" align="center">
       <LibraryIllustration scene="community" />
-      <Heading id="community-heading">{supportTitleWords.join(' ')}{' '}<CrayonUnderline>{supportTitleEnd}</CrayonUnderline></Heading>
+      <Heading id="community-heading"><CrayonHighlight text={home.support.title} /></Heading>
     </Stack>
     <Text tone="muted">{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
