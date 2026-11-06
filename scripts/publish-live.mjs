@@ -12,7 +12,7 @@ import {inventory} from './release.mjs';
 import {revisionDigest, recordBuild, verifyBundle, preview, stageRelease, previousStage, promoteWithRollback, deploy, waitForHosted, checkHosting, checkFileInventory, LIVE_BRANCH} from './cms-publishing.mjs';
 import {verifyPublisher} from '../cms-publisher/src/deployment-readiness.mjs';
 import {REPOSITORY, LIVE_ORIGIN, sourcePattern, operationIdPattern} from '../cms-publisher/src/contract.mjs';
-import {siteDigest, compareContent, parseContentUpdate, isContentUpdatePath, parseRevisions, statusDescription, commentBody, checkPages, COMMENT_MARKER} from './content-changes.mjs';
+import {siteDigest, compareContent, parseContentUpdate, isContentUpdatePath, parseRevisions, statusDescription, commentBody, checkPages, changeKind, COMMENT_MARKER} from './content-changes.mjs';
 
 export const ARTIFACT = 'library-pr-checked-preview';
 const fail = message => {throw Error(message);};
@@ -62,7 +62,10 @@ export function checkContent(reviewed, current) {
   if (!sameContent(reviewed, current)) fail('Published content changed after preview. Prepare and review a fresh preview before saving.');
 }
 // Only these check jobs decide a preview or a save; record/health jobs never block it.
-export const NEEDED_JOBS = {preview:['verify','pr-preview'], publish:['verify']};
+export const NEEDED_JOBS = {preview:['verify','pr-preview'], publish:['verify'], docs:['verify']};
+export const NO_WEBSITE_CHANGE = {
+  preview:'No website change: this PR only changes instructions or docs, so there is nothing to preview.',
+  live:'No website change: instructions or docs only. The live website is unchanged and needs no save.'};
 export const failedJobs = (jobs, names) => names.filter(name => jobs.find(job => job.name===name)?.conclusion!=='success');
 export function failureDescription(message) {
   if (/^Live website files are verified/.test(message)) return 'Live website updated, but its save record needs an administrator. See PR comment.';
@@ -178,6 +181,13 @@ export async function route(trigger, env, {get=api}={}) {
     const matches=await get(`commits/${trigger.head_sha}/pulls?per_page=100`,env);
     const pr=matches.find(item=>item.state==='open' && item.head.sha===trigger.head_sha && item.base.ref==='main' && item.head.repo?.full_name===REPOSITORY);
     if(!pr)return {action:'skip',reason:'Superseded: this commit is no longer the head of an open PR. Nothing to preview.'};
+    // Instructions-only PRs skip the website build in check.yml, so there is no artifact to preview.
+    if(await kindOf(pr.number,env,get)==='docs') {
+      const failed=failedJobs(await jobs(),NEEDED_JOBS.docs);
+      if(failed.length)return {action:'fail',pr:pr.number,sha:trigger.head_sha,context:PREVIEW,
+        description:`The instructions check (${failed.join(', ')}) failed. Read the check log, fix it and push again.`};
+      return {action:'docs',pr:pr.number,sha:trigger.head_sha,context:PREVIEW,description:NO_WEBSITE_CHANGE.preview};
+    }
     const failed=failedJobs(await jobs(),NEEDED_JOBS.preview);
     if(failed.length)return {action:'fail',pr:pr.number,sha:trigger.head_sha,context:PREVIEW,
       description:`No preview: the website check (${failed.join(', ')}) failed. Read the check log, fix it and push again.`};
@@ -187,6 +197,7 @@ export async function route(trigger, env, {get=api}={}) {
     const matches=await get(`commits/${trigger.head_sha}/pulls?per_page=100`,env);
     const candidate=matches.find(item=>item.merged_at && item.merge_commit_sha===trigger.head_sha && item.base.ref==='main');
     if(!candidate)return {action:'skip',reason:'No approved PR merge at this main commit. Live website unchanged.'};
+    if(await kindOf(candidate.number,env,get)==='docs')return {action:'docs',pr:candidate.number,sha:trigger.head_sha,context:LIVE,description:NO_WEBSITE_CHANGE.live};
     if(trigger.conclusion==='cancelled')return {action:'fail',pr:candidate.number,sha:trigger.head_sha,context:LIVE,
       description:'Not saved: the website check on main was cancelled. Live site unchanged. Make a refresh save (see PR comment).'};
     const failed=failedJobs(await jobs(),NEEDED_JOBS.publish);
@@ -205,6 +216,7 @@ const summary=async(text,env)=>{if(env.GITHUB_STEP_SUMMARY)await writeFile(env.G
 
 async function routeStep(env) {
   const decision=await route(await trustedTrigger(env),env);
+  if(decision.action==='docs')await setStatus(decision.sha,decision.context,runUrl(env),decision.description,env);
   if(decision.action==='fail') {
     await setStatus(decision.sha,decision.context,runUrl(env),decision.description,env,'failure');
     if(decision.context===LIVE)await upsertComment(decision.pr,'<!-- cottonwood-live-failure -->',failureComment(decision.description,runUrl(env)),env);
@@ -229,9 +241,18 @@ async function liveContent(env) {
   const run=await api(`actions/runs/${status.previewRunId}`,env).catch(()=>null);
   return {live:null,liveCheckedAt:Date.parse(run?.run_started_at??run?.created_at)};
 }
-export async function updateFiles(pr,sha,env,{get=api}={}) {
+async function prFiles(pr,env,get=api) {
   const files=[];
   for(let page=1;page<=30;page++){const batch=await get(`pulls/${pr}/files?per_page=100&page=${page}`,env);files.push(...batch);if(batch.length<100)break;}
+  return files;
+}
+// Trusted classification from GitHub's own file list; any error counts as a website change.
+export async function kindOf(pr,env,get=api) {
+  try {return changeKind((await prFiles(pr,env,get)).flatMap(file=>[file.filename,file.previous_filename].filter(Boolean)));}
+  catch {return 'code';}
+}
+export async function updateFiles(pr,sha,env,{get=api}={}) {
+  const files=await prFiles(pr,env,get);
   const result={updateFiles:[],listed:[],problems:[]};
   for(const file of files.filter(item=>isContentUpdatePath(item.filename) && item.status!=='removed')) {
     result.updateFiles.push(file.filename);

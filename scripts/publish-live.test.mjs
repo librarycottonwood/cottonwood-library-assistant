@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkRun,checkMerge,checkContent,sameContent,checkStaticFiles,route,failedJobs,failureDescription,failureComment,updateFiles} from './publish-live.mjs';
+import {checkRun,checkMerge,checkContent,sameContent,checkStaticFiles,route,failedJobs,failureDescription,failureComment,updateFiles,kindOf,NO_WEBSITE_CHANGE} from './publish-live.mjs';
+import {changeKind} from './content-changes.mjs';
+import {prKind} from './change-kind.mjs';
 import {digestOf} from './release.mjs';
 const repo='librarycottonwood/cottonwood-library-assistant';
 const head='a'.repeat(40),main='b'.repeat(40),tree='c'.repeat(40);
@@ -31,8 +33,35 @@ test('uploading a picture nothing uses yet does not invalidate a reviewed previe
 });
 const trigger={id:7,path:'.github/workflows/check.yml',head_repository:{full_name:repo},head_sha:head,event:'pull_request',conclusion:'success',head_branch:'content/x'};
 const openPr={number:5,state:'open',head:{sha:head,repo:{full_name:repo}},base:{ref:'main'}};
-const fakeGet=({pulls=[openPr],jobs=[{name:'verify',conclusion:'success'},{name:'pr-preview',conclusion:'success'},{name:'cms-live',conclusion:'skipped'}]}={})=>async route=>
-  route.startsWith('commits/')?pulls:route.startsWith('actions/runs/')?{jobs}:assert.fail(`unexpected ${route}`);
+const fakeGet=({pulls=[openPr],jobs=[{name:'verify',conclusion:'success'},{name:'pr-preview',conclusion:'success'},{name:'cms-live',conclusion:'skipped'}],files=[{filename:'content-updates/2026-10-27-a.json'}]}={})=>async route=>
+  route.startsWith('commits/')?pulls:route.startsWith('actions/runs/')?{jobs}:route.startsWith('pulls/5/files')?files:assert.fail(`unexpected ${route}`);
+test('only instructions-only PRs skip the website build; anything unclear is a website change',async()=>{
+  assert.equal(changeKind(['AGENTS.md','assistant/HANDOVER.md','plugins/cottonwood-library/skills/news/SKILL.md','docs/staff-guide.md','.claude/skills/x/SKILL.md']),'docs');
+  assert.equal(changeKind(['content-updates/2026-10-27-a.json','assistant/HANDOVER.md']),'content');
+  assert.equal(changeKind(['assistant/website-update.json']),'content');
+  for(const files of [[],['src/pages/index.astro'],['assistant/HANDOVER.md','scripts/build.mjs'],['src/design-system/README.md'],['.github/workflows/check.yml'],['content-updates/latest.json'],['test/check.txt']])
+    assert.equal(changeKind(files),'code',files.join());
+  // A file moved out of src/ still changes the website.
+  assert.equal(await kindOf(5,{},fakeGet({files:[{filename:'docs/old.md',previous_filename:'src/pages/old.md'}]})),'code');
+  assert.equal(await kindOf(5,{},async()=>{throw Error('GitHub down');}),'code');
+  const files=[{filename:'AGENTS.md'}];
+  assert.equal(await kindOf(5,{},fakeGet({files})),'docs');
+  assert.equal(await prKind({repository:repo,base:main,head,token:'t'},{fetcher:async()=>({ok:true,json:async()=>({files})})}),'docs');
+  assert.equal(await prKind({repository:repo,base:main,head,token:'t'},{fetcher:async()=>({ok:false})}),'code');
+  assert.equal(await prKind({repository:repo,base:main,head,token:'t'},{fetcher:async()=>({ok:true,json:async()=>({files:Array(300).fill({filename:'AGENTS.md'})})})}),'code','an incomplete list runs every check');
+  assert.equal(await prKind({repository:repo,base:'',head,token:'t'},{fetcher:async()=>assert.fail('no request')}),'code');
+});
+test('routing: an instructions-only PR gets a "no website change" status instead of a preview or a save',async()=>{
+  const files=[{filename:'assistant/HANDOVER.md'}];
+  assert.deepEqual(await route(trigger,{},{get:fakeGet({files,jobs:[{name:'verify',conclusion:'success'},{name:'pr-preview',conclusion:'success'}]})}),
+    {action:'docs',pr:5,sha:head,context:'Website preview',description:NO_WEBSITE_CHANGE.preview});
+  const failed=await route({...trigger,conclusion:'failure'},{},{get:fakeGet({files,jobs:[{name:'verify',conclusion:'failure'}]})});
+  assert.equal(failed.action,'fail');
+  const push={...trigger,event:'push',head_branch:'main',head_sha:main};
+  const merged=[{number:5,merged_at:'2026-10-27T00:00:00Z',merge_commit_sha:main,base:{ref:'main'}}];
+  assert.deepEqual(await route(push,{},{get:fakeGet({pulls:merged,files})}),{action:'docs',pr:5,sha:main,context:'Live website',description:NO_WEBSITE_CHANGE.live});
+  for(const text of Object.values(NO_WEBSITE_CHANGE))assert.ok(text.length<=140);
+});
 test('routing: a passing PR check previews, a superseded or cancelled one quietly stops',async()=>{
   assert.deepEqual(await route(trigger,{},{get:fakeGet()}),{action:'preview',pr:5,sha:head});
   assert.equal((await route({...trigger,conclusion:'cancelled'},{},{get:fakeGet()})).action,'skip');

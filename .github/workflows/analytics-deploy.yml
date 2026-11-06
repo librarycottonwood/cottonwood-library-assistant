@@ -17,20 +17,45 @@ jobs:
     outputs:
       state: ${{ steps.deploy.outputs.state }}
       publish: ${{ steps.current.outputs.publish }}
+      changed: ${{ steps.changed.outputs.changed }}
     steps:
+      # Most website saves do not touch the connector. When the hosted connector already
+      # runs the same connector/ source, skip the install, test, build and deploy (and the
+      # record job). Any doubt (no hosted version, a lookup error, a very large change) deploys as before.
+      - name: Skip when the hosted connector already has this connector source
+        id: changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          hosted=$(curl -fsS --max-time 15 https://cottonwood-library-analytics.librarycottonwood.workers.dev/health | jq -r '.sourceSha // empty' || true)
+          changed=true
+          if [[ "$hosted" =~ ^[0-9a-f]{40}$ ]] &&
+             files=$(gh api "repos/$GITHUB_REPOSITORY/compare/$hosted...$CHECKED_SHA" --jq 'if (.files | length) < 300 and .status != "diverged" then [.files[] | .filename, (.previous_filename // empty)] | join("\n") else "unknown" end') &&
+             [ "$files" != unknown ]; then
+            grep -qE '^(connector/|scripts/library-account\.mjs$)' <<< "$files" || changed=false
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          if [ "$changed" = false ]; then echo "The hosted connector already runs this connector source ($hosted); nothing to deploy." >> "$GITHUB_STEP_SUMMARY"; fi
       - uses: actions/checkout@v7.0.1
+        if: steps.changed.outputs.changed == 'true'
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
       - uses: actions/setup-node@v7.1.0
+        if: steps.changed.outputs.changed == 'true'
         with:
           node-version: '24'
           package-manager-cache: false
-      - run: npm ci --prefix connector --ignore-scripts
-      - run: npm test --prefix connector
-      - run: npm run build --prefix connector
+      - if: steps.changed.outputs.changed == 'true'
+        run: npm ci --prefix connector --ignore-scripts
+      - if: steps.changed.outputs.changed == 'true'
+        run: npm test --prefix connector
+      - if: steps.changed.outputs.changed == 'true'
+        run: npm run build --prefix connector
       - name: Skip a version superseded by newer main source
         id: current
+        if: steps.changed.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           CHECKED_SHA: ${{ github.event.workflow_run.head_sha }}
@@ -53,7 +78,8 @@ jobs:
         run: echo 'The connector update needs attention. Previous Cloudflare Worker versions remain available for rollback; accounts, permissions and Analytics settings were not changed by this workflow.' >> "$GITHUB_STEP_SUMMARY"
   record:
     needs: publish
-    if: always() && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
+    # Nothing to record when the hosted connector already had this source (its last record stays current).
+    if: always() && needs.publish.outputs.changed != 'false' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 2
     concurrency:
