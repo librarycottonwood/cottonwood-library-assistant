@@ -1,0 +1,33 @@
+{
+  "request": "Put the Fall 2026 newsletter on the website as the current issue; Summer 2026 stays in the archive.",
+  "sanityDocuments": [
+    {
+      "id": "newsletter-fall-2026",
+      "revision": "lp7buDZoNfv0LQPywV8Rhq",
+      "fields": [
+        "issue",
+        "title",
+        "slug",
+        "summary",
+        "file",
+        "cover"
+      ],
+      "before": null
+    },
+    {
+      "id": "library-settings",
+      "revision": "lp7buDZoNfv0LQPywV8Rhq",
+      "fields": [
+        "currentNewsletter"
+      ],
+      "before": {
+        "currentNewsletter": {
+          "_type": "reference",
+          "_ref": "newsletter-current",
+          "_weak": true
+        }
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
