@@ -64,7 +64,7 @@ Check installed connections independently of source instructions. Reconnect Sani
 
 6. Review those drafts in the real Studio. Publish the initial complete settings/content only when authorized. Confirm actual references and image/PDF uploads work. A partial dataset fails rather than rendering a mixed website.
 7. Configure the separate worker and OAuth review app using `cms-publisher/README.md`. Configure GitHub variables/secrets named by `.github/workflows/cms.yml` and `check.yml`; enable `LIBRARY_CONTENT_SOURCE=sanity` only after the dataset and webhook are ready. Studio build success does not establish this connection.
-8. Test the complete path on the live website, `cottonwood-library.pages.dev`. Previews are separate immutable uploads on the same library-account project. The real public domain is attached to this project at launch, with no registrar change.
+8. Test the complete path on the live website, https://www.cottonwoodcommunitylibrary.com (the same deployment as `cottonwood-library.pages.dev`). Previews are separate immutable uploads on the same library-account project.
 9. Connect the official Sanity MCP in the library ChatGPT account, expose only needed tools, and rehearse with an ordinary new chat. Update/release the library plugin source after this branch is accepted, then test the installed version. Editing repository instructions alone does not update the installed plugin or existing scheduled task.
 
 ## Publishing, failures and maintenance

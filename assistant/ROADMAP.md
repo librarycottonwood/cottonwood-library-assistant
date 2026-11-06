@@ -2,22 +2,19 @@
 
 Updated November 5, 2026. Done so far: the redesigned website (with motion and the Donate/Volunteer call to action under the hero), Sanity editing, end-to-end content saves from the library ChatGPT, Codex code changes, automatic repair and weekly reports, Givebutter donations and the Under One Roof fundraiser, the website's own newsletter sign-up, and consent-gated Google Analytics. Status details: [HANDOVER.md](HANDOVER.md).
 
-## Public launch: by Thursday, November 5, 2026 (moved from November 3)
+## Public launch: done November 5, 2026
 
-Only when Jaden says “launch”:
-
-- [ ] Point the domain at the website ([DOMAIN-LAUNCH.md](DOMAIN-LAUNCH.md)), keeping registration and email untouched.
-- [ ] Wait for the certificate; check bare and www HTTPS, redirects from old Square addresses, downloads and phone/desktop layouts.
-- [ ] Bring PR #68 (search engines, real-domain Analytics, assistant polish) up to date, check and merge it; upload the ChatGPT plugin it bumps (0.2.21).
-- [ ] Set Sanity to “Always allow”; add the domain in Givebutter so Apple Pay works; add a Google Analytics launch-day note.
-- [ ] Recheck the site the next day. Keep the old site's settings recorded until the new one is verified.
+- [x] Domain points at the website: https://www.cottonwoodcommunitylibrary.com ([DOMAIN.md](DOMAIN.md)). Bare-domain forwarding, HTTPS and old Square addresses checked.
+- [x] Search engines allowed, Analytics on the real domain (PR #68), Givebutter Apple Pay domain added, Google Analytics launch note added.
+- [x] ChatGPT plugin 0.2.22 uploaded.
+- [ ] Recheck the site the morning after launch, then announce.
 
 ## Wizard tests (November 5)
 
 - [x] Closure notice and its undo passed (PRs #100/#101). Newsletter email draft passed.
 - [x] Fixed in PR #102: fundraiser dead end without the Givebutter Form code; undo leaving a hidden Sanity draft; Monday reminder created without asking, and “stop” only pausing it.
 - [x] Newsletter issue upload passed up to the preview (PR #105, not saved, cleaned up). Its “email Todd to close the PR” dead end is fixed in this PR.
-- [ ] Volunteers get the #102 fixes when the ChatGPT plugin is uploaded at launch (0.2.21, with PR #68).
+- [x] Volunteers have the #102 fixes (ChatGPT plugin 0.2.22).
 
 ## Launch week
 

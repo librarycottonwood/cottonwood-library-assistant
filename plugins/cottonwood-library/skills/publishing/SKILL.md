@@ -36,7 +36,7 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
 
 ### Before you start
 
-1. **Check for other waiting changes.** Look for open PRs whose branch starts with `content/`, and for Sanity documents published since the last live save: compare current published records with https://cottonwood-library.pages.dev/_content/revisions.json (if that file is missing, look for records updated after the newest **Live website** success on `main`). If someone else's change is waiting, say: "Someone else's change is also waiting: <what it is, in plain words>. If we save now, it goes on the website too. Include it, or wait?" Wait for the answer.
+1. **Check for other waiting changes.** Look for open PRs whose branch starts with `content/`, and for Sanity documents published since the last live save: compare current published records with https://www.cottonwoodcommunitylibrary.com/_content/revisions.json (if that file is missing, look for records updated after the newest **Live website** success on `main`). If someone else's change is waiting, say: "Someone else's change is also waiting: <what it is, in plain words>. If we save now, it goes on the website too. Include it, or wait?" Wait for the answer.
 2. **Upload every photo first**, then publish the records that use them. A record that points to a photo that isn't uploaded yet breaks the preview.
 3. **Write down the old values.** Before changing a record, read it and keep the current value of each field you will change. They go in the content-update file as `before`, so any later chat can undo this save.
 4. Check every value against "Values that break the website" below, then publish the Sanity records.
@@ -72,7 +72,7 @@ If a Sanity or GitHub step fails the first time (for example "the editor blocked
    - no Sanity record was published after the PR's head commit.
 
    If any of these fails, push a new commit (for example update `requestedInChat`) for a fresh preview and list, and ask again. Otherwise merge the PR (merge commit).
-8. Wait for the commit status **Live website** on the merge commit to be **success** (usually about 6 minutes; "Not live yet: waiting to publish" means it is queued). Then open https://cottonwood-library.pages.dev/ and confirm the change. Only then say it is saved. If it fails, or isn't success 15 minutes after the merge, see "If it doesn't go live".
+8. Wait for the commit status **Live website** on the merge commit to be **success** (usually about 6 minutes; "Not live yet: waiting to publish" means it is queued). Then open https://www.cottonwoodcommunitylibrary.com/ and confirm the change. Only then say it is saved. If it fails, or isn't success 15 minutes after the merge, see "If it doesn't go live".
 9. Delete the request's branch.
 
 ### If the preview doesn't come

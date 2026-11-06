@@ -77,7 +77,7 @@ export function failureDescription(message) {
 export function failureComment(message, url) {
   return ['<!-- cottonwood-live-failure -->','### This save did not reach the live website','',`Reason: ${message}`,'',
     'The PR is merged, but the live website was **not** updated with it (unless the reason above says the live files were verified). Nothing is lost: the content is still published in the website editor.','',
-    'First open https://cottonwood-library.pages.dev/ : if a later save already put this change live, it is saved and nothing else is needed.','',
+    'First open https://www.cottonwoodcommunitylibrary.com/ : if a later save already put this change live, it is saved and nothing else is needed.','',
     '**How to finish it (library assistant):**',
     '1. Make a new branch from current `main` named `content/refresh-<short-name>`.',
     '2. Add `content-updates/<today>-refresh-<short-name>.json` with `request` ("Refresh: <the original request>"), the same `sanityDocuments` as this PR\'s content-update file, and `requestedInChat` (today).',

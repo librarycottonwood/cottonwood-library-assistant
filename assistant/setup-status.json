@@ -3,7 +3,7 @@
     "status": "Prepared in an isolated PR; not merged, deployed or installed until its separate acceptance evidence is recorded.",
     "repository": "librarycottonwood/cottonwood-library-assistant",
     "baselineMain": "0ffcfea58a2ab8aa646f5ca80b7a53903940acf7",
-    "sourcePluginVersion": "0.2.12 (October 22; history, current source is 0.2.20; PR #68 bumps it to 0.2.21)",
+    "sourcePluginVersion": "0.2.12 (October 22; history; current source is 0.2.22)",
     "lastObservedInstalledPluginVersion": "0.2.11",
     "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact live publication and verification; task-owned cleanup.",
     "detour": "Website MCP tools, scopes and service binding removed in restoration source. PR35/36 had no successful native chat preview/save acceptance. Reporting remains read-only.",
@@ -26,11 +26,11 @@
     "account": "Library Cloudflare account e05729fd6b6fad329e31896d8b1c2da9 only. Deploy scripts refuse any other CLOUDFLARE_ACCOUNT_ID or a missing library token; no local or personal-account deploy path remains.",
     "project": "cottonwood-library (production branch production)",
     "workflows": "publish-live.yml (PR preview + live save), cms.yml (CMS preview + administrator recovery), live-hosting-setup.yml (one-time project creation)",
-    "domain": "cottonwoodcommunitylibrary.com is attached to this project at the public launch (by Thursday, November 5, 2026; moved from November 3); see assistant/DOMAIN-LAUNCH.md.",
+    "domain": "www.cottonwoodcommunitylibrary.com is attached to this project since November 5, 2026; the bare domain forwards to it. See assistant/DOMAIN.md.",
     "status": "First verified live save October 24: PR #40 merged as 48d30939; publish-live run 40160373342 published the exact checked PR artifact (release 6b00c9b49bd9f5d7040064c2a99329472aec56da32c60b02ada49bda57c6de35, preview https://acf77744.cottonwood-library.pages.dev/) to the production deployment and recorded it in the CMS ledger. live-hosting-setup run 40160161567 created the project on the library account. CMS preview run 40160353204 also succeeded on the new project.",
     "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
     "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) was deleted from the library Cloudflare account on November 5, 2026. The live project cottonwood-library is unaffected; no redirects are kept. The live deploy token still uses the legacy secret name CLOUDFLARE_TRIAL_API_TOKEN (see the workflows); it is not tied to the deleted project.",
-    "sourcePluginVersion": "0.2.20 on main; PR #68 bumps it to 0.2.21 for the launch upload (see plugins/cottonwood-library/plugin.json; a new version must be updated in Plugin Creator before it is installed, so check the installed version in the library ChatGPT account separately)"
+    "sourcePluginVersion": "0.2.22 on main, uploaded November 5, 2026 after launch (see plugins/cottonwood-library/plugin.json; a new version must be updated in Plugin Creator before it is installed, so check the installed version in the library ChatGPT account separately)"
   },
   "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
@@ -134,9 +134,9 @@
       "registrant": "Mary Ann Hasbrook",
       "registrantEmail": "cottonlib@shasta.com",
       "renewalDisplayed": "March 7, 2027 for $15",
-      "forwarding": "http://cottonwood-community-library.square.site",
+      "forwarding": "https://www.cottonwoodcommunitylibrary.com (since November 5, 2026; previously http://cottonwood-community-library.square.site)",
       "lock": "On",
-      "transfer": "Not started; Spaceship account and reviewed DNS/forwarding migration required. No DNS or registration changes."
+      "transfer": "Not planned; registration and DNS stay at Squarespace."
     },
     "facebook": "Board reports personal-account access to managed Page. No access granted to Jaden and no ChatGPT connection yet.",
     "analytics": "librarycottonwood@gmail.com added as account Administrator; access table verified alongside Jaden. Email notification disabled. Live demo report showed page views and directions_click; authenticated assistant reporting still unconnected.",
@@ -478,7 +478,7 @@
       "segment": "Library Newsletter Subscribers (Widget form sign-ups is Library Newsletter); October 21 test segment for the old widget",
       "audience": "Contacts tagged Library Newsletter (added by the website form, functions/api/newsletter.ts), excluding unsubscribed. One list; the old widget L4EVDm (no longer on the site) was setup testing, not a second audience"
     },
-    "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
+    "domain": "Live on www since November 5, 2026 (CNAME to cottonwood-library.pages.dev; bare domain forwards to www). Nameservers, DNSSEC and registration unchanged. Setup and rollback: assistant/DOMAIN.md.",
     "assistant": "Installed 0.2.10 read back in Safari with ten skills enabled. Earlier actual donation report, newsletter draft and unscheduled Facebook draft passed; fresh 0.2.10 routing question correctly selected Codex for design and Work/Sanity for news. No public social or bulk email send."
   },
   "newsletterTests": {

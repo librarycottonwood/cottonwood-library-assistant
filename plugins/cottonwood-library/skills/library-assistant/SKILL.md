@@ -41,7 +41,7 @@ The maintained repository is `librarycottonwood/cottonwood-library-assistant`. R
 - Website/code work, previews, approval and saving: `AGENTS.md` and `assistant/WORKFLOW.md`.
 - Account/setup evidence: `assistant/setup-status.json`. Treat dated entries as evidence to verify, not a promise that access still works.
 - General donations, newsletter signup/email and social coordination: `assistant/COMMUNICATIONS.md`. Read current CMS/account records before claiming those connections work.
-- Semester milestones and public-domain launch preparation: `assistant/ROADMAP.md` and `assistant/DOMAIN-LAUNCH.md`.
+- Semester milestones: `assistant/ROADMAP.md`. Domain setup and rollback: `assistant/DOMAIN.md`.
 - Repairs and website health: `assistant/MAINTENANCE.md`.
 - Accounts the website uses and who owns them: `assistant/ACCOUNTS.md`. Entries marked “Board to confirm” are unknown; say that plainly and never guess an owner, admin or plan.
 - Content backups: `assistant/MAINTENANCE.md`, section “CMS backups”.

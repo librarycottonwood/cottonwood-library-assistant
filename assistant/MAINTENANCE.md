@@ -84,7 +84,7 @@ Treat these as separate facts:
 | Sanity published record | The CMS record is available to the publishing path. The website may still show the previous version. |
 | Publisher `review_required` | A checked immutable website preview is ready for a person’s approval. |
 | Publisher `publish_queued` | Approval was recorded and publication requested. The deployed result is not yet verified. |
-| Publisher `deployed_verified` | The controlled publisher independently verified the approved operation/source/content/release against the live website's hosted status. The public domain is attached separately at launch. |
+| Publisher `deployed_verified` | The controlled publisher independently verified the approved operation/source/content/release against the live website's hosted status. |
 | Publisher `setup_pending`, failed, uncertain, or superseded state | Explain the actual next step. Do not translate it into success or retry blindly. |
 
 The publication gate binds document revision, source commit, content snapshot digest, immutable release digest, and checked workflow run. A content or code change invalidates the old approval. Duplicate or ambiguous deliveries are tracked in the operation ledger to avoid duplicate publishing. The service’s configuration health response alone is not proof of live publishing.
