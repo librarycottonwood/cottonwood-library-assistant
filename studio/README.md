@@ -8,7 +8,7 @@ This standalone Sanity Studio supplies the library's editing forms. Sanity proje
 - **Blog posts:** title, summary, formatted text, cover picture, photo gallery, and references to existing events.
 - **Regular programs:** the reusable program description, picture, and regular schedule.
 - **Newsletters:** upload a PDF and its cover, then select it under Library settings → Homepage. Older PDFs remain available.
-- **Notices and closures:** a message and inclusive first/last dates, interpreted in Pacific time.
+- **Notices and closures:** a message and inclusive first/last dates to show the banner, interpreted in Pacific time, plus the days the library is closed (or a "stays open" switch). Regular programs are left off the website calendar on closed days only.
 - **Library settings and hours:** contact details, one hours table, page introductions, services, borrowing information, story, and navigation. The website derives the callable phone link and hours summary; volunteers do not edit duplicates.
 - **Giving and acknowledgments:** ways to help, visible community thank-yous, and approved Givebutter campaign/widget IDs. Payment processing and live totals remain in Givebutter.
 
@@ -57,7 +57,7 @@ The adapter reads the raw Sanity snapshot envelope `{schemaVersion: 1, projectId
 | `post` | `slug.current`, `title`, optional `publishedAt`/`dateLabel`, `category`, `summary`, `body` Portable Text, optional `image`, `gallery[]`, `eventRefs[]`, imported `href`, `externalUrl`, `sourceLabel`. |
 | `program` | `slug.current` is the existing program ID; `audience`, `title`, `schedule`, `description`, `details`, `image`, optional `orderRank`. |
 | `newsletter` | `slug.current` is the stable archive address; `issue`, `title`, `summary`, `file` (Sanity file asset) **or** migration-only `legacyFileUrl`, `cover`. |
-| `notice` | `slug.current`, `message`, `startsOn`, `endsOn`, optional `link{label, href}`. |
+| `notice` | `slug.current`, `message`, `startsOn`, `endsOn`, optional `closedDates[]` (YYYY-MM-DD), optional `staysOpen` boolean, optional `link{label, href}`. |
 
 Slugs use lowercase letters/numbers separated by hyphens. Preserve existing slugs when editing so shared links continue to work. Singleton templates and duplicate/delete/unpublish actions are excluded from the editing menu; the adapter separately enforces the expected IDs.
 

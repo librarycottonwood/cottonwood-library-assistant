@@ -28,7 +28,7 @@ All times are Pacific. Write a short one-line summary yourself. Preview and ask 
 - **Change details or time:** find the event, confirm which date if there are several, edit, preview, save.
 - **Move:** update the date; offer a short "New date!" notice (notices skill) if it's soon.
 - **Cancel:**
-  - **A program with no calendar entry** (for example Book Club or Story Time, which only have a regular schedule): there is no date to remove. Offer a banner for that day (notices skill) and a Facebook post (social skill).
+  - **A program with no calendar entry** (for example Book Club or Story Time, which only have a regular schedule): the website works out its next dates from the schedule. To take one date off, add a banner for that day with that day as a closed day (notices skill, see "Banner days vs closed days"). A closed day hides every program that day, so check no other program meets then first; if one does, post the banner without a closed day. Offer a Facebook post (social skill).
   - **An event with several dates:** remove only the cancelled dates. List the exact dates you will remove with their weekdays ("Saturday, November 14") and get a yes first. Keep the others.
   - **An event's only date:** ask "Take it off the website, or keep it showing as cancelled?" Off means unpublish it, after checking no news post or other record points to it. Never leave an event with zero dates. Kept means add "Cancelled" to the title and summary.
   - **Same day:** say "A website change takes about 15 minutes to show up. Facebook or a sign on the door reaches people faster." Offer the post, then do the website change too.

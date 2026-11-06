@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType, type DocumentDefinition} from 'sanity';
 import {image, link, paragraph, slug, strings, text} from './objects.ts';
-import {uniqueSessions, validDateRange, validLink, validNewsletter, validPhone} from '../validation.ts';
+import {noticeClosureNotice, uniqueSessions, validDateRange, validLink, validNewsletter, validNoticeClosure, validPhone} from '../validation.ts';
 import {pacificDateLabel} from '../dates.ts';
 
 export const event = defineType({
@@ -73,16 +73,24 @@ export const newsletter = defineType({
 
 export const notice = defineType({
   name: 'notice', title: 'Notice or closure', type: 'document',
-  description: 'A short banner shown on every page during the dates you choose. Dates include the entire day in Pacific time.',
+  description: 'A short banner shown on every page during the dates you choose. Dates include the entire day in Pacific time. Also say which days the library is closed, or that it stays open.',
   fields: [
     defineField({...slug, options: {source: 'message', maxLength: 96}}),
     paragraph('message', 'Banner message'),
     defineField({name: 'startsOn', title: 'First day to show', type: 'date', validation: (rule) => rule.required()}),
     defineField({name: 'endsOn', title: 'Last day to show', type: 'date', validation: (rule) => rule.required()}),
+    defineField({name: 'closedDates', title: 'Days the library is closed', type: 'array', of: [defineArrayMember({type: 'date'})],
+      description: 'Every day the library is fully closed (Pacific time). Regular programs such as Story Time are left off the website on these days only. This can differ from the days the banner shows.',
+      validation: (rule) => rule.unique()}),
+    defineField({name: 'staysOpen', title: 'The library stays open (not a closure)', type: 'boolean',
+      description: 'Turn on for shorter hours or a notice that does not close the library. Regular programs then stay listed.'}),
     defineField({name: 'link', title: 'Optional link', type: 'navigationLink'}),
   ],
-  validation: (rule) => rule.custom(validDateRange),
-  preview: {select: {title: 'message', start: 'startsOn', end: 'endsOn'}, prepare({title, start, end}) {return {title, subtitle: `${start ?? '?'} to ${end ?? '?'} · Pacific`};}},
+  validation: (rule) => [rule.custom(validDateRange), rule.custom(validNoticeClosure), rule.custom(noticeClosureNotice).warning()],
+  preview: {select: {title: 'message', start: 'startsOn', end: 'endsOn', closed: 'closedDates'}, prepare({title, start, end, closed}) {
+    const closedText = Array.isArray(closed) && closed.length ? ` · closed ${closed.join(', ')}` : '';
+    return {title, subtitle: `${start ?? '?'} to ${end ?? '?'}${closedText} · Pacific`};
+  }},
 });
 
 export const siteSettings = defineType({

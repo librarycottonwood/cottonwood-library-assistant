@@ -53,6 +53,26 @@ export function validDateRange(value: unknown): true | string {
     ? 'The end date must be the same as or later than the start date.' : true;
 }
 
+type NoticeClosure = {startsOn?: string; endsOn?: string; closedDates?: unknown; staysOpen?: unknown};
+const closedDays = (notice: NoticeClosure) => Array.isArray(notice.closedDates) ? notice.closedDates.filter((day): day is string => typeof day === 'string' && day !== '') : [];
+
+/** A notice either lists the days the library is closed or says it stays open, not both. */
+export function validNoticeClosure(value: unknown): true | string {
+  if (!value || typeof value !== 'object') return true;
+  return (value as NoticeClosure).staysOpen === true && closedDays(value as NoticeClosure).length
+    ? 'Choose one: list the days the library is closed, or turn on "The library stays open". Not both.' : true;
+}
+
+/** Warning only: without closed days or "stays open", the website leaves regular programs off every day the banner shows. */
+export function noticeClosureNotice(value: unknown): true | string {
+  if (!value || typeof value !== 'object') return true;
+  const notice = value as NoticeClosure, days = closedDays(notice);
+  if (!days.length) return notice.staysOpen === true ? true
+    : 'Add the days the library is closed, or turn on "The library stays open". Otherwise Story Time and other regular programs are left off the website for every day this banner shows.';
+  const outside = days.filter((day) => (notice.startsOn && day < notice.startsOn) || (notice.endsOn && day > notice.endsOn));
+  return outside.length ? `The banner is not showing on ${outside.join(', ')}. Check the closed days and the banner dates.` : true;
+}
+
 const sessionTime = (value: unknown) => {
   if (value == null || value === '') return undefined;
   const result = normalizeInstant(value);

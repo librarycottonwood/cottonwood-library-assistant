@@ -174,16 +174,26 @@ export function libraryDateTime(day, time) {
 const dayAfter = (day, days = 1) => new Date(Date.parse(`${day}T12:00:00Z`) + days * 864e5).toISOString().slice(0, 10);
 const libraryDay = instant => new Intl.DateTimeFormat('en-CA', { timeZone: ZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).format(instant);
 
+/** Whether a notice closes the library on `day` (YYYY-MM-DD, Pacific). A notice with closedDates closes only
+ * those days; one marked staysOpen (shorter hours, a reminder) closes none. Older notices with neither are
+ * treated cautiously: every day the banner shows counts as closed, so no session is advertised on a day
+ * the library may be shut. */
+export function noticeClosesDay(notice, day) {
+  if (notice.closedDates?.length) return notice.closedDates.includes(day);
+  if (notice.staysOpen) return false;
+  return notice.startsOn <= day && day <= notice.endsOn;
+}
+
 /** Upcoming dated sessions of a regular program, worked out from its Sanity schedule text at build time
  * ("Wednesdays · 11:30 a.m.", "Third Tuesday · 2:30 p.m."). The site only rebuilds when a change is saved,
- * so this covers the next `days` days. Left out: sessions that already started, any day a notice banner
- * shows (closures and program cancellations are announced that way), and days the program already has a
- * dated event. A schedule without a readable pattern and time gives no sessions at all. */
+ * so this covers the next `days` days. Left out: sessions that already started, any day a notice closes
+ * the library (noticeClosesDay; to cancel one session, publish a notice with that closed day), and days the
+ * program already has a dated event. A schedule without a readable pattern and time gives no sessions at all. */
 export function programSessions(program, { now = new Date(), days = 90, notices = [], events = [] } = {}) {
   const rule = parseSchedule(program.schedule);
   const time = rule?.time && parseTime(rule.time);
   if (!rule || !time) return [];
-  const blocked = day => notices.some(notice => notice.startsOn <= day && day <= notice.endsOn)
+  const blocked = day => notices.some(notice => noticeClosesDay(notice, day))
     || events.some(event => event.programId === program.id && libraryDay(new Date(event.startsAt)) === day);
   const sessions = [];
   const today = libraryDay(now);

@@ -10,6 +10,7 @@ import type { LibraryNotice } from './types';
  *     message: 'The library is closed Thursday–Saturday, November 26–28, for Thanksgiving.',
  *     startsOn: '2026-11-16',
  *     endsOn: '2026-11-28',
+ *     closedDates: ['2026-11-26', '2026-11-27', '2026-11-28'], // or staysOpen: true for shorter hours
  *     link: { label: 'See regular hours', href: '/#visit' }, // optional
  *   },
  */

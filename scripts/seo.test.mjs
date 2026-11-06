@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { articleNode, eventNodes, jsonLd, libraryDateTime, libraryNode, openingHours, parseDays, parseHours, parseTime, programEventNodes, programSessions } from '../src/content/seo.mjs';
+import { articleNode, eventNodes, jsonLd, libraryDateTime, libraryNode, noticeClosesDay, openingHours, parseDays, parseHours, parseTime, programEventNodes, programSessions } from '../src/content/seo.mjs';
 import { sessionPhrase } from '../src/content/schedule.mjs';
+import { searchTagProblems } from './seo-pages.mjs';
 
 test('day text from Sanity becomes schema.org days', () => {
   assert.deepEqual(parseDays('Monday–Wednesday'), ['Monday', 'Tuesday', 'Wednesday']);
@@ -85,11 +86,47 @@ test('sessions that already started are left out', () => {
   assert.deepEqual(starts(story, { now: at('2026-11-11T11:30:00-08:00'), days: 7 }), ['2026-11-18T11:30:00-08:00']);
   for (const session of starts(story, { now: at('2026-11-11T15:00:00-08:00') })) assert.ok(Date.parse(session) > Date.parse('2026-11-11T15:00:00-08:00'));
 });
-test('days with a notice banner, or a dated event for the program, are skipped', () => {
+test('a notice with closed days skips sessions on those days only, not every day its banner shows', () => {
   const story = { id: 'story-time', schedule: 'Wednesdays · 11:30 a.m.' };
   const now = at('2026-11-16T09:00:00-08:00');
-  const notices = [{ startsOn: '2026-11-24', endsOn: '2026-11-28' }];
-  assert.deepEqual(starts(story, { now, days: 16, notices }), ['2026-11-18T11:30:00-08:00', '2026-12-02T11:30:00-08:00']);
+  // Banner shows Nov 16–28 for a Thanksgiving closure Wednesday Nov 25 – Friday Nov 27.
+  const thanksgiving = { startsOn: '2026-11-16', endsOn: '2026-11-28', closedDates: ['2026-11-25', '2026-11-26', '2026-11-27'] };
+  assert.deepEqual(starts(story, { now, days: 16, notices: [thanksgiving] }), ['2026-11-18T11:30:00-08:00', '2026-12-02T11:30:00-08:00']);
+  // Closed only Thursday the 26th: both Story Times in the banner's window stay listed.
+  assert.deepEqual(starts(story, { now, days: 16, notices: [{ ...thanksgiving, closedDates: ['2026-11-26'] }] }), ['2026-11-18T11:30:00-08:00', '2026-11-25T11:30:00-08:00', '2026-12-02T11:30:00-08:00']);
+  // A closed day after the banner comes down still skips that session (cancelling one Story Time this way works too).
+  assert.deepEqual(starts(story, { now, days: 16, notices: [{ startsOn: '2026-11-16', endsOn: '2026-11-18', closedDates: ['2026-12-02'] }] }), ['2026-11-18T11:30:00-08:00', '2026-11-25T11:30:00-08:00']);
+});
+test('an older notice without closed days still skips every day its banner shows', () => {
+  const story = { id: 'story-time', schedule: 'Wednesdays · 11:30 a.m.' };
+  const now = at('2026-11-16T09:00:00-08:00');
+  assert.deepEqual(starts(story, { now, days: 16, notices: [{ startsOn: '2026-11-24', endsOn: '2026-11-28' }] }), ['2026-11-18T11:30:00-08:00', '2026-12-02T11:30:00-08:00']);
+  assert.deepEqual(starts(story, { now, days: 16, notices: [{ startsOn: '2026-11-16', endsOn: '2026-11-28', closedDates: [] }] }), ['2026-12-02T11:30:00-08:00']);
+  assert.equal(noticeClosesDay({ startsOn: '2026-11-16', endsOn: '2026-11-28' }, '2026-11-16'), true);
+  assert.equal(noticeClosesDay({ startsOn: '2026-11-16', endsOn: '2026-11-28' }, '2026-11-29'), false);
+});
+test('a notice that says the library stays open (shorter hours) skips no sessions', () => {
+  const story = { id: 'story-time', schedule: 'Wednesdays · 11:30 a.m.' };
+  const shorterHours = { startsOn: '2026-12-14', endsOn: '2026-12-24', staysOpen: true };
+  assert.deepEqual(starts(story, { now: at('2026-12-14T09:00:00-08:00'), days: 10, notices: [shorterHours] }), ['2026-12-16T11:30:00-08:00', '2026-12-23T11:30:00-08:00']);
+  // Closed days win if a notice somehow has both.
+  assert.equal(noticeClosesDay({ ...shorterHours, closedDates: ['2026-12-23'] }, '2026-12-23'), true);
+  assert.equal(noticeClosesDay({ ...shorterHours, closedDates: ['2026-12-23'] }, '2026-12-16'), false);
+});
+test('closed days are Pacific calendar days, across daylight saving and for evening sessions', () => {
+  const story = { id: 'story-time', schedule: 'Wednesdays · 11:30 a.m.' };
+  // The Wednesday right after clocks fall back (Nov 1, 2026), and right after they spring forward (Mar 14, 2027).
+  assert.deepEqual(starts(story, { now: at('2026-10-27T09:00:00-07:00'), days: 15, notices: [{ startsOn: '2026-10-27', endsOn: '2026-11-04', closedDates: ['2026-11-04'] }] }), ['2026-10-28T11:30:00-07:00', '2026-11-11T11:30:00-08:00']);
+  assert.deepEqual(starts(story, { now: at('2027-03-09T09:00:00-08:00'), days: 15, notices: [{ startsOn: '2027-03-09', endsOn: '2027-03-17', closedDates: ['2027-03-17'] }] }), ['2027-03-10T11:30:00-08:00', '2027-03-24T11:30:00-07:00']);
+  // A 6 p.m. Pacific session is already the next day in UTC; the Pacific day is what counts.
+  const evening = { id: 'x', schedule: 'Last Friday · 6–7 p.m.' };
+  const now = at('2027-01-01T00:00:00-08:00');
+  assert.deepEqual(starts(evening, { now, days: 30, notices: [{ startsOn: '2027-01-25', endsOn: '2027-01-29', closedDates: ['2027-01-29'] }] }), []);
+  assert.deepEqual(starts(evening, { now, days: 30, notices: [{ startsOn: '2027-01-25', endsOn: '2027-01-30', closedDates: ['2027-01-30'] }] }), ['2027-01-29T18:00:00-08:00']);
+});
+test('a dated event for the program skips that day', () => {
+  const story = { id: 'story-time', schedule: 'Wednesdays · 11:30 a.m.' };
+  const now = at('2026-11-16T09:00:00-08:00');
   const events = [{ programId: 'story-time', startsAt: '2026-11-18T10:00:00-08:00' }, { programId: 'book-club', startsAt: '2026-12-02T13:00:00-08:00' }];
   assert.deepEqual(starts(story, { now, days: 16, events }), ['2026-11-25T11:30:00-08:00', '2026-12-02T11:30:00-08:00']);
 });
@@ -112,4 +149,16 @@ test('the visible session list groups dates by month', () => {
   assert.equal(text(['2026-11-17', '2026-12-15', '2027-01-19']), 'November 17, December 15 and January 19');
   assert.equal(text(['2026-11-17', '2026-12-15']), 'November 17 and December 15');
   assert.equal(sessionPhrase([{ day: '2026-12-02' }]).filter(piece => piece.session).length, 1);
+});
+
+test('built pages need their own title, description, canonical address and share picture', () => {
+  const page = (path, { title = `${path} | Cottonwood Community Library`, description = `About ${path}.`, canonical = `https://www.cottonwoodcommunitylibrary.com${path}`, extra = '' } = {}) => ({ path,
+    html: `<html><head><meta charset="UTF-8"><meta name="description" content="${description}"><link rel="canonical" href="${canonical}"><meta property="og:image" content="https://cdn/x.jpg">${extra}<title>${title}</title></head></html>` });
+  assert.deepEqual(searchTagProblems([page('/'), page('/visit/'), page('/events/regular/story-time/')]), { errors: [], warnings: [] });
+  const { errors, warnings } = searchTagProblems([page('/'), page('/new/', { title: '', description: '' }), page('/copy/', { title: '/ | Cottonwood Community Library', description: 'About /.' }), page('/moved/', { canonical: 'https://www.cottonwoodcommunitylibrary.com/' })]);
+  assert.deepEqual(errors, ['/new/ has no title. Pass BaseLayout a title.', '/new/ has no description. Pass BaseLayout a description.', '/moved/ has canonical address "https://www.cottonwoodcommunitylibrary.com/", expected https://www.cottonwoodcommunitylibrary.com/moved/.']);
+  assert.equal(warnings.length, 2);
+  assert.match(warnings[0], /\/copy\/ has the same title as \//);
+  // Pages kept out of search, redirects and design-system pages are not checked.
+  assert.deepEqual(searchTagProblems([page('/404', { description: '', extra: '<meta name="robots" content="noindex">' }), { path: '/our-story/', html: '<meta http-equiv="refresh" content="0;url=/about/">' }, { path: '/components/', html: '<title></title>' }]), { errors: [], warnings: [] });
 });
