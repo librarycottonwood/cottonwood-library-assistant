@@ -11,10 +11,13 @@
  * </Section>
  */
 import Heading from './Heading.astro';
+import LibraryIllustration from './LibraryIllustration.astro';
 import type { Space } from '../../design-system/tokens';
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
+  /** A small crayon scene next to the heading, kept in the layout so it cannot cover content. */
+  illustration?: 'reading' | 'playing' | 'books';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -27,11 +30,13 @@ interface Props {
   continues?: boolean;
   id?: string;
 }
-const { title, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
+const { title, illustration, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
 <section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
-    {title && <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>}
+    {title && (illustration
+      ? <div class="illustrated-heading"><Heading id={headingId} relaxed={align === 'center'}>{title}</Heading><LibraryIllustration scene={illustration} /></div>
+      : <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>)}
     <slot />
   </div>
 </section>
@@ -50,4 +55,7 @@ const { title, headingId, align = 'center', width = 'content', gap, continues = 
   .align-center { align-items: center; }
   .align-center > :global(:is(h2, p)) { text-align: center; }
   .align-start { align-items: flex-start; }
+  .illustrated-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-sm); max-width: 100%; }
+  .illustrated-heading :global(h2) { min-width: 0; text-align: center; }
+  .align-start .illustrated-heading { justify-content: flex-start; }
 </style>

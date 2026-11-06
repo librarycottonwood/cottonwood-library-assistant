@@ -1,0 +1,26 @@
+---
+/**
+ * @component LibraryIllustration
+ * Small, transparent crayon scenes using the library's indigo and green palette.
+ * @use Beside a related section heading: reading for services, playing for events, books for the newsletter.
+ * @avoid Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
+ * @example
+ * <LibraryIllustration scene="reading" />
+ */
+import Image from '../OptimizedImage.astro';
+interface Props { scene: 'reading' | 'playing' | 'books'; }
+const { scene } = Astro.props;
+const keys = { reading: 'crayonReading', playing: 'crayonPlaying', books: 'crayonBooks' } as const;
+---
+<span class:list={['illustration', scene]} aria-hidden="true">
+  <Image image={{ key: keys[scene], alt: '' }} alt="" width={360} widths={[120, 240, 360]} sizes={scene === 'books' ? '100px' : '(max-width: 47.99rem) 120px, 180px'} loading="lazy" />
+</span>
+<style>
+  .illustration { display: block; flex-shrink: 0; width: 11.25rem; max-width: 100%; pointer-events: none; }
+  .books { width: 6.25rem; }
+  .illustration :global(img) { display: block; width: 100%; height: auto; }
+  @media (max-width: 47.99rem) {
+    .illustration { width: 7.5rem; }
+    .books { width: 4.375rem; }
+  }
+</style>

@@ -135,6 +135,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
+| [CrayonUnderline](#crayonunderline) | A single, gently uneven crayon underline that stays attached to its word. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
 | [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary). |
@@ -143,6 +144,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [LibraryIllustration](#libraryillustration) | Small, transparent crayon scenes using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
@@ -256,6 +258,8 @@ interface Props {
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
+  /** A soft offset edge behind a photo, used by the homepage service cards. */
+  crayon?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -265,6 +269,17 @@ interface Props {
 <Grid as="ul" columns={3}>
   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
 </Grid>
+```
+
+### CrayonUnderline
+
+`src/components/site/CrayonUnderline.astro` — A single, gently uneven crayon underline that stays attached to its word.
+
+- **Use for:** One word in an occasional section heading. Keep the rest of the heading plain.
+- **Don't use for:** Links, body copy, long phrases, or decorative marks floating beside a label.
+
+```astro
+<Heading>Powered by <CrayonUnderline>Community</CrayonUnderline></Heading>
 ```
 
 ### DetailList
@@ -438,6 +453,21 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
 ```
 
+### LibraryIllustration
+
+`src/components/site/LibraryIllustration.astro` — Small, transparent crayon scenes using the library's indigo and green palette.
+
+- **Use for:** Beside a related section heading: reading for services, playing for events, books for the newsletter.
+- **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
+
+```ts
+interface Props { scene: 'reading' | 'playing' | 'books'; }
+```
+
+```astro
+<LibraryIllustration scene="reading" />
+```
+
 ### MapCard
 
 `src/components/site/MapCard.astro` — The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead.
@@ -530,6 +560,8 @@ interface Props {
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
+  /** A small crayon scene next to the heading, kept in the layout so it cannot cover content. */
+  illustration?: 'reading' | 'playing' | 'books';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -580,6 +612,8 @@ interface Props {
   panel?: boolean;
   /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
   inset?: boolean;
+  /** A soft offset photo edge. Use on an occasional supporting block, keeping the hero plain. */
+  crayon?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */

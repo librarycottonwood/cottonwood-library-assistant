@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/site/Badge.astro';
 import Button from '../components/site/Button.astro';
 import Card from '../components/site/Card.astro';
+import CrayonUnderline from '../components/site/CrayonUnderline.astro';
 import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
 import Heading from '../components/site/Heading.astro';
@@ -30,6 +31,8 @@ const featuredImage = featured && eventPhoto(featured, programs);
 const givingPhoto = givingImage ?? home.support.image;
 const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
+const supportTitleWords = home.support.title.trim().split(/\s+/);
+const supportTitleEnd = supportTitleWords.pop();
 ---
 <BaseLayout>
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
@@ -51,8 +54,8 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Fragment>
   </Split>
 
-  <Split media="start" image={givingPhoto} headingId="community-heading">
-    <Heading id="community-heading">{home.support.title}</Heading>
+  <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
+    <Heading id="community-heading">{supportTitleWords.join(' ')}{' '}<CrayonUnderline>{supportTitleEnd}</CrayonUnderline></Heading>
     <Text tone="muted">{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
@@ -67,14 +70,14 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
   </Split>}
 
-  <Section title="Upcoming events" headingId="events-heading">
+  <Section title="Upcoming events" headingId="events-heading" illustration="playing">
     <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
     <Button href="/events/" iconEnd="arrow">View all</Button>
   </Section>
 
-  <Section title="Library services" headingId="services-heading">
+  <Section title="Library services" headingId="services-heading" illustration="reading">
     <Grid as="ul" columns={3}>
-      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!}>{service.description}</Card>)}
+      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} crayon>{service.description}</Card>)}
     </Grid>
     <Button href="/services/" iconEnd="arrow">Read more</Button>
   </Section>

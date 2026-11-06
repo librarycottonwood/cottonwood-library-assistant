@@ -24,7 +24,7 @@ const { library } = Astro.props;
 // Figma puts the PO box and the town on separate lines.
 const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
 ---
-<Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
+<Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md" illustration="books">
   <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
   <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
   <IconLink href="/newsletter/" iconEnd="arrow">Read the latest newsletter</IconLink>
