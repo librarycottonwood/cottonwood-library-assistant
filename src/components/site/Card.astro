@@ -44,7 +44,7 @@ const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
 const titleStart = titleWords.join(' ');
 ---
-<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText, 'card-crayon': crayon && shape === 'photo' && !logo, 'card-book': Boolean(serviceIcon) }]} {...attributes}>
+<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText, 'card-crayon': crayon && shape === 'photo' && !logo && !serviceIcon, 'card-book': Boolean(serviceIcon) }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
