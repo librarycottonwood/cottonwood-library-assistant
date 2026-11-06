@@ -25,10 +25,14 @@ interface Props {
   layout?: 'stacked' | 'adaptive';
   /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
+  /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
+  logo?: boolean;
+  /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
+  fullText?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', ...attributes } = Astro.props;
+const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, ...attributes } = Astro.props;
 const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
 // The arrow stays on the line with the title's last word, so a wrapping title never leaves it alone on a line.
@@ -36,7 +40,7 @@ const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
 const titleStart = titleWords.join(' ');
 ---
-<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page' }]} {...attributes}>
+<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
@@ -66,6 +70,8 @@ const titleStart = titleWords.join(' ');
     .card-linked:hover .card-copy h3 :global(.icon-end) { transform: translateX(0.2em); }
   }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
+  .card-logo .card-media { display: grid; place-items: center; background: var(--color-surface); }
+  .card-logo .card-media :global(.card-image) { width: 60%; height: 60%; object-fit: contain; }
   /* right keeps a long schedule badge inside the photo at large text sizes; it wraps instead. */
   .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }
   .card-badge > :global(*) { min-width: 0; overflow-wrap: anywhere; }
@@ -74,6 +80,7 @@ const titleStart = titleWords.join(' ');
   /* Two lines at most, ending in "…" (long Sanity event summaries), so cards side by side read evenly. The full text is
    * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
   .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); }
+  .card-full-text .card-copy p { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
   .title-end { white-space: nowrap; }

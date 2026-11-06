@@ -252,6 +252,10 @@ interface Props {
   layout?: 'stacked' | 'adaptive';
   /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
+  /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
+  logo?: boolean;
+  /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
+  fullText?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }

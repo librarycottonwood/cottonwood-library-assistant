@@ -61,7 +61,7 @@ const otherWays = otherWaysToHelp(support.initiatives);
   {/* Community acknowledgments from Sanity ("Giving and acknowledgments"); the old site's "Thank You!" section. */}
   {support.updates.length > 0 && <Section title="Thank you to our supporters" headingId="supporters-heading" id="supporters">
     <Grid as="ul" columns={3}>
-      {support.updates.map(item => <Card as="li" title={item.title} image={item.image}>{item.body}</Card>)}
+      {support.updates.map(item => <Card as="li" title={item.title} image={item.image} logo fullText>{item.body}</Card>)}
     </Grid>
   </Section>}
 </BaseLayout>
