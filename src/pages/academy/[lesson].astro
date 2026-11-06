@@ -1,0 +1,24 @@
+---
+import AcademyLayout from '../../layouts/AcademyLayout.astro';
+import LessonBody from '../../components/academy/LessonBody.astro';
+import LessonPagination from '../../components/academy/LessonPagination.astro';
+import { lessons } from './_guide';
+export function getStaticPaths() { return lessons.map((lesson, index) => ({ params: { lesson: lesson.slug }, props: { lesson, index } })); }
+const { lesson, index } = Astro.props;
+const previous = lessons[index - 1];
+const next = lessons[index + 1];
+const topics = lesson.parts.filter(part => part.id);
+---
+<AcademyLayout title={lesson.title} active={lesson.slug} withPageIndex={topics.length > 0}>
+  <div class="lesson-layout">
+  <header class="lesson-header"><h1>{lesson.title}</h1><p class="lead">{lesson.summary}</p></header>
+  {topics.length > 0 && <nav class="lesson-topics" aria-label="On this page"><p>On this page</p><ul>{topics.map(part => <li><a href={`#${part.id}`}>{part.title}</a></li>)}</ul></nav>}
+  <div class="lesson-body">
+  <LessonBody lesson={lesson} />
+  <LessonPagination
+    previous={{ href: previous ? `/academy/${previous.slug}/` : '/academy/', title: previous?.title ?? 'Overview' }}
+    next={{ href: next ? `/academy/${next.slug}/` : '/academy/quick-reference/', title: next?.title ?? 'Quick guide' }}
+  />
+  </div>
+  </div>
+</AcademyLayout>

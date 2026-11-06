@@ -1,0 +1,17 @@
+---
+import { lessons } from '../../pages/academy/_guide';
+import { ArrowRight } from '@lucide/astro';
+import LessonIcon from './LessonIcon.astro';
+---
+<header class="lesson-header">
+  <h1>Volunteer academy</h1>
+  <p class="lead">How to use ChatGPT and the library’s websites.</p>
+</header>
+<section aria-labelledby="lessons-heading">
+  <h2 id="lessons-heading">Guides</h2>
+  <ol class="lesson-list">{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`}>
+    <span class="lesson-list-icon"><LessonIcon slug={lesson.slug} size={21} /></span>
+    <div><h3>{lesson.title}</h3><p>{lesson.summary}</p></div>
+    <ArrowRight size={18} aria-hidden="true" />
+  </a></li>)}</ol>
+</section>

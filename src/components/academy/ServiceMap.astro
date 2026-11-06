@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import { BookOpen, CodeXml, ChartColumn, Users, Rocket, ArrowUpRight } from '@lucide/astro';
+import { services, serviceGroups } from '../../pages/academy/_guide';
+import { contentRepository } from '../../content/repository';
+import { resolveImage } from '../../content/images';
+interface Props { print?: boolean; }
+const { print = false } = Astro.props;
+const { library } = await contentRepository.getHome();
+const GroupHeading = print ? 'h3' : 'h2';
+const Heading = print ? 'h4' : 'h3';
+const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', drive: 'academyDrive', buffer: 'academyBuffer', github: 'academyGithub', cloudflare: 'academyCloudflare', sanity: 'academySanity', squarespace: 'academySquarespace', gmail: 'academyGmail', square: 'academySquare' };
+const icons: Record<string, typeof BookOpen> = { codex: CodeXml, analytics: ChartColumn, social: Users, catalog: BookOpen, spaceship: Rocket };
+const href = (service: typeof services[number]) => service.id === 'social' ? library.facebookUrl : service.href;
+---
+<section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">
+  <div class="platform-overview">
+    <p>For an event update, <a href="#website-chatgpt">ChatGPT</a> changes the details in <a href="#website-sanity">Sanity</a>. <a href="#website-github">GitHub</a> prepares the preview and records the save. <a href="#website-cloudflare">Cloudflare</a> puts the approved page on the <a href="https://cottonwood-library.pages.dev/">library website</a>. <a href="#website-codex">Codex</a> handles changes to the page design.</p>
+  </div>
+  <nav class="service-group-links screen-only" aria-label="Website groups">{serviceGroups.map(group => <a href={`#services-${group.id}`}>{group.title}</a>)}</nav>
+  {serviceGroups.map(group => <section class="service-group" id={`services-${group.id}`}>
+    <GroupHeading class="service-group-title">{group.title}</GroupHeading>
+    <div class="service-grid">
+      {services.filter(service => service.group === group.id).map(service => {
+        const Icon = icons[service.id] ?? BookOpen;
+        return <article class="service-card" id={`website-${service.id}`}>
+          <div class="service-heading">
+            <span class="service-icon" aria-hidden="true">
+              {logos[service.id] ? <Image src={resolveImage(logos[service.id])} alt="" width={28} height={28} /> : <Icon size={26} stroke-width={1.6} />}
+            </span>
+            <Heading>{service.name}</Heading>
+          </div>
+          <p class="service-purpose">{service.purpose}</p>
+          <p class="service-signin">{service.signin}</p>
+          <div class="service-actions">
+            <a class="service-open" href={href(service)}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></a>
+            {print && <span class="service-url">{href(service)}</span>}
+            {service.id === 'social' && library.instagramUrl && <a class="service-extra" href={library.instagramUrl}>Open Instagram <ArrowUpRight size={14} aria-hidden="true" /></a>}
+            {service.id === 'analytics' && <a class="service-extra" href="https://console.cloud.google.com/">Google Cloud <ArrowUpRight size={14} aria-hidden="true" /></a>}
+          </div>
+        </article>;
+      })}
+    </div>
+  </section>)}
+</section>

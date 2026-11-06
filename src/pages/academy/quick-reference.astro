@@ -1,0 +1,16 @@
+---
+import PrintButton from '../../components/academy/PrintButton.astro';
+import AcademyLayout from '../../layouts/AcademyLayout.astro';
+import { quickReference, reviewed, academyUrl } from './_guide';
+---
+<AcademyLayout title="Library tasks: quick guide" print>
+  <article class="desk-guide">
+    <p class="eyebrow">Cottonwood Community Library</p>
+    <h1>Library tasks: quick guide</h1>
+    <p class="lead">For website changes, open ChatGPT and choose Work.</p>
+    <PrintButton />
+    <dl>{quickReference.map(([title, text]) => <div><dt>{title}</dt><dd>{text}</dd></div>)}</dl>
+    <p class="tool-addresses"><a href="https://chatgpt.com/">chatgpt.com</a> · <a href="https://dashboard.givebutter.com/">dashboard.givebutter.com</a> · <a href="https://publish.buffer.com/">publish.buffer.com</a></p>
+    <p class="small">Full instructions: <a href={academyUrl}>{academyUrl}</a><br />Updated {reviewed}</p>
+  </article>
+</AcademyLayout>
