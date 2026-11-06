@@ -34,17 +34,30 @@ const date = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', y
 const clock = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: zone });
 // The library writes times as "10 a.m." and "2:30 p.m.".
 const time = { format: (date: Date) => clock.format(date).replace(':00', '').replace(' AM', ' a.m.').replace(' PM', ' p.m.') };
-const when = sessions.map(session => ({ label: day.format(new Date(session.startsAt)), value: `${time.format(new Date(session.startsAt))} – ${time.format(new Date(session.endsAt))}` }));
+const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
+const endDay = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: zone });
+const sameDay = (start: Date, end: Date) => dayKey.format(start) === dayKey.format(end);
+// A session that runs past midnight (the online auction: Saturday noon to Sunday 3 p.m.) names its last day too.
+const when = sessions.map(session => {
+  const start = new Date(session.startsAt), end = new Date(session.endsAt);
+  return { label: day.format(start), value: sameDay(start, end) ? `${time.format(start)} – ${time.format(end)}` : `${time.format(start)} – ${endDay.format(end)}, ${time.format(end)}` };
+});
+// The title line shows "November 14–15, 2026" for a session that spans days.
+const titleDate = (session: LibraryEvent) => {
+  const start = new Date(session.startsAt), end = new Date(session.endsAt);
+  return sameDay(start, end) ? date.format(start) : date.formatRange(start, end);
+};
 ---
 <BaseLayout title={`${event.title} | ${library.name}`} description={event.summary}>
   <PageTitle title={event.title} trail={[eventsLink]}>
-    {sessions.map((session, index) => <>{index > 0 && ' · '}<time datetime={session.startsAt}>{date.format(new Date(session.startsAt))}</time></>)}
+    {sessions.map((session, index) => <>{index > 0 && ' · '}<time datetime={session.startsAt}>{titleDate(session)}</time></>)}
   </PageTitle>
   <WideImage image={image} first />
   <Section width="text" align="start">
     <Text size="lead">{event.summary}</Text>
     <DetailList label="Dates and times" items={[...when, { label: 'Where', value: event.location ?? `${library.address}, ${library.locality}` }]} />
-    {(inPerson || program) && <Stack direction="row" gap="xs" wrap>
+    {(inPerson || program || event.link) && <Stack direction="row" gap="xs" wrap>
+      {event.link && <Button href={event.link} data-analytics-event="event_link" variant={inPerson ? undefined : 'accent'} iconEnd="external">{inPerson ? 'More information' : 'Go to the event'}</Button>}
       {inPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
       {program && <Button href={programHref(program.id)} icon="book">About {program.title}</Button>}
     </Stack>}

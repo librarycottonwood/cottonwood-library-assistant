@@ -1,0 +1,16 @@
+{
+  "request": "Add making a craft to the Story Time program description.",
+  "sanityDocuments": [
+    {
+      "id": "program-story-time",
+      "revision": "erHQW7OXxMdgiHGnyoIlWq",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "Read, sing, dance, and enjoy some snacks!"
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
