@@ -53,6 +53,16 @@ class SelectionTest(unittest.TestCase):
         self.assertEqual(sorted(a['id'] for a in keep), [1, 3])
         self.assertEqual([a['id'] for a in remove], [2])
 
+    def test_newest_backups_are_kept_and_counted_before_other_archives(self):
+        backups = [artifact(i, cms_artifacts.BACKUP, size=50 * MB, created=f'2026-10-2{i}T00:00:00Z') for i in range(1, 7)]
+        protected = artifact(10, cms_artifacts.PR_PREVIEW, 'a' * 40, size=200 * MB)
+        others = [artifact(20, 'library-preview-and-screenshots', size=40 * MB, created='2026-10-26T00:00:00Z'),
+                  artifact(21, 'library-preview-and-screenshots', size=40 * MB, created='2026-10-27T00:00:00Z')]
+        keep, remove = cms_artifacts.selection(backups + [protected] + others, protected_heads={'a' * 40})
+        # Four newest backups (200 MiB) + protected preview (200 MiB) leave 50 MiB: only the newest screenshot set fits.
+        self.assertEqual(sorted(a['id'] for a in keep), [3, 4, 5, 6, 10, 21])
+        self.assertEqual(sorted(a['id'] for a in remove), [1, 2, 20])
+
     def test_live_heads_cover_open_and_recently_merged_prs(self):
         now = datetime.datetime(2026, 10, 28, tzinfo=datetime.timezone.utc)
         open_prs = [{'head': {'sha': 'a'}, 'base': {'ref': 'main'}}, {'head': {'sha': 'x'}, 'base': {'ref': 'other'}}]

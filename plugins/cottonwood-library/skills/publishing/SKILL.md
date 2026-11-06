@@ -40,6 +40,9 @@ Do every step yourself with the Sanity and GitHub tools in this chat, on `librar
 2. **Upload every photo first**, then publish the records that use them. A record that points to a photo that isn't uploaded yet breaks the preview.
 3. **Write down the old values.** Before changing a record, read it and keep the current value of each field you will change. They go in the content-update file as `before`, so any later chat can undo this save.
 4. Check every value against "Values that break the website" below, then publish the Sanity records.
+5. **Leave no drafts behind.** After publishing, look for a leftover draft of each record you touched (`drafts.<id>`). If one is left and it is yours from this request, discard it; leave other people's drafts alone. A forgotten draft can sneak into someone else's later save.
+
+If a Sanity or GitHub step fails the first time (for example "the editor blocked the change"), try it once more quietly before telling the volunteer. If it fails again, explain it in plain words.
 
 ### Save it
 
@@ -89,6 +92,8 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
 - Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. Otherwise tell the volunteer "Your change is saved but isn't on the website yet. The website still shows the previous version and works. The library's automatic repair is checking it; ask me again in about an hour." Only send this to Todd (see the library assistant skill) if a person must reconnect an account.
 
+If the volunteer decides not to save, close the PR and delete its branch yourself. If your tools can't close it, leave it: tell the volunteer “Nothing went on the website. It closes by itself in 14 days.” Never ask a volunteer or board member to close PRs, delete branches or remove previews.
+
 Save PRs with no activity for 14 days are closed automatically with a comment. Nothing from them went live, but what they published in Sanity stays published and goes live with the next save, so check that comment's list.
 
 ## Values that break the website (check before every publish)
@@ -109,6 +114,6 @@ For a failure, first establish whether the existing website is working and what 
 
 “Discard the draft” means remove only the unfinished work from this request; preserve the published record and other people's changes. Read the result back.
 
-“Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 15 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
+“Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, check that no draft of those records is left (discard any that is), then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 15 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
 
 If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. Todd Haines, the board admin, needs to delete them." Give the volunteer one plain sentence to email him (toddhaines7@gmail.com). Undoing the website change alone does not remove them.

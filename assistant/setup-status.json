@@ -3,7 +3,7 @@
     "status": "Prepared in an isolated PR; not merged, deployed or installed until its separate acceptance evidence is recorded.",
     "repository": "librarycottonwood/cottonwood-library-assistant",
     "baselineMain": "0ffcfea58a2ab8aa646f5ca80b7a53903940acf7",
-    "sourcePluginVersion": "0.2.12 (October 22; history, current source is 0.2.21)",
+    "sourcePluginVersion": "0.2.12 (October 22; history, current source is 0.2.20; PR #68 bumps it to 0.2.21)",
     "lastObservedInstalledPluginVersion": "0.2.11",
     "workflow": "New worktree/branch/PR per website request; current Sanity snapshot preview URL; Ready to save?; explicit chat approval; conflict handling; checked merge; exact-artifact live publication and verification; task-owned cleanup.",
     "detour": "Website MCP tools, scopes and service binding removed in restoration source. PR35/36 had no successful native chat preview/save acceptance. Reporting remains read-only.",
@@ -29,8 +29,8 @@
     "domain": "cottonwoodcommunitylibrary.com is attached to this project at the public launch (by Thursday, November 5, 2026; moved from November 3); see assistant/DOMAIN-LAUNCH.md.",
     "status": "First verified live save October 24: PR #40 merged as 48d30939; publish-live run 40160373342 published the exact checked PR artifact (release 6b00c9b49bd9f5d7040064c2a99329472aec56da32c60b02ada49bda57c6de35, preview https://acf77744.cottonwood-library.pages.dev/) to the production deployment and recorded it in the CMS ledger. live-hosting-setup run 40160161567 created the project on the library account. CMS preview run 40160353204 also succeeded on the new project.",
     "personalPreviewHosting": "Earlier manual preview links on Jaden's personal Cloudflare account were removed from this record; that project is retired and being deleted.",
-    "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) is retired and awaits deletion after the live website is verified; no redirects are kept.",
-    "sourcePluginVersion": "0.2.21 (see plugins/cottonwood-library/plugin.json; a new version must be updated in Plugin Creator before it is installed, so check the installed version in the library ChatGPT account separately)"
+    "retiredLibraryProject": "cottonwood-library-trial-preview (old trial addresses) was deleted from the library Cloudflare account on November 5, 2026. The live project cottonwood-library is unaffected; no redirects are kept. The live deploy token still uses the legacy secret name CLOUDFLARE_TRIAL_API_TOKEN (see the workflows); it is not tied to the deleted project.",
+    "sourcePluginVersion": "0.2.20 on main; PR #68 bumps it to 0.2.21 for the launch upload (see plugins/cottonwood-library/plugin.json; a new version must be updated in Plugin Creator before it is installed, so check the installed version in the library ChatGPT account separately)"
   },
   "checkedAt": "2026-10-06 America/Los_Angeles",
   "repository": "https://github.com/librarycottonwood/cottonwood-library-assistant",
@@ -163,6 +163,7 @@
       },
       "recovery": {
         "environment": "cottonwood-library-editor-recovery",
+        "deleted": "November 5, 2026: deleted as unneeded. The main environment cottonwood-library-editor is the only Codex environment; it received the same pnpm folder environment variables and passed pnpm install and pnpm check.",
         "setupChat": "https://chatgpt.com/local/01a15cc5-f116-764a-815f-82fd4798f008?hostId=local",
         "published": true,
         "readyForHandoff": false,
@@ -184,7 +185,7 @@
         "digest": "7fb29f628c6d09b08e8a2408c49ab2d3a2bfa108589296a79ac50e1289a18c7e",
         "saved": false
       },
-      "hostingOwnership": "Library-owned Cloudflare account e05729fd6b6fad329e31896d8b1c2da9. Live project cottonwood-library since October 24; the earlier cottonwood-library-trial-preview project is retired. Nothing depends on Jaden's personal hosting.",
+      "hostingOwnership": "Library-owned Cloudflare account e05729fd6b6fad329e31896d8b1c2da9. Live project cottonwood-library since October 24; the earlier cottonwood-library-trial-preview project is retired and was deleted November 5, 2026. Nothing depends on Jaden's personal hosting.",
       "imageDelivery": "Inline delivery paused in AGENTS/START/WORKFLOW; screenshot capture and hosted review page retained. Valid hosted HTTPS images rejected by ChatGPT; raw cloud file loading also fails. Native Library upload tool absent in tested cloud session. No support report requested or sent.",
       "hostingMigration": {
         "accountId": "e05729fd6b6fad329e31896d8b1c2da9",
@@ -319,7 +320,7 @@
         "workflow": "cms.yml",
         "validationRun": "39535874197",
         "checkedSource": "b87c6ddf1a6a367428f4268973fd39cebc9b8dec",
-        "status": "Historical: verified October 20 as the former trial destination. Retired October 24 when the trial was renamed to the live website (see liveWebsite); its project awaits deletion.",
+        "status": "Historical: verified October 20 as the former trial destination. Retired October 24 when the trial was renamed to the live website (see liveWebsite); its project was deleted November 5, 2026.",
         "token": "Existing scoped service and hosting credentials stay in server/GitHub storage."
       },
       "retiredSourceDemo": {
@@ -328,7 +329,7 @@
         "workflow": "trial.yml",
         "validationRun": "37569962832",
         "checkedSource": "ea8d61dd8325e827143df93d2f83d15c65dfe3e3",
-        "status": "Historical retired publishing path. Its redirect machinery was removed October 24; the old project awaits deletion.",
+        "status": "Historical retired publishing path. Its redirect machinery was removed October 24; the old project was deleted November 5, 2026.",
         "token": "Library account Pages Write token (legacy secret name CLOUDFLARE_TRIAL_API_TOKEN); trusted publisher only, outside agent container",
         "latestPublishRun": "37570642969"
       },
@@ -479,5 +480,11 @@
     },
     "domain": "Baseline and rollback plan in assistant/DOMAIN-LAUNCH.md; existing Squarespace DNS, nameservers, DNSSEC and forwarding unchanged.",
     "assistant": "Installed 0.2.10 read back in Safari with ten skills enabled. Earlier actual donation report, newsletter draft and unscheduled Facebook draft passed; fresh 0.2.10 routing question correctly selected Codex for design and Work/Sanity for news. No public social or bulk email send."
+  },
+  "newsletterTests": {
+    "asOf": "2026-11-05 America/Los_Angeles",
+    "websiteSignup": "Website's own sign-up form (functions/api/newsletter.ts) tested end to end October 30, 2026.",
+    "emailDelivery": "Givebutter email delivery to an approved inbox tested October 21, 2026 (see communicationsOctober21).",
+    "unsubscribe": "Unsubscribe: not tested by us; accepted November 5, 2026. Givebutter adds its own Unsubscribe link to every newsletter (test sends show a placeholder)."
   }
 }
