@@ -280,8 +280,6 @@ interface Props {
   fullText?: boolean;
   /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
   crayon?: boolean;
-  /** A book-like cover and colored spine for the homepage service cards; includes a matching decorative icon. */
-  serviceIcon?: 'book' | 'computer' | 'printer';
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -642,8 +640,6 @@ interface Props {
   inset?: boolean;
   /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
   crayon?: boolean;
-  /** Copy alignment. Wide promotional splits default to center; heroes, inset details and information panels default to start. */
-  align?: 'start' | 'center';
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -709,6 +705,8 @@ interface Props {
   as?: 'p' | 'span' | 'div';
   /** Italic, for a side note such as "Late fees: 10¢/day, up to the replacement cost." */
   note?: boolean;
+  /** Even line lengths for a short introduction, avoiding a single trailing word. */
+  balance?: boolean;
 }
 ```
 

@@ -16,7 +16,7 @@ The original prompt set is in `docs/crayon-art-prompts.json`; the holding-hands 
 
 Illustrations sit above their headings, centered on the same axis. The community scene follows the user's suggestion of children holding hands in a line.
 
-Wide promotional photo-and-text sections center their copy, illustrations and action rows within the text column, including Powered by Community and the homepage featured event. The shared Split component exposes an alignment option; the opening hero and structured detail panels retain their existing alignment.
+Photo-and-text sections retain left-aligned copy and action rows. Headings use balanced wrapping, and the short community introduction balances its line lengths to avoid a lone trailing word. Featured-event summaries use the regular body size.
 
 Main page titles reuse the same scenes in the space to the right: reading for Events & News and News, computers for Explore Services, the book-carrying child for Visit Us and Newsletter, and children holding hands for About Us and Support Us. On phones, the artwork moves above the centered title. Breadcrumbs and supporting text remain with the title. Article, event-detail and legal page titles stay plain.
 
@@ -26,6 +26,6 @@ A soft indigo crayon accent sits below the final word of the hero and community 
 
 Photo frames share the `shadow-photo` and `shadow-photo-reverse` tokens: a small pale indigo or green offset, including the hero, event/service cards, split blocks, wide photos and galleries. The hero's clipping frame owns its inset, keeping the image's existing settling animation inside it. Logos, newsletter page cards and contained gallery artwork retain plain frames.
 
-Homepage service cards have a book-cover treatment: a continuous indigo or green spine beside the photo and white copy area, with a small matching service icon in the photo corner. Their full descriptions remain readable at narrow widths. These cards replace the usual offset photo inset with one complete cover. Other card types retain their original layout.
+Homepage service cards retain the original photo-and-copy layout with the shared photo insets and readable full descriptions.
 
 The shared newsletter signup sits on a white paper panel with a pale indigo folded corner. The book-carrying child peeks above the paper's top edge. All decoration stays outside the text and controls; the original form, labels, messages and newsletter link remain in place.

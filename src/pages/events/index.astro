@@ -31,10 +31,10 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
   <PageTitle title={title} illustration="reading" />
-  {featured && featuredImage && <Split media="start" panel align="center" image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+  {featured && featuredImage && <Split media="start" panel image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
-    <Text tone="muted" size="lead">{featured.summary}</Text>
+    <Text tone="muted">{featured.summary}</Text>
     <Stack direction="row" gap="xs" wrap>
       {featuredInPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
       <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
