@@ -8,16 +8,21 @@
  * <LibraryIllustration scene="reading" />
  */
 import Image from '../OptimizedImage.astro';
-interface Props { scene: 'reading' | 'computers' | 'books' | 'community'; }
-const { scene } = Astro.props;
+interface Props {
+  scene: 'reading' | 'computers' | 'books' | 'community';
+  /** Follow the left edge of a text column, or center above a section heading (default). */
+  align?: 'start' | 'center';
+}
+const { scene, align = 'center' } = Astro.props;
 const keys = { reading: 'crayonReading', computers: 'crayonComputers', books: 'crayonBooks', community: 'crayonCommunity' } as const;
 ---
-<span class:list={['illustration', scene]} aria-hidden="true">
+<span class:list={['illustration', scene, { 'illustration-start': align === 'start' }]} aria-hidden="true">
   <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={scene === 'books' ? '(max-width: 47.99rem) 128px, 160px' : '(max-width: 47.99rem) 240px, 320px'} loading="lazy" />
 </span>
 <style>
   .illustration { display: block; flex-shrink: 0; align-self: center; width: 20rem; max-width: 100%; pointer-events: none; }
   .books { width: 10rem; }
+  .illustration-start { align-self: flex-start; }
   .illustration :global(img) { display: block; width: 100%; height: auto; }
   @media (max-width: 47.99rem) {
     .illustration { width: 15rem; }

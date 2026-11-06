@@ -145,7 +145,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
-| [CrayonHighlight](#crayonhighlight) | A textured indigo crayon accent below the last word of a short heading, with clear space around the letters. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
 | [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary). |
@@ -289,21 +288,6 @@ interface Props {
 <Grid as="ul" columns={3}>
   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
 </Grid>
-```
-
-### CrayonHighlight
-
-`src/components/site/CrayonHighlight.astro` — A textured indigo crayon accent below the last word of a short heading, with clear space around the letters.
-
-- **Use for:** The hero and an occasional supporting heading, using the full original text.
-- **Don't use for:** Body text, links, or every heading on a page.
-
-```ts
-interface Props { text: string; }
-```
-
-```astro
-<Heading><CrayonHighlight text="Powered by Community" /></Heading>
 ```
 
 ### DetailList
@@ -485,7 +469,11 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 - **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
 
 ```ts
-interface Props { scene: 'reading' | 'computers' | 'books' | 'community'; }
+interface Props {
+  scene: 'reading' | 'computers' | 'books' | 'community';
+  /** Follow the left edge of a text column, or center above a section heading (default). */
+  align?: 'start' | 'center';
+}
 ```
 
 ```astro
