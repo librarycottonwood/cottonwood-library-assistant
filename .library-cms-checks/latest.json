@@ -1,31 +1,31 @@
 {
-  "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
-  "checkedAt": "2026-11-06T00:16:41.564659+00:00",
+  "sourceSha": "7a06f6078ae18b541016d2c192b6dad730e1dfda",
+  "checkedAt": "2026-11-06T01:21:19.699948+00:00",
   "result": "success",
   "scope": "Separate CMS content/publisher check; skipped until library account setup. No private token or CMS document export.",
   "report": {
-    "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
-    "checkedAt": "2026-11-06T00:16:29.571Z",
+    "sourceSha": "7a06f6078ae18b541016d2c192b6dad730e1dfda",
+    "checkedAt": "2026-11-06T01:21:08.988Z",
     "result": "published_content_and_publisher_checked",
     "contentRead": true,
     "render": true,
     "publisher": true,
     "livePublishingVerified": false,
     "scope": "Read actual published content, build its frozen snapshot, check publisher status, and reconcile missed deliveries into pending previews. No content mutation, approval, deployment, or ChatGPT tool check; publication evidence remains per operation.",
-    "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/42135015124"
+    "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/42142653044"
   },
   "publisher": {
-    "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
-    "checkedAt": "2026-11-06T00:16:29.492Z",
+    "sourceSha": "7a06f6078ae18b541016d2c192b6dad730e1dfda",
+    "checkedAt": "2026-11-06T01:21:08.918Z",
     "result": "checked",
     "hostedVerified": true,
     "lastVerified": {
-      "operationId": "afd88e21-46d0-4dc9-b2c0-01206535be1a",
-      "sourceSha": "e3804ebd2ede4794d0bd9275b353a1a2b8df89d9",
+      "operationId": "f75ef8ab-b0bb-4d13-b2bb-b2e117ab8d62",
+      "sourceSha": "d2cf87ae25922142216e8402a14ce6c1d316602c",
       "contentDigest": "2c673662fd72ced550b610f2802e87bd132af41a6dea14c5d0d6ddf2505a2953",
-      "releaseDigest": "329f12fdf1e45036149bec6ebd332527d012e32c405ab63c5c3a9e6138252fbc",
+      "releaseDigest": "d5f9f427cc118c2e670743a5267ac234cf5215302aaa1f47ce09ba846d00c431",
       "websiteUrl": "https://cottonwood-library.pages.dev",
-      "verifiedAt": "2026-11-06T00:11:14.526Z"
+      "verifiedAt": "2026-11-06T00:18:04.772Z"
     },
     "reconciliation": {
       "status": "preview_queued",
@@ -33,8 +33,56 @@
     },
     "operations": [
       {
-        "id": "1d7bbcac-ff3e-4858-8b7e-1c9cb529f915",
+        "id": "7f059fc9-2dc9-4648-b729-e1ee93984684",
         "status": "preview_queued",
+        "sourceSha": "7a06f6078ae18b541016d2c192b6dad730e1dfda",
+        "contentDigest": null,
+        "releaseDigest": null,
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/7f059fc9-2dc9-4648-b729-e1ee93984684"
+      },
+      {
+        "id": "8feefd81-e175-48b8-9116-b21cceb1a571",
+        "status": "build_failed",
+        "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
+        "contentDigest": null,
+        "releaseDigest": null,
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/8feefd81-e175-48b8-9116-b21cceb1a571"
+      },
+      {
+        "id": "833e3348-7aaf-4cbb-a705-1945633c3713",
+        "status": "review_required",
+        "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
+        "contentDigest": "b3e3b8653616edff3fd168d6389de0f15dcc016b7e5b2735ab432f125ec764c1",
+        "releaseDigest": "4a4f4d871358fe7a72b9e062e3749e2ba66484b7285f9ee0a6848f2e24fb8007",
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/833e3348-7aaf-4cbb-a705-1945633c3713"
+      },
+      {
+        "id": "67d04fec-41b7-4427-8810-2d5c805d9603",
+        "status": "review_required",
+        "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
+        "contentDigest": "b3e3b8653616edff3fd168d6389de0f15dcc016b7e5b2735ab432f125ec764c1",
+        "releaseDigest": "4a4f4d871358fe7a72b9e062e3749e2ba66484b7285f9ee0a6848f2e24fb8007",
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/67d04fec-41b7-4427-8810-2d5c805d9603"
+      },
+      {
+        "id": "533d16e5-77e1-45bd-8c02-98091a7d0488",
+        "status": "review_required",
+        "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
+        "contentDigest": "b3e3b8653616edff3fd168d6389de0f15dcc016b7e5b2735ab432f125ec764c1",
+        "releaseDigest": "4a4f4d871358fe7a72b9e062e3749e2ba66484b7285f9ee0a6848f2e24fb8007",
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/533d16e5-77e1-45bd-8c02-98091a7d0488"
+      },
+      {
+        "id": "af2d2d49-71c2-44ea-ad18-ca2638b428f6",
+        "status": "build_failed",
+        "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
+        "contentDigest": null,
+        "releaseDigest": null,
+        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/af2d2d49-71c2-44ea-ad18-ca2638b428f6"
+      },
+      {
+        "id": "1d7bbcac-ff3e-4858-8b7e-1c9cb529f915",
+        "status": "build_failed",
         "sourceSha": "f706a7bc2144bfee78787e63fd6a4cbc81f8a9d8",
         "contentDigest": null,
         "releaseDigest": null,
@@ -143,54 +191,6 @@
         "contentDigest": "d4c0a927c58351c57c1249790692ffd5b482bcaf1d4ef71104d3cdc15185e2d0",
         "releaseDigest": "8b8394b32e45104e6441f20900adc7353de7b875e4628a5553bf26f8fa8aef3a",
         "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/d63e8a0f-03fa-4e7d-8cf0-ba68f00a5acc"
-      },
-      {
-        "id": "fa336577-331d-43a3-b010-afcd97acbf01",
-        "status": "build_failed",
-        "sourceSha": "877b0ef90d940eb2dcd6e2c49761efc74b8af680",
-        "contentDigest": null,
-        "releaseDigest": null,
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/fa336577-331d-43a3-b010-afcd97acbf01"
-      },
-      {
-        "id": "2858dcab-4299-4ae7-8775-b7a381d512d2",
-        "status": "build_failed",
-        "sourceSha": "877b0ef90d940eb2dcd6e2c49761efc74b8af680",
-        "contentDigest": null,
-        "releaseDigest": null,
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/2858dcab-4299-4ae7-8775-b7a381d512d2"
-      },
-      {
-        "id": "901483af-7cb3-49fc-8aa0-7d0cceb747db",
-        "status": "review_required",
-        "sourceSha": "877b0ef90d940eb2dcd6e2c49761efc74b8af680",
-        "contentDigest": "2a224da284bc49906915a455c27a6bf32ba8263bc7117d6af12321c7341ca62d",
-        "releaseDigest": "632a078500cd7440b04d95e6d053844ada6bbc27f0a71dc4791d7d259014a93d",
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/901483af-7cb3-49fc-8aa0-7d0cceb747db"
-      },
-      {
-        "id": "16715427-5d4c-453c-90f8-ffcfd3f69dc9",
-        "status": "review_required",
-        "sourceSha": "877b0ef90d940eb2dcd6e2c49761efc74b8af680",
-        "contentDigest": "2a224da284bc49906915a455c27a6bf32ba8263bc7117d6af12321c7341ca62d",
-        "releaseDigest": "632a078500cd7440b04d95e6d053844ada6bbc27f0a71dc4791d7d259014a93d",
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/16715427-5d4c-453c-90f8-ffcfd3f69dc9"
-      },
-      {
-        "id": "b9a23a9d-f1d8-4d83-9e31-0bad484aa1b8",
-        "status": "review_required",
-        "sourceSha": "877b0ef90d940eb2dcd6e2c49761efc74b8af680",
-        "contentDigest": "b3b6833386119e23a2238980a53658779e987fdbb35c13b60a06047f6f4140ec",
-        "releaseDigest": "2f10e236b81aa6dc9af452e1dd0996ab84318373e006c960eb964ca08005e612",
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/b9a23a9d-f1d8-4d83-9e31-0bad484aa1b8"
-      },
-      {
-        "id": "9db22440-8e66-43e9-ae37-bed313754992",
-        "status": "review_required",
-        "sourceSha": "1be0d1728fd68eb2691bddca0b87fccc2ba8d42a",
-        "contentDigest": "b3b6833386119e23a2238980a53658779e987fdbb35c13b60a06047f6f4140ec",
-        "releaseDigest": "c0de9be22618df24c29b4bfa461e45a57ee00223d4894be021d252f10b0f4f37",
-        "reviewUrl": "https://cottonwood-library-cms-publisher.librarycottonwood.workers.dev/review/9db22440-8e66-43e9-ae37-bed313754992"
       }
     ],
     "scope": "Published revision reconciliation and private publisher status; hosted marker/reachability checked when a verified release exists. This is not a ChatGPT connection test, new approval, full hosted asset audit or production launch."
