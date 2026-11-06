@@ -33,7 +33,7 @@ Healthy website checks consume GitHub allowance, while repairs and the weekly re
 
 ### GitHub Actions minutes
 
-The repository is private on GitHub Free: about **2,000 Actions minutes a month**, with a $0 spending cap. When they run out, checks, previews and saves stop until the 1st of the next month. Every job that starts costs at least one minute. Rough costs: a volunteer content save is about 15–20 minutes in total (PR check and preview, the merge check and live publish, plus the Sanity-triggered `cms.yml` preview); each push to a code PR is about 8 minutes and its merge about 10; an instructions-only PR is about 3 per push. Scheduled checks use about 300 a month. So: batch related edits into one PR, push when it is ready rather than after every small edit, avoid many rapid test PRs, and do not re-run workflows to "see if it passes again". Check usage under the organization's Settings → Billing before planning a large batch of test saves.
+The repository has been public since November 5, 2026, so GitHub Actions minutes are free and unlimited. If it is ever made private again, GitHub Free allows about **2,000 minutes a month** with a $0 spending cap, and checks, previews and saves stop when they run out until the 1st of the next month. The checks still skip work they don't need (instructions-only PRs skip the preview; unchanged connectors skip deploys) so volunteers wait less. Batch related edits into one PR and don't re-run workflows just to "see if it passes again".
 
 ## CMS backups
 
