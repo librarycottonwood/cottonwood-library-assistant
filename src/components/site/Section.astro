@@ -16,8 +16,8 @@ import type { Space } from '../../design-system/tokens';
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
-  /** A small crayon scene next to the heading, kept in the layout so it cannot cover content. */
-  illustration?: 'reading' | 'playing' | 'books';
+  /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
+  illustration?: 'reading' | 'playing' | 'books' | 'community';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -35,7 +35,7 @@ const { title, illustration, headingId, align = 'center', width = 'content', gap
 <section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && (illustration
-      ? <div class="illustrated-heading"><Heading id={headingId} relaxed={align === 'center'}>{title}</Heading><LibraryIllustration scene={illustration} /></div>
+      ? <div class="illustrated-heading"><LibraryIllustration scene={illustration} /><Heading id={headingId} relaxed={align === 'center'}>{title}</Heading></div>
       : <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>)}
     <slot />
   </div>
@@ -55,7 +55,9 @@ const { title, illustration, headingId, align = 'center', width = 'content', gap
   .align-center { align-items: center; }
   .align-center > :global(:is(h2, p)) { text-align: center; }
   .align-start { align-items: flex-start; }
-  .illustrated-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-sm); max-width: 100%; }
+  .illustrated-heading { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); width: 100%; }
   .illustrated-heading :global(h2) { min-width: 0; text-align: center; }
-  .align-start .illustrated-heading { justify-content: flex-start; }
+  .align-start .illustrated-heading { align-items: flex-start; }
+  .align-start .illustrated-heading :global(.illustration) { align-self: flex-start; }
+  .align-start .illustrated-heading :global(h2) { text-align: start; }
 </style>

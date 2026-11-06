@@ -114,6 +114,15 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
 
+### Photo edges
+
+A small color inset shared by photo frames. Keep logos, printed pages and contained artwork plain. Reverse the offset on photos that bleed off the right page edge.
+
+| Token | Value | Use for | Don't use for | Example |
+| --- | --- | --- | --- | --- |
+| `--shadow-photo` | `.25rem .375rem 0 var(--color-primary-soft)` | Split photos, photo cards and gallery frames. | Logos, printed pages, text and controls. | `box-shadow: var(--shadow-photo);` |
+| `--shadow-photo-reverse` | `-.25rem .375rem 0 var(--color-accent)` | Right-bleeding photos including the hero, and alternating photo cards. | Logos, printed pages, text and controls. | `box-shadow: var(--shadow-photo-reverse);` |
+
 ### Motion
 
 CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.
@@ -144,7 +153,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
-| [LibraryIllustration](#libraryillustration) | Small, transparent crayon scenes using the library's indigo and green palette. |
+| [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
@@ -258,7 +267,7 @@ interface Props {
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
-  /** A soft offset edge behind a photo, used by the homepage service cards. */
+  /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
   crayon?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
@@ -455,13 +464,13 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 
 ### LibraryIllustration
 
-`src/components/site/LibraryIllustration.astro` — Small, transparent crayon scenes using the library's indigo and green palette.
+`src/components/site/LibraryIllustration.astro` — Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette.
 
-- **Use for:** Beside a related section heading: reading for services, playing for events, books for the newsletter.
+- **Use for:** Above a related heading: community for the support block, reading for services, playing for events, books for the newsletter.
 - **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
 
 ```ts
-interface Props { scene: 'reading' | 'playing' | 'books'; }
+interface Props { scene: 'reading' | 'playing' | 'books' | 'community'; }
 ```
 
 ```astro
@@ -560,8 +569,8 @@ interface Props {
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
-  /** A small crayon scene next to the heading, kept in the layout so it cannot cover content. */
-  illustration?: 'reading' | 'playing' | 'books';
+  /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
+  illustration?: 'reading' | 'playing' | 'books' | 'community';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -612,7 +621,7 @@ interface Props {
   panel?: boolean;
   /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
   inset?: boolean;
-  /** A soft offset photo edge. Use on an occasional supporting block, keeping the hero plain. */
+  /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
   crayon?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;

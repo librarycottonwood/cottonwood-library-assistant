@@ -32,10 +32,12 @@ const images = originalImages.map(refreshPhoto);
   .gallery :global(.gallery-photo) {
     width: 100%; aspect-ratio: 6 / 5; object-fit: cover;
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+    box-shadow: var(--shadow-photo);
   }
   /* Posters, portraits and square pictures show whole, at their own shape, with no box around them. */
   .gallery { align-items: start; }
-  .gallery :global(.gallery-photo.is-contained) { aspect-ratio: auto; height: auto; }
+  .gallery :global(.gallery-photo.is-contained) { aspect-ratio: auto; height: auto; box-shadow: none; }
+  .gallery > li:nth-child(even) :global(.gallery-photo:not(.is-contained)) { box-shadow: var(--shadow-photo-reverse); }
   figcaption { color: var(--color-text-muted); font-size: var(--fluid-label); line-height: var(--leading-snug); }
   @media (min-width: 48rem) {
     .columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -10,6 +10,7 @@ import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
 import Heading from '../components/site/Heading.astro';
 import IconLink from '../components/site/IconLink.astro';
+import LibraryIllustration from '../components/site/LibraryIllustration.astro';
 import Section from '../components/site/Section.astro';
 import Split from '../components/site/Split.astro';
 import Stack from '../components/site/Stack.astro';
@@ -33,6 +34,8 @@ const serviceLink = (service: typeof services[number]) => service.icon === 'book
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 const supportTitleWords = home.support.title.trim().split(/\s+/);
 const supportTitleEnd = supportTitleWords.pop();
+const heroSecondWords = hero.heading[1].trim().split(/\s+/);
+const heroSecondEnd = heroSecondWords.pop();
 ---
 <BaseLayout>
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
@@ -41,7 +44,7 @@ const supportTitleEnd = supportTitleWords.pop();
       {campaign.badgeLabel ?? campaign.title}
     </Badge>}
     <Stack gap="sm">
-      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
+      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{heroSecondWords.join(' ')}{' '}<CrayonUnderline>{heroSecondEnd}</CrayonUnderline></Heading>
       <Text tone="muted" size="lead">{hero.introduction}</Text>
     </Stack>
     <Stack direction="row" gap="xs" wrap>
@@ -55,7 +58,10 @@ const supportTitleEnd = supportTitleWords.pop();
   </Split>
 
   <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
-    <Heading id="community-heading">{supportTitleWords.join(' ')}{' '}<CrayonUnderline>{supportTitleEnd}</CrayonUnderline></Heading>
+    <Stack gap="sm" align="center">
+      <LibraryIllustration scene="community" />
+      <Heading id="community-heading">{supportTitleWords.join(' ')}{' '}<CrayonUnderline>{supportTitleEnd}</CrayonUnderline></Heading>
+    </Stack>
     <Text tone="muted">{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>

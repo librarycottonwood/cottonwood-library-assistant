@@ -136,6 +136,14 @@ export const tokenGroups: TokenGroup[] = [
     ],
   },
   {
+    slug: 'photo-edges', title: 'Photo edges', property: 'box-shadow',
+    note: 'A small color inset shared by photo frames. Keep logos, printed pages and contained artwork plain. Reverse the offset on photos that bleed off the right page edge.',
+    tokens: [
+      token({ name: 'shadow-photo', label: 'Pale indigo inset', value: '.25rem .375rem 0 var(--color-primary-soft)', useFor: 'Split photos, photo cards and gallery frames.', avoid: 'Logos, printed pages, text and controls.', example: 'box-shadow: var(--shadow-photo);' }),
+      token({ name: 'shadow-photo-reverse', label: 'Pale green inset', value: '-.25rem .375rem 0 var(--color-accent)', useFor: 'Right-bleeding photos including the hero, and alternating photo cards.', avoid: 'Logos, printed pages, text and controls.', example: 'box-shadow: var(--shadow-photo-reverse);' }),
+    ],
+  },
+  {
     slug: 'motion', title: 'Motion', property: 'transition-duration',
     note: 'CSS speeds for hover and press feedback. Entrances and sliding (sections rising in, FAQ answers) use Motion springs in src/scripts/motion.ts through data-motion; see docs/design-rules.md, Motion. Nothing loops or waits, and everything is off for visitors who ask for reduced motion.',
     tokens: [

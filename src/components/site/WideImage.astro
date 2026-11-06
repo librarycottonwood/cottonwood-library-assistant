@@ -30,8 +30,9 @@ const image = refreshPhoto(originalImage);
   .wide-image :global(.wide-photo) {
     width: 100%; aspect-ratio: 2 / 1; object-fit: cover;
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
+    box-shadow: var(--shadow-photo-reverse);
   }
-  .wide-image :global(.wide-photo.is-contained) { object-fit: contain; background: var(--color-surface); }
+  .wide-image :global(.wide-photo.is-contained) { object-fit: contain; background: var(--color-surface); box-shadow: none; }
   /* Bleed: runs off the right page edge at every width, like the homepage photo. */
   .bleed { padding-inline-end: 0; }
   .bleed :global(.wide-photo) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
