@@ -1,0 +1,16 @@
+{
+  "request": "Point the Under One Roof auction's \"Go to the event\" button at the Givebutter auction page instead of the donate page.",
+  "sanityDocuments": [
+    {
+      "id": "e0598479-e086-450f-a57a-84821d544b4f",
+      "revision": "erHQW7OXxMdgiHGnyoXcsA",
+      "fields": [
+        "href"
+      ],
+      "before": {
+        "href": "https://givebutter.com/c/underoneroof"
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}
