@@ -21,11 +21,11 @@ jobs:
       action: ${{ steps.route.outputs.action }}
       pr: ${{ steps.route.outputs.pr }}
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           package-manager-cache: false
@@ -49,11 +49,11 @@ jobs:
       cancel-in-progress: true
     steps:
       # Never check out PR code in this credential-bearing job.
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           package-manager-cache: false
@@ -82,7 +82,7 @@ jobs:
             gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" -f state=failure -f context='Website preview' -f target_url="$RUN_URL" \
               -f description='No preview: the preview step failed before it finished. Push again or ask an administrator.'
           fi
-      - uses: actions/upload-artifact@v7.0.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: library-publish-live-result
@@ -108,11 +108,11 @@ jobs:
       cancel-in-progress: false
     steps:
       # Never check out PR code in this credential-bearing job.
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           package-manager-cache: false
@@ -143,7 +143,7 @@ jobs:
             gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" -f state=failure -f context='Live website' -f target_url="$RUN_URL" \
               -f description='Not saved: the publish step stopped before it finished. Check the live site, then make a refresh save.'
           fi
-      - uses: actions/upload-artifact@v7.0.2
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: library-publish-live-result
