@@ -9,7 +9,7 @@ Board admin for account, billing and permission questions: Todd Haines (toddhain
 | **GitHub** (account `librarycottonwood`, private repository `cottonwood-library-assistant`) | Website code, previews, checks, saves, weekly reports | `librarycottonwood` (sign-in email: Board to confirm) | `librarycottonwood` owns the repository; collaborator `oobagi` kept write access. Others: Board to confirm | Board to confirm. The repository notes a $0 overage limit, so checks and stored previews must fit the free allowance |
 | **Cloudflare** (account `e05729fd6b6fad329e31896d8b1c2da9`) | Hosts the live website (Pages project `cottonwood-library`) and previews, the CMS publisher Worker, the visitor-report Worker, and the newsletter form's secrets | librarycottonwood@gmail.com | Board to confirm | CMS publisher and visitor-report Workers run on Workers **Free**; Pages plan: Board to confirm |
 | **Cloudflare Turnstile** (in the same Cloudflare account) | Spam check on the newsletter sign-up form (widget "Cottonwood newsletter form") | Same Cloudflare account | Same as Cloudflare | Free |
-| **Sanity** (organization `oprdu6k2x`, project `2ou0xy2r`, dataset `production`) | Website content: events, news, notices, newsletters, hours, pictures. Editor: https://cottonwood-community-library.sanity.studio/ | Signed in through GitHub as `librarycottonwood` | Backup administrator not set up yet (Board to confirm) | No paid plan. Nonprofit plan applied for October 20, 2026 (from librarycottonwood@gmail.com); decision pending |
+| **Sanity** (organization `oprdu6k2x`, project `2ou0xy2r`, dataset `production`) | Website content: events, news, notices, newsletters, hours, pictures. Editor: https://cottonwood-community-library.sanity.studio/ | Signed in through GitHub as `librarycottonwood` | Board to confirm | No paid plan. Nonprofit plan applied for October 20, 2026 (from librarycottonwood@gmail.com); decision pending |
 | **Givebutter** (account `170378`) | Donations, the Under One Roof fundraiser, newsletter sign-ups and newsletter email (Engage) | cottonlib@shasta.com | Library admin access verified; named admins: Board to confirm | Board to confirm |
 | **Email sending** (Givebutter Engage) | Sends the newsletter from newsletter@cottonwoodlibrary.givebutter-mail.com, replies go to cottonlib@shasta.com | Part of the Givebutter account | Same as Givebutter | Free Givebutter sending domain |
 | **Library email** (cottonlib@shasta.com) | Library contact address; Givebutter login and domain registrant email | Board to confirm | Board to confirm | Board to confirm |
@@ -25,7 +25,7 @@ Not set up yet: the Claude Team plan (move to Claude is on hold) and an OpenAI A
 
 ## For the board to decide
 
-- A second (backup) administrator for GitHub, Cloudflare, Sanity, Givebutter and the domain, so no single sign-in can lock the library out.
+- Backup administrators for each account.
 - Where account recovery details live, and who can reach them.
 - Whether Jaden's Google Analytics access and the `oobagi` GitHub access stay after handoff.
 - Who pays for each paid service after the semester.
