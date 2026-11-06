@@ -16,6 +16,8 @@ The original prompt set is in `docs/crayon-art-prompts.json`; the holding-hands 
 
 Illustrations sit above their headings, centered on the same axis. The community scene follows the user's suggestion of children holding hands in a line.
 
+Main page titles reuse the same scenes in the space to the right: reading for Events & News and News, computers for Explore Services, the book-carrying child for Visit Us and Newsletter, and children holding hands for About Us and Support Us. On phones, the artwork moves above the centered title. Breadcrumbs and supporting text remain with the title. Article, event-detail and legal page titles stay plain.
+
 The footer's old low-opacity logo watermark is replaced by one full-color crayon reading scene. It occupies a separate fourth column on desktop, a normal grid cell on tablets, and follows the contact details on phones. The actual black library logo, all links and contact information remain intact. The scene is decorative, responsive and lazy-loaded.
 
 The separate `CrayonUnderline` is a small code-native shape: one continuous uneven stroke and a faint second pencil pass. It emphasizes the last word of the hero's second line and the community heading, preserving the CMS wording. It has no noise filter, loose flecks, decorative eyebrow marks, or animation.

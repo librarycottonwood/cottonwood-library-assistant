@@ -28,7 +28,7 @@ const questions = [
 const hours = library.hours.map(row => ({ label: row.days, value: row.hours, muted: /^closed$/i.test(row.hours) }));
 ---
 <BaseLayout title="Visit Us | Cottonwood Community Library" description={`Hours, directions and borrowing at ${library.address}, ${library.locality}.`}>
-  <PageTitle title="Visit Us" />
+  <PageTitle title="Visit Us" illustration="books" />
   <Split media="start" panel image={entrance} headingId="visit-heading" mediaId="visit">
     <Stack gap="xs">
       <Heading id="visit-heading">{library.address}</Heading>

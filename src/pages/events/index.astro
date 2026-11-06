@@ -30,7 +30,7 @@ const featuredInPerson = featured && !/online/i.test(featured.location ?? '');
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
-  <PageTitle title={title} />
+  <PageTitle title={title} illustration="reading" />
   {featured && featuredImage && <Split media="start" panel image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>

@@ -31,7 +31,7 @@ const volunteer = support.initiatives.find(item => item.category === 'volunteeri
 const otherWays = otherWaysToHelp(support.initiatives);
 ---
 <BaseLayout title={`${supportLink.label} | Cottonwood Community Library`} description={home.support.introduction}>
-  <PageTitle title={supportLink.label} />
+  <PageTitle title={supportLink.label} illustration="community" />
   {campaign && <Split media="end" panel image={campaign.image ?? photo} headingId="fundraiser-heading" mediaId="fundraiser" data-campaign-only={campaign.endsOn ? '' : undefined} data-campaign-ends={campaign.endsOn}>
     <Stack gap="xs">
       <Heading id="fundraiser-heading">{campaign.title}</Heading>

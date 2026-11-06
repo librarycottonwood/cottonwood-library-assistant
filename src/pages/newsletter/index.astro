@@ -17,7 +17,7 @@ const ordered = newsletter ? [newsletter, ...issues.filter(issue => issue.id !==
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
 <BaseLayout title="Library newsletter | Cottonwood Community Library" description={newsletter?.summary ?? 'News from the Cottonwood Community Library.'}>
-  <PageTitle title="Newsletter" trail={[eventsLink]}>News from your library. Sign up below to get the next issue by email.</PageTitle>
+  <PageTitle title="Newsletter" trail={[eventsLink]} illustration="books">News from your library. Sign up below to get the next issue by email.</PageTitle>
   <Section>
     {ordered.length > 0
       ? <Grid as="ul" columns={3} balance={false}>
