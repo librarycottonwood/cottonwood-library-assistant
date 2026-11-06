@@ -37,6 +37,7 @@ const image = refreshPhoto(originalImage);
   .bleed { padding-inline-end: 0; }
   .bleed :global(.wide-photo) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
   @media (max-width: 47.99rem) {
+    .wide-image :global(.wide-photo:not(.is-contained)) { aspect-ratio: 3 / 2; }
     .bleed :global(.wide-photo) { aspect-ratio: 3 / 2; object-position: left center; }
   }
   @media (min-width: 100rem) {

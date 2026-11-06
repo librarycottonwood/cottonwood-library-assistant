@@ -272,7 +272,7 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
-  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  /** photo (default): a 3:2 photo on mobile, fixed height on desktop. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
   /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
   logo?: boolean;

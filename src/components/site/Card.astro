@@ -23,7 +23,7 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
-  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  /** photo (default): a 3:2 photo on mobile, fixed height on desktop. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
   /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
   logo?: boolean;
@@ -86,6 +86,10 @@ const titleStart = titleWords.join(' ');
    * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
   .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); text-wrap: pretty; }
   .card-full-text .card-copy p { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+  /* A stacked phone card follows its width, so wider phones don't get a shallow letterbox crop. */
+  @media (max-width: 47.99rem) {
+    .card:not(.card-page, .card-logo) .card-media { height: auto; aspect-ratio: 3 / 2; }
+  }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
   .title-end { white-space: nowrap; }

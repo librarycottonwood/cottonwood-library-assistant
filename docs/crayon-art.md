@@ -30,4 +30,6 @@ Photo frames share the `shadow-photo` and `shadow-photo-reverse` tokens: a small
 
 Homepage service cards retain the original photo-and-copy layout with the shared photo insets and readable full descriptions.
 
+Below 768px, photo cards, wide photos and full-width split photos use a 3:2 frame that grows with their width. This avoids shallow letterbox crops on wider phones. Inset service photos keep their taller 5:4 shape; logos and printed newsletter pages retain their dedicated sizing, and contained artwork continues to show whole.
+
 The shared newsletter signup sits on a white paper panel with a pale indigo folded corner. The book-carrying child peeks above the paper's top edge. All decoration stays outside the text and controls; the original form, labels, messages and newsletter link remain in place.

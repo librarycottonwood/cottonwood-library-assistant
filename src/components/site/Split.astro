@@ -104,6 +104,10 @@ const framed = first && bleed && media === 'end';
   .inset { max-width: var(--width-content); margin-inline: auto; box-sizing: content-box; padding-inline: var(--page-inset); }
   .inset .split-copy, .inset .split-media { padding-inline: 0; }
 
+  @media (max-width: 47.99rem) {
+    .split:not(.inset) .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
+  }
+
   @media (min-width: 48rem) {
     .first { padding-block-start: var(--space-md); }
     .panel .split-copy { padding: var(--space-lg); }
