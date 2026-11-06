@@ -642,6 +642,8 @@ interface Props {
   inset?: boolean;
   /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
   crayon?: boolean;
+  /** Copy alignment. Wide promotional splits default to center; heroes, inset details and information panels default to start. */
+  align?: 'start' | 'center';
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */

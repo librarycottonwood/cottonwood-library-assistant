@@ -26,6 +26,8 @@ interface Props {
   inset?: boolean;
   /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
   crayon?: boolean;
+  /** Copy alignment. Wide promotional splits default to center; heroes, inset details and information panels default to start. */
+  align?: 'start' | 'center';
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -37,7 +39,8 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, inset = false, crayon = true, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, inset = false, crayon = true, align: alignProp, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const align = alignProp ?? (first || panel || inset ? 'start' : 'center');
 const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
@@ -46,7 +49,7 @@ const bleed = ratio === '1314 / 652' && !panel && !inset;
 // photos do on hover), so the corners never change shape while it moves.
 const framed = first && bleed && media === 'end';
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon }]} {...attributes}>
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon, 'copy-centered': align === 'center' }]} {...attributes}>
   <div class="split-copy" data-motion="group"><slot /></div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} data-motion={first ? undefined : 'rise'} class:list={['split-media', { 'has-caption': hasCaption }]}>
     {framed
@@ -60,6 +63,10 @@ const framed = first && bleed && media === 'end';
   .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); padding-block: var(--section-space); }
   .first { padding-block-start: var(--space-sm); }
   .split-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); padding-inline: var(--page-inset); }
+  .copy-centered .split-copy { align-items: center; text-align: center; }
+  .copy-centered .split-copy > :global(*) { max-width: 100%; }
+  .copy-centered .split-copy > :global(.stack-column) { align-items: center; }
+  .copy-centered .split-copy > :global(.stack-row) { justify-content: center; }
   /* Phones: the photo always sits above the text. */
   .split-copy { order: 1; }
   .split-media { position: relative; padding-inline: var(--page-inset); }
