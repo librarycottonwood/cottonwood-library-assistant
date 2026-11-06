@@ -25,9 +25,18 @@ await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}`;
 let browser;
 const errors = [], evidence = [];
+// Most of the time is each page's network-idle wait, so a few tabs load at once.
+// Evidence keeps the page order; each internal link target is fetched once per run.
+const TABS = 4;
+const routes = manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html').map(file => '/' + file.path.replace(/index\.html$/, ''));
+const linkChecks = new Map();
+const linkWorks = href => {
+  if (!linkChecks.has(href)) linkChecks.set(href, fetch(href).then(response => response.ok, () => false));
+  return linkChecks.get(href);
+};
 try {
   browser = await launchBrowser({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-  for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]]) {
+  const openTab = async (name, viewport) => {
     const page = await browser.newPage({ viewport });
     page.on('pageerror', error => errors.push(`${name}: ${error.message}`));
     page.on('console', message => { if (message.type() === 'error') errors.push(`${name}: ${message.text()}`); });
@@ -43,32 +52,38 @@ try {
       if (url.hostname === 'challenges.cloudflare.com') return route.fulfill({ contentType: 'text/javascript', body: '' });
       return url.origin === base ? route.continue() : route.abort();
     });
-    for (const file of manifest.files.filter(file => file.path.endsWith('.html') && file.path !== '404.html')) {
-      const route = '/' + file.path.replace(/index\.html$/, '');
-      const response = await page.goto(base + route, { waitUntil: 'networkidle' });
-      if (!response?.ok()) throw new Error(`Failed to load ${route}`);
-      await page.evaluate(() => document.fonts.ready);
-      const heading = await page.locator('h1').first().innerText();
-      if (!heading.trim()) throw new Error(`Missing page heading: ${route}`);
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
-      if (overflow) throw new Error(`Horizontal overflow on ${name}: ${route}`);
-      for (const link of await page.locator('a[href]').evaluateAll(links => links.map(a => a.getAttribute('href')).filter(href => href.startsWith('/') && !href.startsWith('//')))) {
-        const target = new URL(link, base);
-        const check = await page.request.get(target.href);
-        if (!check.ok()) throw new Error(`Broken internal link on ${route}: ${link}`);
-      }
-      {
-        // Lazy illustrations can enter view after fonts settle. Wait for visible images.
-        await page.evaluate(() => Promise.all(Array.from(document.images)
-          .filter(img => { const box = img.getBoundingClientRect(); return box.top < innerHeight && box.bottom > 0; })
-          .map(img => img.decode())));
-        const filename = `${name}-${createHash('sha256').update(route).digest('hex').slice(0,16)}.png`;
-        const bytes = await page.screenshot({ path: path.join(output, filename), fullPage: false });
-        if (route === '/') await writeFile(path.join(output, `${name}.png`), bytes);
-        evidence.push({ name, viewport, route, heading, picture: {file: filename, sha256: createHash('sha256').update(bytes).digest('hex')} });
-      }
+    return page;
+  };
+  const check = async (page, name, viewport, route) => {
+    const response = await page.goto(base + route, { waitUntil: 'networkidle' });
+    if (!response?.ok()) throw new Error(`Failed to load ${route}`);
+    await page.evaluate(() => document.fonts.ready);
+    const heading = await page.locator('h1').first().innerText();
+    if (!heading.trim()) throw new Error(`Missing page heading: ${route}`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+    if (overflow) throw new Error(`Horizontal overflow on ${name}: ${route}`);
+    for (const link of await page.locator('a[href]').evaluateAll(links => links.map(a => a.getAttribute('href')).filter(href => href.startsWith('/') && !href.startsWith('//')))) {
+      if (!await linkWorks(new URL(link, base).href)) throw new Error(`Broken internal link on ${route}: ${link}`);
     }
-    await page.close();
+    // Lazy illustrations can enter view after fonts settle. Wait for visible images.
+    await page.evaluate(() => Promise.all(Array.from(document.images)
+      .filter(img => { const box = img.getBoundingClientRect(); return box.top < innerHeight && box.bottom > 0; })
+      .map(img => img.decode())));
+    const filename = `${name}-${createHash('sha256').update(route).digest('hex').slice(0,16)}.png`;
+    const bytes = await page.screenshot({ path: path.join(output, filename), fullPage: false });
+    if (route === '/') await writeFile(path.join(output, `${name}.png`), bytes);
+    return { name, viewport, route, heading, picture: {file: filename, sha256: createHash('sha256').update(bytes).digest('hex')} };
+  };
+  for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['phone', { width: 390, height: 844 }]]) {
+    const results = [];
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(TABS, routes.length) }, async () => {
+      const page = await openTab(name, viewport);
+      try {
+        while (next < routes.length) { const index = next++; results[index] = await check(page, name, viewport, routes[index]); }
+      } finally { await page.close(); }
+    }));
+    evidence.push(...results);
   }
   if (errors.length) throw new Error(errors.join('\n'));
   const pictures = {};

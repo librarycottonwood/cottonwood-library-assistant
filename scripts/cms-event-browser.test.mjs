@@ -50,7 +50,9 @@ test('expired CMS events stop being promoted in actual browser pages without a n
         const page=await browser.newPage({viewport});
         page.on('pageerror',error=>errors.push(`${viewportName} ${route}: ${error.message}`));
         await page.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
-        await page.clock.install({time:new Date('2099-04-17T20:59:59Z')});
+        // 15 seconds before the first session ends (21:00:00Z). The clock keeps running, so a
+        // slow page load must not cross the end before the "before expiry" checks below.
+        await page.clock.install({time:new Date('2099-04-17T20:59:45Z')});
         const response=await page.goto(base+route,{waitUntil:'networkidle'});assert.equal(response.status(),200);
         const list=page.locator('[data-event-list]').first();
         const active=()=>list.locator('[data-event-expires]:visible');

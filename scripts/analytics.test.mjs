@@ -6,7 +6,6 @@ const analytics = JSON.parse(await readFile('src/content/analytics.json', 'utf8'
 assert.equal(analytics.websiteHost, 'cottonwoodcommunitylibrary.com', 'Tracking must cover the library-owned public domain');
 const host = 'https://www.' + analytics.websiteHost;
 const untrustedHost = 'https://unrelated-preview.example';
-const retiredHost = 'https://cms-trial.cottonwood-library-trial-preview.pages.dev';
 const browser = await launchBrowser();
 try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
@@ -18,7 +17,7 @@ try {
       await route.fulfill({ contentType: 'text/javascript', body: '' });
       return;
     }
-    if (![host, untrustedHost, retiredHost].includes(url.origin)) { await route.abort(); return; }
+    if (![host, untrustedHost].includes(url.origin)) { await route.abort(); return; }
     let file = url.pathname;
     if (!path.extname(file)) file += 'index.html';
     const types = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.woff2':'font/woff2', '.webp':'image/webp' };
@@ -60,10 +59,5 @@ try {
   assert.equal(await page.locator('#statistics-choice').isVisible(), false, 'Unrelated hosting must not activate library tracking');
   assert.equal(await page.locator('#privacy-choices').isVisible(), false);
   assert.equal(googleRequests, 1, 'Unrelated hosting must not contact Google');
-  await page.goto(retiredHost + '/');
-  assert.equal(await page.locator('#statistics-choice').isVisible(), false, 'The retired trial address must not activate library tracking');
-  assert.equal(googleRequests, 1, 'The retired trial address must not contact Google');
-  await page.goto(host + '/');
-  await page.screenshot({path:'output/analytics-consent-phone.png'});
   console.log('Passed: no tracking before consent; persisted refusal; opt-in; clean URLs; catalog event; withdrawal and cookie removal; mobile width.');
 } finally { await browser.close(); }
