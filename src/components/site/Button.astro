@@ -7,7 +7,7 @@
  * @example
  * <Stack direction="row" gap="xs" wrap>
  *   <Button href={library.directionsUrl} variant="accent" icon="navigate">Get directions</Button>
- *   <Button href="/visit/" iconEnd="arrow">Read more</Button>
+ *   <Button href="/visit/" iconEnd="arrow" screenReaderText="about visiting">Read more</Button>
  * </Stack>
  */
 import type { ComponentProps } from 'astro/types';
@@ -24,11 +24,13 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   iconEnd?: IconName;
   /** Only for <button>. */
   type?: 'button' | 'submit';
+  /** Extra words only screen readers and search engines hear, so a short label like "Read more" says where it goes. */
+  screenReaderText?: string;
 }
-const { href, variant = 'outline', icon, iconEnd, type = 'button', ...attributes } = Astro.props;
+const { href, variant = 'outline', icon, iconEnd, type = 'button', screenReaderText, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
-<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`]} {...attributes}>{icon && <Icon name={icon} class={`button-icon icon-${icon}`} />}<slot />{iconEnd && <Icon name={iconEnd} class={`button-icon-end icon-${iconEnd}`} />}</Tag>
+<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`]} {...attributes}>{icon && <Icon name={icon} class={`button-icon icon-${icon}`} />}<slot />{screenReaderText && <span class="sr-only"> {screenReaderText}</span>}{iconEnd && <Icon name={iconEnd} class={`button-icon-end icon-${iconEnd}`} />}</Tag>
 <style>
   .button {
     display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);

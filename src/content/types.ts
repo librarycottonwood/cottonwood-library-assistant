@@ -111,6 +111,11 @@ export interface LibraryNotice {
   message: string;
   startsOn: string;
   endsOn: string;
+  /** YYYY-MM-DD days (Pacific) the library is fully closed. Regular-program sessions are left off these days only.
+   * A notice with neither this nor staysOpen (older notices) leaves them off every day the banner shows. */
+  closedDates?: string[];
+  /** The library stays open (shorter hours, a reminder): regular-program sessions stay listed. */
+  staysOpen?: boolean;
   link?: { label: string; href: string };
 }
 
