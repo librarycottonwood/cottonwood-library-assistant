@@ -130,7 +130,7 @@ CSS speeds for hover and press feedback. Entrances and sliding (sections rising 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--motion-quick` | `150ms` | Hover and press feedback: button colors, arrows nudging, a button pressing in. | Anything that opens or moves into place (use --motion-smooth). | `transition: background-color var(--motion-quick) var(--ease-out);` |
-| `--motion-smooth` | `300ms` | CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
+| `--motion-smooth` | `300ms` | CSS changes that move a little further: the icon turning in the phone menu button, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
 | `--motion-entrance` | `600ms` | A slower CSS change the visitor watches happen once. | Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
 | `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and animation: starts quickly, settles gently. | Linear or bouncy curves; they read as mechanical or playful. | `transition-timing-function: var(--ease-out);` |
 
