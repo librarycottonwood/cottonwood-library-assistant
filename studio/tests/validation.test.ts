@@ -62,7 +62,7 @@ test('list previews use Pacific dates across UTC midnight and keep incomplete dr
 
 // The Studio uses the website build's own rules, so what Studio accepts the build accepts.
 test('Studio accepts the link mistakes the website corrects, and explains the ones it refuses', () => {
-  for (const value of ['tel:(208) 962-3851', 'tel:+1 208 962 3851', 'https://givebutter.com/auction ', ' /visit/']) {
+  for (const value of ['tel:(208) 555-0142', 'tel:+1 208 555 0142', 'https://givebutter.com/auction ', ' /visit/']) {
     assert.equal(validLink(value), true, value);
     assert.equal(normalizeLink(value).ok, true, value);
   }
@@ -81,7 +81,7 @@ test('identifiers: valid ones pass silently, free text passes with a warning sho
 });
 
 test('phone numbers may include an extension but need an area code', () => {
-  assert.equal(validPhone('(530) 347-3373 ext. 2'), true);
+  assert.equal(validPhone('(530) 555-0173 ext. 2'), true);
   assert.equal(validPhone('(530) 347-4818'), true);
   assert.match(String(validPhone('347-4818')), /10-digit/);
 });
