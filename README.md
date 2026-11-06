@@ -25,8 +25,6 @@ pnpm check
 pnpm build
 ```
 
-Never deploy from a computer.
-
 ## License
 
 Code: [MIT](LICENSE). The library's name, logo, photos and written content aren't covered. Outside pull requests aren't accepted ([CONTRIBUTING.md](CONTRIBUTING.md)); report security issues per [SECURITY.md](SECURITY.md).
