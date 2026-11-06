@@ -39,3 +39,9 @@ bash scripts/cms-check.sh   # Studio, CMS and publisher checks, no accounts need
 CI (`.github/workflows/check.yml`) runs the full set, including every `scripts/*.test.mjs`. New pictures go through `pnpm image:prepare`.
 
 Never deploy from a computer. Previews and the live site come only from the GitHub workflows on the library's Cloudflare account.
+
+## License
+
+The code is under the [MIT License](LICENSE). The library's name, logo, photographs, sponsor logos and written content (pages, posts, newsletters) are not covered by it and belong to the library or their owners.
+
+Outside contributions are not accepted through pull requests; contact the library instead.
