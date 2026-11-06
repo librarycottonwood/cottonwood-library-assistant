@@ -64,7 +64,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
     <Text tone="muted" size="lead">{featured.summary}</Text>
-    <Button href={featured.href} variant="accent" iconEnd="arrow">Read more</Button>
+    <Button href={featured.href} variant="accent" iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
   </Split>}
 
   <Section title="Upcoming events" headingId="events-heading">
@@ -76,6 +76,6 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Grid as="ul" columns={3}>
       {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!}>{service.description}</Card>)}
     </Grid>
-    <Button href="/services/" iconEnd="arrow">Read more</Button>
+    <Button href="/services/" iconEnd="arrow" screenReaderText="about library services">Read more</Button>
   </Section>
 </BaseLayout>

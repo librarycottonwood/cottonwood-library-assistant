@@ -231,13 +231,15 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   iconEnd?: IconName;
   /** Only for <button>. */
   type?: 'button' | 'submit';
+  /** Extra words only screen readers and search engines hear, so a short label like "Read more" says where it goes. */
+  screenReaderText?: string;
 }
 ```
 
 ```astro
 <Stack direction="row" gap="xs" wrap>
   <Button href={library.directionsUrl} variant="accent" icon="navigate">Get directions</Button>
-  <Button href="/visit/" iconEnd="arrow">Read more</Button>
+  <Button href="/visit/" iconEnd="arrow" screenReaderText="about visiting">Read more</Button>
 </Stack>
 ```
 

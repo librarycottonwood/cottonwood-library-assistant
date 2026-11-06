@@ -1,5 +1,5 @@
 /** Search-engine and AI-answer data: see seo.mjs. */
-import type { HomeContent, LibraryEvent, LibraryPost } from './types';
+import type { HomeContent, LibraryEvent, LibraryNotice, LibraryPost, Program } from './types';
 type Node = Record<string, unknown>;
 type Library = HomeContent['library'];
 export const SITE_URL: string;
@@ -10,6 +10,11 @@ export function openingHours(rows: { days: string; hours: string }[]): Node[] | 
 export function libraryNode(library: Library, options?: { image?: string; description?: string }): Node;
 export function websiteNode(library: Library): Node;
 export function eventNodes(sessions: LibraryEvent[], options: { url: string; image?: string }): Node[];
+export function parseTime(text: string): { starts: string; ends?: string } | null;
+export function libraryDateTime(day: string, time: string): string;
+export type ProgramSession = { day: string; startsAt: string; endsAt?: string };
+export function programSessions(program: Pick<Program, 'id' | 'schedule'>, options?: { now?: Date; days?: number; notices?: Pick<LibraryNotice, 'startsOn' | 'endsOn'>[]; events?: Pick<LibraryEvent, 'programId' | 'startsAt'>[] }): ProgramSession[];
+export function programEventNodes(program: Pick<Program, 'title' | 'description'>, sessions: ProgramSession[], options: { url: string; image?: string }): Node[];
 export function articleNode(post: LibraryPost, options: { url: string; image?: string }): Node;
 export function faqNode(items: { question: string; answer: string }[], url: string): Node;
 export function jsonLd(nodes: (Node | null | undefined | false)[]): string;

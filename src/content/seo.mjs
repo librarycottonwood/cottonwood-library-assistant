@@ -6,6 +6,7 @@
 export const SITE_URL = 'https://www.cottonwoodcommunitylibrary.com';
 /** [longitude, latitude] of the library building. */
 export const LIBRARY_POINT = [-122.2805738, 40.3873866];
+import { parseSchedule } from './schedule.mjs';
 const LIBRARY_ID = `${SITE_URL}/#library`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 
@@ -143,6 +144,80 @@ export function eventNodes(sessions, { url, image }) {
       organizer: { '@id': LIBRARY_ID },
     };
   });
+}
+
+/** "11:30 a.m.", "noon" or "6–7:30 p.m." → { starts: '11:30', ends?: '19:30' }, or null. */
+export function parseTime(text) {
+  const range = parseHours(text);
+  if (range) return { starts: range.opens, ends: range.closes };
+  const clock = readClock(text);
+  if (!clock) return null;
+  if (clock.minutes != null) return clock.minutes === 12 * 60 ? { starts: '12:00' } : null;
+  return clock.meridiem ? { starts: `${pad(Math.floor(toMinutes(clock, clock.meridiem) / 60))}:${pad(clock.minute)}` } : null;
+}
+
+const ZONE = 'America/Los_Angeles';
+const zoneOffset = new Intl.DateTimeFormat('en-US', { timeZone: ZONE, timeZoneName: 'longOffset' });
+/** Minutes the library's clock is ahead of UTC at `instant` (−480 in winter, −420 in summer). */
+function offsetAt(instant) {
+  const match = zoneOffset.formatToParts(instant).find(part => part.type === 'timeZoneName').value.match(/GMT(?:([+-])(\d{2}):(\d{2}))?/);
+  return match[1] ? (match[1] === '-' ? -1 : 1) * (Number(match[2]) * 60 + Number(match[3])) : 0;
+}
+/** "2026-11-17" + "14:30" in library time → "2026-11-17T14:30:00-08:00" (the offset follows daylight saving). */
+export function libraryDateTime(day, time) {
+  const asUtc = Date.parse(`${day}T${time}:00Z`);
+  let offset = offsetAt(new Date(asUtc));
+  offset = offsetAt(new Date(asUtc - offset * 6e4));
+  const sign = offset < 0 ? '-' : '+', size = Math.abs(offset);
+  return `${day}T${time}:00${sign}${pad(Math.floor(size / 60))}:${pad(size % 60)}`;
+}
+const dayAfter = (day, days = 1) => new Date(Date.parse(`${day}T12:00:00Z`) + days * 864e5).toISOString().slice(0, 10);
+const libraryDay = instant => new Intl.DateTimeFormat('en-CA', { timeZone: ZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).format(instant);
+
+/** Upcoming dated sessions of a regular program, worked out from its Sanity schedule text at build time
+ * ("Wednesdays · 11:30 a.m.", "Third Tuesday · 2:30 p.m."). The site only rebuilds when a change is saved,
+ * so this covers the next `days` days. Left out: sessions that already started, any day a notice banner
+ * shows (closures and program cancellations are announced that way), and days the program already has a
+ * dated event. A schedule without a readable pattern and time gives no sessions at all. */
+export function programSessions(program, { now = new Date(), days = 90, notices = [], events = [] } = {}) {
+  const rule = parseSchedule(program.schedule);
+  const time = rule?.time && parseTime(rule.time);
+  if (!rule || !time) return [];
+  const blocked = day => notices.some(notice => notice.startsOn <= day && day <= notice.endsOn)
+    || events.some(event => event.programId === program.id && libraryDay(new Date(event.startsAt)) === day);
+  const sessions = [];
+  const today = libraryDay(now);
+  for (let offset = 0; offset <= days; offset++) {
+    const day = dayAfter(today, offset);
+    const date = new Date(`${day}T12:00:00Z`);
+    if (!rule.days.includes(date.getUTCDay())) continue;
+    if (rule.nth !== null) {
+      const dayOfMonth = date.getUTCDate();
+      const lastDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate();
+      if (rule.nth === -1 ? dayOfMonth + 7 <= lastDate : Math.ceil(dayOfMonth / 7) !== rule.nth) continue;
+    }
+    const startsAt = libraryDateTime(day, time.starts);
+    if (Date.parse(startsAt) <= now.getTime() || blocked(day)) continue;
+    sessions.push({ day, startsAt, ...(time.ends ? { endsAt: libraryDateTime(day, time.ends) } : {}) });
+  }
+  return sessions;
+}
+
+/** One schema.org Event per upcoming session of a regular program, at the library. */
+export function programEventNodes(program, sessions, { url, image }) {
+  return sessions.map(session => ({
+    '@type': 'Event',
+    name: program.title,
+    description: program.description,
+    startDate: session.startsAt,
+    ...(session.endsAt ? { endDate: session.endsAt } : {}),
+    url: `${url}#session-${session.day}`,
+    ...(image ? { image } : {}),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: { '@id': LIBRARY_ID },
+    organizer: { '@id': LIBRARY_ID },
+  }));
 }
 
 /** A library-written news post. */
