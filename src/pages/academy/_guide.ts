@@ -2,9 +2,9 @@
 // The website and printable handbook use this same text.
 export const reviewed = 'November 5, 2026';
 export const academyUrl = 'https://cottonwood-library.pages.dev/academy/';
-export const practicePrefix = "Let’s practice. Show me an example without changing the website or sending anything. ";
 export interface Part {
   id?: string;
+  icon?: string;
   title: string;
   text: string[];
   steps?: string[];
@@ -309,24 +309,105 @@ export const lessons: Lesson[] = [
     ],
   },
   {
-    slug: 'practice-with-a-buddy', title: 'Try it in ChatGPT',
-    summary: 'Try writing an announcement or reading a flyer with ChatGPT.',
+    slug: 'practice-with-a-buddy', title: 'Examples',
+    summary: 'Pick an idea and open it in ChatGPT. It will help you get started.',
     parts: [
       {
-        title: 'Rewrite a short announcement',
-        text: ['Copy this message into ChatGPT. After it replies, ask “Make it one sentence.” Notice that you can keep revising the same answer.'],
-        prompt: practicePrefix + 'Write a short announcement saying our library is holding a book sale. Use no date or time yet.',
+        "title": "Turn a flyer into a Facebook post",
+        "icon": "image",
+        "text": [],
+        "prompt": "I have a flyer to share. Ask me to attach it, then turn it into a short Facebook post with the date, place and what people need to know. Give me two different opening lines to choose from."
       },
       {
-        title: 'Read a flyer',
-        text: ['Attach a library flyer. Ask ChatGPT to find its details, then compare the answer with the flyer. If it misses something, point it out.'],
-        prompt: practicePrefix + 'Read this flyer and list the event name, date, start and end times, location and cost. If a detail is missing, tell me.',
+        "title": "Dream up a book display",
+        "icon": "books",
+        "text": [],
+        "prompt": "Help me come up with five book-display themes. Ask who the display is for and what kinds of books we have. For each idea, suggest a catchy sign and a few types of books to include."
       },
       {
-        title: 'Practice adding an event',
-        text: ['Try this with made-up details. ChatGPT will ask about your event and write an example description.'],
-        prompt: practicePrefix + 'Walk me through adding a book sale to the website. Ask me one question at a time, then show me the event description.',
+        "title": "Plan a rainy-day activity",
+        "icon": "palette",
+        "text": [],
+        "prompt": "Help me plan a 20-minute library activity using paper, crayons and tape. Ask about the children’s ages and group size, then give me a materials list and simple instructions."
       },
+      {
+        "title": "Get a book club talking",
+        "icon": "chat",
+        "text": [],
+        "prompt": "Help me prepare questions for a book club. Ask for the book’s title and author, and whether everyone has finished it. Start with an easy opening question, then suggest five discussion questions."
+      },
+      {
+        "title": "Turn notes into a newsletter",
+        "icon": "mail",
+        "text": [],
+        "prompt": "Help me turn my rough notes into a library newsletter. Ask me to paste the notes, then organize them into short sections with useful headings. Point out any details you still need from me."
+      },
+      {
+        "title": "Make a meeting to-do list",
+        "icon": "checklist",
+        "text": [],
+        "prompt": "Turn my meeting notes into a to-do list. Ask me to paste them, then pull out the decisions, jobs, who offered to do them and any deadlines. Mark anything we still need to decide."
+      },
+      {
+        "title": "Write the words for a poster",
+        "icon": "poster",
+        "text": [],
+        "prompt": "Help me write a poster for a library event. Ask for the event details one question at a time. Then give me a short headline, a friendly invitation and the details people need to attend."
+      },
+      {
+        "title": "Invite someone to volunteer",
+        "icon": "people",
+        "text": [],
+        "prompt": "Help me write a welcoming invitation for new volunteers. Ask what we need help with, how much time it takes and how someone can get in touch. Draft a short version for Facebook and a longer one for the newsletter."
+      },
+      {
+        "title": "Say thank you",
+        "icon": "heart",
+        "text": [],
+        "prompt": "Help me write a personal thank-you to someone who helped the library. Ask what they did and what it made possible. Keep it warm, specific and short enough for a card."
+      },
+      {
+        "title": "Share an announcement in Spanish",
+        "icon": "languages",
+        "text": [],
+        "prompt": "Help me make a Spanish version of a library announcement. Ask me to paste it, then translate it into clear, friendly Spanish. Keep the names, dates, times and links as written."
+      },
+      {
+        "title": "Answer a visitor’s question",
+        "icon": "reply",
+        "text": [],
+        "prompt": "Help me reply to a visitor’s question. Ask me to paste the question and tell you the answer or facts I know. Draft a friendly reply, and ask me about anything that is still unclear."
+      },
+      {
+        "title": "Plan a week of Facebook posts",
+        "icon": "calendar",
+        "text": [],
+        "prompt": "Help me plan three Facebook posts for the library this week. Ask what is happening and what photos we have. Suggest a posting order, then write a caption and photo idea for each post."
+      },
+      {
+        "title": "Freshen up a website page",
+        "icon": "pencil",
+        "text": [],
+        "prompt": "Help me improve a library website page. Ask for the page link and what feels out of date or hard to understand. Show me suggested wording so I can decide what to change."
+      },
+      {
+        "title": "Make sense of a report",
+        "icon": "chart",
+        "text": [],
+        "prompt": "Help me understand a report. Ask me to upload it or paste the figures and say what I want to find out. Explain the main changes in plain language and suggest three useful questions to discuss with the board."
+      },
+      {
+        "title": "Get ready for an event",
+        "icon": "clipboard",
+        "text": [],
+        "prompt": "Help me make a checklist for a library event. Ask what the event is, when it happens and how many volunteers can help. Organize the jobs into before, during and after the event."
+      },
+      {
+        "title": "Practice adding an event",
+        "icon": "practice",
+        "text": [],
+        "prompt": "Let’s practice. Show me an example without changing the website or sending anything. Walk me through adding a fictional book sale to the website. Ask me one question at a time, then show me the event description."
+      }
     ],
   },
 ];

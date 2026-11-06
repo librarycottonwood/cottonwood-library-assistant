@@ -69,3 +69,5 @@ The matrix is a source review and acceptance plan, not a claim that these model 
 Local logs and captures are in ignored `output/`. The PR's Website preview is the authoritative exact-head/current-CMS review artifact. Website publication and installation of plugin 0.2.22 remain separate approval and account steps.
 
 The shared example widget uses the `surface=work&prompt=…` link format from [OpenAI’s training walkthrough](https://developers.openai.com/training/walkthroughs/plugins-and-skills). URL round-tripping, new-tab isolation and no-JavaScript availability are checked locally; this does not verify the library account’s sign-in or connected tools.
+
+- Examples uses sixteen workflow starters in a two-column desktop grid (one column on phones), with shared prefilled ChatGPT and copy controls. The existing lesson URL remains valid. Only the event rehearsal is a practice simulation; the other cards start drafting and planning conversations. The printable handbook uses the same prompts.

@@ -67,7 +67,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         for (const href of await page.locator('a[href^="/academy/"]').evaluateAll(links => links.map(a => a.getAttribute('href')))) {
           assert.ok((await page.request.get(origin + href)).ok(), `internal academy link ${href}`);
         }
-        if (route === '/academy/' || route === '/academy/when-something-goes-wrong/' || route === '/academy/accounts-and-tools/' || route === '/academy/quick-reference/' || route === '/academy/everyday-jobs/') {
+        if (route === '/academy/' || route === '/academy/when-something-goes-wrong/' || route === '/academy/accounts-and-tools/' || route === '/academy/quick-reference/' || route === '/academy/everyday-jobs/' || route === '/academy/practice-with-a-buddy/') {
           const name = route.split('/').filter(Boolean).at(-1);
           await page.screenshot({ path: `output/academy/${width}-${name}.png`, fullPage: true });
         }
@@ -108,8 +108,10 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.getByText('Browse lessons', { exact: true }).click();
     await page.getByRole('button', { name: 'Copy message' }).first().click();
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    assert.ok(copied.startsWith('Let’s practice.'));
-    assert.match(copied, /without changing the website or sending anything/);
+    assert.equal(copied, await page.locator('[data-prompt-text]').first().innerText());
+    assert.equal(await page.getByRole('heading', { name: 'Examples', exact: true }).count(), 1);
+    assert.equal(await page.locator('.example-card').count(), 16);
+    assert.match(await page.locator('[data-prompt-text]').last().innerText(), /Let’s practice.*without changing the website or sending anything/);
     assert.match(await page.getByRole('status').first().innerText(), /Copied/);
     await page.evaluate(() => { Object.defineProperty(navigator.clipboard, 'writeText', { value: async () => { throw new Error('Denied'); } }); });
     await page.getByRole('button', { name: 'Copy message' }).first().click();

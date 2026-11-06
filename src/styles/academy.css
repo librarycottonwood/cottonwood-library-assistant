@@ -80,6 +80,14 @@ main { min-width: 0; }
 .prompt p { padding: 1rem; margin: 0; font-size: .925rem; }
 .prompt .copy-status { padding-top: 0; font-size: .75rem; color: #646870; }
 .copy-status:empty { display: none; }
+.example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.example-card { display: flex; flex-direction: column; min-width: 0; margin: 0; background: #fff; border-radius: 8px; }
+.example-card .prompt-heading { align-items: flex-start; justify-content: flex-start; gap: .65rem; padding: 1.25rem 1.25rem 0; border: 0; }
+.example-card .prompt-heading svg { flex-shrink: 0; color: #565b65; }
+.example-card h2 { font-size: 1rem; margin: 0; line-height: 1.45; letter-spacing: -.015em; }
+.example-card p { padding: 1rem 1.25rem 1.25rem; font-size: .875rem; line-height: 1.65; color: #565b65; }
+.example-card .prompt-actions { margin-top: auto; padding: 0 1.25rem 1.25rem; }
+.example-card .copy-status { padding-inline: 1.25rem; }
 .reference-links { list-style: none; padding: 0; font-size: .85rem; }
 .service-map { margin-block: 1.5rem 2.5rem; }
 .platform-overview { font-size: .925rem; margin-bottom: 1rem; }
@@ -118,6 +126,7 @@ main { min-width: 0; }
 .desk-guide dd { margin: 0; }
 .tool-addresses { overflow-wrap: anywhere; font-size: .85rem; }
 @media (max-width: 1050px) {
+  .example-grid { grid-template-columns: minmax(0, 1fr); }
   .academy-brand { display: block; font-size: .85rem; }
   .academy-brand span { display: block; border: 0; padding: 0; font-size: .7rem; }
   .academy-shell { grid-template-columns: 230px minmax(0, 1fr); }
@@ -168,7 +177,9 @@ main { min-width: 0; }
   .handbook-cover li { padding-block: 5pt; }
   .print-lesson { padding: 22pt 0 0; margin: 22pt 0 0; border-top: 1px solid var(--color-border); }
   .handbook-cover + .print-lesson { margin: 0; padding: 0; border: 0; }
-  #practice-with-a-buddy { break-inside: avoid; }
+  .example-grid { display: block; }
+  .example-card { margin-block: 12pt; break-inside: avoid; }
+  #practice-with-a-buddy { break-before: page; border: 0; margin: 0; padding: 0; }
   .print-title { font-size: 30pt; margin-bottom: 14pt; }
   .lesson-part { margin-block: 12pt; break-inside: avoid; }
   .steps li { margin-block: 7pt; }
