@@ -17,16 +17,30 @@ import SiteFooter from '../components/site/SiteFooter.astro';
 import { contentRepository } from '../content/repository';
 import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
 import CampaignExpiry from '../components/CampaignExpiry.astro';
+import SeoMeta from '../components/SeoMeta.astro';
+import type { LibraryImage } from '../content/types';
 import '../styles/base.css';
 interface Props {
   /** Browser tab and search title. */
   title?: string;
   /** One-sentence page summary for search results. */
   description?: string;
+  /** Photo for the link preview on Facebook and in texts; the homepage photo when absent. */
+  image?: LibraryImage;
+  /** 'article' for a news post. */
+  type?: 'website' | 'article';
+  /** Extra schema.org data for search engines and AI answers (src/content/seo.mjs). */
+  schema?: Record<string, unknown>[];
+  /** Keep this page out of search results (the "page not found" page). */
+  noindex?: boolean;
 }
 const {
-  title = 'Cottonwood Community Library | Your community, your library',
+  title = 'Cottonwood Community Library | Cottonwood, CA',
   description = 'Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.',
+  image,
+  type,
+  schema,
+  noindex,
 } = Astro.props;
 const [content, notices] = await Promise.all([contentRepository.getHome(), contentRepository.getNotices()]);
 // Donate buttons are on every page, so once they open Givebutter's popup its script loads once per page here.
@@ -38,7 +52,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, 'https://www.cottonwoodcommunitylibrary.com').href} />
+    <SeoMeta title={title} description={description} library={content.library} image={image} defaultImage={content.hero.image} type={type} schema={schema} noindex={noindex} />
     <meta name="theme-color" content="#4956a7" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />

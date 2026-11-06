@@ -168,6 +168,14 @@ interface Props {
   title?: string;
   /** One-sentence page summary for search results. */
   description?: string;
+  /** Photo for the link preview on Facebook and in texts; the homepage photo when absent. */
+  image?: LibraryImage;
+  /** 'article' for a news post. */
+  type?: 'website' | 'article';
+  /** Extra schema.org data for search engines and AI answers (src/content/seo.mjs). */
+  schema?: Record<string, unknown>[];
+  /** Keep this page out of search results (the "page not found" page). */
+  noindex?: boolean;
 }
 ```
 

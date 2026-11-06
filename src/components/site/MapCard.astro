@@ -9,10 +9,10 @@
  */
 import Icon from '../Icon.astro';
 import type { HomeContent } from '../../content/types';
+import { LIBRARY_POINT } from '../../content/seo.mjs';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
-// The library building on Main Street. The address itself comes from Sanity; the map needs a point.
-const LIBRARY_POINT = [-122.2805738, 40.3873866];
+// The map point (the building on Main Street) is shared with the search data in seo.mjs; the address comes from Sanity.
 ---
 <div class="map-card" data-map-card data-point={LIBRARY_POINT.join(',')}>
   <p class="map-pills">

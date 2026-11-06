@@ -16,6 +16,7 @@ import TopicList from '../../components/site/TopicList.astro';
 import { mainNavigation } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryImage } from '../../content/types';
+import { SITE_URL, faqNode } from '../../content/seo.mjs';
 const { library, borrowing } = await contentRepository.getHome();
 const title = mainNavigation.find(link => link.href === '/services/')!.label;
 
@@ -31,7 +32,7 @@ const printing = [
   { label: 'Color copies', value: '$1/page' },
 ];
 ---
-<BaseLayout title={`${title} | Cottonwood Community Library`} description="Borrowing books, library computers and Wi-Fi, and printing and copying at the Cottonwood Community Library.">
+<BaseLayout schema={[faqNode(borrowing, new URL(Astro.url.pathname, SITE_URL).href)]} title={`${title} | Cottonwood Community Library`} description="Borrowing books, library computers and Wi-Fi, and printing and copying at the Cottonwood Community Library.">
   <PageTitle title={title} />
 
   <Split media="end" inset ratio="5 / 4" image={photos.borrowing} headingId="borrowing-heading" id="borrowing">

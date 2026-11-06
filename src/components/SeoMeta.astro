@@ -1,0 +1,55 @@
+---
+/**
+ * Search and sharing tags for BaseLayout's <head>: canonical address, the preview card for Facebook and texts
+ * (Open Graph), and schema.org data that search engines and AI answers read (src/content/seo.mjs).
+ * Everything comes from the page's own title/description and the Sanity content it shows.
+ */
+import { getImage } from 'astro:assets';
+import type { HomeContent, LibraryImage } from '../content/types';
+import { resolveImage } from '../content/images';
+import { refreshPhoto } from '../content/photography';
+import { SITE_URL, jsonLd, libraryNode, websiteNode } from '../content/seo.mjs';
+interface Props {
+  title: string;
+  description: string;
+  library: HomeContent['library'];
+  /** Photo for the share card; the homepage photo when absent. */
+  image?: LibraryImage;
+  defaultImage: LibraryImage;
+  type?: 'website' | 'article';
+  /** Extra schema.org nodes for this page (an event, a news post, questions and answers). */
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const { title, description, library, image, defaultImage, type = 'website', schema = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+// A 1200×630 JPEG, the size Facebook, iMessage and search results expect.
+async function shareImage(picture: LibraryImage) {
+  const photo = refreshPhoto(picture);
+  if (photo.url) return { src: `${photo.url}?w=1200&h=630&fit=crop&fm=jpg&q=80`, alt: photo.alt };
+  const built = await getImage({ src: resolveImage(photo.key!), width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 75 });
+  return { src: new URL(built.src, SITE_URL).href, alt: photo.alt };
+}
+const share = await shareImage(image ?? defaultImage);
+const homeImage = image ? (await shareImage(defaultImage)).src : share.src;
+const graph = jsonLd([
+  libraryNode(library, { image: homeImage, description: 'A community-supported library on Main Street in Cottonwood, California, run by volunteers and a part-time director, with no government funding.' }),
+  websiteNode(library),
+  // Events and posts share the page's photo.
+  ...schema.map(node => node['@type'] === 'Event' || node['@type'] === 'NewsArticle' ? { image: share.src, ...node } : node),
+]);
+---
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:site_name" content={library.name} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={share.src} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={share.alt} />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json" set:html={graph} />

@@ -54,7 +54,7 @@ const questions: Record<string, { question: string; answer: string }[]> = {
 };
 const faq = questions[program.id] ?? [];
 ---
-<BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`}>
+<BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`} image={photo}>
   <PageTitle title={program.title} trail={[eventsLink, regularLink]} />
   {/* Figma leaves this panel empty; it holds the program's introduction, When/Where and the next steps. */}
   <Split media="start" panel ratio="16 / 9" image={photo}>

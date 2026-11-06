@@ -14,6 +14,7 @@ import { mainNavigation, programHref } from '../../components/site/navigation';
 import { contentRepository } from '../../content/repository';
 import type { LibraryEvent } from '../../content/types';
 import { eventPhoto } from '../_photos';
+import { SITE_URL, eventNodes } from '../../content/seo.mjs';
 export async function getStaticPaths() {
   const events = await contentRepository.getEvents();
   return [...new Set(events.flatMap(event => event.slug ? [event.slug] : []))].map(slug => ({ params: { slug }, props: { sessions: events.filter(event => event.slug === slug) } }));
@@ -48,7 +49,7 @@ const titleDate = (session: LibraryEvent) => {
   return sameDay(start, end) ? date.format(start) : date.formatRange(start, end);
 };
 ---
-<BaseLayout title={`${event.title} | ${library.name}`} description={event.summary}>
+<BaseLayout title={`${event.title} | ${library.name}`} description={event.summary} image={image} schema={eventNodes(sessions, { url: new URL(Astro.url.pathname, SITE_URL).href })}>
   <PageTitle title={event.title} trail={[eventsLink]}>
     {sessions.map((session, index) => <>{index > 0 && ' · '}<time datetime={session.startsAt}>{titleDate(session)}</time></>)}
   </PageTitle>
