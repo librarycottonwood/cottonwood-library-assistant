@@ -23,3 +23,7 @@ The footer's old low-opacity logo watermark is replaced by one full-color crayon
 A soft indigo crayon accent sits below the final word of the hero and community headings, with a clear gap beneath the letters. Its gently curved stroke and small paper-colored grain marks stay inside one continuous shape. It uses the existing indigo palette and preserves the complete CMS wording. Color never crosses the lettering.
 
 Photo frames share the `shadow-photo` and `shadow-photo-reverse` tokens: a small pale indigo or green offset, including the hero, event/service cards, split blocks, wide photos and galleries. The hero's clipping frame owns its inset, keeping the image's existing settling animation inside it. Logos, newsletter page cards and contained gallery artwork retain plain frames.
+
+Homepage service cards have a book-cover treatment: a continuous indigo or green spine beside the photo and white copy area, with a small matching service icon in the title corner. These cards replace the usual offset photo inset with one complete cover. Other card types retain their original layout.
+
+The shared newsletter signup sits on a white paper panel with a pale indigo folded corner. The book-carrying child peeks above the paper's top edge. All decoration stays outside the text and controls; the original form, labels, messages and newsletter link remain in place.

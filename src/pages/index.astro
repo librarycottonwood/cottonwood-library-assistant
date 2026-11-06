@@ -79,7 +79,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
 
   <Section title="Library services" headingId="services-heading" illustration="computers">
     <Grid as="ul" columns={3}>
-      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} crayon>{service.description}</Card>)}
+      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} serviceIcon={service.icon}>{service.description}</Card>)}
     </Grid>
     <Button href="/services/" iconEnd="arrow">Read more</Button>
   </Section>

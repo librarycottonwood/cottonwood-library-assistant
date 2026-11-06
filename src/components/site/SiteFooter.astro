@@ -12,12 +12,9 @@ import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
 import ContentImage from '../OptimizedImage.astro';
 import Icon from '../Icon.astro';
-import IconLink from './IconLink.astro';
-import Section from './Section.astro';
-import Text from './Text.astro';
 import InstagramIcon from '../InstagramIcon.astro';
 import FacebookIcon from '../FacebookIcon.astro';
-import NewsletterForm from './NewsletterForm.astro';
+import NewsletterNote from './NewsletterNote.astro';
 import { footerNavigation } from './navigation';
 import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
@@ -25,11 +22,7 @@ const { library } = Astro.props;
 // Figma puts the PO box and the town on separate lines.
 const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
 ---
-<Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md" illustration="books">
-  <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
-  <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
-  <IconLink href="/newsletter/" iconEnd="arrow">Read the latest newsletter</IconLink>
-</Section>
+<NewsletterNote email={library.email} />
 <footer class="site-footer">
   <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
     <Image src={logo} alt="" width={163} densities={[1, 2]} loading="lazy" class="footer-logo" />
