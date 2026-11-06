@@ -21,7 +21,7 @@ Board admin for account, billing and permission questions: Todd Haines (toddhain
 | **Facebook Page** | Library posts, published through Buffer | Board members manage it from their own accounts | Board to confirm | Board to confirm |
 | **Old Square website** (cottonwood-community-library.square.site) | Old site; the domain forwards there until launch | Board to confirm | Board to confirm | Has a subscription; cancel only with board approval after the new site is verified |
 
-Not set up yet: the Claude Team plan (move to Claude is on hold) and an OpenAI API account for picture generation. See `docs/setup-checklist.md`.
+Not set up yet: an OpenAI API account for picture generation. See `docs/setup-checklist.md`.
 
 ## For the board to decide
 
