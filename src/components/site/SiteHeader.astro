@@ -39,12 +39,14 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
       <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
     </button>
   </div>
-  <nav id="site-mobile-nav" aria-label="Mobile navigation" class="mobile-nav">
-    {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
-    <a href={library.catalogUrl} data-analytics-event="catalog_mobile">Library catalog <Icon name="external" class="mobile-external" /></a>
-  </nav>
 </header>
+<!-- Outside the header: the header is a container (for its narrow-phone rules), which would trap a fixed panel inside it. -->
+<nav id="site-mobile-nav" aria-label="Mobile navigation" class="mobile-nav">
+  {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+  <a href={library.catalogUrl} data-analytics-event="catalog_mobile">Library catalog <Icon name="external" class="mobile-external" /></a>
+</nav>
 <script>
+  import { menu as animateMenu } from '../../scripts/motion';
   // Sticky header: a line under it only once the hours strip has scrolled away, and anchor
   // targets (#give, #visit…) land below it. The header height is measured, so it isn't a spacing value.
   const header = document.querySelector<HTMLElement>('.site-header');
@@ -54,15 +56,32 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     new ResizeObserver(() => { root.style.scrollPaddingTop = `${header.offsetHeight}px`; }).observe(header);
     if (strip) new IntersectionObserver(([entry]) => { header.toggleAttribute('data-stuck', !entry!.isIntersecting); }).observe(strip);
   }
+  // Phone menu: a panel filling the screen under the header (logo, Donate and the × stay in reach). While it is open
+  // the page behind can't scroll or take focus. Opening and closing animate through menu() in src/scripts/motion.ts.
   const toggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
   const menu = document.querySelector<HTMLElement>('#site-mobile-nav');
-  if (toggle && menu) {
-    toggle.hidden = false;
-    menu.hidden = true;
-    const setOpen = (open: boolean) => { menu.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); };
-    toggle.addEventListener('click', () => setOpen(menu.hidden));
-    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) { setOpen(false); toggle.focus(); } });
-    window.matchMedia('(min-width: 90rem)').addEventListener('change', () => setOpen(false));
+  if (header && toggle && menu) {
+    const behind = () => document.querySelectorAll<HTMLElement>('body > main, body > footer');
+    const place = () => { menu.style.top = `${Math.max(0, header.getBoundingClientRect().bottom)}px`; };
+    let isOpen = false;
+    const setOpen = async (open: boolean, instant = false) => {
+      if (open === isOpen) return;
+      isOpen = open;
+      toggle.setAttribute('aria-expanded', String(open));
+      document.documentElement.toggleAttribute('data-menu-open', open);
+      for (const element of behind()) element.inert = open;
+      if (open) { place(); menu.toggleAttribute('data-open', true); }
+      if (!instant) await animateMenu(menu, open);
+      if (!isOpen) menu.removeAttribute('data-open');
+    };
+    toggle.addEventListener('click', () => setOpen(!isOpen));
+    menu.addEventListener('click', event => { if (event.target instanceof Element && event.target.closest('a')) setOpen(false, true); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen) { setOpen(false); toggle.focus(); } });
+    window.matchMedia('(min-width: 90rem)').addEventListener('change', () => setOpen(false, true));
+    // The header can still move after opening (a scroll still gliding to a stop, a rotated phone), so follow it.
+    for (const event of ['resize', 'scroll']) window.addEventListener(event, () => { if (isOpen) place(); }, { passive: true });
+    // Coming back with the Back button can restore the page with the menu still open.
+    window.addEventListener('pageshow', event => { if (event.persisted) setOpen(false, true); });
   }
 </script>
 <style>
@@ -108,8 +127,6 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     container: site-header / inline-size;
   }
   .site-header[data-stuck] { border-bottom-color: var(--color-border); }
-  /* An open phone menu can be taller than a landscape or zoomed-in screen; let it scroll so every link is reachable. */
-  .site-header:has(.menu-toggle[aria-expanded='true']) { max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
   /* Below desktop the logo, wordmark, Donate and menu share one row. The brand takes the space Donate and the menu
    * leave; it is a container so the wordmark hides when that space is too narrow for it (screens under about 380px). */
   .brand { display: flex; align-items: center; gap: var(--space-xs); min-width: 2.75rem; flex: 1 1 0; container: brand / inline-size; text-decoration-line: none; }
@@ -135,19 +152,32 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   }
   .menu-toggle :global(svg) { width: 1.25rem; height: 1.25rem; }
   .menu-toggle[aria-expanded='true'] :global(.menu-open), .menu-toggle[aria-expanded='false'] :global(.menu-close) { display: none; }
-  .mobile-nav { display: flex; flex-direction: column; flex-basis: 100%; padding-top: var(--space-xs); font-weight: var(--weight-semibold); }
-  .mobile-nav a { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 0; border-top: var(--border-thin) solid var(--color-border); }
-  .mobile-nav :global(.mobile-external) { width: 1em; height: 1em; }
+  /* Without JavaScript there is no menu button and the links are simply listed under the header. With it, the menu is a
+   * panel filling the screen below the header (the script sets its top to the header's bottom edge, which it measures)
+   * that scrolls by itself if its links don't fit (landscape, zoomed in). The page behind stays put. */
+  .mobile-nav { display: flex; flex-direction: column; padding: 0 var(--page-inset) var(--space-sm); font-weight: var(--weight-semibold); }
+  @media (scripting: enabled) {
+    .mobile-nav {
+      position: fixed; inset: 0; z-index: 49;
+      padding: var(--space-sm) var(--page-inset) var(--space-lg);
+      overflow-y: auto; overscroll-behavior: contain;
+      background: var(--color-background);
+      font-size: var(--fluid-lead); line-height: var(--leading-snug);
+    }
+    .mobile-nav:not([data-open]) { display: none; }
+  }
+  .mobile-nav a { display: flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: var(--space-xs) 0; border-bottom: var(--border-thin) solid var(--color-border); }
+  @media (scripting: enabled) { .mobile-nav a { padding-block: var(--space-sm); } }
+  .mobile-nav a[aria-current='page'] { color: var(--color-primary); }
+  .mobile-nav a:hover { text-decoration-line: underline; }
+  .mobile-nav :global(.mobile-external) { width: 0.75em; height: 0.75em; color: var(--color-text-muted); }
+  :global(html[data-menu-open]) { overflow: hidden; scrollbar-gutter: stable; }
+  :global(html[data-menu-open]) .site-header { border-bottom-color: var(--color-border); }
   .site-nav a, .mobile-nav a { transition: text-decoration-color var(--motion-quick) var(--ease-out); }
   @media (prefers-reduced-motion: no-preference) {
-    .mobile-nav { animation: menu-open var(--motion-smooth) var(--ease-out); }
     .menu-toggle :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
   }
-  @keyframes menu-open { from { opacity: 0; transform: translateY(-0.5rem); } }
   @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
-  /* The phone menu starts closed before the script runs, so pages don't open with the menu showing and then jump
-   * up. Without JavaScript the links simply stay listed and there is no menu button. */
-  @media (scripting: enabled) { .site-header:has(.menu-toggle[aria-expanded='false']) .mobile-nav { display: none; } }
   @media (scripting: none) { .menu-toggle { display: none; } }
 
   @media (min-width: 48rem) {
@@ -161,7 +191,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     .brand { justify-self: start; container-type: normal; }
     .header-actions { justify-self: end; }
     .site-nav { display: flex; }
-    .menu-toggle, .mobile-nav { display: none; }
+    .menu-toggle, .mobile-nav, .mobile-nav[data-open] { display: none; }
   }
   @media (min-width: 100rem) {
     .hours-strip, .site-header { padding-block: var(--space-md); }
