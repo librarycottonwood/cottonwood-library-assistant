@@ -9,12 +9,12 @@ The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/im
 | `crayon-reading.png` | Homepage upcoming events heading |
 | `crayon-computers.png` | Homepage library services heading |
 | `crayon-books.png` | Shared newsletter heading |
-| `crayon-community.png` | Beneath the homepage community actions; four children holding hands |
+| `crayon-community.png` | Above the homepage community heading; four children holding hands |
 | `crayon-footer.png` | Footer reading scene, beside the links and contact details on desktop |
 
 The original prompt set is in `docs/crayon-art-prompts.json`; the holding-hands scene and its reading-scene style reference are documented in `docs/crayon-community-prompt.json`. The computer and footer scenes are documented in `docs/crayon-services-footer-prompts.json`. The direction is very simple original comic children, wobbly graphite crayon outlines, sparse indigo and pale green color, transparent background and no lettering. The earlier playing scene is no longer shipped; the reading pair now accompanies events.
 
-Section illustrations sit above their headings at a restrained size on phones. The smaller community scene follows the text column's left edge beneath its actions; centered section titles keep their artwork centered. The community scene follows the user's suggestion of children holding hands in a line.
+Section illustrations sit above their headings at a restrained size on phones. The smaller community scene follows the text column's left edge above its heading; centered section titles keep their artwork centered. The community scene follows the user's suggestion of children holding hands in a line.
 
 Photo-and-text sections retain left-aligned copy and action rows. Headings use balanced wrapping, and the short community introduction balances its line lengths to avoid a lone trailing word. Featured-event summaries use the regular body size.
 
