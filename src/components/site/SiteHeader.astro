@@ -17,17 +17,15 @@ import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 const isCurrent = (href: string) => { const link = [...links, supportLink].find(item => item.href === href); return link ? isCurrentSection(link, Astro.url.pathname) : false; };
-// Keep the full CMS summary for assistive technology; abbreviate only weekday names visually.
+// Keep each CMS schedule group together; phones give each group its own row.
 const hoursParts = library.hoursSummary.split(/\s+·\s+/);
-const shortDays: Record<string, string> = { Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
-const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/g, day => shortDays[day]!);
 ---
 <div class="toolbar-tint" aria-hidden="true"></div>
 <div class="hours-strip">
   <p>
     <Icon name="clock" class="hours-icon" />
     <span class="sr-only">Library hours: </span>
-    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part"><span class="sr-only">{part}{' '}</span><span class="hours-full" aria-hidden="true">{part}</span><span class="hours-compact" aria-hidden="true">{compactHours(part)}</span></span>)}</span>
+    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part">{part}</span>)}</span>
   </p>
 </div>
 <header class="site-header">
@@ -116,11 +114,9 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   .hours-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs) var(--space-sm); min-width: 0; }
   /* Schedules stay separate; their text can reflow when enlarged or on very narrow screens. */
   .hours-part { max-width: 100%; }
-  .hours-compact { display: none; }
   .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: inherit; opacity: .8; }
   @media (max-width: 47.99rem) {
-    .hours-full { display: none; }
-    .hours-compact { display: inline; }
+    .hours-groups { flex-direction: column; align-items: center; }
   }
 
   /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */

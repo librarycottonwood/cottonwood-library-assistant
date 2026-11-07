@@ -53,15 +53,13 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   </Split>
 
   <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
-    <Stack gap="sm" align="start">
-      <LibraryIllustration scene="community" align="start" />
-      <Heading id="community-heading">{home.support.title}</Heading>
-    </Stack>
+    <Heading id="community-heading">{home.support.title}</Heading>
     <Text tone="muted" balance>{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
       <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
     </Stack>
+    <LibraryIllustration scene="community" size="small" align="start" />
   </Split>
 
   {featured && featuredImage && <Split media="end" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>

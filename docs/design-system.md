@@ -474,6 +474,8 @@ interface Props {
   scene: 'reading' | 'computers' | 'books' | 'community';
   /** Follow the left edge of a text column, or center above a section heading (default). */
   align?: 'start' | 'center';
+  /** A supporting detail beneath copy rather than a heading illustration. */
+  size?: 'standard' | 'small';
 }
 ```
 

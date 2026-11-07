@@ -12,20 +12,24 @@ interface Props {
   scene: 'reading' | 'computers' | 'books' | 'community';
   /** Follow the left edge of a text column, or center above a section heading (default). */
   align?: 'start' | 'center';
+  /** A supporting detail beneath copy rather than a heading illustration. */
+  size?: 'standard' | 'small';
 }
-const { scene, align = 'center' } = Astro.props;
+const { scene, align = 'center', size = 'standard' } = Astro.props;
 const keys = { reading: 'crayonReading', computers: 'crayonComputers', books: 'crayonBooks', community: 'crayonCommunity' } as const;
 ---
-<span class:list={['illustration', scene, { 'illustration-start': align === 'start' }]} aria-hidden="true">
-  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={scene === 'books' ? '(max-width: 47.99rem) 128px, 160px' : '(max-width: 47.99rem) 240px, 320px'} loading="lazy" />
+<span class:list={['illustration', scene, { 'illustration-start': align === 'start', 'illustration-small': size === 'small' }]} aria-hidden="true">
+  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={size === 'small' ? '(max-width: 47.99rem) 144px, 192px' : scene === 'books' ? '(max-width: 47.99rem) 96px, 160px' : '(max-width: 47.99rem) 160px, 320px'} loading="lazy" />
 </span>
 <style>
   .illustration { display: block; flex-shrink: 0; align-self: center; width: 20rem; max-width: 100%; pointer-events: none; }
   .books { width: 10rem; }
+  .illustration-small { width: 12rem; }
   .illustration-start { align-self: flex-start; }
   .illustration :global(img) { display: block; width: 100%; height: auto; }
   @media (max-width: 47.99rem) {
-    .illustration { width: 15rem; }
-    .books { width: 8rem; }
+    .illustration { width: 10rem; }
+    .books { width: 6rem; }
+    .illustration-small { width: 9rem; }
   }
 </style>
