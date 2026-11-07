@@ -56,7 +56,7 @@ const emailParts = library.email.split('@');
     </p>
   </div>
   <div class="footer-art" aria-hidden="true">
-    <ContentImage image={{ key: 'crayonFooter', alt: '' }} alt="" width={960} widths={[320, 480, 720, 960]} sizes="(min-width: 64rem) 18rem, 10rem" loading="lazy" />
+    <ContentImage image={{ key: 'crayonFooter', alt: '' }} alt="" width={960} widths={[320, 480, 720, 960]} sizes="(max-width: 20.5rem) calc(100vw - 2.5rem), 18rem" loading="lazy" />
   </div>
 </footer>
 <style>
@@ -71,7 +71,7 @@ const emailParts = library.email.split('@');
   .footer-explore { grid-area: explore; }
   .footer-contact { grid-area: contact; }
   .footer-identity { grid-area: brand; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); min-width: 0; }
-  .footer-art { grid-area: art; align-self: end; justify-self: center; width: 100%; max-width: 10rem; pointer-events: none; }
+  .footer-art { grid-area: art; align-self: end; justify-self: center; width: 100%; max-width: 18rem; pointer-events: none; }
   .footer-art :global(img) { display: block; width: 100%; height: auto; }
   .footer-brand {
     display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); max-width: 100%;
@@ -105,6 +105,6 @@ const emailParts = library.email.split('@');
   }
   @media (min-width: 64rem) {
     .site-footer { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1.05fr); grid-template-areas: 'brand explore contact art'; grid-template-rows: auto; }
-    .footer-art { align-self: end; max-width: 18rem; justify-self: end; }
+    .footer-art { align-self: end; justify-self: end; }
   }
 </style>
