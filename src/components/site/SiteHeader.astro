@@ -188,7 +188,8 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   @media (scripting: none) { .menu-toggle { display: none; } }
 
   @media (min-width: 48rem) {
-    .site-header { padding-block: var(--space-sm); }
+    .hours-strip { font-size: var(--fluid-label); line-height: var(--leading-tight); }
+    .hours-strip, .site-header { padding-block: var(--space-sm); }
     .site-header, .brand { gap: var(--space-sm); }
     .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }
     .brand-name { font-size: clamp(1.125rem, 0.8rem + 0.9vw, var(--text-lead)); }
@@ -201,7 +202,7 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
     .menu-toggle, .mobile-nav, .mobile-nav[data-open] { display: none; }
   }
   @media (min-width: 100rem) {
-    .site-header { padding-block: var(--space-md); }
+    .hours-strip, .site-header { padding-block: var(--space-md); }
     .site-nav { gap: var(--space-lg); }
   }
 </style>
