@@ -27,7 +27,7 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   <p>
     <Icon name="clock" class="hours-icon" />
     <span class="sr-only">Library hours: </span>
-    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part"><span class="sr-only">{part}{' '}</span><span aria-hidden="true">{compactHours(part)}</span></span>)}</span>
+    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part"><span class="sr-only">{part}{' '}</span><span class="hours-full" aria-hidden="true">{part}</span><span class="hours-compact" aria-hidden="true">{compactHours(part)}</span></span>)}</span>
   </p>
 </div>
 <header class="site-header">
@@ -99,7 +99,7 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   @supports (animation-timeline: scroll()) {
     .toolbar-tint {
       display: block; position: fixed; top: 0; right: 0; left: 0; z-index: 40;
-      height: 0.375rem; background: var(--color-primary-soft); pointer-events: none;
+      height: 0.375rem; background: var(--color-primary); pointer-events: none;
       animation: toolbar-tint-away linear both; animation-timeline: scroll(); animation-range: 0.625rem 0.6875rem;
     }
     :global(body:has(.library-notices:not([hidden]))) .toolbar-tint { background: var(--color-accent); }
@@ -108,7 +108,7 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   .hours-strip {
     display: flex; justify-content: center;
     padding: var(--space-xs) var(--page-inset);
-    background: var(--color-primary-soft); color: var(--color-primary-ink);
+    background: var(--color-primary); color: var(--color-surface);
     font-family: var(--font-body); font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: var(--leading-relaxed);
     text-align: center;
   }
@@ -116,7 +116,12 @@ const compactHours = (part: string) => part.replace(/\b(Monday|Tuesday|Wednesday
   .hours-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs) var(--space-sm); min-width: 0; }
   /* Schedules stay separate; their text can reflow when enlarged or on very narrow screens. */
   .hours-part { max-width: 100%; }
-  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-primary); }
+  .hours-compact { display: none; }
+  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: inherit; opacity: .8; }
+  @media (max-width: 47.99rem) {
+    .hours-full { display: none; }
+    .hours-compact { display: inline; }
+  }
 
   /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */
   .site-header {

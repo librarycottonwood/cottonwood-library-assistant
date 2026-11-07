@@ -52,9 +52,9 @@ export const tokenGroups: TokenGroup[] = [
     slug: 'colors', title: 'Colors', property: 'color',
     note: 'Use the role names below. Do not add new colors or shades.',
     tokens: [
-      token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate) and active accents.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
+      token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate), the opening-hours strip and active accents.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
       token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders, badge labels and contact details.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
-      token({ name: 'color-primary-soft', label: 'Pale indigo', value: '#e3e7ff', useFor: 'The opening-hours strip and panels beside a photo: hours, a program or event summary (Split panel).', avoid: 'Buttons, text, or the page background (use --color-background).', example: 'background: var(--color-primary-soft);' }),
+      token({ name: 'color-primary-soft', label: 'Pale indigo', value: '#e3e7ff', useFor: 'Panels beside a photo: opening hours, a program or event summary (Split panel).', avoid: 'Buttons, text, or the page background (use --color-background).', example: 'background: var(--color-primary-soft);' }),
       token({ name: 'color-accent', label: 'Pale green', value: '#beedae', useFor: 'Supporting actions (directions, donations) and the notices bar.', avoid: 'Text color; it fails contrast on paper.', example: '<Button variant="accent">' }),
       token({ name: 'color-accent-ink', label: 'Leaf green', value: '#3b5c30', useFor: 'Text and icons on pale-green backgrounds.', avoid: 'Text on paper or white (use --color-text).', example: 'color: var(--color-accent-ink);' }),
       token({ name: 'color-background', label: 'Paper', value: '#f7f8ff', useFor: 'The page background.', avoid: 'Cards that must stand out from the page (use --color-surface).', example: 'background: var(--color-background);' }),
@@ -81,7 +81,7 @@ export const tokenGroups: TokenGroup[] = [
     slug: 'type-sizes', title: 'Type sizes', property: 'font-size',
     note: 'Body and heading sizes come from the 1920px design and scale down on phones (--fluid-*); Heading and Text pick the right one. Utility is the compact header label size.',
     tokens: [
-      token({ name: 'text-utility', label: 'Utility', value: '0.875rem', detail: '14px', useFor: 'The compact opening-hours strip and short utility labels.', avoid: 'Body copy and main navigation.', example: 'font-size: var(--text-utility);' }),
+      token({ name: 'text-utility', label: 'Utility', value: '0.9375rem', detail: '15px', useFor: 'The compact opening-hours strip and short utility labels.', avoid: 'Body copy and main navigation.', example: 'font-size: var(--text-utility);' }),
       token({ name: 'text-label', label: 'Label', value: '1.25rem', detail: '20px', useFor: 'Badges, dates and notices.', avoid: 'Paragraphs people need to read.', example: '<Text size="label">' }),
       token({ name: 'text-body', label: 'Body', value: '1.5rem', detail: '24px', useFor: 'Body copy, card titles, navigation and buttons.', avoid: 'Headings.', example: '<Text>' }),
       token({ name: 'text-lead', label: 'Lead', value: '1.875rem', detail: '30px', useFor: 'A short introduction under a heading, and the wordmark.', avoid: 'More than two sentences.', example: '<Text size="lead">' }),

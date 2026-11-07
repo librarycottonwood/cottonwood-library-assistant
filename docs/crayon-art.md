@@ -24,7 +24,7 @@ The footer's old low-opacity logo watermark is replaced by one small crayon read
 
 Hero and community headings use plain type with their complete CMS wording. The illustrations provide the decorative detail.
 
-The opening-hours strip uses a slim pale-indigo band, deep-indigo utility text and abbreviated weekday names. It retains the full CMS wording for assistive technology, keeps each schedule together when wrapping, and stays compact on desktop as well as phones.
+The opening-hours strip keeps the library's indigo background and white text with compact vertical spacing. It shows full weekday names on larger screens and short names on phones, preserving the full CMS wording for assistive technology. Schedule groups reflow when space is limited or text is enlarged.
 
 Photo frames share the `shadow-photo` and `shadow-photo-reverse` tokens: a small pale indigo or green offset, including the hero, event/service cards, split blocks, wide photos and galleries. The hero's clipping frame owns its inset, keeping the image's existing settling animation inside it. Logos, newsletter page cards and contained gallery artwork retain plain frames.
 

@@ -27,9 +27,9 @@ Use the role names below. Do not add new colors or shades.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--color-primary` | `#4956a7` | Primary actions (Donate) and active accents. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
+| `--color-primary` | `#4956a7` | Primary actions (Donate), the opening-hours strip and active accents. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
 | `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
-| `--color-primary-soft` | `#e3e7ff` | The opening-hours strip and panels beside a photo: hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
+| `--color-primary-soft` | `#e3e7ff` | Panels beside a photo: opening hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
@@ -58,7 +58,7 @@ Body and heading sizes come from the 1920px design and scale down on phones (--f
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--text-utility` | `0.875rem` (14px) | The compact opening-hours strip and short utility labels. | Body copy and main navigation. | `font-size: var(--text-utility);` |
+| `--text-utility` | `0.9375rem` (15px) | The compact opening-hours strip and short utility labels. | Body copy and main navigation. | `font-size: var(--text-utility);` |
 | `--text-label` | `1.25rem` (20px) | Badges, dates and notices. | Paragraphs people need to read. | `<Text size="label">` |
 | `--text-body` | `1.5rem` (24px) | Body copy, card titles, navigation and buttons. | Headings. | `<Text>` |
 | `--text-lead` | `1.875rem` (30px) | A short introduction under a heading, and the wordmark. | More than two sentences. | `<Text size="lead">` |
