@@ -23,16 +23,18 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
-  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  /** photo (default): a 3:2 photo on mobile, fixed height on desktop. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
   /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
+  /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
+  crayon?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, ...attributes } = Astro.props;
+const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, crayon = true, ...attributes } = Astro.props;
 const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
 // The arrow stays on the line with the title's last word, so a wrapping title never leaves it alone on a line.
@@ -40,7 +42,7 @@ const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
 const titleStart = titleWords.join(' ');
 ---
-<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText }]} {...attributes}>
+<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText, 'card-crayon': crayon && shape === 'photo' && !logo }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
@@ -62,6 +64,9 @@ const titleStart = titleWords.join(' ');
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
   .card-page .card-media { height: auto; aspect-ratio: 8.5 / 11; }
+  /* Attached to the existing frame: no loose ornaments or extra clipping around the zoom. */
+  .card-crayon .card-media { box-shadow: var(--shadow-photo); }
+  .card-crayon:nth-child(even) .card-media { box-shadow: var(--shadow-photo-reverse); }
   .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
   .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-smooth) var(--ease-out); }
   /* Linked cards: hovering anywhere zooms the photo slightly inside its frame and nudges the title arrow. */
@@ -79,8 +84,12 @@ const titleStart = titleWords.join(' ');
   .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
   /* Two lines at most, ending in "…" (long Sanity event summaries), so cards side by side read evenly. The full text is
    * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
-  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); }
+  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); text-wrap: pretty; }
   .card-full-text .card-copy p { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+  /* A stacked phone card follows its width, so wider phones don't get a shallow letterbox crop. */
+  @media (max-width: 47.99rem) {
+    .card:not(.card-page, .card-logo) .card-media { height: auto; aspect-ratio: 3 / 2; }
+  }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy h3 :global(.icon-link) { display: inline; }
   .title-end { white-space: nowrap; }

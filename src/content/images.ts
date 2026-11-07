@@ -11,6 +11,12 @@ import newReads from '../assets/images/junior-readers-display.jpg';
 import copyRoom from '../assets/images/copy-room.jpg';
 import bookDrop from '../assets/images/caterpillar-book-drop.jpg';
 import readingNook from '../assets/images/sunny-reading-nook.jpg';
+// Original AI-generated decorative art, prepared with image:prepare; see docs/crayon-art.md.
+import crayonReading from '../assets/images/crayon-reading.png';
+import crayonComputers from '../assets/images/crayon-computers.png';
+import crayonFooter from '../assets/images/crayon-footer.png';
+import crayonBooks from '../assets/images/crayon-books.png';
+import crayonCommunity from '../assets/images/crayon-community.png';
 
 import mainStreetReaders from '../assets/images/main-street-readers.png';
 import bookClub from '../assets/images/book-club.png';
@@ -60,7 +66,7 @@ import storytimeSession from '../assets/images/storytime-session.jpg';
 import storytimeFacebook from '../assets/images/storytime-facebook.jpg';
 import adventureMuralOriginal from '../assets/images/adventure-mural-original.jpg';
 
-const images: Record<string, ImageMetadata> = { exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
+const images: Record<string, ImageMetadata> = { crayonReading, crayonComputers, crayonFooter, crayonBooks, crayonCommunity, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

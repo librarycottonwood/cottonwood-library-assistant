@@ -10,84 +10,85 @@
  */
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
+import ContentImage from '../OptimizedImage.astro';
 import Icon from '../Icon.astro';
-import IconLink from './IconLink.astro';
-import Section from './Section.astro';
-import Text from './Text.astro';
 import InstagramIcon from '../InstagramIcon.astro';
 import FacebookIcon from '../FacebookIcon.astro';
-import NewsletterForm from './NewsletterForm.astro';
+import NewsletterNote from './NewsletterNote.astro';
 import { footerNavigation } from './navigation';
 import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 // Figma puts the PO box and the town on separate lines.
-const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
+const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/).map(line => line.replace(/\b([A-Z]{2})\s+(\d{5}(?:-\d{4})?)\b/g, '$1\u00a0$2'));
+const emailParts = library.email.split('@');
 ---
-<Section title="Newsletter" headingId="newsletter-heading" width="copy" gap="md">
-  <Text tone="muted">Sign up to get all the latest library news directly in your inbox, from the director herself.</Text>
-  <NewsletterForm email={library.email} labelledBy="newsletter-heading" />
-  <IconLink href="/newsletter/" iconEnd="arrow">Read the latest newsletter</IconLink>
-</Section>
+<NewsletterNote email={library.email} />
 <footer class="site-footer">
-  <Image src={logo} alt="" width={700} widths={[400, 700]} sizes="700px" loading="lazy" class="footer-watermark" />
-  <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
-    <Image src={logo} alt="" width={163} densities={[1, 2]} loading="lazy" class="footer-logo" />
-    <span aria-hidden="true">Cottonwood<br />Community<br />Library</span>
-  </a>
-  <nav aria-labelledby="footer-explore" class="footer-column">
+  <div class="footer-identity">
+    <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
+      <Image src={logo} alt="" width={163} densities={[1, 2]} loading="lazy" class="footer-logo" />
+      <span aria-hidden="true">Cottonwood<br />Community<br />Library</span>
+    </a>
+    <div class="social">
+      <a href={library.instagramUrl} aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="social-icon" /></a>
+      <a href={library.facebookUrl} aria-label="Cottonwood Community Library on Facebook"><FacebookIcon class="social-icon" /></a>
+    </div>
+  </div>
+  <nav aria-labelledby="footer-explore" class="footer-column footer-explore">
     <h2 id="footer-explore">Explore</h2>
     <ul>
       {footerNavigation.map(item => <li><a href={item.href}>{item.label}</a></li>)}
       <li><a href={library.catalogUrl} data-analytics-event="catalog_footer">Library Catalog<Icon name="external" class="footer-external" /></a></li>
     </ul>
   </nav>
-  <div class="footer-column">
+  <div class="footer-column footer-contact">
     <h2>Get in touch</h2>
     <ul>
       <li><a href={library.phoneHref}>{library.phone}</a></li>
-      <li><a href={`mailto:${library.email}`}>{library.email}</a></li>
-      <li>Mailing Address:<br />{addressLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</li>
+      <li><a class="footer-email" href={`mailto:${library.email}`} aria-label={library.email}>{emailParts.map((part, index) => <span>{index > 0 ? '@' : ''}{part}</span>)}</a></li>
+      <li class="footer-address">Mailing Address:<br />{addressLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</li>
     </ul>
-    <div class="social">
-      <a href={library.instagramUrl} aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="social-icon" /></a>
-      <a href={library.facebookUrl} aria-label="Cottonwood Community Library on Facebook"><FacebookIcon class="social-icon" /></a>
-    </div>
     <p class="footer-legal">
       <a href="/privacy/">Privacy</a>
       <!-- Analytics.astro shows this button (by id) on the live site and opens the statistics choice. -->
       <button id="privacy-choices" type="button" hidden>Privacy choices</button>
     </p>
   </div>
+  <div class="footer-art" aria-hidden="true">
+    <ContentImage image={{ key: 'crayonFooter', alt: '' }} alt="" width={960} widths={[320, 480, 720, 960]} sizes="(max-width: 20.5rem) calc(100vw - 2.5rem), 18rem" loading="lazy" />
+  </div>
 </footer>
 <style>
-  /* min-height leaves room for the whole tree box below the top padding, as in Figma. */
+  /* Keep information together; artwork supports it instead of filling a separate quadrant. */
   .site-footer {
-    position: relative; isolation: isolate; overflow: hidden;
-    display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--section-gap);
-    min-height: calc(var(--section-space) + min(41.3125rem, 35.9vw));
-    padding: var(--section-space) var(--page-inset) var(--space-xl);
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: 'brand brand' 'explore contact' 'art art';
+    align-items: start; gap: var(--space-md);
+    padding: var(--space-md) var(--page-inset) var(--space-lg);
+    font-size: var(--fluid-label);
   }
-  /* As in Figma, the tree is cut off at the footer's bottom edge: the box (829 × 661, Figma's frame) crops the
-   * bottom 14% of the image, so the ground and roots never show and the tree runs off the page. */
-  .site-footer :global(.footer-watermark) {
-    position: absolute; z-index: -1; right: var(--page-inset); bottom: 0;
-    width: min(51.8125rem, 45vw); height: auto; aspect-ratio: 829 / 661;
-    object-fit: cover; object-position: center top;
-    opacity: 0.06; pointer-events: none;
-  }
+  .footer-explore { grid-area: explore; }
+  .footer-contact { grid-area: contact; }
+  .footer-identity { grid-area: brand; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); min-width: 0; }
+  .footer-art { grid-area: art; align-self: end; justify-self: center; width: 100%; max-width: 18rem; pointer-events: none; }
+  .footer-art :global(img) { display: block; width: 100%; height: auto; }
   .footer-brand {
-    display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); width: 14.0625rem;
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); max-width: 100%;
     font-weight: var(--weight-bold); line-height: var(--leading-tight); text-align: center; text-decoration-line: none;
   }
-  .footer-brand :global(.footer-logo) { width: clamp(6rem, 8.5vw, 10.1875rem); }
+  .footer-brand :global(.footer-logo) { width: clamp(6rem, 7vw, 7rem); flex-shrink: 0; }
   .footer-column { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; overflow-wrap: anywhere; }
   .footer-column h2 { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
-  .footer-column ul { display: flex; flex-direction: column; gap: var(--space-sm); margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
-  .footer-column a { text-decoration-line: none; }
+  .footer-column ul { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-weight: var(--weight-semibold); line-height: var(--leading-snug); }
+  .footer-column a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration-line: none; }
+  .footer-column a.footer-email { display: flex; flex-wrap: wrap; align-content: center; width: fit-content; max-width: 100%; }
+  .footer-email span { max-width: 100%; }
+  .footer-contact ul { gap: var(--space-xs); }
+  .footer-address { padding-block-start: var(--space-xs); }
   .footer-column a:hover { text-decoration-line: underline; }
   .footer-column :global(.footer-external) { display: inline; width: 0.9em; height: 0.9em; margin-inline-start: var(--space-xs); vertical-align: -0.05em; }
-  .social { display: flex; gap: var(--space-sm); color: var(--color-text-muted); }
+  .social { display: flex; flex-shrink: 0; gap: var(--space-xs); padding-block-start: var(--space-sm); color: var(--color-text-muted); }
   .social a { display: inline-flex; align-items: center; justify-content: flex-start; min-width: 2.75rem; min-height: 2.75rem; }
   .social :global(.social-icon) { width: 1.875rem; height: 1.875rem; }
   .footer-legal { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--color-text-muted); font-size: var(--fluid-label); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
@@ -97,11 +98,13 @@ const addressLines = library.mailingAddress.split(/,\s*(?=[^,]+,)/);
     padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
     text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);
   }
-  /* Phones: one column, everything lined up on the left edge. */
-  @media (max-width: 40rem) {
-    .site-footer { flex-direction: column; }
-    .footer-brand { width: 100%; align-items: flex-start; text-align: start; }
-    .footer-column { width: 100%; }
-    .site-footer :global(.footer-watermark) { width: 85vw; }
+  @media (min-width: 48rem) {
+    .site-footer { grid-template-columns: minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1.3fr); grid-template-areas: 'brand explore contact' 'art art art'; }
+    .footer-identity { flex-direction: column; }
+    .social { padding-block-start: 0; }
+  }
+  @media (min-width: 64rem) {
+    .site-footer { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1.05fr); grid-template-areas: 'brand explore contact art'; grid-template-rows: auto; }
+    .footer-art { align-self: end; justify-self: end; }
   }
 </style>

@@ -9,6 +9,7 @@ import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
 import Heading from '../components/site/Heading.astro';
 import IconLink from '../components/site/IconLink.astro';
+import LibraryIllustration from '../components/site/LibraryIllustration.astro';
 import Section from '../components/site/Section.astro';
 import Split from '../components/site/Split.astro';
 import Stack from '../components/site/Stack.astro';
@@ -51,9 +52,12 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Fragment>
   </Split>
 
-  <Split media="start" image={givingPhoto} headingId="community-heading">
-    <Heading id="community-heading">{home.support.title}</Heading>
-    <Text tone="muted">{home.support.introduction}</Text>
+  <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
+    <Stack gap="sm" align="start">
+      <LibraryIllustration scene="community" size="small" align="start" />
+      <Heading id="community-heading">{home.support.title}</Heading>
+    </Stack>
+    <Text tone="muted" balance>{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
       <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
@@ -63,18 +67,18 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   {featured && featuredImage && <Split media="end" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
-    <Text tone="muted" size="lead">{featured.summary}</Text>
+    <Text tone="muted">{featured.summary}</Text>
     <Button href={featured.href} variant="accent" iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
   </Split>}
 
-  <Section title="Upcoming events" headingId="events-heading">
+  <Section title="Upcoming events" headingId="events-heading" illustration="reading">
     <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
     <Button href="/events/" iconEnd="arrow">View all</Button>
   </Section>
 
-  <Section title="Library services" headingId="services-heading">
+  <Section title="Library services" headingId="services-heading" illustration="computers">
     <Grid as="ul" columns={3}>
-      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!}>{service.description}</Card>)}
+      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} fullText>{service.description}</Card>)}
     </Grid>
     <Button href="/services/" iconEnd="arrow" screenReaderText="about library services">Read more</Button>
   </Section>
