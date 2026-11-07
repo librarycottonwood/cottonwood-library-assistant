@@ -16,8 +16,8 @@
  * Hover and press feedback stays in CSS with the --motion-* tokens. Scale a photo only inside a frame that owns the
  * rounded corners; scaling a photo that has its own rounded corners cuts them square while it moves.
  *
- * Before this script runs, base.css hides rise/group blocks only when BaseLayout set html.motion (motion allowed,
- * JavaScript on). If this script never starts, BaseLayout's fallback removes html.motion and everything shows.
+ * Content is visible before this script runs and while it waits for scroll detection. Controls and their containers
+ * never get entrance animations, so primary actions stay visible even when a browser delays observation or animation.
  */
 import { animate, inView } from 'motion';
 
@@ -42,13 +42,13 @@ export const presets = {
   menuItem: { keyframes: { opacity: [0, 1], transform: ['translateY(16px)', 'translateY(0px)'] }, transition: { ...springs.open, visualDuration: 0.45, opacity: { duration: 0.3, ease: 'easeOut' } } },
   /** …and closing: a quick fade, so the page is back at once. */
   menuClose: { keyframes: { opacity: [1, 0] }, transition: { duration: 0.15, ease: 'easeIn' } },
-  riseOnLoad: { keyframes: { opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
+  riseOnLoad: { keyframes: { transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0 } },
 } as const;
 
 /** Seconds between blocks that arrive together, and the most blocks that wait their turn. */
 const STAGGER = 0.08;
 const MAX_STAGGERED = 5;
-const SKIP = 'givebutter-widget';
+const SKIP = 'givebutter-widget, .button, button, input, select, textarea';
 
 export const motionAllowed = () => document.documentElement.classList.contains('motion');
 
@@ -117,7 +117,6 @@ function flush() {
   const arriving = queue.sort((a, b) => { const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(); return ra.top - rb.top || ra.left - rb.left; });
   queue = [];
   arriving.forEach((element, index) => {
-    element.style.opacity = '0';
     element.dataset.motionDone = '';
     animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * stagger }).then(() => clear(element));
   });
