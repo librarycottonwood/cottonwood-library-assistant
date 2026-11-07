@@ -16,8 +16,8 @@
  * Hover and press feedback stays in CSS with the --motion-* tokens. Scale a photo only inside a frame that owns the
  * rounded corners; scaling a photo that has its own rounded corners cuts them square while it moves.
  *
- * Content is visible before this script runs and while it waits for scroll detection. Controls and their containers
- * never get entrance animations, so primary actions stay visible even when a browser delays observation or animation.
+ * Content is visible before this script runs and while it waits for scroll detection. A group enters as one sequence,
+ * including its actions. Viewport checks back up scroll observation; a deadline clears stalled entrance animations.
  */
 import { animate, inView } from 'motion';
 
@@ -48,7 +48,7 @@ export const presets = {
 /** Seconds between blocks that arrive together, and the most blocks that wait their turn. */
 const STAGGER = 0.08;
 const MAX_STAGGERED = 5;
-const SKIP = 'givebutter-widget, .button, button, input, select, textarea';
+const SKIP = 'givebutter-widget';
 
 export const motionAllowed = () => document.documentElement.classList.contains('motion');
 
@@ -88,15 +88,17 @@ export async function menu(panel: HTMLElement, open: boolean) {
   items.forEach(clear);
 }
 
-function targets(): HTMLElement[] {
-  const found: HTMLElement[] = [];
+interface Entrance { trigger: HTMLElement; elements: HTMLElement[]; stopObserving?: () => void; }
+
+function entrances(): Entrance[] {
+  const found: Entrance[] = [];
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="rise"], [data-motion="group"]')) {
-    if (element.dataset.motion === 'rise') { found.push(element); continue; }
-    for (const child of element.children) {
-      if (child instanceof HTMLElement && child.tagName !== 'SCRIPT' && !child.querySelector('[data-motion]')) found.push(child);
-    }
+    const candidates = element.dataset.motion === 'rise' ? [element] : [...element.children].filter((child): child is HTMLElement =>
+      child instanceof HTMLElement && child.tagName !== 'SCRIPT' && !child.matches('[data-motion]') && !child.querySelector('[data-motion]'));
+    const elements = candidates.filter(child => !child.matches(SKIP) && !child.querySelector(SKIP));
+    if (elements.length) found.push({ trigger: element, elements });
   }
-  return found.filter(element => !element.matches(SKIP) && !element.querySelector(SKIP));
+  return found;
 }
 
 /**
@@ -108,17 +110,38 @@ const clear = (element: HTMLElement) => requestAnimationFrame(() => {
   element.style.removeProperty('transform');
 });
 
+const runningEntrances = new Set<() => void>();
+
+/** Clear completed, rejected or stalled animations through the same path. Nothing waits hidden indefinitely. */
+function playEntrance(element: HTMLElement, preset: typeof presets.rise | typeof presets.riseOnLoad | typeof presets.settle, delay = 0) {
+  let playback: ReturnType<typeof animate> | undefined;
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(deadline);
+    runningEntrances.delete(finish);
+    try { playback?.stop(); } finally { clear(element); }
+  };
+  const deadline = setTimeout(finish, 2000 + delay * 1000);
+  runningEntrances.add(finish);
+  try {
+    playback = animate(element, preset.keyframes, { ...preset.transition, delay });
+    playback.then(finish).catch(finish);
+  } catch { finish(); }
+}
+
 let queue: HTMLElement[] = [];
 let startedAt = 0;
 function flush() {
   const onLoad = performance.now() - startedAt < 500;
-  const { keyframes, transition } = onLoad ? presets.riseOnLoad : presets.rise;
+  const preset = onLoad ? presets.riseOnLoad : presets.rise;
   const stagger = onLoad ? STAGGER / 2 : STAGGER;
   const arriving = queue.sort((a, b) => { const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(); return ra.top - rb.top || ra.left - rb.left; });
   queue = [];
   arriving.forEach((element, index) => {
     element.dataset.motionDone = '';
-    animate(element, keyframes, { ...transition, delay: Math.min(index, MAX_STAGGERED) * stagger }).then(() => clear(element));
+    playEntrance(element, preset, Math.min(index, MAX_STAGGERED) * stagger);
   });
 }
 
@@ -127,26 +150,47 @@ function start() {
   startedAt = performance.now();
   if (!motionAllowed()) return;
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="settle"]')) {
-    const { keyframes, transition } = presets.settle;
-    animate(element, keyframes, transition).then(() => clear(element));
+    playEntrance(element, presets.settle);
   }
-  const waiting = new Set(targets());
-  for (const element of waiting) {
-    inView(element, () => {
-      if (!waiting.delete(element)) return;
-      if (!queue.length) requestAnimationFrame(flush);
-      queue.push(element);
-    }, { margin: '0px 0px -8% 0px' });
-  }
-  // A jump (a #link, a restored scroll position, a fast fling) can carry blocks past the screen without their ever
-  // being seen. Show those as they are, so nothing above the visitor stays invisible.
-  let checking = false;
-  const showPassed = () => {
-    checking = false;
-    for (const element of waiting) if (element.getBoundingClientRect().bottom < 0) { waiting.delete(element); element.dataset.motionDone = ''; }
+  const waiting = new Set(entrances());
+  const arrive = (entry: Entrance) => {
+    if (!waiting.delete(entry)) return;
+    entry.stopObserving?.();
+    if (!queue.length) requestAnimationFrame(flush);
+    queue.push(...entry.elements);
   };
-  showPassed();
-  addEventListener('scroll', () => { if (!checking && waiting.size) { checking = true; requestAnimationFrame(showPassed); } }, { passive: true });
+  // Observe the whole group, so its heading, text and actions share one entrance even across the viewport edge.
+  for (const entry of waiting) {
+    try { entry.stopObserving = inView(entry.trigger, () => arrive(entry)); } catch { /* Viewport checks below remain available. */ }
+  }
+  // Initial content does not depend on an observer callback. Scroll/resize checks also cover delayed observers,
+  // restored positions and Safari's changing visual viewport. Passed groups stay visible without replaying.
+  const viewport = window.visualViewport;
+  let checking = false;
+  const checkViewport = () => {
+    checking = false;
+    const top = viewport?.offsetTop ?? 0;
+    const bottom = top + (viewport?.height ?? innerHeight);
+    for (const entry of waiting) {
+      const box = entry.trigger.getBoundingClientRect();
+      if (!box.width || !box.height) continue;
+      if (box.bottom <= top) {
+        waiting.delete(entry);
+        entry.stopObserving?.();
+        for (const element of entry.elements) element.dataset.motionDone = '';
+      } else if (box.top < bottom) arrive(entry);
+    }
+  };
+  const scheduleCheck = () => { if (!checking && waiting.size) { checking = true; requestAnimationFrame(checkViewport); } };
+  checkViewport();
+  addEventListener('scroll', scheduleCheck, { passive: true });
+  addEventListener('resize', scheduleCheck, { passive: true });
+  viewport?.addEventListener('resize', scheduleCheck, { passive: true });
+  addEventListener('pageshow', event => {
+    if (!event.persisted) return;
+    for (const finish of runningEntrances) finish();
+    scheduleCheck();
+  });
 }
 
 start();
