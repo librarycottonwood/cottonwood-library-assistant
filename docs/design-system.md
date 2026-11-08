@@ -144,6 +144,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | --- | --- |
 | [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
+| [BookUnderline](#bookunderline) | A short indigo pencil stroke ending in an open book, below a single heading line. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
@@ -223,6 +224,17 @@ interface Props {
   <Image slot="start" image={campaign.image} alt="" width={50} height={50} />
   {campaign.title}
 </Badge>
+```
+
+### BookUnderline
+
+`src/components/site/BookUnderline.astro` — A short indigo pencil stroke ending in an open book, below a single heading line.
+
+- **Use for:** Once in the homepage hero, around the complete second heading line from the CMS.
+- **Don't use for:** Repeating the accent on section headings or placing it behind letters.
+
+```astro
+<BookUnderline>Your library.</BookUnderline>
 ```
 
 ### Button

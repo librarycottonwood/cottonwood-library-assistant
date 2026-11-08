@@ -3,6 +3,7 @@
 import Image from '../components/OptimizedImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/site/Badge.astro';
+import BookUnderline from '../components/site/BookUnderline.astro';
 import Button from '../components/site/Button.astro';
 import Card from '../components/site/Card.astro';
 import EventCards from '../components/site/EventCards.astro';
@@ -39,7 +40,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
       {campaign.badgeLabel ?? campaign.title}
     </Badge>}
     <Stack gap="sm">
-      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br />{hero.heading[1]}</Heading>
+      <Heading level={1} size="display" id="welcome-heading">{hero.heading[0]}<br /><BookUnderline>{hero.heading[1]}</BookUnderline></Heading>
       <Text tone="muted" size="lead">{hero.introduction}</Text>
     </Stack>
     <Stack direction="row" gap="xs" wrap>

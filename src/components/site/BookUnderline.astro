@@ -1,0 +1,27 @@
+---
+/**
+ * @component BookUnderline
+ * A short indigo pencil stroke ending in an open book, below a single heading line.
+ * @use Once in the homepage hero, around the complete second heading line from the CMS.
+ * @avoid Repeating the accent on section headings or placing it behind letters.
+ * @example
+ * <BookUnderline>Your library.</BookUnderline>
+ */
+---
+<span class="book-heading"><slot /><span class="book-accent" aria-hidden="true">
+  <svg class="pencil-line" viewBox="0 0 240 8" preserveAspectRatio="none" focusable="false">
+    <path d="M1 5.5 18 4.3 55 4.5 88 4 122 4.7 157 4.2 193 4.8 221 4.4 240 5.3 240 7 211 6.6 181 7.2 144 6.7 111 7.1 74 6.4 42 6.9 14 6.5Z" fill="currentColor" />
+    <path d="m28 5.4 8-.2m45.5.4 4.5.1m45-.3 7 .2m47 .2 4-.1m35 .1 7 .2" class="pencil-grain" />
+  </svg>
+  <svg class="little-book" viewBox="0 0 32 24" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 6C12 2.5 6 2 1 3.5V21c6-1.6 11.2-.5 15 2 4-2.5 9-3.6 15-2V3.5C25.3 2 20 2.5 16 6Zm0 0v17" />
+    <path d="M5 8c2.5-.1 4.9.5 7 1.7M5 12c2.5-.1 4.9.5 7 1.7M20 9.7c2.1-1.2 4.5-1.8 7-1.7M20 13.7c2.1-1.2 4.5-1.8 7-1.7" />
+  </svg>
+</span></span>
+<style>
+  .book-heading { display: inline-block; position: relative; max-width: 100%; padding-block-end: var(--space-md); }
+  .book-accent { position: absolute; inset-inline-end: 0; bottom: 0; display: flex; align-items: flex-end; width: 74%; height: var(--space-sm); color: var(--color-primary); pointer-events: none; }
+  .pencil-line { display: block; flex: 1; min-width: 0; height: var(--space-xs); }
+  .pencil-grain { fill: none; stroke: var(--color-background); stroke-width: .6; opacity: .65; }
+  .little-book { display: block; flex-shrink: 0; height: 100%; width: auto; }
+</style>
