@@ -2,7 +2,7 @@
 
 These are original AI-generated decorative illustrations, created with the built-in imagegen tool for the November 2026 design exploration. They depict fictional children, not library visitors. Real library photography and existing program artwork remain in place.
 
-The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/images.ts` registers them, and `LibraryIllustration` serves responsive versions through the maintained image component. Heading scenes are 320px on desktop and 160px on phones; the single book-carrying child is 160px and 96px. The smaller community detail is 192px on desktop and 144px on phones. Their empty alt text and hidden decorative wrapper keep them out of accessible names.
+The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/images.ts` registers them, and `LibraryIllustration` serves responsive versions through the maintained image component. Heading scenes scale smoothly at 20vw between 160px and 320px, rather than jumping at a tablet breakpoint. The book-carrying child scales at 10vw between 96px and 160px; the smaller community scene scales at 12vw between 144px and 192px. Responsive image sizes follow those same ranges. The larger footer scene retains its separate 288px cap. Their empty alt text and hidden decorative wrapper keep them out of accessible names.
 
 | Source asset | Placement |
 | --- | --- |

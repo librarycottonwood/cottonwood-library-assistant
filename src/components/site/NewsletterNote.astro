@@ -31,14 +31,12 @@ const { email } = Astro.props;
 </section>
 <style>
   .newsletter-section { padding: var(--section-space) var(--page-inset); }
-  .newsletter-note { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); width: 100%; max-width: var(--width-text); margin-inline: auto; }
-  .note-paper { position: absolute; z-index: -1; inset-block-start: var(--space-lg); inset-block-end: 0; inset-inline: 0; border: var(--border-thin) solid var(--color-primary-soft); border-radius: .5rem; background: var(--color-surface); clip-path: polygon(0 0, calc(100% - 3.75rem) 0, 100% 3.75rem, 100% 100%, 0 100%); pointer-events: none; }
-  .note-fold { position: absolute; z-index: -1; inset-block-start: var(--space-lg); inset-inline-end: 0; width: 3.75rem; height: 3.75rem; background: var(--color-primary-soft); clip-path: polygon(0 0, 100% 100%, 0 100%); pointer-events: none; }
+  .newsletter-note { --note-fold-size: clamp(2.5rem, 3.75vw, 3.75rem); position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); width: 100%; max-width: var(--width-text); margin-inline: auto; }
+  .note-paper { position: absolute; z-index: -1; inset-block-start: var(--space-lg); inset-block-end: 0; inset-inline: 0; border: var(--border-thin) solid var(--color-primary-soft); border-radius: .5rem; background: var(--color-surface); clip-path: polygon(0 0, calc(100% - var(--note-fold-size)) 0, 100% var(--note-fold-size), 100% 100%, 0 100%); pointer-events: none; }
+  .note-fold { position: absolute; z-index: -1; inset-block-start: var(--space-lg); inset-inline-end: 0; width: var(--note-fold-size); height: var(--note-fold-size); background: var(--color-primary-soft); clip-path: polygon(0 0, 100% 100%, 0 100%); pointer-events: none; }
   .note-copy { display: flex; flex-direction: column; align-items: center; gap: var(--space-md); width: 100%; padding: 0 var(--space-lg) var(--space-lg); text-align: center; }
   .note-copy > :global(*) { max-width: var(--width-copy); }
   @media (max-width: 47.99rem) {
     .note-copy { padding: 0 var(--space-sm) var(--space-md); }
-    .note-paper { clip-path: polygon(0 0, calc(100% - 2.5rem) 0, 100% 2.5rem, 100% 100%, 0 100%); }
-    .note-fold { width: 2.5rem; height: 2.5rem; }
   }
 </style>
