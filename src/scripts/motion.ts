@@ -16,8 +16,8 @@
  * Hover and press feedback stays in CSS with the --motion-* tokens. Scale a photo only inside a frame that owns the
  * rounded corners; scaling a photo that has its own rounded corners cuts them square while it moves.
  *
- * Content is visible before this script runs and while it waits for scroll detection. A group enters as one sequence,
- * including its actions. Viewport checks back up scroll observation; a deadline clears stalled entrance animations.
+ * BaseLayout prepares entrance states before paint. If loading falls back to visible content, late entrances stay
+ * disabled. A group enters as one sequence, including actions. Viewport checks and deadlines recover stalled motion.
  */
 import { animate, inView } from 'motion';
 
@@ -42,7 +42,7 @@ export const presets = {
   menuItem: { keyframes: { opacity: [0, 1], transform: ['translateY(16px)', 'translateY(0px)'] }, transition: { ...springs.open, visualDuration: 0.45, opacity: { duration: 0.3, ease: 'easeOut' } } },
   /** …and closing: a quick fade, so the page is back at once. */
   menuClose: { keyframes: { opacity: [1, 0] }, transition: { duration: 0.15, ease: 'easeIn' } },
-  riseOnLoad: { keyframes: { transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0 } },
+  riseOnLoad: { keyframes: { opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
 } as const;
 
 /** Seconds between blocks that arrive together, and the most blocks that wait their turn. */
@@ -114,11 +114,13 @@ const runningEntrances = new Set<() => void>();
 
 /** Clear completed, rejected or stalled animations through the same path. Nothing waits hidden indefinitely. */
 function playEntrance(element: HTMLElement, preset: typeof presets.rise | typeof presets.riseOnLoad | typeof presets.settle, delay = 0) {
+  if (!motionAllowed() || element.hasAttribute('data-motion-done')) { element.dataset.motionDone = ''; clear(element); return; }
   let playback: ReturnType<typeof animate> | undefined;
   let finished = false;
   const finish = () => {
     if (finished) return;
     finished = true;
+    element.dataset.motionDone = '';
     clearTimeout(deadline);
     runningEntrances.delete(finish);
     try { playback?.stop(); } finally { clear(element); }
@@ -140,13 +142,11 @@ function flush() {
   const arriving = queue.sort((a, b) => { const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(); return ra.top - rb.top || ra.left - rb.left; });
   queue = [];
   arriving.forEach((element, index) => {
-    element.dataset.motionDone = '';
     playEntrance(element, preset, Math.min(index, MAX_STAGGERED) * stagger);
   });
 }
 
 function start() {
-  document.documentElement.dataset.motionReady = '';
   startedAt = performance.now();
   if (!motionAllowed()) return;
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="settle"]')) {
@@ -191,6 +191,7 @@ function start() {
     for (const finish of runningEntrances) finish();
     scheduleCheck();
   });
+  document.documentElement.dataset.motionReady = '';
 }
 
 start();
