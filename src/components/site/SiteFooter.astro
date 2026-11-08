@@ -62,15 +62,16 @@ const emailParts = library.email.split('@');
 <style>
   /* Keep information together; artwork supports it instead of filling a separate quadrant. */
   .site-footer {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
     grid-template-areas: 'brand brand' 'explore contact' 'art art';
-    align-items: start; gap: var(--space-md);
+    align-items: start; gap: var(--space-md) var(--space-sm);
+    width: 100%; max-width: 32rem; margin-inline: auto;
     padding: var(--space-md) var(--page-inset) var(--space-lg);
     font-size: var(--fluid-label);
   }
   .footer-explore { grid-area: explore; }
   .footer-contact { grid-area: contact; }
-  .footer-identity { grid-area: brand; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-sm); min-width: 0; }
+  .footer-identity { grid-area: brand; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: var(--space-xs); min-width: 0; }
   .footer-art { grid-area: art; align-self: end; justify-self: center; width: 100%; max-width: 18rem; pointer-events: none; }
   .footer-art :global(img) { display: block; width: 100%; height: auto; }
   .footer-brand {
@@ -78,18 +79,17 @@ const emailParts = library.email.split('@');
     font-weight: var(--weight-bold); line-height: var(--leading-tight); text-align: center; text-decoration-line: none;
   }
   .footer-brand :global(.footer-logo) { width: clamp(6rem, 7vw, 7rem); flex-shrink: 0; }
-  .footer-column { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; overflow-wrap: anywhere; }
+  .footer-column { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; overflow-wrap: anywhere; }
   .footer-column h2 { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-tight); }
   .footer-column ul { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-weight: var(--weight-semibold); line-height: var(--leading-snug); }
   .footer-column a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration-line: none; }
   .footer-column a.footer-email { display: flex; flex-wrap: wrap; align-content: center; width: fit-content; max-width: 100%; }
   .footer-email span { max-width: 100%; }
-  .footer-contact ul { gap: var(--space-xs); }
   .footer-address { padding-block-start: var(--space-xs); }
   .footer-column a:hover { text-decoration-line: underline; }
   .footer-column :global(.footer-external) { display: inline; width: 0.9em; height: 0.9em; margin-inline-start: var(--space-xs); vertical-align: -0.05em; }
-  .social { display: flex; flex-shrink: 0; gap: var(--space-xs); padding-block-start: var(--space-sm); color: var(--color-text-muted); }
-  .social a { display: inline-flex; align-items: center; justify-content: flex-start; min-width: 2.75rem; min-height: 2.75rem; }
+  .social { display: flex; flex-shrink: 0; gap: var(--space-xs); color: var(--color-text-muted); }
+  .social a { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2.75rem; }
   .social :global(.social-icon) { width: 1.875rem; height: 1.875rem; }
   .footer-legal { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--color-text-muted); font-size: var(--fluid-label); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
   .footer-legal a, .footer-legal button { text-decoration-line: none; }
@@ -99,9 +99,8 @@ const emailParts = library.email.split('@');
     text-decoration-thickness: var(--underline-thickness); text-underline-offset: var(--underline-offset);
   }
   @media (min-width: 48rem) {
-    .site-footer { grid-template-columns: minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1.3fr); grid-template-areas: 'brand explore contact' 'art art art'; }
-    .footer-identity { flex-direction: column; }
-    .social { padding-block-start: 0; }
+    .site-footer { max-width: none; column-gap: var(--space-md); grid-template-columns: minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1.3fr); grid-template-areas: 'brand explore contact' 'art art art'; }
+    .footer-identity { justify-self: start; }
   }
   @media (min-width: 64rem) {
     .site-footer { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1.05fr); grid-template-areas: 'brand explore contact art'; grid-template-rows: auto; }
