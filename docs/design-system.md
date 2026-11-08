@@ -153,7 +153,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
-| [HeroHeading](#heroheading) | The homepage's two-line heading, with its second line in the library's indigo. |
+| [HeroHeading](#heroheading) | The homepage's black two-line heading, with a textured double crayon stroke under its final word. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
@@ -445,10 +445,10 @@ interface Props {
 
 ### HeroHeading
 
-`src/components/site/HeroHeading.astro` — The homepage's two-line heading, with its second line in the library's indigo.
+`src/components/site/HeroHeading.astro` — The homepage's black two-line heading, with a textured double crayon stroke under its final word.
 
 - **Use for:** Once in the opening homepage Split, preserving both complete CMS heading lines.
-- **Don't use for:** Underlines, miniature icons, or decorative marks attached to the lettering.
+- **Don't use for:** Repeating the flourish on other headings, crossing the letters, or attaching miniature icons.
 
 ```ts
 interface Props { lines: readonly string[]; id: string; }

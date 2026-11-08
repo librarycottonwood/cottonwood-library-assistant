@@ -1,17 +1,35 @@
 ---
 /**
  * @component HeroHeading
- * The homepage's two-line heading, with its second line in the library's indigo.
+ * The homepage's black two-line heading, with a textured double crayon stroke under its final word.
  * @use Once in the opening homepage Split, preserving both complete CMS heading lines.
- * @avoid Underlines, miniature icons, or decorative marks attached to the lettering.
+ * @avoid Repeating the flourish on other headings, crossing the letters, or attaching miniature icons.
  * @example
  * <HeroHeading lines={hero.heading} id="welcome-heading" />
  */
 import Heading from './Heading.astro';
 interface Props { lines: readonly string[]; id: string; }
 const { lines, id } = Astro.props;
+// Keep the CMS wording and spacing intact; the final word owns its decoration even when the line wraps.
+const secondLine = lines[1] ?? '';
+const words = secondLine.match(/^(.*?)(\S+)\s*$/u);
+const prefix = words?.[1] ?? '';
+const lastWord = words?.[2] ?? secondLine;
 ---
-<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-emphasis">{lines[1]}</span></Heading>
+<Heading level={1} size="display" id={id}>{lines[0]}<br />{prefix}<span class="hero-word">{lastWord}<svg class="hero-flourish" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="hero-crayon-grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".58 .7" numOctaves="3" seed="14" result="grain" />
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 1 1 0 -.65" result="grain-alpha" />
+      <feComposite in="SourceGraphic" in2="grain-alpha" operator="in" />
+    </filter>
+  </defs>
+  <g fill="currentColor" filter="url(#hero-crayon-grain)">
+    <path d="M2 10C50 1 111 2 164 5c48 3 96 5 133 2-35 9-85 9-134 5C110 8 51 7 2 10Z" />
+    <path d="M45 22c54-8 117-7 169-5l50 1c-51 6-98 2-145 4-27 1-52 2-74 0Z" />
+  </g>
+</svg></span></Heading>
 <style>
-  .hero-emphasis { color: var(--color-primary); }
+  .hero-word { display: inline-block; position: relative; max-width: 100%; padding-block-end: var(--space-sm); }
+  .hero-flourish { position: absolute; inset-inline: 0; bottom: 0; display: block; width: 100%; height: var(--space-sm); color: var(--color-primary); pointer-events: none; }
 </style>
