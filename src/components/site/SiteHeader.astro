@@ -27,8 +27,8 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
 <div class="hours-strip">
   <p>
     <Icon name="clock" class="hours-icon" />
-    <span class="sr-only">Library hours: </span>
-    <span class="hours-groups">{hoursParts.map(part => <span class="hours-part">
+    <span class="sr-only">Library hours: {library.hoursSummary}</span>
+    <span class="hours-groups" aria-hidden="true">{hoursParts.map(part => <span class="hours-part">
       {part.days && <><span class="hours-day"><span class="hours-full">{part.days}</span><span class="hours-short" aria-hidden="true">{compactDays(part.days)}</span></span>{' '}</>}
       <span class:list={['hours-time', { 'hours-only': !part.days }]}>{part.hours}</span>
     </span>)}</span>
@@ -129,7 +129,7 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
     .hours-groups { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, max-content); gap: 0 var(--space-sm); justify-content: start; text-align: start; }
     .hours-part { display: contents; }
     .hours-day, .hours-time { overflow-wrap: anywhere; }
-    .hours-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .hours-full { display: none; }
     .hours-short { display: inline; }
     .hours-only { grid-column: 1 / -1; }
     .toolbar-tint { background: var(--color-background); }
