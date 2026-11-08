@@ -144,7 +144,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | --- | --- |
 | [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
-| [BookUnderline](#bookunderline) | A short indigo pencil stroke ending in an open book, below a single heading line. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
@@ -154,7 +153,9 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
+| [HeroHeading](#heroheading) | The homepage's two-line heading, with its second line in the library's indigo. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones. |
@@ -224,17 +225,6 @@ interface Props {
   <Image slot="start" image={campaign.image} alt="" width={50} height={50} />
   {campaign.title}
 </Badge>
-```
-
-### BookUnderline
-
-`src/components/site/BookUnderline.astro` — A short indigo pencil stroke ending in an open book, below a single heading line.
-
-- **Use for:** Once in the homepage hero, around the complete second heading line from the CMS.
-- **Don't use for:** Repeating the accent on section headings or placing it behind letters.
-
-```astro
-<BookUnderline>Your library.</BookUnderline>
 ```
 
 ### Button
@@ -453,6 +443,21 @@ interface Props {
 <Heading level={1} size="display" id="welcome-heading">Your community.<br />Your library.</Heading>
 ```
 
+### HeroHeading
+
+`src/components/site/HeroHeading.astro` — The homepage's two-line heading, with its second line in the library's indigo.
+
+- **Use for:** Once in the opening homepage Split, preserving both complete CMS heading lines.
+- **Don't use for:** Underlines, miniature icons, or decorative marks attached to the lettering.
+
+```ts
+interface Props { lines: readonly string[]; id: string; }
+```
+
+```astro
+<HeroHeading lines={hero.heading} id="welcome-heading" />
+```
+
 ### IconLink
 
 `src/components/site/IconLink.astro` — A text link with an icon before or after it, underlined on hover.
@@ -472,6 +477,23 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 
 ```astro
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
+```
+
+### IllustratedCallout
+
+`src/components/site/IllustratedCallout.astro` — A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action.
+
+- **Use for:** Inside a Section for the volunteer invitation, where a generic room photo does not explain the activity.
+- **Don't use for:** Cropping illustrations into photo frames, adding redundant artwork above the copy, or centering paragraphs.
+
+```ts
+interface Props { image: LibraryImage; }
+```
+
+```astro
+<IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
+  <Heading>Give your time</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
+</IllustratedCallout>
 ```
 
 ### LibraryIllustration

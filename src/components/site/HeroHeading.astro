@@ -1,0 +1,17 @@
+---
+/**
+ * @component HeroHeading
+ * The homepage's two-line heading, with its second line in the library's indigo.
+ * @use Once in the opening homepage Split, preserving both complete CMS heading lines.
+ * @avoid Underlines, miniature icons, or decorative marks attached to the lettering.
+ * @example
+ * <HeroHeading lines={hero.heading} id="welcome-heading" />
+ */
+import Heading from './Heading.astro';
+interface Props { lines: readonly string[]; id: string; }
+const { lines, id } = Astro.props;
+---
+<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-emphasis">{lines[1]}</span></Heading>
+<style>
+  .hero-emphasis { color: var(--color-primary); }
+</style>

@@ -1,0 +1,9 @@
+{
+  "generator": "built-in imagegen",
+  "key": "volunteers",
+  "references": [
+    "crayon-community.png",
+    "crayon-books.png"
+  ],
+  "prompt": "Use case: illustration-story. Create one original transparent-background library volunteer illustration for a real library website. The two reference images are STYLE REFERENCES ONLY: match their charming very simple crayon-pencil linework, deep indigo uneven outlines, sparse pale green and indigo crayon hatch fills, peach skin and round friendly faces. New subject: one clearly adult woman volunteer and one clearly adult man volunteer, working together to sort a small stack of donated books onto a low little library shelf. Show cooperation: one passes a book to the other. Full figures with simple adult proportions, warm inclusive everyday clothing; not children. Compact horizontal scene, approximately 4:3 occupied area, only two people, one small shelf and a few books. Strong readable silhouettes that work at 240px width. No room background, no floor rectangle, no scenery, no badge, no text, no letters, no signage, no logo, no gradients or drop shadow. Genuine transparent background. Restrained crayon texture like reference, no photorealism or 3D. Leave a small even transparent margin. This is fictional decorative art, not a representation of real volunteers."
+}
