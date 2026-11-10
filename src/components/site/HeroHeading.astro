@@ -1,14 +1,15 @@
 ---
 /**
  * @component HeroHeading
- * The homepage's black two-line heading with a pale marker behind its final word.
+ * The complete homepage heading, with optional handwritten or leaf-accent preview treatments.
  * @use Once in the opening homepage Split, preserving both complete CMS heading lines.
- * @avoid Repeating the highlight on other headings or animating it separately from the copy.
+ * @avoid Repeating these accents on other headings or animating them separately from the copy.
  * @example
  * <HeroHeading lines={hero.heading} id="welcome-heading" />
  */
 import Heading from './Heading.astro';
-import marker from '../../assets/decorations/hero-marker.svg?raw';
+import leaves from '../../assets/decorations/hero-leaves.svg?raw';
+import handwriting from '../../assets/fonts/caveat-latin-variable.woff2?url';
 interface Props { lines: readonly string[]; id: string; }
 const { lines, id } = Astro.props;
 const secondLine = lines[1] ?? '';
@@ -16,16 +17,14 @@ const words = secondLine.match(/^(.*?)(\S+)\s*$/u);
 const prefix = words?.[1] ?? '';
 const lastWord = words?.[2] ?? secondLine;
 ---
-<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-line">{prefix}<span class="hero-word">{lastWord}<svg class="hero-mark hero-mark-yellow" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="39%" width="108%" height="55%"><Fragment set:html={marker} /></svg></svg><svg class="hero-mark hero-mark-green" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="14%" width="108%" height="80%" viewBox="0 0 300 100" preserveAspectRatio="none"><path d="M8 8 299 2 292 93 0 99Z" fill="currentColor" /></svg></svg></span><svg class="hero-mark hero-mark-lavender" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="37%" width="108%" height="58%"><Fragment set:html={marker} /></svg></svg></span></Heading>
+<link rel="preload" href={handwriting} as="font" type="font/woff2" crossorigin="anonymous" />
+<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-line">{prefix}<span class="hero-word">{lastWord}<span class="hero-leaves" aria-hidden="true" set:html={leaves} /></span></span></Heading>
 <style>
-  .hero-line, .hero-word { display: inline-block; position: relative; max-width: 100%; isolation: isolate; z-index: 0; }
-  .hero-mark { position: absolute; inset: 0; display: none; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: -1; }
-  .hero-mark-yellow { display: block; color: var(--color-highlight-yellow); transform: rotate(-.7deg); }
-  .hero-mark-green { color: var(--color-accent); transform: rotate(-1deg); }
-  .hero-mark-lavender { color: var(--color-highlight-lavender); transform: rotate(-.5deg); }
-  :global(html[data-hero-highlight="green"]) .hero-mark-yellow,
-  :global(html[data-hero-highlight="lavender"]) .hero-mark-yellow,
-  :global(html[data-hero-highlight="plain"]) .hero-mark-yellow { display: none; }
-  :global(html[data-hero-highlight="green"]) .hero-mark-green,
-  :global(html[data-hero-highlight="lavender"]) .hero-mark-lavender { display: block; }
+  @font-face { font-family: 'Hero Caveat'; src: url('../../assets/fonts/caveat-latin-variable.woff2') format('woff2'); font-weight: 400 700; font-style: normal; font-display: swap; }
+  .hero-line, .hero-word { display: inline-block; position: relative; max-width: 100%; }
+  .hero-leaves { display: none; width: .85em; height: .85em; vertical-align: top; color: var(--color-primary); pointer-events: none; }
+  .hero-leaves :global(svg) { display: block; width: 100%; height: 100%; }
+  :global(html[data-hero-style="handwritten"]) .hero-line { line-height: 1.16; }
+  :global(html[data-hero-style="handwritten"]) .hero-word { font-family: 'Hero Caveat', cursive; font-size: 1.26em; font-weight: 650; line-height: .8; color: var(--color-primary); transform: rotate(-3deg); transform-origin: 50% 70%; }
+  :global(html[data-hero-style="leaves"]) .hero-leaves { display: inline-block; transform: translateY(-10%); }
 </style>
