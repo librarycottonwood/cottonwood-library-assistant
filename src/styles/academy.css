@@ -16,11 +16,11 @@ p { margin: 0 0 1rem; }
 li { margin-block: .4rem; }
 .skip-link { position: absolute; left: -10000px; }
 .skip-link:focus { left: 1rem; top: 1rem; z-index: 5; background: white; padding: .5rem; }
-.academy-header { border-bottom: 1px solid var(--color-border); max-width: 1360px; margin-inline: auto; min-height: 76px; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.academy-header { border-bottom: 1px solid var(--color-border); width: 100%; min-height: 76px; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
 .academy-brand { color: var(--color-primary-ink); text-decoration: none; font-weight: 700; font-size: .95rem; }
 .academy-brand span { display: block; color: var(--color-text-muted); font-weight: 500; font-size: .8rem; }
 .library-link { display: inline-flex; align-items: center; gap: .3rem; color: var(--color-text-muted); text-decoration: none; font-size: .85rem; }
-.academy-shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); width: 100%; max-width: 1360px; margin-inline: auto; }
+.academy-shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); width: 100%; }
 .academy-sidebar { position: sticky; top: 24px; height: calc(100dvh - 48px); overflow-y: auto; border-right: 1px solid var(--color-border); padding: 2rem 1rem; background: #fff; }
 .lesson-menu > summary { display: none; list-style: none; }
 .lesson-menu > summary::-webkit-details-marker { display: none; }
@@ -53,7 +53,7 @@ main { min-width: 0; }
 .lesson-body { min-width: 0; }
 .lesson-body > .lesson-part:first-child { margin-top: 0; }
 @media (min-width: 1200px) {
-  .academy-content.with-page-index { max-width: none; padding-right: 2rem; }
+  .academy-content.with-page-index { max-width: 1200px; padding-right: 2rem; }
   .with-page-index .lesson-layout { display: grid; grid-template-columns: minmax(0, 1fr) 216px; column-gap: 3rem; }
   .with-page-index .lesson-header { grid-column: 1; grid-row: 1; }
   .with-page-index .lesson-body { grid-column: 1; grid-row: 2; }
