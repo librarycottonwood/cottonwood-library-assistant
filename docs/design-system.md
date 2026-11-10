@@ -31,6 +31,8 @@ Use the role names below. Do not add new colors or shades.
 | `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
 | `--color-primary-soft` | `#e3e7ff` | Panels beside a photo: opening hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
+| `--color-highlight-yellow` | `#ffe893` | The pale marker behind black homepage heading text. | Text, controls or large section backgrounds. | `color: var(--color-highlight-yellow);` |
+| `--color-highlight-lavender` | `#dde2ff` | The alternate pale homepage marker in the design preview. | Text or controls. | `color: var(--color-highlight-lavender);` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
 | `--color-surface` | `#ffffff` | Raised surfaces, badges on photos, and text on indigo. | The page background. | `background: var(--color-surface);` |
@@ -153,7 +155,8 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
-| [HeroHeading](#heroheading) | The homepage's black two-line heading, with a textured double crayon stroke under its final word. |
+| [HeroHeading](#heroheading) | The homepage's black two-line heading with a pale marker behind its final word. |
+| [HeroHighlightPicker](#herohighlightpicker) | Temporary, collapsible comparison controls for the homepage highlight. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
@@ -445,10 +448,10 @@ interface Props {
 
 ### HeroHeading
 
-`src/components/site/HeroHeading.astro` — The homepage's black two-line heading, with a textured double crayon stroke under its final word.
+`src/components/site/HeroHeading.astro` — The homepage's black two-line heading with a pale marker behind its final word.
 
 - **Use for:** Once in the opening homepage Split, preserving both complete CMS heading lines.
-- **Don't use for:** Repeating the flourish on other headings, crossing the letters, or attaching miniature icons.
+- **Don't use for:** Repeating the highlight on other headings or animating it separately from the copy.
 
 ```ts
 interface Props { lines: readonly string[]; id: string; }
@@ -456,6 +459,17 @@ interface Props { lines: readonly string[]; id: string; }
 
 ```astro
 <HeroHeading lines={hero.heading} id="welcome-heading" />
+```
+
+### HeroHighlightPicker
+
+`src/components/site/HeroHighlightPicker.astro` — Temporary, collapsible comparison controls for the homepage highlight.
+
+- **Use for:** Only beside HeroHeading while reviewing its three alternatives on a preview URL.
+- **Don't use for:** Shipping the picker after choosing the final treatment; it stays hidden on live hosts.
+
+```astro
+<HeroHighlightPicker />
 ```
 
 ### IconLink

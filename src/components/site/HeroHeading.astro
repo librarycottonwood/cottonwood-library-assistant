@@ -1,35 +1,31 @@
 ---
 /**
  * @component HeroHeading
- * The homepage's black two-line heading, with a textured double crayon stroke under its final word.
+ * The homepage's black two-line heading with a pale marker behind its final word.
  * @use Once in the opening homepage Split, preserving both complete CMS heading lines.
- * @avoid Repeating the flourish on other headings, crossing the letters, or attaching miniature icons.
+ * @avoid Repeating the highlight on other headings or animating it separately from the copy.
  * @example
  * <HeroHeading lines={hero.heading} id="welcome-heading" />
  */
 import Heading from './Heading.astro';
+import marker from '../../assets/decorations/hero-marker.svg?raw';
 interface Props { lines: readonly string[]; id: string; }
 const { lines, id } = Astro.props;
-// Keep the CMS wording and spacing intact; the final word owns its decoration even when the line wraps.
 const secondLine = lines[1] ?? '';
 const words = secondLine.match(/^(.*?)(\S+)\s*$/u);
 const prefix = words?.[1] ?? '';
 const lastWord = words?.[2] ?? secondLine;
 ---
-<Heading level={1} size="display" id={id}>{lines[0]}<br />{prefix}<span class="hero-word">{lastWord}<svg class="hero-flourish" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-  <defs>
-    <filter id="hero-crayon-grain" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency=".58 .7" numOctaves="3" seed="14" result="grain" />
-      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 1 1 0 -.65" result="grain-alpha" />
-      <feComposite in="SourceGraphic" in2="grain-alpha" operator="in" />
-    </filter>
-  </defs>
-  <g fill="currentColor" filter="url(#hero-crayon-grain)">
-    <path d="M2 10C50 1 111 2 164 5c48 3 96 5 133 2-35 9-85 9-134 5C110 8 51 7 2 10Z" />
-    <path d="M45 22c54-8 117-7 169-5l50 1c-51 6-98 2-145 4-27 1-52 2-74 0Z" />
-  </g>
-</svg></span></Heading>
+<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-line">{prefix}<span class="hero-word">{lastWord}<svg class="hero-mark hero-mark-yellow" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="39%" width="108%" height="55%"><Fragment set:html={marker} /></svg></svg><svg class="hero-mark hero-mark-green" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="14%" width="108%" height="80%" viewBox="0 0 300 100" preserveAspectRatio="none"><path d="M8 8 299 2 292 93 0 99Z" fill="currentColor" /></svg></svg></span><svg class="hero-mark hero-mark-lavender" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><svg x="-4%" y="37%" width="108%" height="58%"><Fragment set:html={marker} /></svg></svg></span></Heading>
 <style>
-  .hero-word { display: inline-block; position: relative; max-width: 100%; padding-block-end: var(--space-sm); }
-  .hero-flourish { position: absolute; inset-inline: 0; bottom: 0; display: block; width: 100%; height: var(--space-sm); color: var(--color-primary); pointer-events: none; }
+  .hero-line, .hero-word { display: inline-block; position: relative; max-width: 100%; isolation: isolate; z-index: 0; }
+  .hero-mark { position: absolute; inset: 0; display: none; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: -1; }
+  .hero-mark-yellow { display: block; color: var(--color-highlight-yellow); transform: rotate(-.7deg); }
+  .hero-mark-green { color: var(--color-accent); transform: rotate(-1deg); }
+  .hero-mark-lavender { color: var(--color-highlight-lavender); transform: rotate(-.5deg); }
+  :global(html[data-hero-highlight="green"]) .hero-mark-yellow,
+  :global(html[data-hero-highlight="lavender"]) .hero-mark-yellow,
+  :global(html[data-hero-highlight="plain"]) .hero-mark-yellow { display: none; }
+  :global(html[data-hero-highlight="green"]) .hero-mark-green,
+  :global(html[data-hero-highlight="lavender"]) .hero-mark-lavender { display: block; }
 </style>
