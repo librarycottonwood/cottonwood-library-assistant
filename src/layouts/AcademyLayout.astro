@@ -1,6 +1,6 @@
 ---
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
-import { ArrowUpRight, House, BookOpen, Printer } from '@lucide/astro';
+import { ArrowUpRight, House, BookOpen, Printer, ChevronRight } from '@lucide/astro';
 import LessonIcon from '../components/academy/LessonIcon.astro';
 import { lessons } from '../pages/academy/_guide';
 import '../styles/academy.css';
@@ -27,7 +27,7 @@ const { title, active, print = false, withPageIndex = false } = Astro.props;
     <div class="academy-shell">
       <aside class="academy-sidebar">
         <details class="lesson-menu" open>
-          <summary>Browse lessons</summary>
+          <summary><ChevronRight size={18} aria-hidden="true" /><span>Browse lessons</span></summary>
           <nav aria-label="Academy lessons">
             <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
             <p class="nav-label">Learn</p>

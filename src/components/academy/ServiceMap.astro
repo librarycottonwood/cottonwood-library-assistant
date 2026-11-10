@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { BookOpen, CodeXml, ChartColumn, Users, Rocket, ArrowUpRight } from '@lucide/astro';
+import { BookOpen, Bot, ChartColumn, Users, Rocket, ArrowUpRight } from '@lucide/astro';
 import { services, serviceGroups } from '../../pages/academy/_guide';
 import { contentRepository } from '../../content/repository';
 import { resolveImage } from '../../content/images';
@@ -10,7 +10,7 @@ const { library } = await contentRepository.getHome();
 const GroupHeading = print ? 'h3' : 'h2';
 const Heading = print ? 'h4' : 'h3';
 const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', drive: 'academyDrive', buffer: 'academyBuffer', github: 'academyGithub', cloudflare: 'academyCloudflare', sanity: 'academySanity', squarespace: 'academySquarespace', gmail: 'academyGmail', square: 'academySquare' };
-const icons: Record<string, typeof BookOpen> = { codex: CodeXml, analytics: ChartColumn, social: Users, catalog: BookOpen, spaceship: Rocket };
+const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartColumn, social: Users, catalog: BookOpen, spaceship: Rocket };
 const href = (service: typeof services[number]) => service.id === 'social' ? library.facebookUrl : service.href;
 ---
 <section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">

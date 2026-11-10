@@ -1,4 +1,5 @@
 ---
+import { ArrowUpRight } from '@lucide/astro';
 import Prompt from './Prompt.astro';
 import ServiceMap from './ServiceMap.astro';
 import WorkflowExamples from './WorkflowExamples.astro';
@@ -14,5 +15,5 @@ const PartHeading = print ? 'h3' : 'h2';
   {part.text.map(text => <p>{text}</p>)}
   {part.steps && <ol class="steps">{part.steps.map(step => <li>{step}</li>)}</ol>}
   {part.prompt && <Prompt text={part.prompt} />}
-  {part.links && <ul class="reference-links">{part.links.map(link => <li><a href={link.href}>{link.label} ↗</a></li>)}</ul>}
+  {part.links && <ul class="reference-links">{part.links.map(link => <li><a href={link.href}>{link.label} <ArrowUpRight size={16} aria-hidden="true" /></a></li>)}</ul>}
 </section>)}
