@@ -56,7 +56,8 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.equal(await page.locator('.lesson-menu').getAttribute('open') !== null, width >= 768, 'sidebar is open on desktop and collapsed on phone');
         if (route !== '/academy/print/' && route !== '/academy/quick-reference/') {
           const title = await page.locator('h1').boundingBox();
-          assert.ok(title.y < 180, 'content starts near the top, without a hero');
+          const header = await page.locator('.academy-header').boundingBox();
+          assert.ok(title.y < header.height + 120, 'content starts just below the header and mobile menu');
           assert.equal(await page.locator('.academy-sidebar a[aria-current="page"]').count(), 1, 'current guide is identified in navigation');
         }
 
@@ -85,6 +86,30 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.equal(await page.locator('.catalog-nav a').last().isVisible(), true);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: expanded catalog`);
       }
+    }
+    for (const width of [320, 390, 768, 1024, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(origin + '/academy/when-something-goes-wrong/');
+      await page.evaluate(() => document.fonts.ready);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `header fits ${width}px`);
+      assert.equal(await page.locator('.academy-sidebar a[href$="/print/"], .academy-sidebar a[href$="/quick-reference/"]').count(), 0, 'print links have one home');
+      const printToggle = page.locator('.academy-print-menu summary');
+      await printToggle.focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await page.getByRole('link', { name: 'Full handbook', exact: true }).isVisible(), true);
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('.academy-print-menu').getAttribute('open'), null);
+      assert.equal(await printToggle.evaluate(node => node === document.activeElement), true, 'Escape returns focus to Print');
+      await printToggle.click();
+      await page.locator('.academy-header').click({ position: { x: 2, y: 2 } });
+      assert.equal(await page.locator('.academy-print-menu').getAttribute('open'), null, 'outside click dismisses Print');
+      await page.locator('.lesson-topics a').first().click();
+      const header = await page.locator('.academy-header').boundingBox();
+      const anchor = await page.locator('.lesson-part').first().boundingBox();
+      assert.ok(Math.abs(header.y) < 1, 'header stays at the top after scrolling');
+      assert.ok(anchor.y >= header.height, 'section links land below the sticky header');
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.screenshot({ path: `output/academy/${width}-library-header.png` });
     }
     await page.goto(origin + '/academy/accounts-and-tools/');
     assert.equal(await page.locator('article.service-card').count(), 15);

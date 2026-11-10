@@ -1,11 +1,12 @@
 ---
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
-import { ArrowUpRight, House, BookOpen, Printer, ChevronRight } from '@lucide/astro';
+import { ArrowUpRight, House, BookOpen, Printer, ChevronRight, ChevronDown, MessageSquare } from '@lucide/astro';
 import LessonIcon from '../components/academy/LessonIcon.astro';
 import { lessons } from '../pages/academy/_guide';
 import '../styles/academy.css';
 interface Props { title: string; active?: string; print?: boolean; withPageIndex?: boolean; }
 const { title, active, print = false, withPageIndex = false } = Astro.props;
+const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'preview-and-save': 'Website updates', 'everyday-jobs': 'Email, posts & donations' };
 ---
 <!doctype html>
 <html lang="en">
@@ -22,7 +23,17 @@ const { title, active, print = false, withPageIndex = false } = Astro.props;
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="academy-header">
       <a class="academy-brand" href="/academy/">Cottonwood <span>Volunteer academy</span></a>
-      <a class="library-link" href="/">Library website <ArrowUpRight size={15} aria-hidden="true" /></a>
+      <nav class="academy-header-actions" aria-label="Academy tools">
+        <a class="library-link" href="/" aria-label="Library website">Library <ArrowUpRight size={16} aria-hidden="true" /></a>
+        <details class="academy-print-menu">
+          <summary><Printer size={18} aria-hidden="true" /><span>Print</span><ChevronDown size={15} aria-hidden="true" /></summary>
+          <div class="academy-print-options">
+            <a href="/academy/quick-reference/"><BookOpen size={18} aria-hidden="true" />Quick guide</a>
+            <a href="/academy/print/"><Printer size={18} aria-hidden="true" />Full handbook</a>
+          </div>
+        </details>
+        <a class="academy-chatgpt" href="https://chatgpt.com/?surface=work" target="_blank" rel="noopener noreferrer"><MessageSquare size={18} aria-hidden="true" />Open ChatGPT</a>
+      </nav>
     </header>
     <div class="academy-shell">
       <aside class="academy-sidebar">
@@ -30,11 +41,7 @@ const { title, active, print = false, withPageIndex = false } = Astro.props;
           <summary><ChevronRight size={18} aria-hidden="true" /><span>Browse lessons</span></summary>
           <nav aria-label="Academy lessons">
             <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
-            <p class="nav-label">Learn</p>
-            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{lesson.title}</span></a></li>)}</ol>
-            <p class="nav-label">Print a guide</p>
-            <a href="/academy/quick-reference/" aria-current={Astro.url.pathname.includes('quick-reference') ? 'page' : undefined}><BookOpen size={18} aria-hidden="true" /><span>Quick guide</span></a>
-            <a href="/academy/print/" aria-current={Astro.url.pathname.includes('/print') ? 'page' : undefined}><Printer size={18} aria-hidden="true" /><span>Printable handbook</span></a>
+            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
           </nav>
         </details>
       </aside>
@@ -43,6 +50,22 @@ const { title, active, print = false, withPageIndex = false } = Astro.props;
       </div>
     </div>
     <script>
+      const header = document.querySelector<HTMLElement>('.academy-header');
+      if (header) {
+        const measureHeader = () => document.documentElement.style.setProperty('--academy-header-height', `${header.offsetHeight}px`);
+        measureHeader();
+        new ResizeObserver(measureHeader).observe(header);
+      }
+      const printMenu = document.querySelector<HTMLDetailsElement>('.academy-print-menu');
+      document.addEventListener('click', event => {
+        if (event.target instanceof Node && !printMenu?.contains(event.target) && printMenu) printMenu.open = false;
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && printMenu?.open) {
+          printMenu.open = false;
+          printMenu.querySelector('summary')?.focus();
+        }
+      });
       const menu = document.querySelector<HTMLDetailsElement>('.lesson-menu');
       const narrow = window.matchMedia('(max-width: 767px)');
       const syncMenu = () => { if (menu) menu.open = !narrow.matches; };
