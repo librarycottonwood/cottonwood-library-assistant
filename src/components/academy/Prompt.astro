@@ -10,11 +10,11 @@ chatgptUrl.searchParams.set('surface', 'work');
 chatgptUrl.searchParams.set('prompt', text);
 ---
 <aside class:list={['prompt', { 'example-card': card }]} data-prompt aria-label={card ? heading : 'Example message for ChatGPT'}>
-  <div class="prompt-heading"><slot name="icon" /><Heading>{heading}</Heading></div>
+  {card && <div class="prompt-heading"><slot name="icon" /><Heading>{heading}</Heading></div>}
   <p data-prompt-text>{text}</p>
   <div class="prompt-actions">
     <a href={chatgptUrl.href} target="_blank" rel="noopener noreferrer" data-open-prompt aria-label="Open in ChatGPT (opens in a new tab)">Open in ChatGPT <ArrowUpRight size={15} aria-hidden="true" /></a>
-    <button type="button" data-copy-prompt hidden><Copy size={15} aria-hidden="true" />Copy message</button>
+    <button type="button" data-copy-prompt aria-label="Copy message" hidden><Copy size={15} aria-hidden="true" />Copy</button>
   </div>
   <p class="copy-status" role="status" aria-live="polite"></p>
 </aside>

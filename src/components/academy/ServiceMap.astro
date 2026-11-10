@@ -15,7 +15,7 @@ const href = (service: typeof services[number]) => service.id === 'social' ? lib
 ---
 <section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">
   <div class="platform-overview">
-    <p>For an event update, <a href="#website-chatgpt">ChatGPT</a> changes the details in <a href="#website-sanity">Sanity</a>. <a href="#website-github">GitHub</a> prepares the preview and records the save. <a href="#website-cloudflare">Cloudflare</a> puts the approved page on the <a href="https://cottonwood-library.pages.dev/">library website</a>. <a href="#website-codex">Codex</a> handles changes to the page design.</p>
+    <p>Ask <a href="#website-chatgpt">ChatGPT</a> for an update. <a href="#website-sanity">Sanity</a> keeps the content, <a href="#website-github">GitHub</a> prepares your preview, and <a href="#website-cloudflare">Cloudflare</a> puts the approved update online. <a href="#website-codex">Codex</a> changes the design.</p>
   </div>
   <nav class="service-group-links screen-only" aria-label="Website groups">{serviceGroups.map(group => <a href={`#services-${group.id}`}>{group.title}</a>)}</nav>
   {serviceGroups.map(group => <section class="service-group" id={`services-${group.id}`}>
