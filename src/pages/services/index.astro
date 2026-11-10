@@ -7,6 +7,7 @@ import Button from '../../components/site/Button.astro';
 import DetailList from '../../components/site/DetailList.astro';
 import Faq from '../../components/site/Faq.astro';
 import Heading from '../../components/site/Heading.astro';
+import AccentHeading from '../../components/site/AccentHeading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
@@ -37,7 +38,7 @@ const printing = [
 
   <Split media="end" inset ratio="5 / 4" image={photos.borrowing} headingId="borrowing-heading" id="borrowing">
     <Stack gap="xs">
-      <Heading id="borrowing-heading" relaxed>Borrowing books</Heading>
+      <AccentHeading id="borrowing-heading" text="Borrowing books" phrase="books" />
       <Text tone="muted">Find your next read and make yourself at home!</Text>
     </Stack>
     <TopicList items={[
@@ -68,7 +69,7 @@ const printing = [
     <Text tone="muted">Ask a volunteer at the front desk for any assistance!</Text>
   </Split>
 
-  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
+  {borrowing.length > 0 && <Section title="Frequently Asked Questions" leaf="branch" headingId="questions-heading" width="text" id="questions">
     <Faq items={borrowing} email={library.email} />
   </Section>}
 </BaseLayout>

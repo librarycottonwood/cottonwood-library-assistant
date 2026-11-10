@@ -161,8 +161,8 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [HeroContacts](#herocontacts) | Directions and phone links that become two compact action tiles beneath the hero photo on phones. |
 | [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
-| [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
-| [LeafAccent](#leafaccent) | A small family of outlined leaves: an upright sprig, a paired shoot, or a horizontal branch. |
+| [IllustratedCallout](#illustratedcallout) | An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones. |
+| [LeafAccent](#leafaccent) | A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones. |
@@ -539,7 +539,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 
 ### IllustratedCallout
 
-`src/components/site/IllustratedCallout.astro` — A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action.
+`src/components/site/IllustratedCallout.astro` — An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones.
 
 - **Use for:** Inside a Section for the volunteer invitation, where a generic room photo does not explain the activity.
 - **Don't use for:** Cropping illustrations into photo frames, adding redundant artwork above the copy, or centering paragraphs.
@@ -556,7 +556,7 @@ interface Props { image: LibraryImage; }
 
 ### LeafAccent
 
-`src/components/site/LeafAccent.astro` — A small family of outlined leaves: an upright sprig, a paired shoot, or a horizontal branch.
+`src/components/site/LeafAccent.astro` — A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
 
 - **Use for:** A quiet accent above a plain history, gratitude or ways-to-help heading. Section places it as part of the same heading group.
 - **Don't use for:** The homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.

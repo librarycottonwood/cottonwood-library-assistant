@@ -8,6 +8,7 @@ import Card from '../../components/site/Card.astro';
 import EventCards from '../../components/site/EventCards.astro';
 import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
+import AccentHeading from '../../components/site/AccentHeading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import PostList from '../../components/site/PostList.astro';
 import Section from '../../components/site/Section.astro';
@@ -45,7 +46,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   {laterEvents.length > 0 && <Section title="Upcoming Events" headingId="events-heading" id="upcoming">
     <EventCards events={laterEvents} programs={programs} fill={false} limit={9} />
   </Section>}
-  {programs.length > 0 && <Section title="Regular Events" headingId="regular-heading" id="regular">
+  {programs.length > 0 && <Section title="Regular Events" leaf="sprig" headingId="regular-heading" id="regular">
     <Grid as="ul" columns={3}>
       {programs.map(program => <Card as="li" title={program.title} href={programHref(program.id)} image={program.image}>
         <Badge slot="badge" surface>{program.schedule}</Badge>
@@ -53,7 +54,8 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
       </Card>)}
     </Grid>
   </Section>}
-  {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
+  {posts.length > 0 && <Section headingId="news-heading" id="news">
+    <AccentHeading id="news-heading" text="Latest News" phrase="News" />
     <PostList posts={postsWithPhotos(latestPosts)} />
     <Button href="/news/" iconEnd="arrow">All news</Button>
   </Section>}

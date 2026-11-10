@@ -19,12 +19,12 @@ const { scene, align = 'center', size = 'standard' } = Astro.props;
 const keys = { reading: 'crayonReading', computers: 'crayonComputers', books: 'crayonBooks', community: 'crayonCommunity' } as const;
 ---
 <span class:list={['illustration', scene, { 'illustration-start': align === 'start', 'illustration-small': size === 'small' }]} aria-hidden="true">
-  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={size === 'small' ? '(max-width: 75rem) 9rem, (max-width: 100rem) 12vw, 12rem' : scene === 'books' ? '(max-width: 60rem) 6rem, (max-width: 100rem) 10vw, 10rem' : '(max-width: 50rem) 10rem, (max-width: 100rem) 20vw, 20rem'} loading="lazy" />
+  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={size === 'small' ? '(max-width: 78.57rem) 11rem, (max-width: 100rem) 14vw, 14rem' : scene === 'books' ? '(max-width: 60rem) 6rem, (max-width: 100rem) 10vw, 10rem' : '(max-width: 50rem) 10rem, (max-width: 100rem) 20vw, 20rem'} loading="lazy" />
 </span>
 <style>
   .illustration { display: block; flex-shrink: 0; align-self: center; width: clamp(10rem, 20vw, 20rem); max-width: 100%; pointer-events: none; }
   .books { width: clamp(6rem, 10vw, 10rem); }
-  .illustration-small { width: clamp(9rem, 12vw, 12rem); }
+  .illustration-small { width: clamp(11rem, 14vw, 14rem); }
   .illustration-start { align-self: flex-start; }
   .illustration :global(img) { display: block; width: 100%; height: auto; }
 </style>

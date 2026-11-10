@@ -62,6 +62,7 @@ const { title, illustration, leaf, headingId, align = 'center', width = 'content
   .leaf-heading { gap: var(--space-xs); }
   .illustrated-heading :global(h2) { min-width: 0; text-align: center; }
   .align-start .illustrated-heading { align-items: flex-start; }
+  .align-start .leaf-heading { flex-direction: row; align-items: center; gap: var(--space-sm); }
   .align-start .illustrated-heading :global(.illustration) { align-self: flex-start; }
   .align-start .illustrated-heading :global(h2) { text-align: start; }
 </style>
