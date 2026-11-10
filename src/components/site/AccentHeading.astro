@@ -1,0 +1,22 @@
+---
+/**
+ * @component AccentHeading
+ * A complete heading with one explicitly chosen word or short phrase in handwriting.
+ * @use Warm community and volunteer invitations; text is the complete existing wording and phrase is an exact, deliberate selection.
+ * @avoid Automatically styling the last word of every heading, or rewriting CMS text to fit the accent. An absent phrase leaves the heading plain.
+ * @example
+ * <AccentHeading id="community-heading" text={home.support.title} phrase="Community" />
+ */
+import Heading from './Heading.astro';
+import Handwritten from './Handwritten.astro';
+interface Props {
+  text: string;
+  phrase: string;
+  id?: string;
+  level?: 1 | 2 | 3;
+  size?: 'display' | 'heading' | 'title';
+}
+const { text, phrase, id, level = 2, size = 'heading' } = Astro.props;
+const index = phrase ? text.indexOf(phrase) : -1;
+---
+<Heading id={id} level={level} size={size}>{index < 0 ? text : <>{text.slice(0, index)}<Handwritten>{text.slice(index, index + phrase.length)}</Handwritten>{text.slice(index + phrase.length)}</>}</Heading>

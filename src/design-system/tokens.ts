@@ -67,9 +67,10 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'fonts', title: 'Fonts', property: 'font-family',
-    note: 'Two self-hosted families. Headings use Bree Serif; everything else uses Mona Sans.',
+    note: 'Bree Serif headings and Mona Sans body copy, with self-hosted Caveat reserved for a few warm words and thank-you notes.',
     tokens: [
       token({ name: 'font-display', label: 'Bree Serif', value: "'Bree Serif', Georgia, serif", detail: 'Regular · 400', useFor: 'Page titles and section headings.', avoid: 'Body copy, buttons, labels or card titles.', example: '<Heading size="display">' }),
+      token({ name: 'font-handwritten', label: 'Caveat', value: "'Caveat', 'Segoe Print', cursive", detail: 'Variable · 650', useFor: 'One warm word in selected headings, or a short thank-you sign-off, through Handwritten.', avoid: 'Navigation, buttons, forms, dates, prices, hours, paragraphs, or every heading.', example: '<Handwritten>Community</Handwritten>' }),
       token({ name: 'font-body', label: 'Mona Sans', value: "'Mona Sans Variable', 'Mona Sans', sans-serif", detail: 'Medium 500 / Semibold 600 / Bold 700', useFor: 'Body copy, navigation, links, buttons, dates and labels.', avoid: 'Page and section headings (use --font-display).', example: 'font-family: var(--font-body);' }),
       token({ name: 'weight-regular', label: 'Regular weight', value: '400', useFor: 'Bree Serif headings.', avoid: 'Mona Sans text; it is lighter than the design.', example: 'font-weight: var(--weight-regular);' }),
       token({ name: 'weight-medium', label: 'Medium weight', value: '500', useFor: 'Body text and opening hours.', avoid: 'Buttons and card titles (use bold).', example: 'font-weight: var(--weight-medium);' }),

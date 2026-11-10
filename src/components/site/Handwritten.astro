@@ -1,0 +1,18 @@
+---
+/**
+ * @component Handwritten
+ * A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy.
+ * @use One warm word in a selected heading, or a short thank-you sign-off. Prefer AccentHeading for complete CMS headings.
+ * @avoid Navigation, buttons, forms, dates, prices, hours, paragraphs, and combining it with a leaf on the same heading.
+ * @example
+ * <Heading>Give your <Handwritten>time</Handwritten></Heading>
+ */
+interface Props { variant?: 'heading' | 'hero' | 'signature'; }
+const { variant = 'heading' } = Astro.props;
+---
+<span class:list={['handwritten', `handwritten-${variant}`]} data-handwritten><slot /></span>
+<style>
+  .handwritten { display: inline-block; max-width: 100%; font-family: var(--font-handwritten); font-size: 1.2em; font-weight: 650; line-height: .9; color: var(--color-primary); transform: rotate(-2deg); transform-origin: 50% 70%; }
+  .handwritten-hero { font-size: 1.26em; line-height: .8; transform: rotate(-3deg); }
+  .handwritten-signature { font-size: 1.5em; line-height: 1.15; transform: none; }
+</style>

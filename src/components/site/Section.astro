@@ -12,12 +12,15 @@
  */
 import Heading from './Heading.astro';
 import LibraryIllustration from './LibraryIllustration.astro';
+import LeafAccent from './LeafAccent.astro';
 import type { Space } from '../../design-system/tokens';
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
+  /** Small leaf accent above a plain heading; use instead of a crayon scene, at most once per page. */
+  leaf?: 'sprig' | 'pair' | 'branch';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -30,12 +33,12 @@ interface Props {
   continues?: boolean;
   id?: string;
 }
-const { title, illustration, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
+const { title, illustration, leaf, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
 <section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
-    {title && (illustration
-      ? <div class="illustrated-heading"><LibraryIllustration scene={illustration} /><Heading id={headingId} relaxed={align === 'center'}>{title}</Heading></div>
+    {title && (illustration || leaf
+      ? <div class:list={['illustrated-heading', { 'leaf-heading': !illustration && leaf }]}>{illustration ? <LibraryIllustration scene={illustration} /> : <LeafAccent variant={leaf} />}<Heading id={headingId} relaxed={align === 'center'}>{title}</Heading></div>
       : <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>)}
     <slot />
   </div>
@@ -56,6 +59,7 @@ const { title, illustration, headingId, align = 'center', width = 'content', gap
   .align-center > :global(:is(h2, p)) { text-align: center; }
   .align-start { align-items: flex-start; }
   .illustrated-heading { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); width: 100%; }
+  .leaf-heading { gap: var(--space-xs); }
   .illustrated-heading :global(h2) { min-width: 0; text-align: center; }
   .align-start .illustrated-heading { align-items: flex-start; }
   .align-start .illustrated-heading :global(.illustration) { align-self: flex-start; }

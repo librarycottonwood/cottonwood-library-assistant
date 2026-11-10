@@ -8,8 +8,8 @@ import Card from '../components/site/Card.astro';
 import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
 import Heading from '../components/site/Heading.astro';
+import AccentHeading from '../components/site/AccentHeading.astro';
 import HeroHeading from '../components/site/HeroHeading.astro';
-import HeroStylePicker from '../components/site/HeroStylePicker.astro';
 import IconLink from '../components/site/IconLink.astro';
 import LibraryIllustration from '../components/site/LibraryIllustration.astro';
 import Section from '../components/site/Section.astro';
@@ -35,7 +35,6 @@ const serviceLink = (service: typeof services[number]) => service.icon === 'book
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title="Cottonwood Community Library | Cottonwood, CA" description="Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.">
-  <HeroStylePicker />
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
     {campaign && <Badge href={DONATE_PAGE_HREF} iconEnd="external" data-campaign-only data-campaign-ends={campaign.endsOn}>
       <Image slot="start" src={campaign.image ? undefined : fundraiserHouse} image={campaign.image} alt="" width={50} height={50} />
@@ -58,7 +57,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
     <Stack gap="sm" align="start">
       <LibraryIllustration scene="community" size="small" align="start" />
-      <Heading id="community-heading">{home.support.title}</Heading>
+      <AccentHeading id="community-heading" text={home.support.title} phrase="Community" />
     </Stack>
     <Text tone="muted" balance>{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>

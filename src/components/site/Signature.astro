@@ -9,10 +9,13 @@
  */
 import { Image } from 'astro:assets';
 import Text from './Text.astro';
+import Handwritten from './Handwritten.astro';
 import logo from '../../assets/logos/library-tree.png';
+interface Props { handwritten?: boolean; }
+const { handwritten = false } = Astro.props;
 ---
 <div class="signature">
-  {Astro.slots.has('default') && <Text tone="muted" size="lead"><slot /></Text>}
+  {Astro.slots.has('default') && <Text tone="muted" size="lead">{handwritten ? <Handwritten variant="signature"><slot /></Handwritten> : <slot />}</Text>}
   <p class="signature-mark">
     <Image src={logo} alt="" width={77} densities={[1, 2]} loading="lazy" class="signature-logo" />
     <span>Cottonwood<br />Community Library</span>

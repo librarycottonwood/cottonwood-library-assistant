@@ -36,3 +36,12 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 
 ## Keep
 - Colours, Bree Serif + Mona Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.
+
+## Handwriting and leaves
+
+- Bree Serif and Mona Sans remain the main type pair. Self-hosted Caveat is an occasional indigo accent, applied through `Handwritten` or `AccentHeading`.
+- Choose one warm word or short phrase deliberately. The homepage hero uses “library.”, its community invitation uses “Community”, and the volunteer invitation uses “time”. The About page also uses a handwritten thank-you sign-off. Keep other headings plain.
+- `AccentHeading` receives the complete existing heading and an exact phrase. If that phrase is absent, it renders the complete heading plainly. Never change CMS wording to make a style work.
+- Keep navigation, buttons, form labels, hours, dates, prices, facts and paragraphs in their regular type. Handwriting stays real text, selectable and accessible, and enters with its surrounding group.
+- `LeafAccent` has three small variants: `sprig` for a quiet story heading, `pair` for gratitude, and `branch` for related ways to help. Use no more than one leaf accent per public page. `Section` places it above the heading with a small gap.
+- Use a leaf on a plain heading, separate from handwriting and crayon scenes. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.

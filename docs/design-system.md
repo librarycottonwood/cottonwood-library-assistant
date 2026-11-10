@@ -41,11 +41,12 @@ Use the role names below. Do not add new colors or shades.
 
 ### Fonts
 
-Two self-hosted families. Headings use Bree Serif; everything else uses Mona Sans.
+Bree Serif headings and Mona Sans body copy, with self-hosted Caveat reserved for a few warm words and thank-you notes.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--font-display` | `'Bree Serif', Georgia, serif` (Regular · 400) | Page titles and section headings. | Body copy, buttons, labels or card titles. | `<Heading size="display">` |
+| `--font-handwritten` | `'Caveat', 'Segoe Print', cursive` (Variable · 650) | One warm word in selected headings, or a short thank-you sign-off, through Handwritten. | Navigation, buttons, forms, dates, prices, hours, paragraphs, or every heading. | `<Handwritten>Community</Handwritten>` |
 | `--font-body` | `'Mona Sans Variable', 'Mona Sans', sans-serif` (Medium 500 / Semibold 600 / Bold 700) | Body copy, navigation, links, buttons, dates and labels. | Page and section headings (use --font-display). | `font-family: var(--font-body);` |
 | `--weight-regular` | `400` | Bree Serif headings. | Mona Sans text; it is lighter than the design. | `font-weight: var(--weight-regular);` |
 | `--weight-medium` | `500` | Body text and opening hours. | Buttons and card titles (use bold). | `font-weight: var(--weight-medium);` |
@@ -143,6 +144,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | Component | Purpose |
 | --- | --- |
 | [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
+| [AccentHeading](#accentheading) | A complete heading with one explicitly chosen word or short phrase in handwriting. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
@@ -152,11 +154,12 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
+| [Handwritten](#handwritten) | A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
-| [HeroHeading](#heroheading) | The complete homepage heading, with optional handwritten or leaf-accent preview treatments. |
-| [HeroStylePicker](#herostylepicker) | Temporary, collapsible comparison controls for the homepage heading. |
+| [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
+| [LeafAccent](#leafaccent) | A small family of outlined leaves: an upright sprig, a paired shoot, or a horizontal branch. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones. |
@@ -198,6 +201,27 @@ interface Props {
 <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
   <Section title="Visit us" headingId="visit-heading">…</Section>
 </BaseLayout>
+```
+
+### AccentHeading
+
+`src/components/site/AccentHeading.astro` — A complete heading with one explicitly chosen word or short phrase in handwriting.
+
+- **Use for:** Warm community and volunteer invitations; text is the complete existing wording and phrase is an exact, deliberate selection.
+- **Don't use for:** Automatically styling the last word of every heading, or rewriting CMS text to fit the accent. An absent phrase leaves the heading plain.
+
+```ts
+interface Props {
+  text: string;
+  phrase: string;
+  id?: string;
+  level?: 1 | 2 | 3;
+  size?: 'display' | 'heading' | 'title';
+}
+```
+
+```astro
+<AccentHeading id="community-heading" text={home.support.title} phrase="Community" />
 ```
 
 ### Badge
@@ -422,6 +446,21 @@ interface Props {
 </Grid>
 ```
 
+### Handwritten
+
+`src/components/site/Handwritten.astro` — A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy.
+
+- **Use for:** One warm word in a selected heading, or a short thank-you sign-off. Prefer AccentHeading for complete CMS headings.
+- **Don't use for:** Navigation, buttons, forms, dates, prices, hours, paragraphs, and combining it with a leaf on the same heading.
+
+```ts
+interface Props { variant?: 'heading' | 'hero' | 'signature'; }
+```
+
+```astro
+<Heading>Give your <Handwritten>time</Handwritten></Heading>
+```
+
 ### Heading
 
 `src/components/site/Heading.astro` — Page and section headings in Bree Serif, plus bold card-style titles.
@@ -446,10 +485,10 @@ interface Props {
 
 ### HeroHeading
 
-`src/components/site/HeroHeading.astro` — The complete homepage heading, with optional handwritten or leaf-accent preview treatments.
+`src/components/site/HeroHeading.astro` — The complete homepage heading, with its final word in the chosen handwritten style.
 
 - **Use for:** Once in the opening homepage Split, preserving both complete CMS heading lines.
-- **Don't use for:** Repeating these accents on other headings or animating them separately from the copy.
+- **Don't use for:** Adding a leaf or underline here, or animating the handwritten word separately from the copy.
 
 ```ts
 interface Props { lines: readonly string[]; id: string; }
@@ -457,17 +496,6 @@ interface Props { lines: readonly string[]; id: string; }
 
 ```astro
 <HeroHeading lines={hero.heading} id="welcome-heading" />
-```
-
-### HeroStylePicker
-
-`src/components/site/HeroStylePicker.astro` — Temporary, collapsible comparison controls for the homepage heading.
-
-- **Use for:** Only beside HeroHeading while reviewing its two alternatives on a preview URL.
-- **Don't use for:** Shipping the picker after choosing the final treatment; it stays hidden on live hosts.
-
-```astro
-<HeroStylePicker />
 ```
 
 ### IconLink
@@ -506,6 +534,21 @@ interface Props { image: LibraryImage; }
 <IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
   <Heading>Give your time</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
 </IllustratedCallout>
+```
+
+### LeafAccent
+
+`src/components/site/LeafAccent.astro` — A small family of outlined leaves: an upright sprig, a paired shoot, or a horizontal branch.
+
+- **Use for:** A quiet accent above a plain history, gratitude or ways-to-help heading. Section places it as part of the same heading group.
+- **Don't use for:** The homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
+
+```ts
+interface Props { variant?: 'sprig' | 'pair' | 'branch'; }
+```
+
+```astro
+<Section title="A place of our own" leaf="sprig" headingId="place-heading" />
 ```
 
 ### LibraryIllustration
@@ -625,6 +668,8 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
+  /** Small leaf accent above a plain heading; use instead of a crayon scene, at most once per page. */
+  leaf?: 'sprig' | 'pair' | 'branch';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -652,6 +697,10 @@ interface Props {
 
 - **Use for:** The end of a long text such as the About Us story, inside the same Section as the Prose, before its Donate button.
 - **Don't use for:** Page headers or footers (they have their own logo), or more than one per page.
+
+```ts
+interface Props { handwritten?: boolean; }
+```
 
 ```astro
 <Signature>Thank you for your support!</Signature>

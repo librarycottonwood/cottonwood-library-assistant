@@ -8,6 +8,7 @@ import Card from '../../components/site/Card.astro';
 import FundraiserForm from '../../components/site/FundraiserForm.astro';
 import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
+import AccentHeading from '../../components/site/AccentHeading.astro';
 import IconLink from '../../components/site/IconLink.astro';
 import IllustratedCallout from '../../components/site/IllustratedCallout.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
@@ -51,7 +52,7 @@ const otherWays = otherWaysToHelp(support.initiatives);
   </Split>}
   {volunteer && <Section headingId="volunteer-heading" id="volunteer" align="start">
     <IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
-      <Heading id="volunteer-heading">{volunteer.title}</Heading>
+      <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
       <Text tone="muted">{volunteer.summary}</Text>
       <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
     </IllustratedCallout>
@@ -62,7 +63,7 @@ const otherWays = otherWaysToHelp(support.initiatives);
     </Grid>
   </Section>}
   {/* Community acknowledgments from Sanity ("Giving and acknowledgments"); the old site's "Thank You!" section. */}
-  {support.updates.length > 0 && <Section title="Thank you to our supporters" headingId="supporters-heading" id="supporters">
+  {support.updates.length > 0 && <Section title="Thank you to our supporters" leaf="pair" headingId="supporters-heading" id="supporters">
     <Grid as="ul" columns={3}>
       {support.updates.map(item => <Card as="li" title={item.title} image={item.image} logo fullText>{item.body}</Card>)}
     </Grid>
