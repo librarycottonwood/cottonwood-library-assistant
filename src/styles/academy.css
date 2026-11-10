@@ -16,11 +16,8 @@ p { margin: 0 0 1rem; }
 li { margin-block: .4rem; }
 .skip-link { position: absolute; left: -10000px; }
 .skip-link:focus { left: 1rem; top: 1rem; z-index: 5; background: white; padding: .5rem; }
-.academy-header { min-height: 76px; padding: 1rem 2rem; border-bottom: 1px solid #e7e8ec; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1.5rem; background: #fff; }
-.academy-brand { color: #17191e; text-decoration: none; font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: 1rem; }
-.academy-brand span { color: var(--color-text-muted); border-left: 1px solid #d9dce2; padding-left: 1rem; font-weight: 500; font-size: .85rem; }
-.library-link { display: inline-flex; align-items: center; gap: .3rem; color: var(--color-text-muted); text-decoration: none; font-size: .8rem; }
-.academy-shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); max-width: 1440px; margin: 0 auto; }
+.lesson-menu .library-link { margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1rem; }
+.academy-shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); width: 100%; }
 .academy-sidebar { position: sticky; top: 24px; height: calc(100dvh - 48px); overflow-y: auto; border-right: 1px solid #e7e8ec; padding: 2rem 1rem; background: #fff; }
 .lesson-menu > summary { display: none; }
 .lesson-menu nav { font-size: .9rem; line-height: 1.5; }
@@ -31,9 +28,8 @@ li { margin-block: .4rem; }
 .lesson-menu a:hover { color: var(--color-primary); }
 .lesson-menu a[aria-current] { border-left-color: var(--color-primary); color: var(--color-primary-ink); font-weight: 650; }
 .nav-label { margin: 1.8rem .8rem .5rem; color: var(--color-text-muted); font-size: .8rem; font-weight: 650; }
-.academy-content { min-width: 0; width: 100%; max-width: 920px; padding: 2.5rem 3rem 0; }
+.academy-content { min-width: 0; width: 100%; padding: 2.5rem 3rem; }
 main { min-width: 0; }
-.academy-footer { border-top: 1px solid #e7e8ec; margin-top: 3rem; padding-block: 1.4rem; font-size: .75rem; color: var(--color-text-muted); }
 .lesson-header { margin-bottom: 2rem; }
 .lead { font-size: 1rem; color: var(--color-text-muted); margin: 0; }
 .eyebrow, .small { font-size: .8rem; color: var(--color-text-muted); }
@@ -81,7 +77,7 @@ main { min-width: 0; }
 .prompt .copy-status { padding: .6rem 0 0; font-size: .85rem; color: var(--color-text-muted); }
 .copy-status:empty { display: none; }
 .example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; }
-.example-card { display: flex; flex-direction: column; min-width: 0; margin: 0; }
+.example-card { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 1.25rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); }
 .example-card h2 { font: 650 1rem/1.45 var(--font-body); margin: 0; color: var(--color-primary-ink); }
 .example-card .prompt-actions { margin-top: auto; }
 .reference-links { list-style: none; padding: 0; font-size: .95rem; }
@@ -92,7 +88,7 @@ main { min-width: 0; }
 .service-group-title { font-size: 1.45rem; margin-bottom: 1rem; }
 .service-extra { display: inline-flex; align-items: center; gap: .25rem; font-size: .85rem; }
 .service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.service-card { min-width: 0; border-bottom: 1px solid var(--color-border); padding: 1rem 0 1.5rem; display: flex; flex-direction: column; scroll-margin-top: 24px; }
+.service-card { min-width: 0; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); padding: 1.25rem; display: flex; flex-direction: column; scroll-margin-top: 24px; }
 .service-heading { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
 .service-heading h3, .service-heading h4 { font: 650 1rem/1.35 var(--font-body); margin: 0; letter-spacing: -.015em; }
 .service-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid #e9eaed; border-radius: 10px; background: white; color: #454b52; }
@@ -124,21 +120,16 @@ main { min-width: 0; }
 .tool-addresses { overflow-wrap: anywhere; font-size: .85rem; }
 @media (max-width: 1050px) {
   .example-grid, .service-grid { grid-template-columns: minmax(0, 1fr); }
-  .academy-brand { display: block; font-size: .85rem; }
-  .academy-brand span { display: block; border: 0; padding: 0; font-size: .8rem; }
   .academy-shell { grid-template-columns: 230px minmax(0, 1fr); }
-  .academy-content { padding: 2.5rem 2rem 0; }
+  .academy-content { padding: 2.5rem 2rem; }
 }
 @media (max-width: 767px) {
-  .academy-header { min-height: 76px; padding: .75rem 1rem; grid-template-columns: 1fr auto; gap: .75rem; }
-  .library-link { grid-column: 2; grid-row: 1; }
-  .library-link { font-size: .8rem; }
   .academy-shell { display: block; }
   .academy-sidebar { position: static; height: auto; padding: 0 1rem; border-right: 0; border-bottom: 1px solid #e7e8ec; }
   .lesson-menu > summary { display: list-item; padding-block: .75rem; cursor: pointer; font-size: .95rem; }
   .lesson-menu nav { padding-bottom: 1rem; }
   .nav-label { margin-top: 1rem; }
-  .academy-content { padding: 1.75rem 1.25rem 0; }
+  .academy-content { padding: 1.75rem 1.25rem; }
   .service-grid { grid-template-columns: minmax(0, 1fr); }
   .lesson-pagination { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
   .lesson-page-link { min-height: 84px; }
@@ -152,7 +143,7 @@ main { min-width: 0; }
 @page { size: auto; margin: 15mm; }
 @media print {
   html { background: white; color: #1b2040; font-size: 11pt; line-height: 1.42; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .academy-header, .academy-sidebar, .lesson-topics, .academy-footer, .screen-only, .skip-link, .prompt-actions, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
+  .academy-sidebar, .lesson-topics, .screen-only, .skip-link, .prompt-actions, [data-copy-prompt], [data-print], .copy-status, .lesson-pagination { display: none !important; }
   .academy-shell { display: block; padding: 0; max-width: none; }
   .academy-content, .academy-content.with-page-index { max-width: none; padding: 0; }
   .with-page-index .lesson-layout { display: block; }
@@ -173,7 +164,7 @@ main { min-width: 0; }
   .print-lesson { padding: 22pt 0 0; margin: 22pt 0 0; border-top: 1px solid var(--color-border); }
   .handbook-cover + .print-lesson { margin: 0; padding: 0; border: 0; }
   .example-grid { display: block; }
-  .example-card { margin-block: 12pt; break-inside: avoid; }
+  .example-card { margin-block: 12pt; padding: 4pt 0 4pt 10pt; border: 0; border-left: 3px solid var(--color-primary); border-radius: 0; break-inside: avoid; }
   #practice-with-a-buddy { break-before: page; border: 0; margin: 0; padding: 0; }
   .print-title { font-size: 30pt; margin-bottom: 14pt; }
   .lesson-part { margin-block: 12pt; break-inside: avoid; }
