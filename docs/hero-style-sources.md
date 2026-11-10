@@ -8,7 +8,7 @@ The chosen homepage treatment uses Caveat for the final word. The temporary pick
 
 `Handwritten` owns the font, indigo color and three restrained variants: the selected hero treatment, a slightly smaller heading accent, and a short thank-you sign-off. `AccentHeading` preserves the complete incoming text and accents only an explicitly named phrase. An absent phrase leaves the heading plain.
 
-Current public uses are the homepage hero, “Community” in its support invitation, “time” in the Support Us volunteer invitation, and the About page’s thank-you. These examples establish the pattern without applying it to every heading. Usage limits are in `docs/design-rules.md`.
+Current public uses are the homepage hero, “time” in the Support Us volunteer invitation, and the About page’s thank-you. Each page has just one handwritten moment. The homepage’s “Powered by Community” remains plain so adjacent sections do not repeat the treatment. Usage limits are in `docs/design-rules.md`.
 
 ## Leaves
 

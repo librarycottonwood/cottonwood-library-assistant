@@ -17,7 +17,7 @@ import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 const isCurrent = (href: string) => { const link = [...links, supportLink].find(item => item.href === href); return link ? isCurrentSection(link, Astro.url.pathname) : false; };
-// Keep the canonical CMS hours intact. Phones place each short day label above its unchanged hours.
+// Keep the canonical CMS hours intact. Phones use two centered rows with short days and unchanged times.
 const openHours = library.hours.filter(row => !/^closed$/i.test(row.hours));
 const hoursParts = openHours.length ? openHours : [{ days: '', hours: library.hoursSummary }];
 const shortDays: Record<string, string> = { Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
@@ -123,11 +123,11 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
   .hours-short { display: none; }
   .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: inherit; opacity: .8; }
   @media (max-width: 47.99rem) {
-    .hours-strip { line-height: var(--leading-snug); }
+    .hours-strip { line-height: var(--leading-relaxed); }
     .hours-strip p { width: 100%; }
     .hours-strip :global(.hours-icon) { display: none; }
-    .hours-groups { width: 100%; gap: var(--space-xs) var(--space-sm); }
-    .hours-part { display: flex; flex: 1 1 8.5em; flex-direction: column; align-items: center; min-width: 0; }
+    .hours-groups { width: 100%; flex-direction: column; align-items: center; gap: 0; }
+    .hours-part { display: flex; flex: 0 0 auto; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 var(--space-xs); min-width: 0; }
     .hours-day, .hours-time { overflow-wrap: anywhere; }
     .hours-day { font-weight: var(--weight-semibold); }
     .hours-full { display: none; }

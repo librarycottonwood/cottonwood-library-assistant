@@ -83,6 +83,7 @@ export const tokenGroups: TokenGroup[] = [
     note: 'Body and heading sizes come from the 1920px design and scale down on phones (--fluid-*); Heading and Text pick the right one. Utility is the compact header label size.',
     tokens: [
       token({ name: 'text-utility', label: 'Utility', value: '0.9375rem', detail: '15px', useFor: 'The compact opening-hours strip and short utility labels.', avoid: 'Body copy and main navigation.', example: 'font-size: var(--text-utility);' }),
+      token({ name: 'text-contact-detail', label: 'Contact detail', value: '0.875rem', detail: '14px', useFor: 'Supporting address and phone values inside the compact mobile contact tiles.', avoid: 'Main copy, form labels, headings, hours or buttons.', example: 'font-size: var(--text-contact-detail);' }),
       token({ name: 'text-label', label: 'Label', value: '1.25rem', detail: '20px', useFor: 'Badges, dates and notices.', avoid: 'Paragraphs people need to read.', example: '<Text size="label">' }),
       token({ name: 'text-body', label: 'Body', value: '1.5rem', detail: '24px', useFor: 'Body copy, card titles, navigation and buttons.', avoid: 'Headings.', example: '<Text>' }),
       token({ name: 'text-lead', label: 'Lead', value: '1.875rem', detail: '30px', useFor: 'A short introduction under a heading, and the wordmark.', avoid: 'More than two sentences.', example: '<Text size="lead">' }),
@@ -120,9 +121,10 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'corners', title: 'Corners', property: 'border-radius',
-    note: 'Three shapes only.',
+    note: 'Square edges, compact contact tiles, soft photo corners, and action pills each have a distinct role.',
     tokens: [
       token({ name: 'radius-none', label: 'Square', value: '0px', useFor: 'Sections, strips and edges where a photo bleeds off the page.', avoid: 'Photos inside the page (use --radius-image).', example: 'border-radius: var(--radius-none);' }),
+      token({ name: 'radius-contact', label: 'Compact contact tile', value: '1rem', detail: '16px', useFor: 'The two small mobile Directions and Call tiles below the hero photo.', avoid: 'Photos, buttons, large panels or full-width capsules.', example: 'border-radius: var(--radius-contact);' }),
       token({ name: 'radius-image', label: 'Soft', value: '2.1875rem', detail: '35px', useFor: 'Photos, image containers and floating panels.', avoid: 'Buttons and badges (use --radius-pill).', example: 'border-radius: var(--radius-image);' }),
       token({ name: 'radius-pill', label: 'Pill', value: '6.25rem', detail: '100px', useFor: 'Buttons, badges and contact strips.', avoid: 'Photos or large panels.', example: '<Button> / <Badge>' }),
     ],

@@ -60,6 +60,7 @@ Body and heading sizes come from the 1920px design and scale down on phones (--f
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--text-utility` | `0.9375rem` (15px) | The compact opening-hours strip and short utility labels. | Body copy and main navigation. | `font-size: var(--text-utility);` |
+| `--text-contact-detail` | `0.875rem` (14px) | Supporting address and phone values inside the compact mobile contact tiles. | Main copy, form labels, headings, hours or buttons. | `font-size: var(--text-contact-detail);` |
 | `--text-label` | `1.25rem` (20px) | Badges, dates and notices. | Paragraphs people need to read. | `<Text size="label">` |
 | `--text-body` | `1.5rem` (24px) | Body copy, card titles, navigation and buttons. | Headings. | `<Text>` |
 | `--text-lead` | `1.875rem` (30px) | A short introduction under a heading, and the wordmark. | More than two sentences. | `<Text size="lead">` |
@@ -98,11 +99,12 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 
 ### Corners
 
-Three shapes only.
+Square edges, compact contact tiles, soft photo corners, and action pills each have a distinct role.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--radius-none` | `0px` | Sections, strips and edges where a photo bleeds off the page. | Photos inside the page (use --radius-image). | `border-radius: var(--radius-none);` |
+| `--radius-contact` | `1rem` (16px) | The two small mobile Directions and Call tiles below the hero photo. | Photos, buttons, large panels or full-width capsules. | `border-radius: var(--radius-contact);` |
 | `--radius-image` | `2.1875rem` (35px) | Photos, image containers and floating panels. | Buttons and badges (use --radius-pill). | `border-radius: var(--radius-image);` |
 | `--radius-pill` | `6.25rem` (100px) | Buttons, badges and contact strips. | Photos or large panels. | `<Button> / <Badge>` |
 
@@ -156,6 +158,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Handwritten](#handwritten) | A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
+| [HeroContacts](#herocontacts) | Directions and phone links that become two compact action tiles beneath the hero photo on phones. |
 | [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | A contained pale-indigo band pairing a purpose-made illustration with left-aligned copy and an action. |
@@ -167,7 +170,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
-| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions flow beneath the photo, aligned with the copy; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
+| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two action tiles beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
@@ -221,7 +224,7 @@ interface Props {
 ```
 
 ```astro
-<AccentHeading id="community-heading" text={home.support.title} phrase="Community" />
+<AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
 ```
 
 ### Badge
@@ -483,6 +486,21 @@ interface Props {
 <Heading level={1} size="display" id="welcome-heading">Your community.<br />Your library.</Heading>
 ```
 
+### HeroContacts
+
+`src/components/site/HeroContacts.astro` — Directions and phone links that become two compact action tiles beneath the hero photo on phones.
+
+- **Use for:** Once in the homepage Split caption, with the complete current address, phone and original destinations.
+- **Don't use for:** Other page actions, shortening contact values, or replacing the hero's main heading with contact details.
+
+```ts
+interface Props { address: string; directionsHref: string; phone: string; phoneHref: string; }
+```
+
+```astro
+<HeroContacts slot="caption" address={`${library.address}, Cottonwood`} directionsHref={library.directionsUrl} phone={library.phone} phoneHref={library.phoneHref} />
+```
+
 ### HeroHeading
 
 `src/components/site/HeroHeading.astro` — The complete homepage heading, with its final word in the chosen handwritten style.
@@ -708,7 +726,7 @@ interface Props { handwritten?: boolean; }
 
 ### Split
 
-`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions flow beneath the photo, aligned with the copy; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two action tiles beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
 - **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
 - **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).

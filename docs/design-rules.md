@@ -40,8 +40,14 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 ## Handwriting and leaves
 
 - Bree Serif and Mona Sans remain the main type pair. Self-hosted Caveat is an occasional indigo accent, applied through `Handwritten` or `AccentHeading`.
-- Choose one warm word or short phrase deliberately. The homepage hero uses “library.”, its community invitation uses “Community”, and the volunteer invitation uses “time”. The About page also uses a handwritten thank-you sign-off. Keep other headings plain.
+- Choose one warm word or short phrase deliberately, at most once per page. The homepage uses “library.” only in the hero; “Powered by Community” stays plain. The Support Us volunteer invitation uses “time”, and the About page uses a handwritten thank-you sign-off. Never repeat handwriting in back-to-back sections.
 - `AccentHeading` receives the complete existing heading and an exact phrase. If that phrase is absent, it renders the complete heading plainly. Never change CMS wording to make a style work.
 - Keep navigation, buttons, form labels, hours, dates, prices, facts and paragraphs in their regular type. Handwriting stays real text, selectable and accessible, and enters with its surrounding group.
 - `LeafAccent` has three small variants: `sprig` for a quiet story heading, `pair` for gratitude, and `branch` for related ways to help. Use no more than one leaf accent per public page. `Section` places it above the heading with a small gap.
 - Use a leaf on a plain heading, separate from handwriting and crayon scenes. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.
+
+## Mobile hours and hero contacts
+
+- Keep the hours strip indigo at every width. Phones use centered rows with short day labels beside the complete times. The canonical CMS summary remains accessible, and enlarged text can wrap.
+- `HeroContacts` provides the chosen two-tile mobile layout: Directions and Call the library, with the complete address and phone. Its 16px corners and 14px supporting text have dedicated tokens; padding and gaps use the existing spacing steps.
+- The tiles sit below the photo and stack when text needs more room. Wider screens retain the existing inline contact overlay. Keep these factual details in Mona Sans, separate from decorative handwriting and leaves.
