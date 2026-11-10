@@ -46,7 +46,7 @@ li { margin-block: .4rem; }
 .lesson-menu a { display: flex; align-items: center; gap: .65rem; padding: .8rem .75rem; border-radius: 10px; text-decoration: none; color: var(--color-text-muted); }
 .lesson-menu a svg { flex-shrink: 0; margin-top: .08rem; }
 .lesson-menu a:hover { color: var(--color-primary-ink); background: var(--color-background); }
-.lesson-menu a[aria-current] { color: var(--color-primary); background: var(--color-background); font-weight: 750; box-shadow: inset 3px 0 var(--color-primary); }
+.lesson-menu a[aria-current] { color: var(--color-primary-ink); font-weight: 650; }
 .academy-content { min-width: 0; width: 100%; max-width: 960px; margin-inline: auto; padding: 2.5rem 3rem; }
 main { min-width: 0; }
 .lesson-header { margin-bottom: 2rem; }

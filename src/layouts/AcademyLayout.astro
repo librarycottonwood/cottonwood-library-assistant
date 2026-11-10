@@ -40,8 +40,8 @@ const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'prev
         <details class="lesson-menu" open>
           <summary><ChevronRight size={18} aria-hidden="true" /><span>Browse lessons</span></summary>
           <nav aria-label="Academy lessons">
-            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
-            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
+            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}>{active === 'home' ? <ChevronRight size={18} aria-hidden="true" /> : <House size={18} aria-hidden="true" />}<span>Overview</span></a>
+            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{active === lesson.slug ? <ChevronRight size={18} aria-hidden="true" /> : <LessonIcon slug={lesson.slug} />}<span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
           </nav>
         </details>
       </aside>
