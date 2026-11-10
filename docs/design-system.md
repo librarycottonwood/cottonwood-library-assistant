@@ -13,6 +13,7 @@ Read this before building or changing a page. `docs/design-rules.md` holds the r
 5. If no component fits, add a small one in `src/components/site/` with a usage block (copy an existing one), then run `pnpm design:docs`. Keep it to what the page needs.
 6. Sanity (through `contentRepository`) holds only content that changes often: events, news, newsletters, notices, hours, fundraisers, site settings. Everything else (service details, prices, fees, About Us, ways to help, page photos) is written in the page file in Figma's wording; never add Sanity fields for it. See docs/design-rules.md.
 7. Pages have no `<style>`, `style=` or `class=` of their own, and no raw colors, sizes or spacing. If Figma needs something new, extend a component with a prop or variant (never copy one) or add a reusable one. A Figma value that isn't a token is snapped to the nearest token and listed in the PR.
+8. Every page passes BaseLayout its own `title` ("<Page> | Cottonwood Community Library") and `description` (1–2 sentences from facts on the page), and an `image` when it has its own photo. The canonical address, share card, schema.org data and sitemap entry are automatic. See "Search and sharing" in docs/design-rules.md.
 
 Breakpoints used inside components (min-width): tablet `48rem` (768px), split `64rem` (1024px), desktop `90rem` (1440px), wide `100rem` (1600px).
 
@@ -121,7 +122,7 @@ CSS speeds for hover and press feedback. Entrances and sliding (sections rising 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--motion-quick` | `150ms` | Hover and press feedback: button colors, arrows nudging, a button pressing in. | Anything that opens or moves into place (use --motion-smooth). | `transition: background-color var(--motion-quick) var(--ease-out);` |
-| `--motion-smooth` | `300ms` | CSS changes that move a little further: the phone menu opening, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
+| `--motion-smooth` | `300ms` | CSS changes that move a little further: the icon turning in the phone menu button, a card photo zooming, the FAQ + turning into ×. | Hover colors; they feel sluggish (use --motion-quick). | `transition: transform var(--motion-smooth) var(--ease-out);` |
 | `--motion-entrance` | `600ms` | A slower CSS change the visitor watches happen once. | Entrances (use data-motion, src/scripts/motion.ts) or anything the visitor clicked; they would wait for it. | `animation: rise var(--motion-entrance) var(--ease-out) both;` |
 | `--ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and animation: starts quickly, settles gently. | Linear or bouncy curves; they read as mechanical or playful. | `transition-timing-function: var(--ease-out);` |
 
@@ -159,15 +160,23 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 
 `src/layouts/BaseLayout.astro` — The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link.
 
-- **Use for:** Wrapping every page. Put Splits and Sections directly inside it.
-- **Don't use for:** Page-level styles or spacing: build from src/components/site instead.
+- **Use for:** Wrapping every page. Put Splits and Sections directly inside it. Every page passes its own `title` ("<Page> | Cottonwood Community Library") and `description` (1–2 sentences from facts on the page), and an `image` when it has its own photo. Canonical address, share card, schema.org data and the sitemap entry are automatic (docs/design-rules.md, "Search and sharing").
+- **Don't use for:** Page-level styles or spacing: build from src/components/site instead. Reusing another page's title or description.
 
 ```ts
 interface Props {
-  /** Browser tab and search title. */
-  title?: string;
-  /** One-sentence page summary for search results. */
-  description?: string;
+  /** Browser tab, search and share-card title, unique to this page: "<Page> | Cottonwood Community Library". */
+  title: string;
+  /** 1–2 sentences for search results and share cards, from facts on this page. Unique to this page. */
+  description: string;
+  /** Photo for the link preview on Facebook and in texts; the homepage photo when absent. Pass the page's own photo. */
+  image?: LibraryImage;
+  /** 'article' for a news post. */
+  type?: 'website' | 'article';
+  /** Extra schema.org data for search engines and AI answers (src/content/seo.mjs). */
+  schema?: Record<string, unknown>[];
+  /** Keep this page out of search results (the "page not found" page). */
+  noindex?: boolean;
 }
 ```
 
@@ -223,13 +232,15 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   iconEnd?: IconName;
   /** Only for <button>. */
   type?: 'button' | 'submit';
+  /** Extra words only screen readers and search engines hear, so a short label like "Read more" says where it goes. */
+  screenReaderText?: string;
 }
 ```
 
 ```astro
 <Stack direction="row" gap="xs" wrap>
   <Button href={library.directionsUrl} variant="accent" icon="navigate">Get directions</Button>
-  <Button href="/visit/" iconEnd="arrow">Read more</Button>
+  <Button href="/visit/" iconEnd="arrow" screenReaderText="about visiting">Read more</Button>
 </Stack>
 ```
 
@@ -252,6 +263,10 @@ interface Props {
   layout?: 'stacked' | 'adaptive';
   /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
+  /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
+  logo?: boolean;
+  /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
+  fullText?: boolean;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }

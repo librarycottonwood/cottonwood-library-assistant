@@ -9,6 +9,18 @@ export const UPDATE_PATTERN = /^content-updates\/\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-
 export const isContentUpdatePath = file => file === LEGACY_UPDATE_PATH || UPDATE_PATTERN.test(file);
 export const COMMENT_MARKER = '<!-- cottonwood-content-changes -->';
 
+// Instructions and notes the website build never reads (tests that read them still run).
+const INSTRUCTION_FOLDERS = ['assistant/', 'docs/', 'plugins/', '.claude/'];
+export const isInstructionPath = file => !isContentUpdatePath(file) && (INSTRUCTION_FOLDERS.some(folder => file.startsWith(folder)) || /^[^/]+\.md$/.test(file));
+/** What a PR changes, from its file list (include renamed files' old paths): 'docs' (instructions only,
+ * no website change), 'content' (content-update files, maybe with instructions) or 'code'. Unsure means code. */
+export function changeKind(files) {
+  if (!files.length) return 'code';
+  if (files.every(isInstructionPath)) return 'docs';
+  if (files.every(file => isContentUpdatePath(file) || isInstructionPath(file))) return 'content';
+  return 'code';
+}
+
 const slug = value => String(value).normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60).replace(/-$/, '');
 export function contentUpdatePath(day, name) {
   const file = `content-updates/${day}-${slug(name) || 'save'}.json`;

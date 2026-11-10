@@ -149,7 +149,7 @@ const initiative = (overrides = {}) => ({ id: 'book-sale', title: 'Book sale', c
 const campaign = (overrides = {}) => ({ id: 'auction', title: 'Online auction', description: 'Bid on items.', url: 'https://givebutter.com/auction', givebutter: { formWidgetId: 'jwyYlq' }, ...overrides });
 
 test('phone links typed with spaces, punctuation or a country code become one dialable tel: link', () => {
-  for (const [href, expected] of [['tel:(208) 962-3851', 'tel:+12089623851'], ['tel:+1 208 962 3851', 'tel:+12089623851'], ['tel:208-962-3851', 'tel:+12089623851'], ['tel:+15303474818', 'tel:+15303474818'], ['tel:(530) 347-3373 ext. 2', 'tel:+15303473373,2'], ['tel:211', 'tel:211']]) {
+  for (const [href, expected] of [['tel:(208) 555-0142', 'tel:+12085550142'], ['tel:+1 208 555 0142', 'tel:+12085550142'], ['tel:208-555-0142', 'tel:+12085550142'], ['tel:+15303474818', 'tel:+15303474818'], ['tel:(530) 555-0173 ext. 2', 'tel:+15305550173,2'], ['tel:211', 'tel:211']]) {
     const s = fixture(); doc(s, 'siteSettings').navigation[0].href = href;
     const { options } = quiet();
     assert.equal(validateSanitySnapshot(s, undefined, options).home.navigation[0].href, expected, href);
@@ -220,7 +220,7 @@ test('blank story paragraphs and blank steps are left off instead of failing the
   assert.match(warnings[0], /Library story › Story paragraphs › item 2 \(story\.paragraphs\[1\]\): This entry is empty/);
 });
 test('library phone numbers with an extension keep the extension in the call link', () => {
-  for (const [phone, href] of [['(530) 347-3373 ext. 2', 'tel:+15303473373,2'], ['530-347-3373 x12', 'tel:+15303473373,12'], ['1 (530) 347-4818', 'tel:+15303474818'], ['+1 530 347 4818', 'tel:+15303474818']]) {
+  for (const [phone, href] of [['(530) 555-0173 ext. 2', 'tel:+15305550173,2'], ['530-555-0173 x12', 'tel:+15305550173,12'], ['1 (530) 347-4818', 'tel:+15303474818'], ['+1 530 347 4818', 'tel:+15303474818']]) {
     const s = fixture(); doc(s, 'siteSettings').library.phone = phone;
     const library = validateSanitySnapshot(s, undefined, quiet().options).home.library;
     assert.equal(library.phoneHref, href, phone); assert.equal(library.phone, phone);
@@ -286,4 +286,19 @@ test('correction warnings print once per message by default and are returned wit
   } finally { console.warn = original; }
   assert.equal(printed.length, 1);
   assert.match(printed[0], /^Sanity content warning: In Library settings/);
+});
+test('a notice keeps its closed days (sorted, once each) or its "stays open" switch; older notices need neither', () => {
+  const withNotice = fields => { const snapshot = fixture(); snapshot.documents = snapshot.documents.filter(item => item._type !== 'notice'); snapshot.documents.push({_id:'notice-thanksgiving',_type:'notice',slug:{current:'holiday'},message:'Closed for Thanksgiving.',startsOn:'2026-11-16',endsOn:'2026-11-28',...fields}); return snapshot; };
+  const notice = fields => validateSanitySnapshot(withNotice(fields), undefined, { warn: () => {} }).notices[0];
+  assert.deepEqual(notice({}), {id:'holiday',message:'Closed for Thanksgiving.',startsOn:'2026-11-16',endsOn:'2026-11-28'});
+  assert.deepEqual(notice({closedDates:['2026-11-27','2026-11-26','2026-11-26']}).closedDates, ['2026-11-26','2026-11-27']);
+  assert.equal(notice({staysOpen:true}).staysOpen, true);
+  assert.equal('staysOpen' in notice({staysOpen:false}), false);
+  assert.equal('closedDates' in notice({closedDates:[]}), false);
+  const both = validateSanitySnapshot(withNotice({closedDates:['2026-11-26'],staysOpen:true}), undefined, { warn: () => {} });
+  assert.deepEqual(both.notices[0].closedDates, ['2026-11-26']);
+  assert.equal('staysOpen' in both.notices[0], false);
+  assert.match(both.warnings.join('\n'), /uses the closed days/);
+  assert.throws(() => validateSanitySnapshot(withNotice({closedDates:['Nov 26']})), /Days the library is closed/);
+  assert.throws(() => validateSanitySnapshot(withNotice({staysOpen:'yes'})), /on or off/);
 });

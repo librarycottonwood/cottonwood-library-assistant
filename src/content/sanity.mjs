@@ -300,7 +300,13 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
     const startsOn = day(doc.startsOn, field('First day to show', 'startsOn')), endsOn = day(doc.endsOn, field('Last day to show', 'endsOn'));
     if (endsOn < startsOn) problem(field('Last day to show', 'endsOn'), `The notice ends (${endsOn}) before it starts (${startsOn}). Fix one of the dates.`);
     const linkAt = field('Optional link', 'link');
-    return { id: slug(doc.slug?.current ?? doc.id ?? doc._id, field('Page address', 'slug')), message: text(doc.message, field('Banner message', 'message')), startsOn, endsOn, ...(doc.link ? { link: { label: text(doc.link.label, sub(linkAt, 'Label', 'label')), href: safeHref(doc.link.href, sub(linkAt, 'Destination', 'href'), warn) } } : {}) };
+    // Closed days decide which regular-program sessions are left off; see programSessions in seo.mjs.
+    const closedAt = field('Days the library is closed', 'closedDates');
+    const closedDates = [...new Set(array(doc.closedDates ?? [], closedAt).map((entry, index) => day(entry, item(closedAt, index))))].sort();
+    if (doc.staysOpen != null && typeof doc.staysOpen !== 'boolean') problem(field('The library stays open', 'staysOpen'), 'This must be on or off.');
+    const staysOpen = doc.staysOpen === true && !closedDates.length;
+    if (doc.staysOpen === true && closedDates.length) warn(`${where(closedAt)}: this notice lists closed days and also says the library stays open. The website uses the closed days.`);
+    return { id: slug(doc.slug?.current ?? doc.id ?? doc._id, field('Page address', 'slug')), message: text(doc.message, field('Banner message', 'message')), startsOn, endsOn, ...(closedDates.length ? { closedDates } : {}), ...(staysOpen ? { staysOpen } : {}), ...(doc.link ? { link: { label: text(doc.link.label, sub(linkAt, 'Label', 'label')), href: safeHref(doc.link.href, sub(linkAt, 'Destination', 'href'), warn) } } : {}) };
   })), 'id', 'notices');
   return { home, support, events, posts, notices, newsletters, warnings };
 }

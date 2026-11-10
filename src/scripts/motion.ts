@@ -37,6 +37,11 @@ export const presets = {
   settle: { keyframes: { transform: ['scale(1.05)', 'scale(1)'] }, transition: { type: 'spring', visualDuration: 1.2, bounce: 0 } },
   rise: { keyframes: { opacity: [0, 1], transform: ['translateY(24px)', 'translateY(0px)'] }, transition: { ...springs.enter, opacity: { duration: 0.5, ease: 'easeOut' } } },
   /** rise for the first screen when a page opens: shorter and closer, so the page is readable almost at once. */
+  /** The phone menu opening: the panel fades in while its links rise into place a beat apart. */
+  menuPanel: { keyframes: { opacity: [0, 1] }, transition: { duration: 0.2, ease: 'easeOut' } },
+  menuItem: { keyframes: { opacity: [0, 1], transform: ['translateY(16px)', 'translateY(0px)'] }, transition: { ...springs.open, visualDuration: 0.45, opacity: { duration: 0.3, ease: 'easeOut' } } },
+  /** …and closing: a quick fade, so the page is back at once. */
+  menuClose: { keyframes: { opacity: [1, 0] }, transition: { duration: 0.15, ease: 'easeIn' } },
   riseOnLoad: { keyframes: { opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0px)'] }, transition: { type: 'spring', visualDuration: 0.4, bounce: 0, opacity: { duration: 0.25, ease: 'easeOut' } } },
 } as const;
 
@@ -54,6 +59,33 @@ export async function slide(element: HTMLElement, open: boolean) {
   await animate(element, open ? { height: [0, height], opacity: [0, 1] } : { height: [element.offsetHeight, 0], opacity: [1, 0] }, springs.open);
   element.style.removeProperty('height');
   element.style.removeProperty('opacity');
+}
+
+/**
+ * Open or close the phone menu (SiteHeader): fade the panel, and on opening let each link rise a beat after the last.
+ * Resolves when done, so the caller can hide the panel; instant when motion is off. Starting again (a quick second
+ * tap) stops the animation still running.
+ */
+let menuRunning: { stop: () => void }[] = [];
+export async function menu(panel: HTMLElement, open: boolean) {
+  for (const running of menuRunning) running.stop();
+  menuRunning = [];
+  if (!motionAllowed()) return;
+  const items = [...panel.children].filter((child): child is HTMLElement => child instanceof HTMLElement);
+  if (!open) {
+    const closing = animate(panel, presets.menuClose.keyframes, presets.menuClose.transition);
+    menuRunning = [closing];
+    for (const item of items) { item.style.removeProperty('opacity'); item.style.removeProperty('transform'); }
+    await closing;
+    if (menuRunning[0] === closing) clear(panel);
+    return;
+  }
+  const fading = animate(panel, presets.menuPanel.keyframes, presets.menuPanel.transition);
+  const rising = items.map((item, index) => animate(item, presets.menuItem.keyframes, { ...presets.menuItem.transition, delay: 0.03 + Math.min(index, 8) * 0.04 }));
+  menuRunning = [fading, ...rising];
+  await Promise.all([fading, ...rising]);
+  clear(panel);
+  items.forEach(clear);
 }
 
 function targets(): HTMLElement[] {

@@ -229,6 +229,7 @@ export function renderReference(docs) {
     '5. If no component fits, add a small one in `src/components/site/` with a usage block (copy an existing one), then run `pnpm design:docs`. Keep it to what the page needs.',
     '6. Sanity (through `contentRepository`) holds only content that changes often: events, news, newsletters, notices, hours, fundraisers, site settings. Everything else (service details, prices, fees, About Us, ways to help, page photos) is written in the page file in Figma\'s wording; never add Sanity fields for it. See docs/design-rules.md.',
     '7. Pages have no `<style>`, `style=` or `class=` of their own, and no raw colors, sizes or spacing. If Figma needs something new, extend a component with a prop or variant (never copy one) or add a reusable one. A Figma value that isn\'t a token is snapped to the nearest token and listed in the PR.',
+    '8. Every page passes BaseLayout its own `title` ("<Page> | Cottonwood Community Library") and `description` (1–2 sentences from facts on the page), and an `image` when it has its own photo. The canonical address, share card, schema.org data and sitemap entry are automatic. See "Search and sharing" in docs/design-rules.md.',
     '',
     `Breakpoints used inside components (min-width): ${Object.entries(breakpoints).map(([name, value]) => `${name} \`${value}\` (${parseFloat(value) * 16}px)`).join(', ')}.`,
     '',

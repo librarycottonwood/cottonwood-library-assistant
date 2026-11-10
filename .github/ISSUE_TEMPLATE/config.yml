@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Something is wrong on the library website
+    url: https://www.cottonwoodcommunitylibrary.com/visit/
+    about: Wrong hours, a broken link or an event question? Contact the library directly.
+  - name: Report a security problem
+    url: https://github.com/librarycottonwood/cottonwood-library-assistant/security/advisories/new
+    about: Please report security problems privately.

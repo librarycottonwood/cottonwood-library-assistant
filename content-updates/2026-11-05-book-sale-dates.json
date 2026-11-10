@@ -1,0 +1,25 @@
+{
+  "request": "Match the October book sale dates to the Fall 2026 newsletter: October 16 at 10 a.m. through Wednesday, October 21 at 5 p.m.",
+  "sanityDocuments": [
+    {
+      "id": "event-quarterly-book-sale",
+      "revision": "XqD2Y4IF4G6tcn4EeY31ra",
+      "fields": [
+        "sessions"
+      ],
+      "before": {
+        "sessions": [
+          {
+            "startsAt": "2026-10-16T10:00:00-07:00",
+            "endsAt": "2026-10-16T14:00:00-07:00"
+          },
+          {
+            "startsAt": "2026-10-17T10:00:00-07:00",
+            "endsAt": "2026-10-17T14:00:00-07:00"
+          }
+        ]
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}

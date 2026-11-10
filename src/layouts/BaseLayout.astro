@@ -2,8 +2,11 @@
 /**
  * @component BaseLayout
  * The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link.
- * @use Wrapping every page. Put Splits and Sections directly inside it.
- * @avoid Page-level styles or spacing: build from src/components/site instead.
+ * @use Wrapping every page. Put Splits and Sections directly inside it. Every page passes its own `title`
+ * ("<Page> | Cottonwood Community Library") and `description` (1–2 sentences from facts on the page), and an
+ * `image` when it has its own photo. Canonical address, share card, schema.org data and the sitemap entry are
+ * automatic (docs/design-rules.md, "Search and sharing").
+ * @avoid Page-level styles or spacing: build from src/components/site instead. Reusing another page's title or description.
  * @example
  * <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
  *   <Section title="Visit us" headingId="visit-heading">…</Section>
@@ -17,16 +20,30 @@ import SiteFooter from '../components/site/SiteFooter.astro';
 import { contentRepository } from '../content/repository';
 import { givebutterScriptSrc, sitewideGivebutterAccount } from '../content/donate';
 import CampaignExpiry from '../components/CampaignExpiry.astro';
+import SeoMeta from '../components/SeoMeta.astro';
+import type { LibraryImage } from '../content/types';
 import '../styles/base.css';
 interface Props {
-  /** Browser tab and search title. */
-  title?: string;
-  /** One-sentence page summary for search results. */
-  description?: string;
+  /** Browser tab, search and share-card title, unique to this page: "<Page> | Cottonwood Community Library". */
+  title: string;
+  /** 1–2 sentences for search results and share cards, from facts on this page. Unique to this page. */
+  description: string;
+  /** Photo for the link preview on Facebook and in texts; the homepage photo when absent. Pass the page's own photo. */
+  image?: LibraryImage;
+  /** 'article' for a news post. */
+  type?: 'website' | 'article';
+  /** Extra schema.org data for search engines and AI answers (src/content/seo.mjs). */
+  schema?: Record<string, unknown>[];
+  /** Keep this page out of search results (the "page not found" page). */
+  noindex?: boolean;
 }
 const {
-  title = 'Cottonwood Community Library | Your community, your library',
-  description = 'Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.',
+  title,
+  description,
+  image,
+  type,
+  schema,
+  noindex,
 } = Astro.props;
 const [content, notices] = await Promise.all([contentRepository.getHome(), contentRepository.getNotices()]);
 // Donate buttons are on every page, so once they open Givebutter's popup its script loads once per page here.
@@ -38,7 +55,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="robots" content="noindex, nofollow" />
+    <SeoMeta title={title} description={description} library={content.library} image={image} defaultImage={content.hero.image} type={type} schema={schema} noindex={noindex} />
     <meta name="theme-color" content="#4956a7" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />

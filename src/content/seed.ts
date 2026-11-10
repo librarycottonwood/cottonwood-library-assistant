@@ -1,7 +1,7 @@
 import type { HomeContent } from './types';
 
 /** Source: research/site-inventory.md and the library's Summer 2026 newsletter.
- * Editorial headlines are prototype copy. Public facts need library review before launch.
+ * Starting copy only: the live website reads its content from Sanity, never from this file.
  * Keep program recurrences separate from project meetings; do not invent dated occurrences.
  */
 export const homeContent = {
@@ -28,7 +28,7 @@ export const homeContent = {
     donationUrl: null,
     // The general donation campaign in Givebutter, e.g. { account: 'AbC123xYz', campaign: 'Q1W2E3' }.
     // null until the board supplies it; then every Donate button opens Givebutter's checkout popup
-    // (see .claude/skills/fundraisers/SKILL.md, "Donate buttons").
+    // (see plugins/cottonwood-library/skills/fundraisers/SKILL.md, "Donate buttons").
     givebutter: null as HomeContent['library']['givebutter'],
   },
   navigation: [

@@ -16,13 +16,15 @@ import Text from '../../../components/site/Text.astro';
 import { mainNavigation } from '../../../components/site/navigation';
 import { contentRepository } from '../../../content/repository';
 import type { LibraryImage, Program } from '../../../content/types';
+import { SITE_URL, programEventNodes, programSessions } from '../../../content/seo.mjs';
+import { sessionPhrase } from '../../../content/schedule.mjs';
 export async function getStaticPaths() {
   const { programs } = await contentRepository.getHome();
   return programs.map(program => ({ params: { slug: program.id }, props: { program } }));
 }
 interface Props { program: Program; }
 const { program } = Astro.props;
-const { library } = await contentRepository.getHome();
+const [{ library }, notices, events] = await Promise.all([contentRepository.getHome(), contentRepository.getNotices(), contentRepository.getEvents()]);
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 const regularLink = { label: 'Regular Events', href: '/events/#regular' };
 // More photos from the program, shown under the panel.
@@ -53,13 +55,18 @@ const questions: Record<string, { question: string; answer: string }[]> = {
   ],
 };
 const faq = questions[program.id] ?? [];
+// Dated sessions for the next ~90 days, worked out from the schedule when the site is built (src/content/seo.mjs).
+// The page lists them so the search-engine event data matches what visitors see.
+const sessions = programSessions(program, { notices, events });
+const schema = programEventNodes(program, sessions, { url: new URL(Astro.url.pathname, SITE_URL).href });
 ---
-<BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`}>
+<BaseLayout title={`${program.title} | Cottonwood Community Library`} description={`${program.description} ${program.schedule}`} image={photo} schema={schema}>
   <PageTitle title={program.title} trail={[eventsLink, regularLink]} />
   {/* Figma leaves this panel empty; it holds the program's introduction, When/Where and the next steps. */}
   <Split media="start" panel ratio="16 / 9" image={photo}>
     <Text size="lead">{program.description}</Text>
     <DetailList label={`${program.title} schedule`} items={[{ label: 'When', value: program.schedule }, { label: 'Where', value: library.address }]} />
+    {sessions.length > 0 && <Text tone="muted">Next sessions: <span data-sessions={JSON.stringify(sessions)}>{sessionPhrase(sessions).map(piece => piece.session ? <time id={`session-${piece.session.day}`} datetime={piece.session.startsAt}>{piece.text}</time> : piece.text)}</span>.</Text>}
     {faq.length === 0 && program.details && <Text tone="muted">{program.details}</Text>}
     <Stack direction="row" gap="xs" wrap>
       <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>
@@ -76,3 +83,21 @@ const faq = questions[program.id] ?? [];
     <Faq items={faq} email={library.email} />
   </Section>}
 </BaseLayout>
+<script>
+  // The site is only rebuilt when a change is saved, so drop sessions that have started since then.
+  import { sessionPhrase } from '../../../content/schedule.mjs';
+  for (const dates of document.querySelectorAll<HTMLElement>('[data-sessions]')) {
+    const all: { day: string; startsAt: string }[] = JSON.parse(dates.dataset.sessions!);
+    const upcoming = all.filter(session => Date.parse(session.startsAt) > Date.now());
+    if (upcoming.length === all.length) continue;
+    if (!upcoming.length) { dates.parentElement!.hidden = true; continue; }
+    dates.replaceChildren(...sessionPhrase(upcoming).map(piece => {
+      if (!piece.session) return piece.text;
+      const time = document.createElement('time');
+      time.id = `session-${piece.session.day}`;
+      time.dateTime = piece.session.startsAt;
+      time.textContent = piece.text;
+      return time;
+    }));
+  }
+</script>

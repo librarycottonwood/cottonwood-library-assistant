@@ -1,0 +1,53 @@
+{
+  "request": "Plainer wording for Story Time, Book Club, Main Street Readers and the book sale; supporter thank-yous named after the supporters.",
+  "sanityDocuments": [
+    {
+      "id": "program-story-time",
+      "revision": "NoJPWpDzR8mqD2ki4msORZ",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "An hour of stories, songs, dancing and a craft, with a snack to finish. Each craft has a theme, like bugs, butterflies or scarecrows. With help from First 5 Shasta, the library has books and craft bags for young readers to take home."
+      }
+    },
+    {
+      "id": "program-book-club",
+      "revision": "NoJPWpDzR8mqD2ki4msORZ",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "Find your next great read and a lively conversation with fellow book lovers. The club reads one book a month and meets at the library to talk it over. Each title is held at the front desk a month ahead, so there’s time to read it first."
+      }
+    },
+    {
+      "id": "program-main-street-readers",
+      "revision": "NoJPWpDzR8mqD2ki4msORZ",
+      "fields": [
+        "description"
+      ],
+      "before": {
+        "description": "An informal group that meets at the library to talk about books. There’s no assigned title. Bring whatever you’ve been reading, the ones you loved and the ones you wish you hadn’t picked up, and leave with new recommendations."
+      }
+    },
+    {
+      "id": "event-quarterly-book-sale",
+      "revision": "NoJPWpDzR8mqD2ki4msORZ",
+      "fields": [
+        "summary"
+      ],
+      "before": {
+        "summary": "Our biggest book sale ever. Hardcovers, paperbacks, children’s books and DVDs fill the meeting room: donated and duplicate copies, from old favorites to recent best sellers. Prices run from 25¢ to $1, with discounts on bundles. Enter through the back door; cash only. Every sale supports the library."
+      }
+    },
+    {
+      "id": "library-giving",
+      "revision": "NoJPWpDzR8mqD2ki4msORZ",
+      "fields": [
+        "updates"
+      ]
+    }
+  ],
+  "requestedInChat": "2026-11-05"
+}

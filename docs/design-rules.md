@@ -10,6 +10,19 @@ Rules that sit above the components. The tokens and components themselves are in
   - Still never invent facts: page content comes from Figma or from library staff, and anything copied from Figma that staff haven't confirmed (prices, fees, rules) is listed for them to check.
 - Page photos live in `src/assets/images/`, are registered in `src/content/images.ts`, and are prepared with `pnpm image:prepare`.
 
+## Search and sharing
+
+Checklist for every new page (and when a page's purpose changes):
+
+- [ ] `title`: unique, `"<Page> | Cottonwood Community Library"` (BaseLayout requires it; `pnpm check` fails without one).
+- [ ] `description`: 1–2 plain sentences from facts on the page itself, different from every other page. This is the line under the title in Google and on Facebook/text previews.
+- [ ] `image`: the page's own landscape photo, so its share card isn't the homepage photo. Without one, the homepage photo is used.
+- [ ] No invented facts, numbers, dates or quotes in either. Ask library staff for anything missing.
+- [ ] Dated things on the page (events, sessions) get schema.org data through `schema` (helpers in `src/content/seo.mjs`); don't hand-write JSON-LD.
+- [ ] A new top-level page: add one line for it under "Main pages" in `src/pages/llms.txt.ts` (the summary AI assistants read).
+
+Automatic, nothing to add: the canonical address, Open Graph/share-card tags, the library's schema.org data, the sitemap entry (`astro.config.mjs`), and `llms.txt` lines for programs, events and news posts. Pass `noindex` only for pages that shouldn't appear in Google (the "page not found" page). `pnpm build` fails if a public page has no title, description or canonical address, and warns about two pages sharing a title or description.
+
 ## Motion
 
 Motion makes the site feel calm and responsive; it never decorates, loops or makes anyone wait.
@@ -18,7 +31,7 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 - **A new component** gets motion by adding one of those attributes to its root.
 - **New kinds of animation are welcome** when the library asks (a slide in from the side, a pop, a counter ticking up). Add each one as a named preset in `motion.ts` with Motion (look up its docs at motion.dev), add the name to `scripts/motion.test.mjs`, and use it through `data-motion`. Keep it in that one file, never `animate()` or entrance `@keyframes` inside a component and never a second animation library, so every animation shares the same feel and the reduced-motion and no-JavaScript safety.
 - **Hover and press feedback is CSS** with the `--motion-*` tokens: colors fade, the button presses in, arrows nudge, card photos zoom slightly. Only on devices that hover.
-- **Opening and closing** (FAQ answers) uses `slide()` from `motion.ts`, so both directions animate.
+- **Opening and closing** uses `motion.ts` so both directions animate: FAQ answers use `slide()`, the full-screen phone menu uses `menu()` (the panel fades, its links rise a beat apart).
 - **Always:** animate only `opacity` and a full `transform` string with explicit start and end values (`['translateY(24px)', 'translateY(0px)']`, never `'none'`), which the browser runs smoothly off the main thread; never Motion's `x`, `y` or `scale` shorthands, which are computed in JavaScript each frame and stutter while a page loads; springs without bounce; zoom a photo only inside a frame that owns its rounded corners and border, as Card and Split's opening photo do (a photo with its own rounded corners gets them cut square while it zooms); nothing over about a second; never animate a block holding a Givebutter widget (its popups would get trapped under the header); everything still works and shows with JavaScript off or reduced motion on (base.css hides blocks only under `html.motion`).
 
 ## Keep

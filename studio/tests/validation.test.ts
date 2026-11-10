@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {studioEnvironment} from '../environment.ts';
 import {pacificDateLabel} from '../dates.ts';
-import {emptyEntryNotice, identifierNotice, nestedListNotice, sessionTimeNotice, uniqueSessions, validDateRange, validIdentifier, validImage, validLink, validNewsletter, validPhone, validSession} from '../validation.ts';
+import {emptyEntryNotice, identifierNotice, nestedListNotice, noticeClosureNotice, sessionTimeNotice, uniqueSessions, validDateRange, validIdentifier, validImage, validLink, validNewsletter, validNoticeClosure, validPhone, validSession} from '../validation.ts';
 import {normalizeLink} from '../../src/content/rules.mjs';
 
 test('events require an end time and reject backwards times, including equivalent UTC and Pacific offsets', () => {
@@ -23,6 +23,18 @@ test('one event can have several dates but cannot repeat the same instant in dif
 test('a one-day closure is valid; a closure cannot expire before it starts', () => {
   assert.equal(validDateRange({startsOn: '2026-11-26', endsOn: '2026-11-26'}), true);
   assert.match(String(validDateRange({startsOn: '2026-11-26', endsOn: '2026-11-25'})), /end date/);
+});
+
+test('a notice lists its closed days or says the library stays open, and is warned when it does neither', () => {
+  const banner = {startsOn: '2026-11-16', endsOn: '2026-11-28'};
+  assert.equal(validNoticeClosure({...banner, closedDates: ['2026-11-26']}), true);
+  assert.equal(validNoticeClosure({...banner, staysOpen: true}), true);
+  assert.match(String(validNoticeClosure({...banner, staysOpen: true, closedDates: ['2026-11-26']})), /Not both/);
+  assert.equal(noticeClosureNotice({...banner, closedDates: ['2026-11-26', '2026-11-27']}), true);
+  assert.equal(noticeClosureNotice({...banner, staysOpen: true}), true);
+  assert.match(String(noticeClosureNotice(banner)), /every day this banner shows/);
+  assert.match(String(noticeClosureNotice({...banner, closedDates: []})), /every day this banner shows/);
+  assert.match(String(noticeClosureNotice({...banner, closedDates: ['2026-11-30']})), /not showing on 2026-11-30/);
 });
 
 test('picture replacement and imported picture references both work; empty objects cannot publish', () => {
@@ -62,7 +74,7 @@ test('list previews use Pacific dates across UTC midnight and keep incomplete dr
 
 // The Studio uses the website build's own rules, so what Studio accepts the build accepts.
 test('Studio accepts the link mistakes the website corrects, and explains the ones it refuses', () => {
-  for (const value of ['tel:(208) 962-3851', 'tel:+1 208 962 3851', 'https://givebutter.com/auction ', ' /visit/']) {
+  for (const value of ['tel:(208) 555-0142', 'tel:+1 208 555 0142', 'https://givebutter.com/auction ', ' /visit/']) {
     assert.equal(validLink(value), true, value);
     assert.equal(normalizeLink(value).ok, true, value);
   }
@@ -81,7 +93,7 @@ test('identifiers: valid ones pass silently, free text passes with a warning sho
 });
 
 test('phone numbers may include an extension but need an area code', () => {
-  assert.equal(validPhone('(530) 347-3373 ext. 2'), true);
+  assert.equal(validPhone('(530) 555-0173 ext. 2'), true);
   assert.equal(validPhone('(530) 347-4818'), true);
   assert.match(String(validPhone('347-4818')), /10-digit/);
 });

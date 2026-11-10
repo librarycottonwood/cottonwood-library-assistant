@@ -43,7 +43,7 @@ test('comparison dates and missing data stay explicit',()=>{
   const req=reportRequest({...dates,compare_start_date:'2026-09-22',compare_end_date:'2026-09-28'});
   const data=normalizeReport({},req);
   assert.equal(data.noRecordedData,true);assert.equal(data.dateRanges.length,2);assert.equal(data.rows.length,0);
-  assert.match(data.trackingScope,/demo/);assert.ok(data.warnings.some(w=>w.includes('no defined percentage')));
+  assert.match(data.trackingScope,/allowed statistics/);assert.ok(data.warnings.some(w=>w.includes('no defined percentage')));
   const result=normalizeReport({dimensionHeaders:[{name:'dateRange'}],metricHeaders:[{name:'activeUsers'}],rows:[{dimensionValues:[{value:'requested'}],metricValues:[{value:'1'}]}],metadata:{subjectToThresholding:true}},req);
   assert.equal(result.rows[0].activeUsers,1);assert.equal(result.rows[0].dateRange,'requested');assert.ok(result.warnings.some(w=>w.includes('thresholds')));
 });

@@ -1,4 +1,5 @@
 User-agent: *
-Disallow: /
 Disallow: /components
 Allow: /components/tokens.css
+
+Sitemap: https://www.cottonwoodcommunitylibrary.com/sitemap-index.xml

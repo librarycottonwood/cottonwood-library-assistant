@@ -2,7 +2,7 @@ import { runReport } from './google.mjs';
 import { REPORTS } from './reports.mjs';
 const tool = {
   name: 'library_website_report',
-  description: 'Use this for any Cottonwood library website statistics question. Reads the library demo GA4 property only. Reports: visitors (people, visits, views), pages (most viewed), clicks (catalog, donate and directions button clicks by button), directions (directions clicks total), locations (country, region, city), sources (how visitors arrived: search, social, direct, referring sites), devices (desktop, mobile, tablet), new_vs_returning, daily (day-by-day trend). Supply explicit dates in the property timezone America/Los_Angeles; infer this week/last week from today. Visitors are active users, visits are sessions, views are page views. No recorded data is different from connection failure. Do not extrapolate demo traffic to the existing public website. Gender and age are not available.',
+  description: 'Use this for any Cottonwood library website statistics question. Reads the library website GA4 property only. Reports: visitors (people, visits, views), pages (most viewed), clicks (catalog, donate and directions button clicks by button), directions (directions clicks total), locations (country, region, city), sources (how visitors arrived: search, social, direct, referring sites), devices (desktop, mobile, tablet), new_vs_returning, daily (day-by-day trend). Supply explicit dates in the property timezone America/Los_Angeles; infer this week/last week from today. Visitors are active users, visits are sessions, views are page views. No recorded data is different from connection failure. Only visitors who allowed statistics are counted. Gender and age are not available.',
   annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   inputSchema: { type: 'object', additionalProperties: false, required: ['report','start_date','end_date'], properties: {
     report: { type:'string',enum:Object.keys(REPORTS) },
@@ -27,7 +27,7 @@ export async function handleMcp(request,env,ctx,reporter=runReport,checker) {
   const reply=result=>Response.json({jsonrpc:'2.0',id:message.id,result},{headers:{'Cache-Control':'no-store'}});
   const error=(code,message)=>Response.json({jsonrpc:'2.0',id:message.id,error:{code,message}},{headers:{'Cache-Control':'no-store'}});
   switch(message.method) {
-    case 'initialize': return reply({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2026-07-28'].includes(message.params?.protocolVersion)?message.params.protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'Cottonwood Library Analytics',version:'0.2.0'},instructions:'Answer in friendly everyday language. Give the exact period and explain that these are tracked demo visits. Never invent data or turn a connection failure into zero.'});
+    case 'initialize': return reply({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2026-07-28'].includes(message.params?.protocolVersion)?message.params.protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'Cottonwood Library Analytics',version:'0.2.0'},instructions:'Answer in friendly everyday language. Give the exact period and mention once that only visitors who allowed statistics are counted. Never call it a demo or test website. Never invent data or turn a connection failure into zero.'});
     case 'ping': return reply({});
     case 'tools/list': return reply({tools:checker?[tool,statusTool]:[tool]});
     case 'tools/call': {
