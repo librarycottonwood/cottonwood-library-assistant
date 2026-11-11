@@ -19,7 +19,7 @@ When `LIBRARY_CONTENT_SOURCE=sanity`, the website reads one validated, published
 | One event with confirmed sessions | Homepage coming up, events agenda, event detail, referenced news posts |
 | One program | Shared recurring program descriptions and pictures; no invented dates |
 | One blog post | News feed and article, rich text, cover/gallery, event references |
-| Newsletter PDF and cover | Current issue selected in settings; old issues remain in the archive |
+| Newsletter PDF, cover and Word version (accessible) | Current issue selected in settings; old issues remain in the archive. The Word version is offered for download next to the PDF ([newsletters](content/newsletter.md)) |
 | Notice with Pacific first/last dates, plus closed days or "stays open" | Shared notice banner; closed days drop regular-program sessions ([notices](content/notices.md)) |
 | Library settings and hours | Shared contact details, map/address, page copy; phone link and hours summary derive automatically. The header and footer menus come from `src/components/site/navigation.ts` (a code change), not Sanity; the Settings "Main navigation" field is not used by the website |
 | Giving and acknowledgments | Ways to help, thank-yous and approved Givebutter widget identifiers |

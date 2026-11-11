@@ -1,0 +1,18 @@
+{
+  "request": "Add the accessible Word versions of the Summer 2026 and Fall 2026 newsletters next to their PDFs.",
+  "sanityDocuments": [
+    {
+      "id": "newsletter-fall-2026",
+      "revision": "0RJn2IYwmye6Rx2GpbZhZm",
+      "fields": ["accessibleFile"],
+      "before": {"accessibleFile": null}
+    },
+    {
+      "id": "newsletter-current",
+      "revision": "0RJn2IYwmye6Rx2GpbZiuQ",
+      "fields": ["accessibleFile"],
+      "before": {"accessibleFile": null}
+    }
+  ],
+  "requestedInChat": "2026-11-10"
+}

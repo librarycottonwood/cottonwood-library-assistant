@@ -11,7 +11,7 @@
     "dev": "astro dev --host 0.0.0.0",
     "build": "node scripts/build.mjs",
     "preview": "astro preview --host 0.0.0.0",
-    "check": "node scripts/design-system.mjs check && node --test scripts/design-system.test.mjs scripts/newsletter.test.mjs scripts/photography.test.mjs scripts/seo.test.mjs scripts/accessibility.test.mjs && astro check",
+    "check": "node scripts/design-system.mjs check && node --test scripts/design-system.test.mjs scripts/newsletter.test.mjs scripts/accessible-newsletter.test.mjs scripts/photography.test.mjs scripts/seo.test.mjs scripts/accessibility.test.mjs && astro check",
     "design:docs": "node scripts/design-system.mjs docs",
     "release:capture": "node scripts/capture.mjs",
     "release:prepare": "node scripts/release.mjs prepare",
@@ -30,6 +30,7 @@
     "@fontsource/bree-serif": "5.3.0",
     "@lucide/astro": "1.47.0",
     "astro": "7.3.3",
+    "jszip": "3.10.2",
     "maplibre-gl": "6.6.0",
     "motion": "14.9.0",
     "sharp": "0.35.4"

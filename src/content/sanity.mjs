@@ -12,6 +12,7 @@ export const SANITY_DOCUMENT_TYPES = ['siteSettings', 'givingSettings', 'program
 export const SANITY_QUERY = '*[!(_id in path("drafts.**")) && !(_id in path("versions.**")) && _type in ["siteSettings","givingSettings","program","event","post","newsletter","notice","sanity.imageAsset","sanity.fileAsset"]]';
 const LEGACY_IMAGES = new Set(['exterior','computerLab','storytime','books','interior','newsletter','watercolor','mainStreetReaders','bookClub','bookDonation','bookSale','childrensBookSale','holidayMarket','firstFive','communityFoundation','founders']);
 const PREFIX = 'Sanity content: ';
+export const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const fail = message => { throw new Error(`${PREFIX}${message}`); };
 
 // A field location: `label` is what staff see in Studio, `path` is the stored field name.
@@ -161,6 +162,15 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
     if (!LEGACY_IMAGES.has(value.legacyKey)) problem(at, 'This needs an uploaded picture (or a known migration legacyKey).');
     return { ...base, key: value.legacyKey };
   }
+  /** The optional accessible Word version of a newsletter. The website checks it at build time and offers it for download. */
+  function wordFile(value, issueId, at) {
+    const asset = reference(object(value, at).asset, 'sanity.fileAsset', sub(at, 'uploaded file', 'asset'));
+    if (asset.mimeType !== DOCX_MIME || !/^file-[A-Za-z0-9]+-docx$/.test(asset._id)) problem(at, 'This must be a Word document (.docx). Upload the accessible Word version, not a PDF or .doc file.');
+    const url = cdnAsset(asset, 'files', at);
+    if (new URL(url).pathname.split('/').pop() !== `${asset._id.slice(5,-5)}.docx`) problem(at, 'The file URL and id disagree. Re-upload the Word file.');
+    const fileName = `cottonwood-library-newsletter-${issueId}.docx`;
+    return { url: `${url}?dl=${fileName}`, source: url, fileName };
+  }
   function file(value, legacy, at) {
     if (value) {
       const asset = reference(object(value, at).asset, 'sanity.fileAsset', sub(at, 'uploaded file', 'asset'));
@@ -187,7 +197,7 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
     id: slug(doc.slug?.current, field('Page address', 'slug')), title: text(doc.title, field('Program name', 'title')), audience: oneOf(doc.audience, ['children','adults'], field('Audience', 'audience')), schedule: text(doc.schedule, field('Regular schedule', 'schedule')), description: text(doc.description, field('Short description', 'description')), details: text(doc.details, field('More information', 'details')), image: image(doc.image, field('Picture', 'image')),
   }))), 'id', 'regular programs', value => `page address "${value}"`);
   const newsletterId = doc => slug(doc.slug?.current ?? doc._id.replace(/^newsletter-/, ''), field('Page address', 'slug'));
-  const newsletters = unique(docs.filter(doc => doc._type === 'newsletter').map(doc => within(doc, () => ({ id: newsletterId(doc), issue: text(doc.issue, field('Issue', 'issue')), title: text(doc.title, field('Title', 'title')), summary: text(doc.summary, field('Short description', 'summary')), fileUrl: file(doc.file, doc.legacyFileUrl, field('Newsletter PDF', 'file')), cover: image(doc.cover, field('Cover picture', 'cover')) }))), 'id', 'newsletters', value => `page address "${value}"`);
+  const newsletters = unique(docs.filter(doc => doc._type === 'newsletter').map(doc => within(doc, () => ({ id: newsletterId(doc), issue: text(doc.issue, field('Issue', 'issue')), title: text(doc.title, field('Title', 'title')), summary: text(doc.summary, field('Short description', 'summary')), fileUrl: file(doc.file, doc.legacyFileUrl, field('Newsletter PDF', 'file')), cover: image(doc.cover, field('Cover picture', 'cover')), ...(doc.accessibleFile ? { accessibleFile: wordFile(doc.accessibleFile, newsletterId(doc), field('Word version (accessible)', 'accessibleFile')) } : {}) }))), 'id', 'newsletters', value => `page address "${value}"`);
 
   const home = within(settings, () => {
     const currentRef = settings.currentNewsletter ? reference(settings.currentNewsletter, 'newsletter', field('Current newsletter', 'currentNewsletter')) : undefined;

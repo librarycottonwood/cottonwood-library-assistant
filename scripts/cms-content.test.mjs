@@ -142,6 +142,15 @@ test('uploaded newsletter PDFs resolve only through their matching project file 
   doc(s,'sanity.fileAsset').mimeType='text/html';assert.throws(()=>validateSanitySnapshot(s),/PDF/);
 });
 
+test('an accessible Word version resolves to a download of its project file asset, and only .docx is accepted',()=>{
+  const docx='application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  const s=fixture();doc(s,'newsletter').accessibleFile={asset:{_ref:'file-def456-docx'}};s.documents.push({_id:'file-def456-docx',_type:'sanity.fileAsset',mimeType:docx,url:'https://cdn.sanity.io/files/testproject/rehearsal/def456.docx'});
+  assert.deepEqual(validateSanitySnapshot(s).newsletters[0].accessibleFile,{url:'https://cdn.sanity.io/files/testproject/rehearsal/def456.docx?dl=cottonwood-library-newsletter-summer-2026.docx',source:'https://cdn.sanity.io/files/testproject/rehearsal/def456.docx',fileName:'cottonwood-library-newsletter-summer-2026.docx'});
+  assert.equal('accessibleFile' in validateSanitySnapshot(fixture()).newsletters[0],false,'issues without one are unchanged');
+  const pdf=structuredClone(s);doc(pdf,'sanity.fileAsset').mimeType='application/pdf';assert.throws(()=>validateSanitySnapshot(pdf),/Word version \(accessible\).*Word document/);
+  const missing=fixture();doc(missing,'newsletter').accessibleFile={asset:{_ref:'file-gone-docx'}};assert.throws(()=>validateSanitySnapshot(missing),/missing published/);
+});
+
 // Small content mistakes typed in Studio, or written by the assistant through the API (where Studio
 // validation never runs), are corrected with a warning instead of blocking every preview and publish.
 const quiet = () => { const warnings = []; return { warnings, options: { warn: message => warnings.push(message) } }; };

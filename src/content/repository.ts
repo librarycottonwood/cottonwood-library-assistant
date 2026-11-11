@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import process from 'node:process';
 import { fetchSanitySnapshot, sanityConfig, validateSanitySnapshot, type SanityContent } from './sanity.mjs';
+import { wordFixtures } from './fixtures/newsletters';
 import type { HomeContent, SupportContent, LibraryEvent, LibraryNotice, LibraryPost, LibraryNewsletter } from './types';
 
 export interface ContentRepository {
@@ -22,8 +23,18 @@ async function sanityContent(): Promise<SanityContent> {
     const config = sanityConfig(env);
     const snapshotPath = env.SANITY_SNAPSHOT_PATH;
     const snapshot = snapshotPath ? JSON.parse(await readFile(snapshotPath, 'utf8')) : await fetchSanitySnapshot(config, { token: env.SANITY_READ_TOKEN });
-    return validateSanitySnapshot(snapshot, config);
+    return withWordPreview(validateSanitySnapshot(snapshot, config));
   })();
+}
+/** Local design preview only: NEWSLETTER_WORD_PREVIEW=1 shows the test Word versions (src/content/fixtures/newsletters)
+ * on the real published issues that do not have one yet. Refused in CI, which builds every preview and the live website. */
+function withWordPreview(content: SanityContent): SanityContent {
+  if (env.NEWSLETTER_WORD_PREVIEW !== '1') return content;
+  if (env.CI) throw new Error('NEWSLETTER_WORD_PREVIEW is for local previews only. Remove it from this build.');
+  const add = (issue: LibraryNewsletter) => issue.accessibleFile || !issue.id || !wordFixtures[issue.id] ? issue : { ...issue, accessibleFile: wordFixtures[issue.id] };
+  const newsletters = content.newsletters.map(add);
+  const current = content.home.newsletter && newsletters.find(issue => issue.id === content.home.newsletter!.id);
+  return { ...content, newsletters, home: { ...content.home, newsletter: current ?? content.home.newsletter } };
 }
 const sanityRepository: ContentRepository = {
   async getHome() { return (await sanityContent()).home; },
