@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType, type DocumentDefinition} from 'sanity';
 import {image, link, paragraph, slug, strings, text} from './objects.ts';
-import {noticeClosureNotice, uniqueSessions, validDateRange, validLink, validNewsletter, validNoticeClosure, validPhone} from '../validation.ts';
+import {WORD_MIME, noticeClosureNotice, uniqueSessions, validDateRange, validLink, validNewsletter, validNoticeClosure, validPhone, validWordFile} from '../validation.ts';
 import {pacificDateLabel} from '../dates.ts';
 
 export const event = defineType({
@@ -61,6 +61,14 @@ export const newsletter = defineType({
         if (!file?.asset?._ref) return true;
         const asset = await context.getClient({apiVersion: '2026-10-01'}).fetch<{mimeType?: string} | null>('*[_id == $id][0]{mimeType}', {id: file.asset._ref});
         return asset?.mimeType === 'application/pdf' ? true : 'Choose a PDF document.';
+      })}),
+    defineField({name: 'accessibleFile', title: 'Word version (accessible)', type: 'file',
+      options: {accept: `.docx,${WORD_MIME}`},
+      description: 'The same newsletter as a Word file that screen readers can follow. The library assistant makes it from the PDF. The website offers it for download and shows the issue as a web page.',
+      validation: (rule) => rule.custom(async (file, context) => {
+        if (!file?.asset?._ref) return true;
+        const asset = await context.getClient({apiVersion: '2026-10-01'}).fetch<{mimeType?: string; extension?: string} | null>('*[_id == $id][0]{mimeType, extension}', {id: file.asset._ref});
+        return validWordFile(asset);
       })}),
     defineField({name: 'legacyFileUrl', title: 'Imported PDF address', type: 'string', readOnly: true,
       hidden: ({document}) => !document?.legacyFileUrl,

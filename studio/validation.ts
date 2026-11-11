@@ -111,3 +111,11 @@ export function validNewsletter(value: unknown): true | string {
   return newsletter?.file?.asset?._ref || newsletter?.legacyFileUrl?.trim()
     ? true : 'Upload the newsletter PDF before publishing.';
 }
+
+export const WORD_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+/** The optional accessible Word version must be a .docx file (not a PDF or an old .doc). */
+export function validWordFile(asset: {mimeType?: string; extension?: string} | null | undefined): true | string {
+  return asset?.mimeType === WORD_MIME || asset?.extension === 'docx'
+    ? true : 'Choose a Word document (.docx). Save it from Word or Google Docs as .docx.';
+}

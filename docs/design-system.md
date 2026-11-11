@@ -147,7 +147,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
-| [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
+| [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2 to h4), lists, links and pictures, from Sanity rich text, plain paragraphs, a newsletter's Word version converted at build time, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
 | [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
@@ -249,7 +249,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
 - **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href). The one exception is the `links` slot: a few IconLinks under the text to other versions of the same thing (a newsletter's PDF and Word files), which sit above the card link.
 
 ```ts
 interface Props {
@@ -509,9 +509,9 @@ interface Props {
 
 ### Prose
 
-`src/components/site/Prose.astro` — Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages.
+`src/components/site/Prose.astro` — Longer reading text: paragraphs, subheadings (h2 to h4), lists, links and pictures, from Sanity rich text, plain paragraphs, a newsletter's Word version converted at build time, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages.
 
-- **Use for:** Article bodies (news posts, event descriptions), the About story, the privacy notice. Put it in a Section with width="text" and align="start".
+- **Use for:** Article bodies (news posts, event descriptions), the About story, the privacy notice, a newsletter issue's web version. Put it in a Section with width="text" and align="start".
 - **Don't use for:** Short introductions (use Text), text beside a photo (use Split), or hand-written facts.
 
 ```ts
@@ -522,6 +522,8 @@ interface Props {
   paragraphs?: string[];
   /** Numbered steps after the text (how to give books, how to volunteer). */
   steps?: string[];
+  /** HTML already checked and cleaned at build time: a newsletter's Word version (src/content/accessible-newsletter.mjs). Never visitor or raw CMS text. */
+  html?: string;
 }
 ```
 

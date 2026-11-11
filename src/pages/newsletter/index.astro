@@ -1,10 +1,12 @@
 ---
-// The library newsletter: every issue as a cover card, newest (the current issue) first. Each card opens the PDF.
+// The library newsletter: every issue as a cover card, newest (the current issue) first. A card opens the PDF, or, when the
+// issue has a Word version (accessible), the issue's web page, with the PDF and Word downloads under the card.
 // Built only from src/components/site; issues come from Sanity (Newsletters, and Library settings › Current newsletter).
 // The sign-up form is in the layout's footer.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/site/Card.astro';
 import Grid from '../../components/site/Grid.astro';
+import IconLink from '../../components/site/IconLink.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Text from '../../components/site/Text.astro';
@@ -21,7 +23,14 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
   <Section>
     {ordered.length > 0
       ? <Grid as="ul" columns={3} balance={false}>
-          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
+          {ordered.map(issue => issue.accessibleFile
+            ? <Card as="li" shape="page" title={issue.issue} href={`/newsletters/${issue.id}/`} image={issue.cover}>{issue.summary}
+                <Fragment slot="links">
+                  <IconLink href={issue.fileUrl} icon="download" aria-label={`Download PDF: ${issue.issue} newsletter`}>Download PDF</IconLink>
+                  <IconLink href={issue.accessibleFile.url} icon="download" aria-label={`Word version (accessible): ${issue.issue} newsletter`}>Word version (accessible)</IconLink>
+                </Fragment>
+              </Card>
+            : <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
         </Grid>
       : <Text tone="muted">No newsletter has been published yet.</Text>}
   </Section>

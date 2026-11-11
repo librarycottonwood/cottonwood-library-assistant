@@ -3,7 +3,7 @@
  * @component Card
  * Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
  * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
- * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
+ * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href). The one exception is the `links` slot: a few IconLinks under the text to other versions of the same thing (a newsletter's PDF and Word files), which sit above the card link.
  * @example
  * <Grid as="ul" columns={3}>
  *   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
@@ -35,6 +35,7 @@ interface Props {
 const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, ...attributes } = Astro.props;
 const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
+const hasLinks = Astro.slots.has('links');
 // The arrow stays on the line with the title's last word, so a wrapping title never leaves it alone on a line.
 const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
@@ -49,6 +50,7 @@ const titleStart = titleWords.join(' ');
     <div class="card-copy">
       <h3>{href ? <IconLink href={href}>{titleStart && `${titleStart} `}<span class="title-end">{titleEnd}<Icon name="arrow" class="icon-end" /></span></IconLink> : title}</h3>
       <p><slot /></p>
+      {hasLinks && <div class="card-links"><slot name="links" /></div>}
     </div>
   </div>
 </Tag>
@@ -90,6 +92,9 @@ const titleStart = titleWords.join(' ');
   .card-copy h3 :global(.icon-link)::after { content: ''; position: absolute; z-index: 1; inset: 0; border-radius: var(--radius-image); }
   .card-copy h3 :global(.icon-link:focus-visible) { outline: none; text-decoration-line: underline; }
   .card-copy h3 :global(.icon-link:focus-visible)::after { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+  /* Extra links (other file versions) sit above the stretched card link so each is its own target. */
+  .card-links { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); }
 
   /* Adaptive: photo beside the text when the card itself is wide (a container query, so it follows the card's real width). */
   .card-adaptive { container: card / inline-size; }
