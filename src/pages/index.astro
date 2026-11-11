@@ -19,9 +19,9 @@ import fundraiserHouse from '../assets/images/fundraiser-house.png';
 import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
 import { servicePhotos } from '../content/service-photos';
-import { checkoutAttributes, DONATE_PAGE_HREF, getDonateLink } from '../content/donate';
+import { DONATE_PAGE_HREF } from '../content/donate';
 import { eventPhoto } from './_photos';
-const [home, support, allEvents, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents(), getDonateLink()]);
+const [home, support, allEvents] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents()]);
 const { library, hero, programs, services, givingImage } = home;
 const events = upcomingEvents(allEvents);
 const campaign = activeCampaign(support.campaigns);
@@ -57,7 +57,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Stack>
     <Text tone="muted" balance>{home.support.introduction}</Text>
     <Stack direction="row" gap="xs" wrap>
-      <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_quick" variant="accent" icon="heart">{donate.source === 'fallback' ? 'Ways to give' : 'Donate'}</Button>
+      <Button href={DONATE_PAGE_HREF} data-analytics-event="donate_quick" variant="accent" icon="heart">Donate</Button>
       <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
     </Stack>
   </Split>

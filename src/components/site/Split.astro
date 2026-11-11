@@ -1,7 +1,7 @@
 ---
 /**
  * @component Split
- * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two action tiles beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+ * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
  * @use The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
  * @avoid Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
  * @example
@@ -107,7 +107,7 @@ const framed = first && bleed && media === 'end';
   @media (max-width: 47.99rem) {
     .split:not(.inset) .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
     .has-caption { padding-block-end: 0; }
-    .split-caption { position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5em), 1fr)); align-items: stretch; gap: var(--space-xs); max-width: none; margin: var(--space-xs) var(--page-inset) 0 0; padding: 0; border-radius: var(--radius-none); background: transparent; font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }
+    .split-caption { position: static; display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: none; margin: var(--space-xs) var(--page-inset) 0 0; padding: 0; border-radius: var(--radius-none); background: transparent; font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }
   }
 
   @media (min-width: 48rem) {

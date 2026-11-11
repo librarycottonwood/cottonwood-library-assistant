@@ -1,7 +1,7 @@
 ---
 /**
  * @component HeroContacts
- * Directions and phone links that become two compact action tiles beneath the hero photo on phones.
+ * Directions and phone links, shown as two plain rows beneath the hero photo on phones.
  * @use Once in the homepage Split caption, with the complete current address, phone and original destinations.
  * @avoid Other page actions, shortening contact values, or replacing the hero's main heading with contact details.
  * @example
@@ -15,17 +15,14 @@ const contacts = [
   { title: 'Call the library', value: phone, href: phoneHref, icon: 'phone' as const, event: undefined },
 ];
 ---
-{contacts.map(contact => <a class="hero-contact" href={contact.href} data-analytics-event={contact.event}><span class="contact-label"><Icon name={contact.icon} /><span class="contact-action">{contact.title}</span></span>{' '}<span class="contact-detail">{contact.value}</span></a>)}
+{contacts.map(contact => <a class="hero-contact" href={contact.href} aria-label={`${contact.title}: ${contact.value}`} data-analytics-event={contact.event}><Icon name={contact.icon} />{' '}<span class="contact-detail">{contact.value}</span></a>)}
 <style>
   .hero-contact { display: inline-flex; align-items: center; gap: var(--space-xs); max-width: 100%; text-decoration-line: none; }
   .hero-contact:hover { text-decoration-line: underline; }
-  .contact-label { display: inline-flex; align-items: center; gap: var(--space-xs); max-width: 100%; }
-  .contact-label :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
-  .contact-action { display: none; }
+  .hero-contact :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
   .contact-detail { min-width: 0; }
   @media (max-width: 47.99rem) {
-    .hero-contact { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: var(--space-xs); width: 100%; min-width: 0; min-height: 7.375rem; padding: var(--space-sm) var(--space-xs); border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-contact); background: var(--color-surface); font-weight: var(--weight-medium); }
-    .contact-action { display: inline; min-width: 0; font-weight: var(--weight-semibold); line-height: 1.3; overflow-wrap: anywhere; }
+    .hero-contact { width: fit-content; min-width: 0; min-height: 2.75rem; font-weight: var(--weight-medium); }
     .contact-detail { font-size: var(--text-contact-detail); color: var(--color-text-muted); line-height: 1.4; overflow-wrap: anywhere; }
   }
 </style>

@@ -75,7 +75,8 @@ const titleStart = titleWords.join(' ');
     .card-linked:hover .card-copy h3 :global(.icon-end) { transform: translateX(0.2em); }
   }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
-  .card-logo .card-media { display: grid; place-items: center; background: var(--color-surface); }
+  /* Definite tracks keep percentage-sized logos from enlarging an intrinsic grid row beyond the frame. */
+  .card-logo .card-media { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; background: var(--color-surface); }
   .card-logo .card-media :global(.card-image) { width: 60%; height: 60%; object-fit: contain; }
   /* right keeps a long schedule badge inside the photo at large text sizes; it wraps instead. */
   .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }
