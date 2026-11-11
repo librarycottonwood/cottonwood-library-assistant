@@ -107,6 +107,17 @@ const launchPost = {_id: 'post-launch', _type: 'post', _rev: 'n1', title: 'Our N
 const launchSave = () => compareContent({live: revisionList(snapshot([settings])), current: snapshot([settings, launchPost]), listed: ['post-launch'], updateFiles: ['content-updates/2026-11-03-launch.json']});
 const respond = (status, body = '') => ({status, text: async () => body});
 
+test('a newsletter page passes when it shows the issue heading, even though its title differs', async () => {
+  const summer = {_id: 'newsletter-current', _type: 'newsletter', _rev: 'n2', issue: 'Summer 2026', title: 'A little news from your library', slug: {current: 'summer-2026'}};
+  const result = compareContent({live: revisionList(snapshot([settings])), current: snapshot([settings, summer]), listed: ['newsletter-current'], updateFiles: ['content-updates/2026-11-10-word.json']});
+  assert.equal(result.changes[0].pageHeading, 'Summer 2026 newsletter');
+  const shown = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async () => respond(200, '<h1>Summer 2026 newsletter</h1>')});
+  assert.equal(shown[0].ok, true);
+  assert.equal(shown[0].url, 'https://abcd1234.cottonwood-library.pages.dev/newsletters/summer-2026/');
+  const wrong = await checkPages(result, 'https://abcd1234.cottonwood-library.pages.dev/', {fetcher: async () => respond(200, '<h1>Page not found</h1>')});
+  assert.match(wrong[0].problem, /does not show "A little news from your library"/);
+});
+
 test('the preview check opens each listed page and only passes when it shows the title', async () => {
   const result = launchSave();
   const asked = [];
