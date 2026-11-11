@@ -110,7 +110,7 @@ const clear = (element: HTMLElement) => requestAnimationFrame(() => {
   element.style.removeProperty('transform');
 });
 
-const runningEntrances = new Set<() => void>();
+const runningEntrances = new Map<HTMLElement, () => void>();
 
 /** Clear completed, rejected or stalled animations through the same path. Nothing waits hidden indefinitely. */
 function playEntrance(element: HTMLElement, preset: typeof presets.rise | typeof presets.riseOnLoad | typeof presets.settle, delay = 0) {
@@ -122,11 +122,11 @@ function playEntrance(element: HTMLElement, preset: typeof presets.rise | typeof
     finished = true;
     element.dataset.motionDone = '';
     clearTimeout(deadline);
-    runningEntrances.delete(finish);
+    runningEntrances.delete(element);
     try { playback?.stop(); } finally { clear(element); }
   };
   const deadline = setTimeout(finish, 2000 + delay * 1000);
-  runningEntrances.add(finish);
+  runningEntrances.set(element, finish);
   try {
     playback = animate(element, preset.keyframes, { ...preset.transition, delay });
     playback.then(finish).catch(finish);
@@ -152,7 +152,8 @@ function start() {
   for (const element of document.querySelectorAll<HTMLElement>('[data-motion="settle"]')) {
     playEntrance(element, presets.settle);
   }
-  const waiting = new Set(entrances());
+  const entries = entrances();
+  const waiting = new Set(entries);
   const arrive = (entry: Entrance) => {
     if (!waiting.delete(entry)) return;
     entry.stopObserving?.();
@@ -186,9 +187,25 @@ function start() {
   addEventListener('scroll', scheduleCheck, { passive: true });
   addEventListener('resize', scheduleCheck, { passive: true });
   viewport?.addEventListener('resize', scheduleCheck, { passive: true });
+  // Preserve keyboard access even before an observer, queued entrance or active animation has revealed a group.
+  addEventListener('focusin', event => {
+    if (!(event.target instanceof Node)) return;
+    for (const entry of entries) {
+      if (!entry.trigger.contains(event.target)) continue;
+      waiting.delete(entry);
+      entry.stopObserving?.();
+      queue = queue.filter(element => !entry.elements.includes(element));
+      for (const element of entry.elements) {
+        runningEntrances.get(element)?.();
+        element.dataset.motionDone = '';
+        element.style.removeProperty('opacity');
+        element.style.removeProperty('transform');
+      }
+    }
+  });
   addEventListener('pageshow', event => {
     if (!event.persisted) return;
-    for (const finish of runningEntrances) finish();
+    for (const finish of runningEntrances.values()) finish();
     scheduleCheck();
   });
   document.documentElement.dataset.motionReady = '';

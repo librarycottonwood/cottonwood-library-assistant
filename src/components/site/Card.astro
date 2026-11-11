@@ -3,7 +3,7 @@
  * @component Card
  * Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
  * @use A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
- * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
+ * @avoid A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href). The one exception is the `links` slot: a few IconLinks under the text to other versions of the same thing (a newsletter's PDF and Word files), which sit above the card link.
  * @example
  * <Grid as="ul" columns={3}>
  *   <Card as="li" title="Computers & Wi-Fi" href="/visit/#computers" image={photo}>Public computers and Wi-Fi.</Card>
@@ -31,12 +31,16 @@ interface Props {
   fullText?: boolean;
   /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
   crayon?: boolean;
+  /** Heading level of the title: 2 directly below a page title, or 3 under a section heading. */
+  level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, crayon = true, ...attributes } = Astro.props;
+const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, crayon = true, level = 3, ...attributes } = Astro.props;
+const TitleTag = `h${level}` as 'h2' | 'h3';
 const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
+const hasLinks = Astro.slots.has('links');
 // The arrow stays on the line with the title's last word, so a wrapping title never leaves it alone on a line.
 const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
@@ -49,8 +53,9 @@ const titleStart = titleWords.join(' ');
       {hasBadge && <div class="card-badge"><slot name="badge" /></div>}
     </div>
     <div class="card-copy">
-      <h3>{href ? <IconLink href={href}>{titleStart && `${titleStart} `}<span class="title-end">{titleEnd}<Icon name="arrow" class="icon-end" /></span></IconLink> : title}</h3>
+      <TitleTag class="card-title">{href ? <IconLink href={href}>{titleStart && `${titleStart} `}<span class="title-end">{titleEnd}<Icon name="arrow" class="icon-end" /></span></IconLink> : title}</TitleTag>
       <p><slot /></p>
+      {hasLinks && <div class="card-links"><slot name="links" /></div>}
     </div>
   </div>
 </Tag>
@@ -72,7 +77,7 @@ const titleStart = titleWords.join(' ');
   /* Linked cards: hovering anywhere zooms the photo slightly inside its frame and nudges the title arrow. */
   @media (hover: hover) {
     .card-linked:hover .card-media :global(.card-image:not(.is-contained)) { transform: scale(1.04); }
-    .card-linked:hover .card-copy h3 :global(.icon-end) { transform: translateX(0.2em); }
+    .card-linked:hover .card-copy .card-title :global(.icon-end) { transform: translateX(0.2em); }
   }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
   /* Definite tracks keep percentage-sized logos from enlarging an intrinsic grid row beyond the frame. */
@@ -82,7 +87,7 @@ const titleStart = titleWords.join(' ');
   .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }
   .card-badge > :global(*) { min-width: 0; overflow-wrap: anywhere; }
   .card-copy { display: flex; flex-direction: column; gap: var(--space-sm); padding: 0 var(--space-md); }
-  .card-copy h3 { margin: 0; font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
+  .card-copy .card-title { margin: 0; font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
   /* Two lines at most, ending in "…" (long Sanity event summaries), so cards side by side read evenly. The full text is
    * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
   .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); text-wrap: pretty; }
@@ -92,14 +97,17 @@ const titleStart = titleWords.join(' ');
     .card:not(.card-page, .card-logo) .card-media { height: auto; aspect-ratio: 3 / 2; }
   }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
-  .card-copy h3 :global(.icon-link) { display: inline; }
+  .card-copy .card-title :global(.icon-link) { display: inline; }
   .title-end { white-space: nowrap; }
-  .card-copy h3 :global(.icon-link .icon-end) { display: inline-block; margin-inline-start: var(--space-xs); vertical-align: -0.125em; }
+  .card-copy .card-title :global(.icon-link .icon-end) { display: inline-block; margin-inline-start: var(--space-xs); vertical-align: -0.125em; }
 
   /* IconLink already underlines on hover; hovering anywhere on the card hovers the link. */
-  .card-copy h3 :global(.icon-link)::after { content: ''; position: absolute; z-index: 1; inset: 0; border-radius: var(--radius-image); }
-  .card-copy h3 :global(.icon-link:focus-visible) { outline: none; text-decoration-line: underline; }
-  .card-copy h3 :global(.icon-link:focus-visible)::after { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+  .card-copy .card-title :global(.icon-link)::after { content: ''; position: absolute; z-index: 1; inset: 0; border-radius: var(--radius-image); }
+  .card-copy .card-title :global(.icon-link:focus-visible) { outline: none; text-decoration-line: underline; }
+  .card-copy .card-title :global(.icon-link:focus-visible)::after { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+
+  /* Extra links (other file versions) sit above the stretched card link so each is its own target. */
+  .card-links { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); }
 
   /* Adaptive: photo beside the text when the card itself is wide (a container query, so it follows the card's real width). */
   .card-adaptive { container: card / inline-size; }
@@ -107,6 +115,6 @@ const titleStart = titleWords.join(' ');
     .card-body { flex-direction: row; align-items: center; gap: var(--space-lg); }
     .card-media { flex: 1 1 0; height: auto; aspect-ratio: 16 / 9; }
     .card-copy { flex: 1 1 0; padding: 0 var(--space-md) 0 0; }
-    .card-copy h3 { font-size: var(--fluid-lead); }
+    .card-copy .card-title { font-size: var(--fluid-lead); }
   }
 </style>

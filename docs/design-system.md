@@ -158,7 +158,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
 | [Handwritten](#handwritten) | A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
-| [HeroContacts](#herocontacts) | Directions and phone links, shown as two plain rows beneath the hero photo on phones. |
+| [HeroContacts](#herocontacts) | Directions and phone links, shown as two plain rows after the hero actions on phones and tablets. |
 | [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones. |
@@ -170,7 +170,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
-| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
+| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
@@ -290,7 +290,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
 - **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href). The one exception is the `links` slot: a few IconLinks under the text to other versions of the same thing (a newsletter's PDF and Word files), which sit above the card link.
 
 ```ts
 interface Props {
@@ -310,6 +310,8 @@ interface Props {
   fullText?: boolean;
   /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
   crayon?: boolean;
+  /** Heading level of the title: 2 directly below a page title, or 3 under a section heading. */
+  level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -488,7 +490,7 @@ interface Props {
 
 ### HeroContacts
 
-`src/components/site/HeroContacts.astro` — Directions and phone links, shown as two plain rows beneath the hero photo on phones.
+`src/components/site/HeroContacts.astro` — Directions and phone links, shown as two plain rows after the hero actions on phones and tablets.
 
 - **Use for:** Once in the homepage Split caption, with the complete current address, phone and original destinations.
 - **Don't use for:** Other page actions, shortening contact values, or replacing the hero's main heading with contact details.
@@ -643,6 +645,8 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
+  headingLevel?: 2 | 3;
 }
 ```
 
@@ -726,7 +730,7 @@ interface Props { handwritten?: boolean; }
 
 ### Split
 
-`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
 - **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
 - **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).

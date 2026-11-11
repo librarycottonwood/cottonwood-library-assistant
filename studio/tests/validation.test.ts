@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {studioEnvironment} from '../environment.ts';
 import {pacificDateLabel} from '../dates.ts';
-import {emptyEntryNotice, identifierNotice, nestedListNotice, noticeClosureNotice, sessionTimeNotice, uniqueSessions, validDateRange, validIdentifier, validImage, validLink, validNewsletter, validNoticeClosure, validPhone, validSession} from '../validation.ts';
+import {emptyEntryNotice, identifierNotice, nestedListNotice, noticeClosureNotice, sessionTimeNotice, uniqueSessions, validDateRange, validIdentifier, validImage, validLink, validNewsletter, validNoticeClosure, validPhone, validSession, validWordFile} from '../validation.ts';
 import {normalizeLink} from '../../src/content/rules.mjs';
 
 test('events require an end time and reject backwards times, including equivalent UTC and Pacific offsets', () => {
@@ -48,6 +48,12 @@ test('a newsletter must have an uploaded PDF asset or a preserved migration URL'
   assert.equal(validNewsletter({legacyFileUrl: '/documents/old-issue.pdf'}), true);
   assert.match(String(validNewsletter({file: {}})), /Upload/);
   assert.match(String(validNewsletter({legacyFileUrl: ' '})), /Upload/);
+});
+
+test('the accessible newsletter must be a .docx Word file', () => {
+  assert.equal(validWordFile({mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', extension: 'docx'}), true);
+  assert.equal(validWordFile({extension: 'docx'}), true);
+  for (const asset of [{mimeType: 'application/pdf', extension: 'pdf'}, {mimeType: 'application/msword', extension: 'doc'}, null]) assert.match(String(validWordFile(asset)), /\.docx/);
 });
 
 test('volunteer links allow library paths and contacts but block script and insecure external links', () => {

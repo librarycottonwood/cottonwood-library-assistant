@@ -19,7 +19,7 @@ const { campaign } = Astro.props;
 // Privacy: Givebutter's widget script is functional, separate from the consent-gated Analytics.
 const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptSrc(await campaignAccount(campaign));
 ---
-<div id="give" class="fundraiser-form">
+<div id="give" class="fundraiser-form" data-frame-title={`Donation form: ${campaign.title}`}>
   <div class="fundraiser-slot">
     <givebutter-widget id={campaign.givebutter.formWidgetId}></givebutter-widget>
     <p class="fundraiser-fallback"><IconLink href={campaign.url} iconEnd="external">See progress and give on Givebutter<span class="sr-only"> for {campaign.title}</span></IconLink></p>
@@ -30,6 +30,25 @@ const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptS
 <script>
   import { stabilizeFundraiserFrames } from '../../scripts/fundraiser-layout';
   stabilizeFundraiserFrames();
+</script>
+<script is:inline>
+  // Givebutter titles its form's frame "givebutter-iframe", which is what screen readers announce. Once the form has
+  // loaded (inside Givebutter's open shadow roots), give the frame a real name. Gives up after 20 seconds.
+  document.querySelectorAll('[data-frame-title]').forEach(function (box) {
+    var find = function (root) {
+      var frame = root.querySelector('iframe');
+      if (frame) return frame;
+      var hosts = root.querySelectorAll('*');
+      for (var i = 0; i < hosts.length; i++) if (hosts[i].shadowRoot) { frame = find(hosts[i].shadowRoot); if (frame) return frame; }
+      return null;
+    };
+    var tries = 0;
+    var timer = setInterval(function () {
+      var frame = find(box);
+      if (frame) frame.title = box.dataset.frameTitle;
+      if (frame || ++tries > 40) clearInterval(timer);
+    }, 500);
+  });
 </script>
 <style>
   .fundraiser-form { display: flex; flex-direction: column; gap: var(--space-sm); width: 100%; scroll-margin-block-start: var(--space-xl); }

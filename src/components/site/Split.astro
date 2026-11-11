@@ -1,7 +1,7 @@
 ---
 /**
  * @component Split
- * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows beneath the photo; wider screens retain the compact overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+ * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
  * @use The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
  * @avoid Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
  * @example
@@ -43,18 +43,21 @@ const { image: originalImage, media = 'end', mobileAlign = 'start', ratio: ratio
 const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
+// Rendered once, shown in two places: over the photo from desktop width up, and under the text on phones and tablets,
+// where the photo sits above the text. So Tab and screen readers meet it after the buttons, in the order people read.
+const caption = hasCaption ? await Astro.slots.render('caption') : '';
 const bleed = ratio === '1314 / 652' && !panel && !inset;
 // The opening photo eases out of a slight zoom inside a frame that owns its rounded corners and border (as Card's
 // photos do on hover), so the corners never change shape while it moves.
 const framed = first && bleed && media === 'end';
 ---
 <section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon, 'mobile-center': mobileAlign === 'center' }]} {...attributes}>
-  <div class="split-copy" data-motion="group"><slot /></div>
+  <div class="split-copy" data-motion="group"><slot />{hasCaption && <p class="split-caption-inline" set:html={caption} />}</div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} data-motion={first ? undefined : 'rise'} class:list={['split-media', { 'has-caption': hasCaption }]}>
     {framed
       ? <div class="split-frame"><Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading="eager" fetchpriority="high" class="split-image" style={`--split-ratio: ${ratio}`} data-motion="settle" /></div>
       : <Image width={1314} quality={70} image={image} alt={image.alt} widths={[600, 900, 1314]} sizes="(max-width: 63.99rem) 100vw, 68vw" loading={first ? 'eager' : 'lazy'} fetchpriority={first ? 'high' : undefined} class="split-image" style={`--split-ratio: ${ratio}`} />}
-    {hasCaption && <p class="split-caption"><slot name="caption" /></p>}
+    {hasCaption && <p class="split-caption" set:html={caption} />}
   </div>
 </section>
 <style>
@@ -83,6 +86,15 @@ const framed = first && bleed && media === 'end';
     .bleed.media-end .split-media :global(.split-image) { border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
     .bleed.media-start .split-media { padding-inline-start: 0; }
     .bleed.media-start .split-media :global(.split-image) { border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
+  }
+  /* Phones and tablets: the address and phone sit under the text, not over the photo (see `caption` above). */
+  .split-caption-inline { display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 100%; color: var(--color-primary-ink); font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }
+  @media (max-width: 63.99rem) {
+    .split .split-caption { display: none; }
+    .has-caption { padding-block-end: 0; }
+  }
+  @media (min-width: 64rem) {
+    .split .split-caption-inline { display: none; }
   }
   @media (min-width: 48rem) and (max-width: 63.99rem) {
     .bleed .split-media :global(.split-image) { aspect-ratio: 16 / 9; }
@@ -114,7 +126,6 @@ const framed = first && bleed && media === 'end';
     .mobile-center .split-copy :global(.illustration) { align-self: center; }
     .split:not(.inset) .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
     .has-caption { padding-block-end: 0; }
-    .split-caption { position: static; display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: none; margin: var(--space-xs) var(--page-inset) 0 0; padding: 0; border-radius: var(--radius-none); background: transparent; font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }
   }
 
   @media (min-width: 48rem) {

@@ -79,9 +79,22 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <SiteFooter library={content.library} />
     <Analytics privacyLinks={false} />
     <CampaignExpiry />
+    <!-- Read out after a link's name (aria-describedby), so screen-reader users know before they follow it. -->
+    <span id="link-note-new-tab" hidden>Opens in a new tab</span>
+    <span id="link-note-pdf-new-tab" hidden>PDF, opens in a new tab</span>
+    <span id="link-note-pdf" hidden>PDF</span>
     <script is:inline>
       // Links to other websites (catalog, maps, Givebutter, Facebook) open in a new tab, so the library site stays open.
-      // Decided at click time, so links that scripts change later (CampaignExpiry) are covered too.
+      // Decided at click time, so links that scripts change later (CampaignExpiry) are covered too. Each such link (and
+      // each PDF) is described to screen readers once the page has loaded; Givebutter's Donate buttons open a popup on
+      // this page instead, so they are left alone.
+      document.querySelectorAll('a[href]').forEach(function (link) {
+        if (link.hasAttribute('data-gb-campaign') || link.hasAttribute('data-gb-account')) return;
+        var external = /^https?:$/.test(link.protocol) && link.origin !== location.origin;
+        var pdf = /\.pdf$/i.test(link.pathname);
+        var note = external ? (pdf ? 'link-note-pdf-new-tab' : 'link-note-new-tab') : pdf ? 'link-note-pdf' : '';
+        if (note) link.setAttribute('aria-describedby', ((link.getAttribute('aria-describedby') || '') + ' ' + note).trim());
+      });
       document.addEventListener('click', function (event) {
         var link = event.target instanceof Element ? event.target.closest('a[href]') : null;
         if (!link || link.target || !/^https?:$/.test(link.protocol) || link.origin === location.origin) return;

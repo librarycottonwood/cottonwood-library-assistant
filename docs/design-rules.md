@@ -34,6 +34,8 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 - **Opening and closing** uses `motion.ts` so both directions animate: FAQ answers use `slide()`, the full-screen phone menu uses `menu()` (the panel fades, its links rise a beat apart).
 - **Always:** animate only `opacity` and a full `transform` string with explicit start and end values (`['translateY(24px)', 'translateY(0px)']`, never `'none'`), which the browser runs smoothly off the main thread; never Motion's `x`, `y` or `scale` shorthands, which are computed in JavaScript each frame and stutter while a page loads; springs without bounce; zoom a photo only inside a frame that owns its rounded corners and border, as Card and Split's opening photo do (a photo with its own rounded corners gets them cut square while it zooms); nothing over about a second; never animate a block holding a Givebutter widget (its popups would get trapped under the header). Prepare entrance states before paint and hold them through the animation handoff, so content never flashes visible before fading in. Each group enters as one sequence, including its actions. If initialization misses the short loading window, reveal content and skip late entrances. Direct viewport checks back up observers, and bounded cleanup clears stalled animations. Everything still works and shows with JavaScript off or reduced motion on.
 
+- **Keyboard focus:** reveal a waiting entrance group immediately when it receives focus, and finish any active entrance on that group, so Tab never lands on invisible controls.
+
 ## Keep
 - Colours, Bree Serif + Mona Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.
 
@@ -59,5 +61,5 @@ Decoration follows the section's purpose, not how empty it looks. Plain headings
 ## Mobile hours and hero contacts
 
 - Keep the hours strip indigo at every width. Phones use centered rows with short day labels beside the complete times. The canonical CMS summary remains accessible, and enlarged text can wrap.
-- `HeroContacts` provides two plain icon-and-value rows below the photo on phones, with the complete address and phone, compact 14px type and at least 44px touch targets. No cards or redundant action labels.
+- `HeroContacts` provides two plain icon-and-value rows after the hero actions on phones and tablets, with the complete address and phone, compact 14px type and at least 44px touch targets. No cards or redundant action labels.
 - Wider screens retain the inline contact overlay. Keep these factual details in Mona Sans, separate from decorative handwriting and leaves.
