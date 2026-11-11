@@ -686,8 +686,10 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
-  /** Small leaf accent above a plain heading; use instead of a crayon scene, at most once per page. */
+  /** Small leaf accent with a plain heading; use instead of a crayon scene, at most once per page. */
   leaf?: 'sprig' | 'pair' | 'branch';
+  /** Below makes a compact leaf divider between the heading and section content. */
+  leafPosition?: 'above' | 'below';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */

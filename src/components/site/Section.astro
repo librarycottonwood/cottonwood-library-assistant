@@ -19,8 +19,10 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
-  /** Small leaf accent above a plain heading; use instead of a crayon scene, at most once per page. */
+  /** Small leaf accent with a plain heading; use instead of a crayon scene, at most once per page. */
   leaf?: 'sprig' | 'pair' | 'branch';
+  /** Below makes a compact leaf divider between the heading and section content. */
+  leafPosition?: 'above' | 'below';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -33,12 +35,16 @@ interface Props {
   continues?: boolean;
   id?: string;
 }
-const { title, illustration, leaf, headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
+const { title, illustration, leaf, leafPosition = 'above', headingId, align = 'center', width = 'content', gap, continues = false, id } = Astro.props;
 ---
 <section id={id} aria-labelledby={headingId} class:list={['section', { continues }]}>
   <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && (illustration || leaf
-      ? <div class:list={['illustrated-heading', { 'leaf-heading': !illustration && leaf }]}>{illustration ? <LibraryIllustration scene={illustration} /> : <LeafAccent variant={leaf} />}<Heading id={headingId} relaxed={align === 'center'}>{title}</Heading></div>
+      ? <div class:list={['illustrated-heading', { 'leaf-heading': !illustration && leaf }]}>
+          {illustration ? <LibraryIllustration scene={illustration} /> : leafPosition === 'above' && <LeafAccent variant={leaf} />}
+          <Heading id={headingId} relaxed={align === 'center' && !(leaf && leafPosition === 'below')}>{title}</Heading>
+          {!illustration && leaf && leafPosition === 'below' && <LeafAccent variant={leaf} />}
+        </div>
       : <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>)}
     <slot />
   </div>
