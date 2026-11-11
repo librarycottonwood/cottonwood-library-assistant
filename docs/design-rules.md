@@ -44,7 +44,7 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 - `AccentHeading` receives the complete existing heading and an exact phrase. If that phrase is absent, it renders the complete heading plainly. Never change CMS wording to make a style work.
 - Keep navigation, buttons, form labels, hours, dates, prices, facts and paragraphs in their regular type. Handwriting stays real text, selectable and accessible, and enters with its surrounding group.
 - `LeafAccent` has three small variants: `sprig` for a quiet story or regular-events heading, `pair` with a flower for gratitude, and `branch` for related ways to help or borrowing questions. Use no more than one leaf accent per public page. `Section` places it beside a left-aligned heading, or above a centered heading with a small gap.
-- Use a leaf on a plain heading, separate from handwriting and crayon scenes. The volunteer invitation uses the same illustration-above-heading layout as the homepage community section, with a real activity photo on the right. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.
+- Use a leaf on a plain heading, separate from handwriting and crayon scenes. The volunteer invitation uses the same illustration-above-heading layout as the homepage community section, with a real activity photo on the left and copy on the right. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.
 
 ## Mobile hours and hero contacts
 

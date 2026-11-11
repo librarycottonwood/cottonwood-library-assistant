@@ -61,7 +61,7 @@ function supporterHref(item: SupportUpdate) {
     </Stack>}
     {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
   </Split>}
-  {volunteer && <Split media="end" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer">
+  {volunteer && <Split media="start" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer">
     <Stack gap="sm" align="start">
       <LibraryIllustration scene="volunteers" size="small" align="start" />
       <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
