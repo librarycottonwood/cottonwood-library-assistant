@@ -1,18 +1,12 @@
 ---
-// One newsletter issue. With a Word version (accessible) it shows the whole issue as a web page, converted from that
-// Word file at build time, with both downloads above it. Without one, its cover card opens the PDF.
-// Built only from src/components/site; content from Sanity.
+// One newsletter issue (older links point here): its cover card, which opens the PDF. Built only from src/components/site; content from Sanity.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Button from '../../components/site/Button.astro';
 import Card from '../../components/site/Card.astro';
 import Grid from '../../components/site/Grid.astro';
 import IconLink from '../../components/site/IconLink.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
-import Prose from '../../components/site/Prose.astro';
 import Section from '../../components/site/Section.astro';
-import Stack from '../../components/site/Stack.astro';
 import { mainNavigation } from '../../components/site/navigation';
-import { accessibleIssue } from '../../content/accessible-issue';
 import { contentRepository } from '../../content/repository';
 import type { LibraryNewsletter } from '../../content/types';
 export async function getStaticPaths() {
@@ -20,24 +14,14 @@ export async function getStaticPaths() {
 }
 interface Props { newsletter: LibraryNewsletter; }
 const { newsletter } = Astro.props;
-const issue = await accessibleIssue({ ...newsletter, id: newsletter.id! });
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 ---
 <BaseLayout title={`${newsletter.issue} newsletter | Cottonwood Community Library`} description={newsletter.summary}>
   <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]}>{newsletter.summary}</PageTitle>
-  {issue && newsletter.accessibleFile
-    ? <Section width="text" align="start">
-        <Stack direction="row" gap="xs" wrap>
-          <Button href={newsletter.fileUrl} icon="download">Download PDF</Button>
-          <Button href={newsletter.accessibleFile.url} variant="accent" icon="download">Word version (accessible)</Button>
-        </Stack>
-        <Prose html={issue.html} />
-        <IconLink href="/newsletter/" iconEnd="arrow">All newsletters</IconLink>
-      </Section>
-    : <Section>
-        <Grid as="ul" columns={3} balance={false}>
-          <Card as="li" shape="page" title={newsletter.issue} href={newsletter.fileUrl} image={newsletter.cover}>Read the newsletter (PDF).</Card>
-        </Grid>
-        <IconLink href="/newsletter/" iconEnd="arrow">All newsletters</IconLink>
-      </Section>}
+  <Section>
+    <Grid as="ul" columns={3} balance={false}>
+      <Card as="li" shape="page" title={newsletter.issue} href={newsletter.fileUrl} image={newsletter.cover}>Read the newsletter (PDF).</Card>
+    </Grid>
+    <IconLink href="/newsletter/" iconEnd="arrow">All newsletters</IconLink>
+  </Section>
 </BaseLayout>

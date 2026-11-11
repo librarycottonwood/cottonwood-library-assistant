@@ -64,7 +64,7 @@ export const newsletter = defineType({
       })}),
     defineField({name: 'accessibleFile', title: 'Word version (accessible)', type: 'file',
       options: {accept: `.docx,${WORD_MIME}`},
-      description: 'The same newsletter as a Word file that screen readers can follow. The library assistant makes it from the PDF. The website offers it for download and shows the issue as a web page.',
+      description: 'The same newsletter as a Word file that screen readers can follow. The library assistant makes it from the PDF. The website offers it for download next to the PDF.',
       validation: (rule) => rule.custom(async (file, context) => {
         if (!file?.asset?._ref) return true;
         const asset = await context.getClient({apiVersion: '2026-10-01'}).fetch<{mimeType?: string; extension?: string} | null>('*[_id == $id][0]{mimeType, extension}', {id: file.asset._ref});

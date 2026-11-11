@@ -136,7 +136,7 @@ export interface LibraryNewsletter {
   summary: string;
   fileUrl: string;
   cover: LibraryImage;
-  /** The accessible Word version (.docx), when the issue has one. The issue page shows it as a readable web page too. */
+  /** The accessible Word version (.docx), when the issue has one. Offered for download next to the PDF. */
   accessibleFile?: AccessibleNewsletterFile;
 }
 

@@ -162,7 +162,7 @@ export function validateSanitySnapshot(snapshot, expected, { warn: report = defa
     if (!LEGACY_IMAGES.has(value.legacyKey)) problem(at, 'This needs an uploaded picture (or a known migration legacyKey).');
     return { ...base, key: value.legacyKey };
   }
-  /** The optional accessible Word version of a newsletter. The website converts it to a readable page at build time. */
+  /** The optional accessible Word version of a newsletter. The website checks it at build time and offers it for download. */
   function wordFile(value, issueId, at) {
     const asset = reference(object(value, at).asset, 'sanity.fileAsset', sub(at, 'uploaded file', 'asset'));
     if (asset.mimeType !== DOCX_MIME || !/^file-[A-Za-z0-9]+-docx$/.test(asset._id)) problem(at, 'This must be a Word document (.docx). Upload the accessible Word version, not a PDF or .doc file.');

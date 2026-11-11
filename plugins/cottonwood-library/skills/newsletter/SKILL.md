@@ -28,9 +28,9 @@ Ask one at a time; skip what they already said.
 
 Use the PDF's first page as the cover picture. The new issue replaces the current one on the site; keep the older PDF file available unless they ask to remove it.
 
-Every issue also gets a **Word version (accessible)**, made by you from the PDF with "Accessible Word version" below. Don't ask whether to make it and don't explain how; it is part of saving an issue. The website offers it next to the PDF and shows the whole issue as a web page made from it, so people using screen readers can read it.
+Every issue also gets a **Word version (accessible)**, made by you from the PDF with "Accessible Word version" below. Don't ask whether to make it and don't explain how; it is part of saving an issue. The website offers it for download next to the PDF, so people using screen readers can read the newsletter.
 
-Preview, then ask to save. Before "Ready to save?", show the volunteer in one or two plain lines: the issue name, the summary, and "I also made an accessible Word version" with the .docx attached so they can open it. The issue's link under "Pages checked on the preview" (publishing skill) opens its web version; share that one. For a corrected PDF, make a fresh Word version from the new PDF.
+Preview, then ask to save. Before "Ready to save?", show the volunteer in one or two plain lines: the issue name, the summary, and "I also made an accessible Word version" with the .docx attached so they can open it. Share the preview link as the publishing skill says. For a corrected PDF, make a fresh Word version from the new PDF.
 
 ## Accessible Word version
 

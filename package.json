@@ -31,7 +31,6 @@
     "@lucide/astro": "1.47.0",
     "astro": "7.3.3",
     "jszip": "3.10.2",
-    "mammoth": "1.13.0",
     "maplibre-gl": "6.6.0",
     "motion": "14.9.0",
     "sharp": "0.35.4"

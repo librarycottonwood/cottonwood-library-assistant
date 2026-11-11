@@ -10,11 +10,11 @@ Every new or replaced PDF also gets an accessible Word version, made by the assi
 
 Upload the .docx it made with the Sanity tool for chat files (`dataset_assets_upload_from_web_chatgpt`, asset type `file`; the same route as an attached PDF), then set `accessibleFile` to `{"_type": "file", "asset": {"_type": "reference", "_ref": "file-<hash>-docx"}}` on the newsletter record before publishing it.
 
-What the website does with it (`src/content/accessible-newsletter.mjs`, checked by `scripts/accessible-newsletter.test.mjs`):
+What the website does with it (checks in `src/content/accessible-newsletter.mjs`, tested by `scripts/accessible-newsletter.test.mjs`):
 
-- The newsletter page and the issue page offer **Download PDF** and **Word version (accessible)** side by side. The issue card then opens the issue page, which shows the whole issue as a web page converted from the Word file at build time (Heading 1 becomes the page's h2, pictures keep their descriptions, decorative pictures are left out).
+- Each issue card on the newsletter page opens the PDF, with **Download PDF** and, when the issue has one, **Word version (accessible)** under it.
 - The build stops, naming the issue and the problem, when the Word file has no Heading 1, skips a heading level, uses the Title style, has a picture with no description that isn't marked decorative, or still has a "Manual Review" section. Fix the Word file, upload it again and point `accessibleFile` at the new file.
-- Issues without a Word version look as before: the card opens the PDF.
+- Issues without a Word version show only the PDF download.
 
 For a new issue, preserve older newsletter records and PDFs. In **Library settings and hours → Homepage → Current newsletter**, change `siteSettings.currentNewsletter` on the existing `library-settings` document to reference that issue. This selection drives the current-issue page and homepage card; older issues remain in the archive. Do not create another settings document or maintain a second current-issue copy.
 

@@ -1,8 +1,7 @@
 export interface WordHeading { level: number; text: string; }
-export interface WordPicture { alt: string; contentType: string; bytes: Uint8Array; /** Its size on the Word page, in CSS pixels. */ size?: { width: number; height: number }; }
-export interface AccessibleNewsletterResult { problems: string[]; html: string; headings: WordHeading[]; images: WordPicture[]; }
-export function headingsOf(html: string): WordHeading[];
+export interface WordPicture { name: string; alt: string; decorative: boolean; }
+export interface WordStructure { headings: WordHeading[]; usesTitleStyle: boolean; pictures: WordPicture[]; }
+export interface AccessibleNewsletterCheck { problems: string[]; headings: WordHeading[]; pictures: WordPicture[]; }
+export function readWordStructure(bytes: Uint8Array): Promise<WordStructure | undefined>;
 export function headingProblems(headings: WordHeading[]): string[];
-export function stripManualReview(html: string): string;
-export function shiftHeadings(html: string, by?: number): string;
-export function readAccessibleNewsletter(bytes: Uint8Array): Promise<AccessibleNewsletterResult>;
+export function checkAccessibleNewsletter(bytes: Uint8Array): Promise<AccessibleNewsletterCheck>;
