@@ -1,0 +1,22 @@
+---
+/**
+ * @component IllustratedHeading
+ * A section heading with a small decorative scene to its right, sharing the same entrance.
+ * @use The volunteer invitation, where the small drawing accompanies a separate real activity photo.
+ * @avoid Large illustrations beside a heading, or stacking another decorative accent on the same heading.
+ * @example
+ * <IllustratedHeading id="volunteer-heading" text="Give your time" phrase="time" />
+ */
+import AccentHeading from './AccentHeading.astro';
+import LibraryIllustration from './LibraryIllustration.astro';
+interface Props { text: string; phrase: string; id: string; }
+const { text, phrase, id } = Astro.props;
+---
+<div class="illustrated-title">
+  <AccentHeading id={id} text={text} phrase={phrase} />
+  <LibraryIllustration scene="volunteers" size="accent" />
+</div>
+<style>
+  .illustrated-title { display: grid; grid-template-columns: minmax(0, auto) auto; justify-content: start; align-items: center; gap: var(--space-sm); width: 100%; }
+  .illustrated-title > :global(.heading) { min-width: 0; text-align: start; }
+</style>

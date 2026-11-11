@@ -14,6 +14,7 @@ import Text from '../../components/site/Text.astro';
 import { supportLink } from '../../components/site/navigation';
 import { upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
+import { volunteerActivityPhoto } from '../../content/photography';
 import { DONATE_INITIATIVE_ID } from '../../content/donate';
 import type { SupportInitiative } from '../../content/types';
 import { otherWaysToHelp } from './_other-ways';
@@ -24,6 +25,7 @@ export async function getStaticPaths() {
 }
 interface Props { initiative: SupportInitiative; }
 const { initiative } = Astro.props;
+const image = initiative.category === 'volunteering' ? volunteerActivityPhoto(initiative.image) : initiative.image;
 const [{ initiatives }, events] = await Promise.all([contentRepository.getSupport(), contentRepository.getEvents()]);
 const action = initiative.action;
 // The panel says it once: the first paragraph (what this is), then the steps. The summary is the card text on
@@ -34,9 +36,9 @@ const others = otherWaysToHelp(initiatives, initiative.id);
 const nextSale = initiative.id === 'book-sale' ? upcomingEvents(events).find(event => /book sale/i.test(event.title)) : undefined;
 const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' });
 ---
-<BaseLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary} image={initiative.image}>
+<BaseLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary} image={image}>
   <PageTitle title={initiative.title} trail={[supportLink]} />
-  <Split media="start" panel image={initiative.image}>
+  <Split media="start" panel image={image}>
     <Text size="lead">{intro}</Text>
     {nextSale && <Text>Next sale: <a href={nextSale.href}><time datetime={nextSale.startsAt}>{saleDate.format(new Date(nextSale.startsAt))}</time></a></Text>}
     <Prose steps={initiative.steps} />

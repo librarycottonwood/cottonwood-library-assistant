@@ -8,8 +8,8 @@ import Card from '../../components/site/Card.astro';
 import FundraiserForm from '../../components/site/FundraiserForm.astro';
 import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
-import AccentHeading from '../../components/site/AccentHeading.astro';
 import IconLink from '../../components/site/IconLink.astro';
+import IllustratedHeading from '../../components/site/IllustratedHeading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
@@ -18,6 +18,7 @@ import Text from '../../components/site/Text.astro';
 import { supportLink } from '../../components/site/navigation';
 import { activeCampaign } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
+import { volunteerActivityPhoto } from '../../content/photography';
 import { checkoutAttributes, dayAfter, getDonateLink } from '../../content/donate';
 import { otherWaysToHelp } from './_other-ways';
 const [home, support, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), getDonateLink()]);
@@ -49,10 +50,13 @@ const otherWays = otherWaysToHelp(support.initiatives);
     </Stack>}
     {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
   </Split>}
-  {volunteer && <Split media="start" image={volunteer.image} headingId="volunteer-heading" id="volunteer">
-    <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
+  {volunteer && <Split media="start" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer">
+    <IllustratedHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
     <Text tone="muted">{volunteer.summary}</Text>
-    <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
+      {volunteer.action.download && <Button href={volunteer.action.href} download icon="download">Download form</Button>}
+    </Stack>
   </Split>}
   {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
     <Grid as="ul" columns={3}>

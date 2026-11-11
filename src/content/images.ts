@@ -18,6 +18,7 @@ import crayonFooter from '../assets/images/crayon-footer.png';
 import crayonBooks from '../assets/images/crayon-books.png';
 import crayonCommunity from '../assets/images/crayon-community.png';
 import crayonVolunteers from '../assets/images/crayon-volunteers.png';
+import volunteerCraft from '../assets/images/volunteer-craft-facebook.jpg';
 
 import mainStreetReaders from '../assets/images/main-street-readers.png';
 import bookClub from '../assets/images/book-club.png';
@@ -67,7 +68,7 @@ import storytimeSession from '../assets/images/storytime-session.jpg';
 import storytimeFacebook from '../assets/images/storytime-facebook.jpg';
 import adventureMuralOriginal from '../assets/images/adventure-mural-original.jpg';
 
-const images: Record<string, ImageMetadata> = { crayonReading, crayonComputers, crayonFooter, crayonBooks, crayonCommunity, crayonVolunteers, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
+const images: Record<string, ImageMetadata> = { crayonReading, crayonComputers, crayonFooter, crayonBooks, crayonCommunity, crayonVolunteers, volunteerCraft, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

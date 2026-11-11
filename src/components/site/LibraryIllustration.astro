@@ -2,29 +2,30 @@
 /**
  * @component LibraryIllustration
  * Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette.
- * @use Above a related heading: community for the support block, reading for events, computers for services, books for the newsletter.
+ * @use Above a related heading: community for support, reading for events, computers for services, books for newsletters; use the compact volunteer accent beside its heading.
  * @avoid Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
  * @example
  * <LibraryIllustration scene="reading" />
  */
 import Image from '../OptimizedImage.astro';
 interface Props {
-  scene: 'reading' | 'computers' | 'books' | 'community';
+  scene: 'reading' | 'computers' | 'books' | 'community' | 'volunteers';
   /** Follow the left edge of a text column, or center above a section heading (default). */
   align?: 'start' | 'center';
-  /** Smaller artwork in a supporting text column. */
-  size?: 'standard' | 'small';
+  /** Small: supporting text-column art. Accent: a compact drawing to the right of a heading. */
+  size?: 'standard' | 'small' | 'accent';
 }
 const { scene, align = 'center', size = 'standard' } = Astro.props;
-const keys = { reading: 'crayonReading', computers: 'crayonComputers', books: 'crayonBooks', community: 'crayonCommunity' } as const;
+const keys = { reading: 'crayonReading', computers: 'crayonComputers', books: 'crayonBooks', community: 'crayonCommunity', volunteers: 'crayonVolunteers' } as const;
 ---
-<span class:list={['illustration', scene, { 'illustration-start': align === 'start', 'illustration-small': size === 'small' }]} aria-hidden="true">
-  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={size === 'small' ? '(max-width: 78.57rem) 11rem, (max-width: 100rem) 14vw, 14rem' : scene === 'books' ? '(max-width: 60rem) 6rem, (max-width: 100rem) 10vw, 10rem' : '(max-width: 50rem) 10rem, (max-width: 100rem) 20vw, 20rem'} loading="lazy" />
+<span class:list={['illustration', scene, { 'illustration-start': align === 'start', 'illustration-small': size === 'small', 'illustration-accent': size === 'accent' }]} aria-hidden="true">
+  <Image image={{ key: keys[scene], alt: '' }} alt="" width={640} widths={[160, 320, 480, 640]} sizes={size === 'accent' ? '(max-width: 75rem) 4.5rem, (max-width: 116.67rem) 6vw, 7rem' : size === 'small' ? '(max-width: 78.57rem) 11rem, (max-width: 100rem) 14vw, 14rem' : scene === 'books' ? '(max-width: 60rem) 6rem, (max-width: 100rem) 10vw, 10rem' : '(max-width: 50rem) 10rem, (max-width: 100rem) 20vw, 20rem'} loading="lazy" />
 </span>
 <style>
   .illustration { display: block; flex-shrink: 0; align-self: center; width: clamp(10rem, 20vw, 20rem); max-width: 100%; pointer-events: none; }
   .books { width: clamp(6rem, 10vw, 10rem); }
   .illustration-small { width: clamp(11rem, 14vw, 14rem); }
+  .illustration-accent { width: clamp(4.5rem, 6vw, 7rem); }
   .illustration-start { align-self: flex-start; }
   .illustration :global(img) { display: block; width: 100%; height: auto; }
 </style>
