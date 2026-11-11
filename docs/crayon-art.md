@@ -1,8 +1,8 @@
 # Library crayon illustrations
 
-These are original AI-generated decorative illustrations, created with the built-in imagegen tool for the November 2026 design exploration. They depict fictional children and adults, not actual library visitors or volunteers. Real library photography and existing program artwork remain in place, except the volunteer invitation now uses a relevant illustrated scene instead of a generic shelves photo.
+These are original AI-generated decorative illustrations, created with the built-in imagegen tool for the November 2026 design exploration. They depict fictional children and adults, not actual library visitors or volunteers. Real library photography and existing program artwork remain in place. The volunteer section has returned to its original photo from Sanity, with the photo on the left and copy on the right on desktop.
 
-The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/images.ts` registers them, and `LibraryIllustration` serves responsive versions through the maintained image component. Heading scenes scale smoothly at 20vw between 160px and 320px, rather than jumping at a tablet breakpoint. The book-carrying child scales at 10vw between 96px and 160px; the smaller community scene scales at 12vw between 144px and 192px. Responsive image sizes follow those same ranges. The larger footer scene retains its separate 288px cap. Their empty alt text and hidden decorative wrapper keep them out of accessible names.
+The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/images.ts` registers them, and `LibraryIllustration` serves responsive versions through the maintained image component. Heading scenes scale smoothly at 20vw between 160px and 320px, rather than jumping at a tablet breakpoint. The book-carrying child scales at 10vw between 96px and 160px; the smaller community scene scales at 14vw between 176px and 224px. Responsive image sizes follow those same ranges. The larger footer scene retains its separate 288px cap. Their empty alt text and hidden decorative wrapper keep them out of accessible names.
 
 | Source asset | Placement |
 | --- | --- |
@@ -10,7 +10,7 @@ The transparent PNGs were prepared through `pnpm image:prepare`; `src/content/im
 | `crayon-computers.png` | Homepage library services heading |
 | `crayon-books.png` | Shared newsletter heading |
 | `crayon-community.png` | Above the homepage community heading; four children holding hands |
-| `crayon-volunteers.png` | Support Us volunteer invitation; two adults sorting books together |
+| `crayon-volunteers.png` | Retained design exploration; not rendered on public pages |
 | `crayon-footer.png` | Footer reading scene, beside the links and contact details on desktop |
 
 The original prompt set is in `docs/crayon-art-prompts.json`; the holding-hands scene and its reading-scene style reference are documented in `docs/crayon-community-prompt.json`. The computer and footer scenes are documented in `docs/crayon-services-footer-prompts.json`. The direction is very simple original comic children, wobbly graphite crayon outlines, sparse indigo and pale green color, transparent background and no lettering. The earlier playing scene is no longer shipped; the reading pair now accompanies events.
@@ -23,7 +23,7 @@ Main page titles reuse the same scenes in the space to the right: reading for Ev
 
 The footer's old low-opacity logo watermark is replaced by one crayon reading scene. At 1024px and wider, the three information columns and artwork share one row. Tablet and phone layouts center the scene below the information. The stacked library logo and social links form one centered group; larger layouts keep this group in the first column. On phones, the information columns share a centered area capped at 512px, with more room for contact details and a smaller gap between columns. Contact links retain their touch targets without extra gaps between rows; the mailing address has one small separation. Artwork is capped at 288px and shrinks to the available content width on the narrowest phones. The scene is decorative, responsive and lazy-loaded.
 
-The hero keeps both complete CMS heading lines in black. An original static SVG uses two uneven indigo strokes with crayon grain beneath the final word, separate from the letters. It has no miniature icon and enters with the existing heading group. The community heading stays plain. The volunteer invitation uses a contained pale-indigo band with an illustration of adults sorting books beside left-aligned copy and an action; on phones the scene is centered above the copy at no more than 224px wide. The whole band shares one entrance. Its final built-in imagegen prompt is in `docs/crayon-volunteers-prompt.json`.
+The hero keeps both complete CMS heading lines in black. An original static SVG uses two uneven indigo strokes with crayon grain beneath the final word, separate from the letters. It has no miniature icon and enters with the existing heading group. The community heading stays plain. The volunteer section uses its original photo-and-text Split, with the photo above the left-aligned copy on phones. The short “time” accent remains in its heading. Its final built-in imagegen prompt is in `docs/crayon-volunteers-prompt.json`.
 
 Tablet and desktop opening hours keep their indigo background, white type and original vertical spacing. Phones use a quiet strip on the page background with dark text: short weekday labels and unchanged hours align in two columns, with the clock aligned to the first row. The full CMS day names remain available to screen readers. Long or enlarged text can reflow.
 

@@ -10,7 +10,6 @@ import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
 import AccentHeading from '../../components/site/AccentHeading.astro';
 import IconLink from '../../components/site/IconLink.astro';
-import IllustratedCallout from '../../components/site/IllustratedCallout.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
@@ -50,13 +49,11 @@ const otherWays = otherWaysToHelp(support.initiatives);
     </Stack>}
     {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
   </Split>}
-  {volunteer && <Section headingId="volunteer-heading" id="volunteer" align="start">
-    <IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
-      <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
-      <Text tone="muted">{volunteer.summary}</Text>
-      <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
-    </IllustratedCallout>
-  </Section>}
+  {volunteer && <Split media="start" image={volunteer.image} headingId="volunteer-heading" id="volunteer">
+    <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
+    <Text tone="muted">{volunteer.summary}</Text>
+    <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
+  </Split>}
   {otherWays.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading" id="other-ways">
     <Grid as="ul" columns={3}>
       {otherWays.map(item => <Card as="li" title={item.title} href={`/donate/${item.id}/`} image={item.image}>{item.summary}</Card>)}
