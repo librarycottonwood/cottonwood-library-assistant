@@ -1,17 +1,21 @@
 ---
 // The library newsletter: every issue as a cover card, newest (the current issue) first. Each card opens the PDF.
+// Under each card: Download PDF, and Word version (accessible) when the issue has one (checked at build time).
 // Built only from src/components/site; issues come from Sanity (Newsletters, and Library settings › Current newsletter).
 // The sign-up form is in the layout's footer.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/site/Card.astro';
 import Grid from '../../components/site/Grid.astro';
+import IconLink from '../../components/site/IconLink.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Text from '../../components/site/Text.astro';
 import { mainNavigation } from '../../components/site/navigation';
+import { checkWordVersions } from '../../content/accessible-word';
 import { contentRepository } from '../../content/repository';
 const { newsletter } = await contentRepository.getHome();
 const issues = await contentRepository.getNewsletters();
+await checkWordVersions(issues);
 // The current issue leads; the rest follow in the order Sanity returns them.
 const ordered = newsletter ? [newsletter, ...issues.filter(issue => issue.id !== newsletter.id)] : issues;
 const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
@@ -21,7 +25,12 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
   <Section>
     {ordered.length > 0
       ? <Grid as="ul" columns={3} balance={false}>
-          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
+          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}
+            <Fragment slot="links">
+              <IconLink href={issue.fileUrl} icon="download" aria-label={`Download PDF: ${issue.issue} newsletter`}>Download PDF</IconLink>
+              {issue.accessibleFile && <IconLink href={issue.accessibleFile.url} icon="download" aria-label={`Word version (accessible): ${issue.issue} newsletter`}>Word version (accessible)</IconLink>}
+            </Fragment>
+          </Card>)}
         </Grid>
       : <Text tone="muted">No newsletter has been published yet.</Text>}
   </Section>

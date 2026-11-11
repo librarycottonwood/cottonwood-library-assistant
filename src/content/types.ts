@@ -136,6 +136,16 @@ export interface LibraryNewsletter {
   summary: string;
   fileUrl: string;
   cover: LibraryImage;
+  /** The accessible Word version (.docx), when the issue has one. Offered for download next to the PDF. */
+  accessibleFile?: AccessibleNewsletterFile;
+}
+
+export interface AccessibleNewsletterFile {
+  /** Download address for visitors. */
+  url: string;
+  /** Where the build reads the file: the Sanity CDN address, or a repository path for local fixtures. */
+  source: string;
+  fileName: string;
 }
 
 export interface RichTextSpan { _key: string; _type: 'span'; text: string; marks: string[]; }

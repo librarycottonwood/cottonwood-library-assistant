@@ -4,6 +4,7 @@ export interface SanitySnapshot { schemaVersion: 1; projectId: string; dataset: 
 export interface SanityContent { home: HomeContent; support: SupportContent; events: LibraryEvent[]; posts: LibraryPost[]; notices: LibraryNotice[]; newsletters: LibraryNewsletter[]; /** Corrections made while reading content, naming the document and field. */ warnings: string[]; }
 export interface ValidateOptions { /** Receives each correction warning. Defaults to console.warn, once per message per process. */ warn?: (message: string) => void; }
 export const SANITY_API_VERSION: string;
+export const DOCX_MIME: string;
 export const SANITY_QUERY: string;
 export const SANITY_DOCUMENT_TYPES: string[];
 export function sanityConfig(env?: Record<string, string | undefined>): SanityConfig;
