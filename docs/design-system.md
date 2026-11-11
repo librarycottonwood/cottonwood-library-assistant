@@ -645,6 +645,8 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Load the first two photos immediately (default). Turn off for a list far down the homepage. */
+  eager?: boolean;
   /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
   headingLevel?: 2 | 3;
 }
