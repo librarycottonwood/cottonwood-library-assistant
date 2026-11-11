@@ -150,12 +150,9 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
-| [CommunitySupport](#communitysupport) | A compact support band with community artwork, one short introduction and donation/volunteer links. |
 | [DetailList](#detaillist) | Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices. |
 | [EventCards](#eventcards) | The next upcoming events as Cards with date badges, then regular programs (Story Time, reading groups) to fill any of the `limit` spots left. Built ahead of time, so the visitor's browser hides events after they end, keeps `limit` cards showing, and swaps dates for "Today", "Tomorrow" and "This Friday". The layout follows how many are showing: 1 is one wide card (photo beside text), 2 are centered, 3 or more fill the grid, 0 shows `emptyMessage`. Events with no photo of their own or of their program get a library photo picked by event id, never the hero photo, and never one another card already shows. Regular programs show their next date ("Nov 4 · 11:30 a.m.") worked out from their schedule text; a schedule it can't read shows as written. |
-| [EventRow](#eventrow) | A compact linked event row with a date, title and summary, without a photo frame. |
 | [Faq](#faq) | Questions that open to show their answer, with a + that turns into ×. Only one is open at a time (details name=…; with JavaScript the script does it, so both answers can slide). Works without JavaScript (details/summary). |
-| [FirstVisit](#firstvisit) | A distinct first-visit guide: a short welcome and visit link beside two practical borrowing answers. |
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
@@ -163,7 +160,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [HeroContacts](#herocontacts) | Directions and phone links, shown as two plain rows after the hero actions on phones and tablets. |
 | [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
-| [HomeEvents](#homeevents) | An editorial events section: one regular program with a large photo, beside a compact, live-updating agenda. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones. |
 | [LeafAccent](#leafaccent) | A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch. |
@@ -173,7 +169,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
-| [ServiceLinks](#servicelinks) | Three practical service links with simple icons and complete descriptions, separated by rules instead of photo cards. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
 | [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
@@ -328,21 +323,6 @@ interface Props {
 </Grid>
 ```
 
-### CommunitySupport
-
-`src/components/site/CommunitySupport.astro` — A compact support band with community artwork, one short introduction and donation/volunteer links.
-
-- **Use for:** Near the top of the homepage so the library's community funding remains visible without a second large photo section.
-- **Don't use for:** Campaign totals, checkout widgets, or replacing visitor information with a large fundraising feature.
-
-```ts
-interface Props { title: string; introduction: string; }
-```
-
-```astro
-<CommunitySupport title={home.support.title} introduction={home.support.introduction} />
-```
-
 ### DetailList
 
 `src/components/site/DetailList.astro` — Rows of a label on the left and a value on the right, with a thin line between rows: opening hours, prices.
@@ -380,37 +360,11 @@ interface Props {
   emptyMessage?: string;
   /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
   fill?: boolean;
-  /** list: compact date/title rows for the homepage agenda. Dates and expiry use the same behavior as cards. */
-  layout?: 'cards' | 'list';
 }
 ```
 
 ```astro
 <EventCards events={events} programs={programs} limit={3} />
-```
-
-### EventRow
-
-`src/components/site/EventRow.astro` — A compact linked event row with a date, title and summary, without a photo frame.
-
-- **Use for:** Through EventCards layout="list", which supplies current dates, expiry and replacement programs.
-- **Don't use for:** Maintaining a separate calendar or replacing the detailed event page.
-
-```ts
-interface Props {
-  title: string;
-  href: string;
-  /** EventCards shares its item props with Card; list rows deliberately omit the image. */
-  image?: LibraryImage;
-  layout?: 'stacked' | 'adaptive';
-  as?: 'article' | 'li' | 'div';
-  hidden?: boolean;
-  [data: `data-${string}`]: string | undefined;
-}
-```
-
-```astro
-<EventCards events={events} programs={programs} layout="list" limit={3} />
 ```
 
 ### Faq
@@ -434,21 +388,6 @@ interface Props {
 <Section title="Frequently Asked Questions" headingId="faq-heading" width="text">
   <Faq items={borrowing} email={library.email} />
 </Section>
-```
-
-### FirstVisit
-
-`src/components/site/FirstVisit.astro` — A distinct first-visit guide: a short welcome and visit link beside two practical borrowing answers.
-
-- **Use for:** Near the end of the homepage, surfacing existing visitor information without making people open an FAQ.
-- **Don't use for:** New library policies, generic marketing copy, or treating an account as a requirement to enter the building.
-
-```ts
-interface Props { items: { title: string; text: string }[]; }
-```
-
-```astro
-<FirstVisit items={firstVisitAnswers} />
 ```
 
 ### FundraiserForm
@@ -577,21 +516,6 @@ interface Props { lines: readonly string[]; id: string; }
 
 ```astro
 <HeroHeading lines={hero.heading} id="welcome-heading" />
-```
-
-### HomeEvents
-
-`src/components/site/HomeEvents.astro` — An editorial events section: one regular program with a large photo, beside a compact, live-updating agenda.
-
-- **Use for:** On the homepage, giving library activities one shared destination instead of two consecutive photo/card sections.
-- **Don't use for:** Invented dates, separate expiry logic, or turning a fundraiser into a second large homepage appeal.
-
-```ts
-interface Props { events: LibraryEvent[]; programs: Program[]; }
-```
-
-```astro
-<HomeEvents events={events} programs={programs} />
 ```
 
 ### IconLink
@@ -787,21 +711,6 @@ interface Props {
   <Grid as="ul" columns={3}>…</Grid>
   <Button href="/visit/" iconEnd="arrow">Read more</Button>
 </Section>
-```
-
-### ServiceLinks
-
-`src/components/site/ServiceLinks.astro` — Three practical service links with simple icons and complete descriptions, separated by rules instead of photo cards.
-
-- **Use for:** The homepage's compact service overview; detailed photos and instructions stay on Services.
-- **Don't use for:** Invented prices or embedding multiple actions inside one linked service.
-
-```ts
-interface Props { services: HomeContent['services']; catalogUrl: string; }
-```
-
-```astro
-<ServiceLinks services={home.services} catalogUrl={home.library.catalogUrl} />
 ```
 
 ### Signature

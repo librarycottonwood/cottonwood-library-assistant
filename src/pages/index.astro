@@ -4,12 +4,13 @@ import Image from '../components/OptimizedImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/site/Badge.astro';
 import Button from '../components/site/Button.astro';
-import CommunitySupport from '../components/site/CommunitySupport.astro';
-import HomeEvents from '../components/site/HomeEvents.astro';
-import ServiceLinks from '../components/site/ServiceLinks.astro';
-import FirstVisit from '../components/site/FirstVisit.astro';
+import Card from '../components/site/Card.astro';
+import EventCards from '../components/site/EventCards.astro';
+import Grid from '../components/site/Grid.astro';
+import Heading from '../components/site/Heading.astro';
 import HeroHeading from '../components/site/HeroHeading.astro';
 import HeroContacts from '../components/site/HeroContacts.astro';
+import LibraryIllustration from '../components/site/LibraryIllustration.astro';
 import Section from '../components/site/Section.astro';
 import Split from '../components/site/Split.astro';
 import Stack from '../components/site/Stack.astro';
@@ -17,16 +18,20 @@ import Text from '../components/site/Text.astro';
 import fundraiserHouse from '../assets/images/fundraiser-house.png';
 import { activeCampaign, upcomingEvents } from '../content/feeds';
 import { contentRepository } from '../content/repository';
+import { servicePhotos } from '../content/service-photos';
 import { DONATE_PAGE_HREF } from '../content/donate';
+import { eventPhoto } from './_photos';
 const [home, support, allEvents] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), contentRepository.getEvents()]);
-const { library, hero, programs, services } = home;
+const { library, hero, programs, services, givingImage } = home;
 const events = upcomingEvents(allEvents);
 const campaign = activeCampaign(support.campaigns);
-// Existing borrowing guidance from Visit Us, surfaced here for first-time visitors.
-const firstVisitAnswers = [
-  { title: 'Opening an account', text: 'Adults bring photo ID and proof of residence to the front desk.' },
-  { title: 'Borrowing books', text: 'Tell a volunteer your account name. We don’t issue physical library cards.' },
-];
+// Figma's photo-and-text block always shows the next event; with no photo of its own it shows its program's photo,
+// or a fitting library photo (the same photo as on Events & News and the event page).
+const featured = events[0];
+const featuredImage = featured && eventPhoto(featured, programs);
+const givingPhoto = givingImage ?? home.support.image;
+const serviceLink = (service: typeof services[number]) => service.icon === 'book' ? library.catalogUrl : `/services/#${service.id}`;
+const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title="Cottonwood Community Library | Cottonwood, CA" description="Visit your community-supported library in Cottonwood, California. Find hours, books, Story Time, reading groups, and ways to support your local library.">
   <Split media="end" image={hero.image} headingId="welcome-heading" mediaId="visit" first>
@@ -45,13 +50,34 @@ const firstVisitAnswers = [
     <HeroContacts slot="caption" address={`${library.address}, Cottonwood`} directionsHref={library.directionsUrl} phone={library.phone} phoneHref={library.phoneHref} />
   </Split>
 
-  <CommunitySupport title={home.support.title} introduction={home.support.introduction} />
+  <Split media="start" image={givingPhoto} headingId="community-heading" mobileAlign="center" crayon>
+    <Stack gap="sm" align="start">
+      <LibraryIllustration scene="community" size="small" align="start" />
+      <Heading id="community-heading">{home.support.title}</Heading>
+    </Stack>
+    <Text tone="muted" balance>{home.support.introduction}</Text>
+    <Stack direction="row" gap="xs" wrap>
+      <Button href={DONATE_PAGE_HREF} data-analytics-event="donate_quick" variant="accent" icon="heart">Donate</Button>
+      <Button href="/donate/volunteer/" icon="user">Volunteer</Button>
+    </Stack>
+  </Split>
 
-  <HomeEvents events={events} programs={programs} />
+  {featured && featuredImage && <Split media="end" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
+    <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
+    <Heading id="featured-heading">{featured.title}</Heading>
+    <Text tone="muted">{featured.summary}</Text>
+    <Button href={featured.href} variant="accent" iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
+  </Split>}
 
-  <Section title="Library services" headingId="services-heading" align="start" gap="md">
-    <ServiceLinks services={services} catalogUrl={library.catalogUrl} />
+  <Section title="Upcoming events" headingId="events-heading" illustration="reading">
+    <EventCards events={featured ? events.filter(event => event !== featured) : events} programs={programs} limit={3} />
+    <Button href="/events/" iconEnd="arrow">View all</Button>
   </Section>
 
-  <FirstVisit items={firstVisitAnswers} />
+  <Section title="Library services" headingId="services-heading" illustration="computers">
+    <Grid as="ul" columns={3}>
+      {services.map(service => <Card as="li" title={service.title} href={serviceLink(service)} image={servicePhotos[service.icon]!} fullText>{service.description}</Card>)}
+    </Grid>
+    <Button href="/services/" iconEnd="arrow" screenReaderText="about library services">Read more</Button>
+  </Section>
 </BaseLayout>
