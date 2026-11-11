@@ -18,6 +18,8 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
+  /** Center an illustrated invitation's copy and actions on phones; desktop alignment stays unchanged. */
+  mobileAlign?: 'start' | 'center';
   /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
   ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
   /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
@@ -37,7 +39,7 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, inset = false, crayon = true, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const { image: originalImage, media = 'end', mobileAlign = 'start', ratio: ratioProp, panel = false, inset = false, crayon = true, headingId, first = false, mediaId, ...attributes } = Astro.props;
 const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
@@ -46,7 +48,7 @@ const bleed = ratio === '1314 / 652' && !panel && !inset;
 // photos do on hover), so the corners never change shape while it moves.
 const framed = first && bleed && media === 'end';
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon }]} {...attributes}>
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon, 'mobile-center': mobileAlign === 'center' }]} {...attributes}>
   <div class="split-copy" data-motion="group"><slot /></div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} data-motion={first ? undefined : 'rise'} class:list={['split-media', { 'has-caption': hasCaption }]}>
     {framed
@@ -105,6 +107,10 @@ const framed = first && bleed && media === 'end';
   .inset .split-copy, .inset .split-media { padding-inline: 0; }
 
   @media (max-width: 47.99rem) {
+    .mobile-center .split-copy { align-items: center; text-align: center; }
+    .mobile-center .split-copy > :global(*) { max-width: 100%; }
+    .mobile-center .split-copy > :global(.stack) { align-self: stretch; align-items: center; justify-content: center; }
+    .mobile-center .split-copy :global(.illustration) { align-self: center; }
     .split:not(.inset) .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
     .has-caption { padding-block-end: 0; }
     .split-caption { position: static; display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: none; margin: var(--space-xs) var(--page-inset) 0 0; padding: 0; border-radius: var(--radius-none); background: transparent; font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }

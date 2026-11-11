@@ -50,7 +50,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <HeroContacts slot="caption" address={`${library.address}, Cottonwood`} directionsHref={library.directionsUrl} phone={library.phone} phoneHref={library.phoneHref} />
   </Split>
 
-  <Split media="start" image={givingPhoto} headingId="community-heading" crayon>
+  <Split media="start" image={givingPhoto} headingId="community-heading" mobileAlign="center" crayon>
     <Stack gap="sm" align="start">
       <LibraryIllustration scene="community" size="small" align="start" />
       <Heading id="community-heading">{home.support.title}</Heading>

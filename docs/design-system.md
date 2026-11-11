@@ -736,6 +736,8 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
+  /** Center an illustrated invitation's copy and actions on phones; desktop alignment stays unchanged. */
+  mobileAlign?: 'start' | 'center';
   /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
   ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
   /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
