@@ -13,6 +13,7 @@
  * <EventCards events={events} programs={programs} limit={3} />
  */
 import Card from './Card.astro';
+import EventRow from './EventRow.astro';
 import { programHref } from './navigation';
 import Grid from './Grid.astro';
 import Badge from './Badge.astro';
@@ -30,8 +31,11 @@ interface Props {
   emptyMessage?: string;
   /** Fill spots no dated event takes with regular programs. Turn off where the page lists the programs itself. */
   fill?: boolean;
+  /** list: compact date/title rows for the homepage agenda. Dates and expiry use the same behavior as cards. */
+  layout?: 'cards' | 'list';
 }
-const { programs = [], limit = 3, fill = true, emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const { programs = [], limit = 3, fill = true, layout = 'cards', emptyMessage = 'No special events are scheduled right now.' } = Astro.props;
+const EventItem = layout === 'list' ? EventRow : Card;
 const zone = 'America/Los_Angeles';
 const dayKey = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone });
 const shortDay = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: zone });
@@ -62,18 +66,18 @@ for (const event of events) {
 const today = dayKey.format(new Date());
 const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:00`));
 ---
-<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class="event-list">
+<div data-event-list data-event-limit={limit} data-event-count={Math.min(events.length + fillers.length, limit)} class:list={['event-list', { 'event-list-list': layout === 'list' }]}>
   <Grid as="ul" columns={3} balance={false} hidden={events.length + fillers.length === 0} data-event-rows>
-    {events.map((event, index) => <Card as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
+    {events.map((event, index) => <EventItem as="li" layout="adaptive" title={event.title} href={event.href} image={images.get(event)!} data-event-card="" data-event-expires={event.endsAt} hidden={index >= limit}>
       <Badge slot="badge" surface datetime={event.startsAt} data-event-day={dayKey.format(new Date(event.startsAt))}>{shortDay.format(new Date(event.startsAt))}<span class="sr-only">, {fullDay.format(new Date(event.startsAt))}</span></Badge>
       {event.summary}
-    </Card>)}
-    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <Card as="li" layout="adaptive" title={program.title} href={programHref(program.id)} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
+    </EventItem>)}
+    {fillers.map(program => ({ ...program, next: nextScheduledDay(program.schedule, today) })).map((program, index) => <EventItem as="li" layout="adaptive" title={program.title} href={programHref(program.id)} image={program.image} data-event-card="" hidden={events.length + index >= limit}>
       {program.next
         ? <Badge slot="badge" surface data-event-day={program.next.day} data-schedule={program.schedule}>{dayLabel(program.next.day)}{program.next.time && <span>&nbsp;· {program.next.time}</span>}<span class="sr-only">, next session; {program.schedule}</span></Badge>
         : <Badge slot="badge" surface>{program.schedule}</Badge>}
       {program.description}
-    </Card>)}
+    </EventItem>)}
   </Grid>
   <p data-event-empty hidden={events.length + fillers.length > 0} class="event-empty">{emptyMessage}</p>
 </div>
@@ -143,4 +147,5 @@ const dayLabel = (key: string) => shortDay.format(new Date(`${key}T12:00:00-08:0
   /* A program badge reads as one line, "Nov 4 · 11:30 a.m.": no flex gap between the date and its time. */
   .event-list :global(.badge[data-schedule]) { column-gap: 0; }
   .event-empty { color: var(--color-text-muted); text-align: center; }
+  .event-list-list[data-event-count] :global(.grid) { grid-template-columns: minmax(0, 1fr); gap: 0; }
 </style>

@@ -1,0 +1,42 @@
+---
+/**
+ * @component CommunitySupport
+ * A compact support band with community artwork, one short introduction and donation/volunteer links.
+ * @use Near the top of the homepage so the library's community funding remains visible without a second large photo section.
+ * @avoid Campaign totals, checkout widgets, or replacing visitor information with a large fundraising feature.
+ * @example
+ * <CommunitySupport title={home.support.title} introduction={home.support.introduction} />
+ */
+import Heading from './Heading.astro';
+import LibraryIllustration from './LibraryIllustration.astro';
+import Button from './Button.astro';
+interface Props { title: string; introduction: string; }
+const { title, introduction } = Astro.props;
+---
+<section class="community-support" aria-labelledby="community-heading">
+  <div class="support-inner" data-motion="group">
+    <div class="support-art"><LibraryIllustration scene="community" size="small" /></div>
+    <div class="support-copy"><Heading id="community-heading">{title}</Heading><p>{introduction}</p></div>
+    <div class="support-actions"><Button href="/donate/" icon="heart" variant="primary" data-analytics-event="donate_quick">Donate</Button><Button href="/donate/volunteer/" icon="user">Volunteer</Button></div>
+  </div>
+</section>
+<style>
+  .community-support { padding: var(--space-md) var(--page-inset); background: color-mix(in srgb, var(--color-accent) 25%, var(--color-background)); }
+  .support-inner { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; justify-items: center; gap: var(--space-sm); max-width: var(--width-content); margin-inline: auto; text-align: center; }
+  .support-art { width: 9rem; max-width: 100%; }
+  .support-art :global(.illustration) { width: 100%; }
+  .support-copy { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+  .support-copy :global(.heading) { font-size: var(--fluid-lead); line-height: var(--leading-snug); }
+  .support-copy p { max-width: var(--width-copy); color: var(--color-text-muted); font-size: var(--fluid-label); text-wrap: pretty; }
+  .support-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); max-width: 100%; font-size: var(--fluid-label); }
+  @media (min-width: 48rem) {
+    .support-inner { grid-template-columns: 9rem minmax(0, 1fr); justify-items: start; gap: var(--space-xs) var(--space-md); text-align: start; }
+    .support-art { grid-row: span 2; }
+    .support-actions { grid-column: 2; justify-content: flex-start; }
+  }
+  @media (min-width: 80rem) {
+    .support-inner { grid-template-columns: 10rem minmax(0, 1fr) auto; gap: var(--space-md); }
+    .support-art { width: 10rem; grid-row: auto; }
+    .support-actions { grid-column: 3; }
+  }
+</style>

@@ -42,6 +42,7 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
   </a>
   <nav aria-label="Main navigation" class="site-nav">
     {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+    <a href={library.catalogUrl} data-analytics-event="catalog_header">Catalog</a>
   </nav>
   <div class="header-actions">
     <!-- Goes to the Support Us page (its button opens Givebutter's popup). The click still counts as donate_header. -->

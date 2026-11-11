@@ -55,8 +55,16 @@ Decoration follows the section's purpose, not how empty it looks. Plain headings
 - Illustrations identify the subject of a main page or invitation. They are not repeated beside each service, event or card title. Index pages may have topic artwork even when their practical subsection headings stay plain. Article, event-detail and legal page titles stay plain.
 - The reading scene in the shared footer is the site's repeated closing illustration, in the same place on every page. It is separate from section heading decoration.
 - A botanical is a pause for a story or thank-you, not a general section marker. Use at most one per page, centered above the heading with the same small gap, and never on a heading that already has handwriting or a crayon scene. `branch` is the standard story accent; `pair` is the flower for gratitude. The upright `sprig` remains an available drawing, not a requirement to find another place to decorate.
-- The volunteer invitation and homepage community invitation share the same illustration-above-heading layout. They center on phones; desktop retains the real photo on the left and copy on the right. A volunteer invitation may pair its subject drawing with the page's one handwritten phrase. Do not add a third accent to it.
+- Illustrated invitations center on phones. The volunteer invitation retains its real photo on the left and copy on the right on desktop; the homepage support appeal uses a compact illustrated band. A volunteer invitation may pair its subject drawing with the page's one handwritten phrase. Do not add a third accent to it.
 - Body stories remain left-aligned under centered chapter headings. Navigation, buttons, forms, hours, dates, prices and other facts always use regular type. All artwork enters with its surrounding group; no separate decorative animation.
+
+## Homepage flow
+
+- Keep community support near the top in a compact band after the hero. Give visitors a clear route into activities, services and their first visit without a second large fundraising photo section.
+- Use distinct structures: the hero, compact support band, a regular-program photo beside an agenda, practical service links, then a first-visit guide. Do not repeat a large photo-and-copy Split for each purpose.
+- The agenda uses EventCards' shared scheduling and expiry behavior through its list layout. All dated occurrences remain eligible; the separately featured regular program stays available after dated events end.
+- First-visit answers use the existing Visit Us borrowing guidance. Do not invent a new membership requirement or require an account to enter the library.
+- Catalog remains available in desktop navigation as well as the mobile menu and homepage actions.
 
 ## Mobile hours and hero contacts
 

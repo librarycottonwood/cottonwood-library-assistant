@@ -1,0 +1,32 @@
+---
+/**
+ * @component FirstVisit
+ * A distinct first-visit guide: a short welcome and visit link beside two practical borrowing answers.
+ * @use Near the end of the homepage, surfacing existing visitor information without making people open an FAQ.
+ * @avoid New library policies, generic marketing copy, or treating an account as a requirement to enter the building.
+ * @example
+ * <FirstVisit items={firstVisitAnswers} />
+ */
+import Heading from './Heading.astro';
+import Button from './Button.astro';
+interface Props { items: { title: string; text: string }[]; }
+const { items } = Astro.props;
+---
+<section class="first-visit" aria-labelledby="first-visit-heading" id="first-visit">
+  <div class="first-visit-inner" data-motion="group">
+    <div class="visit-welcome"><Heading id="first-visit-heading">First time here?</Heading><p>Start at the front desk. A volunteer can help you get set up.</p><Button href="/visit/" icon="navigate" variant="accent">Plan your visit</Button></div>
+    <dl class="visit-answers">{items.map(item => <div><dt>{item.title}</dt><dd>{item.text}</dd></div>)}</dl>
+  </div>
+</section>
+<style>
+  .first-visit { padding: 0 var(--page-inset) var(--section-space); }
+  .first-visit-inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); max-width: var(--width-content); margin-inline: auto; padding: var(--space-md); background: var(--color-primary-soft); border-radius: var(--radius-image); }
+  .visit-welcome { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); min-width: 0; }
+  .visit-welcome > p { max-width: var(--width-copy); color: var(--color-text-muted); text-wrap: pretty; }
+  .visit-welcome :global(.heading) { max-width: 100%; }
+  .visit-answers { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; margin: 0; }
+  .visit-answers > div { display: flex; flex-direction: column; gap: var(--space-xs); padding-block-start: var(--space-sm); border-top: var(--border-thin) solid var(--color-border); }
+  .visit-answers dt { font-weight: var(--weight-bold); }
+  .visit-answers dd { margin: 0; color: var(--color-text-muted); font-size: var(--fluid-label); text-wrap: pretty; }
+  @media (min-width: 48rem) { .first-visit-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: var(--space-lg); gap: var(--space-lg); } }
+</style>
