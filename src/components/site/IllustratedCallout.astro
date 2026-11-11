@@ -21,12 +21,12 @@ const { image } = Astro.props;
   <div class="callout-copy"><slot /></div>
 </div>
 <style>
-  .illustrated-callout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-md); width: 100%; }
+  .illustrated-callout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-md); width: 100%; max-width: var(--width-text); margin-inline: auto; }
   .callout-art { width: clamp(11rem, 22vw, 20rem); max-width: 100%; justify-self: start; }
   .callout-art :global(img) { display: block; width: 100%; height: auto; }
   .callout-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); min-width: 0; max-width: var(--width-copy); }
   @media (min-width: 48rem) {
-    .illustrated-callout { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); gap: var(--space-lg); }
+    .illustrated-callout { grid-template-columns: minmax(0, 1fr) clamp(11rem, 22vw, 20rem); gap: var(--space-lg); }
     .callout-art { grid-column: 2; grid-row: 1; justify-self: center; }
     .callout-copy { grid-column: 1; grid-row: 1; }
   }
