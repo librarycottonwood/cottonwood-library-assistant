@@ -68,7 +68,7 @@ const printing = [
     <Text tone="muted">Ask a volunteer at the front desk for any assistance!</Text>
   </Split>
 
-  {borrowing.length > 0 && <Section title="Frequently Asked Questions" leaf="branch" headingId="questions-heading" width="text" id="questions">
+  {borrowing.length > 0 && <Section title="Frequently Asked Questions" headingId="questions-heading" width="text" id="questions">
     <Faq items={borrowing} email={library.email} />
   </Section>}
 </BaseLayout>

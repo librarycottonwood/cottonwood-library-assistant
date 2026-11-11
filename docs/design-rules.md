@@ -37,17 +37,27 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 ## Keep
 - Colours, Bree Serif + Mona Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.
 
-## Handwriting and leaves
+## Illustration, handwriting and leaf dividers
 
-- Bree Serif and Mona Sans remain the main type pair. Self-hosted Caveat is an occasional indigo accent, applied through `Handwritten` or `AccentHeading`.
-- Choose one warm word or short phrase deliberately, at most once per page. The homepage uses “library.” only in the hero; “Powered by Community” stays plain. Support Us uses “time” in its photo-and-text volunteer section, and About uses a handwritten thank-you sign-off. Never repeat handwriting in back-to-back sections.
-- `AccentHeading` receives the complete existing heading and an exact phrase. If that phrase is absent, it renders the complete heading plainly. Never change CMS wording to make a style work.
-- Keep navigation, buttons, form labels, hours, dates, prices, facts and paragraphs in their regular type. Handwriting stays real text, selectable and accessible, and enters with its surrounding group.
-- `LeafAccent` has three small variants: `sprig` for a quiet story or regular-events heading, `pair` with a flower for gratitude, and `branch` for related ways to help or borrowing questions. Use no more than one leaf accent per public page. `Section` places it above the heading with a small gap; left-aligned headings keep the same text edge as their content.
-- Use a leaf on a plain heading, separate from handwriting and crayon scenes. The volunteer invitation uses the same illustration-above-heading layout as the homepage community section, with a real activity photo on the left and copy on the right. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.
+Decoration follows the section's purpose, not how empty it looks. Plain headings are the default. Do not decorate every section or rotate treatments merely to create variety.
+
+| Section role | Treatment | Current examples |
+| --- | --- | --- |
+| Main page topic or major invitation | A matching crayon scene. On phones, center the artwork above the heading; illustrated invitations also center their copy and actions. | Reading for Events & News, computers for Services, community for the homepage support invitation, volunteers for Give your time. |
+| A personal promise, invitation or sign-off | One short indigo Caveat phrase, at most once per page. It is expressive language, not a topic label. | Home: “library.”; Support Us: “time”; About: “Thank you for your support!” |
+| Library history or community gratitude | A centered botanical divider immediately below a regular Bree Serif heading. | About: branch below “A place of our own”; Support Us: flower below “Thank you to our supporters”. |
+| Browsing, instructions or facts | Regular Bree Serif headings and Mona Sans copy. No added handwriting or botanical. | Upcoming and Regular Events, Latest News, individual services, FAQs, Other ways to help, dates, prices and forms. |
+
+- Bree Serif and Mona Sans remain the main type pair. Use self-hosted Caveat through `Handwritten` or `AccentHeading`; keep it real, selectable text. A page without a personal message does not need handwriting. “Powered by Community” stays plain so it does not repeat the homepage hero's handwritten emphasis.
+- `AccentHeading` receives the complete existing heading and an exact phrase. If the phrase is absent, it renders the complete heading plainly. Never rewrite CMS wording to make decoration work.
+- Illustrations identify the subject of a main page or invitation. They are not repeated beside each service, event or card title. Index pages may have topic artwork even when their practical subsection headings stay plain. Article, event-detail and legal page titles stay plain.
+- The reading scene in the shared footer is the site's repeated closing illustration, in the same place on every page. It is separate from section heading decoration.
+- A leaf divider is a pause for a story or thank-you, not a general section marker. Use at most one per page, below the heading with the same small gap, and never on a heading that already has handwriting or a crayon scene. `branch` is the standard story divider; `pair` is the flower for gratitude. The upright `sprig` remains an available drawing, not a requirement to find another place to decorate.
+- The volunteer invitation and homepage community invitation share the same illustration-above-heading layout. They center on phones; desktop retains the real photo on the left and copy on the right. A volunteer invitation may pair its subject drawing with the page's one handwritten phrase. Do not add a third accent to it.
+- Body stories remain left-aligned under centered chapter headings. Navigation, buttons, forms, hours, dates, prices and other facts always use regular type. All artwork enters with its surrounding group; no separate decorative animation.
 
 ## Mobile hours and hero contacts
 
 - Keep the hours strip indigo at every width. Phones use centered rows with short day labels beside the complete times. The canonical CMS summary remains accessible, and enlarged text can wrap.
-- `HeroContacts` provides the chosen two-tile mobile layout: Directions and Call the library, with the complete address and phone. Its 16px corners and 14px supporting text have dedicated tokens; padding and gaps use the existing spacing steps.
-- The tiles sit below the photo and stack when text needs more room. Wider screens retain the existing inline contact overlay. Keep these factual details in Mona Sans, separate from decorative handwriting and leaves.
+- `HeroContacts` provides two plain icon-and-value rows below the photo on phones, with the complete address and phone, compact 14px type and at least 44px touch targets. No cards or redundant action labels.
+- Wider screens retain the inline contact overlay. Keep these factual details in Mona Sans, separate from decorative handwriting and leaves.

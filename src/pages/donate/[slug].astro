@@ -47,7 +47,7 @@ const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'lon
   {initiative.gallery && initiative.gallery.length > 0 && <Section title="Photos" headingId="photos-heading">
     <Gallery images={initiative.gallery} />
   </Section>}
-  {others.length > 0 && <Section title="Other ways to help" leaf={initiative.category === 'volunteering' ? 'branch' : undefined} headingId="other-ways-heading">
+  {others.length > 0 && <Section title="Other ways to help" headingId="other-ways-heading">
     <Grid as="ul" columns={3}>
       {others.map(item => <Card as="li" title={item.title} href={`/donate/${item.id}/`} image={item.image}>{item.summary}</Card>)}
     </Grid>

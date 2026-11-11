@@ -45,7 +45,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
   {laterEvents.length > 0 && <Section title="Upcoming Events" headingId="events-heading" id="upcoming">
     <EventCards events={laterEvents} programs={programs} fill={false} limit={9} />
   </Section>}
-  {programs.length > 0 && <Section title="Regular Events" leaf="sprig" headingId="regular-heading" id="regular">
+  {programs.length > 0 && <Section title="Regular Events" headingId="regular-heading" id="regular">
     <Grid as="ul" columns={3}>
       {programs.map(program => <Card as="li" title={program.title} href={programHref(program.id)} image={program.image}>
         <Badge slot="badge" surface>{program.schedule}</Badge>

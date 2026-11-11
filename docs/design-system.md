@@ -558,15 +558,15 @@ interface Props { image: LibraryImage; }
 
 `src/components/site/LeafAccent.astro` — A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
 
-- **Use for:** A quiet accent above a plain history, gratitude or ways-to-help heading. Section places it as part of the same heading group.
-- **Don't use for:** The homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
+- **Use for:** A centered divider beneath a plain history or gratitude heading. Section keeps it in the heading group: branch for the library story, flower for supporter thanks.
+- **Don't use for:** Practical headings such as FAQs, event listings and related links; the homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
 
 ```ts
 interface Props { variant?: 'sprig' | 'pair' | 'branch'; }
 ```
 
 ```astro
-<Section title="A place of our own" leaf="sprig" headingId="place-heading" />
+<Section title="A place of our own" leaf="branch" headingId="place-heading" />
 ```
 
 ### LibraryIllustration
@@ -686,10 +686,8 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
-  /** Small leaf accent with a plain heading; use instead of a crayon scene, at most once per page. */
+  /** Centered leaf divider below a history or gratitude heading, at most once per page. Practical listings stay plain. */
   leaf?: 'sprig' | 'pair' | 'branch';
-  /** Below makes a compact leaf divider between the heading and section content. */
-  leafPosition?: 'above' | 'below';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
