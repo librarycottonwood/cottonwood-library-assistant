@@ -24,7 +24,8 @@ const { library } = Astro.props;
       <Icon name="pin" />
       <p>{library.address}<br />{library.locality}</p>
     </div>
-    <div class="map-canvas" data-map-canvas role="region" aria-label={`Map showing ${library.name} at ${library.address}`}></div>
+    <!-- inert until the map has drawn: until then it is invisible (opacity 0), and Tab must not stop on its hidden controls. -->
+    <div class="map-canvas" data-map-canvas role="region" aria-label={`Map showing ${library.name} at ${library.address}`} inert></div>
   </div>
 </div>
 <style>
@@ -84,7 +85,7 @@ const { library } = Astro.props;
         const map = new Map({ container: host, style, center: point, zoom: 14.5, scrollZoom: false, cooperativeGestures: true, attributionControl: { compact: true } });
         new Marker({ color: '#1b2040' }).setLngLat(point).addTo(map);
         map.addControl(new NavigationControl({ showCompass: false }), 'bottom-right');
-        map.once('idle', () => { card.dataset.mapReady = 'true'; });
+        map.once('idle', () => { card.dataset.mapReady = 'true'; host.inert = false; });
         map.on('error', () => { /* The address stays visible if tiles fail. */ });
       } catch { /* No WebGL or network: the address fallback stays. */ }
     };

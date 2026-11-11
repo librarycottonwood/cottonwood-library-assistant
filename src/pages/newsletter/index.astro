@@ -25,7 +25,7 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
   <Section>
     {ordered.length > 0
       ? <Grid as="ul" columns={3} balance={false}>
-          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}
+          {ordered.map(issue => <Card as="li" shape="page" level={2} title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}
             <Fragment slot="links">
               <IconLink href={issue.fileUrl} icon="download" aria-label={`Download PDF: ${issue.issue} newsletter`}>Download PDF</IconLink>
               {issue.accessibleFile && <IconLink href={issue.accessibleFile.url} icon="download" aria-label={`Word version (accessible): ${issue.issue} newsletter`}>Word version (accessible)</IconLink>}

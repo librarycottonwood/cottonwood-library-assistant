@@ -20,7 +20,7 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
   <PageTitle title={`${newsletter.issue} newsletter`} trail={[eventsLink, { label: 'Newsletter', href: '/newsletter/' }]}>{newsletter.summary}</PageTitle>
   <Section>
     <Grid as="ul" columns={3} balance={false}>
-      <Card as="li" shape="page" title={newsletter.issue} href={newsletter.fileUrl} image={newsletter.cover}>Read the newsletter (PDF).</Card>
+      <Card as="li" shape="page" level={2} title={newsletter.issue} href={newsletter.fileUrl} image={newsletter.cover}>Read the newsletter (PDF).</Card>
     </Grid>
     <IconLink href="/newsletter/" iconEnd="arrow">All newsletters</IconLink>
   </Section>
