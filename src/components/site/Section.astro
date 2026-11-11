@@ -19,7 +19,7 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
-  /** Centered leaf divider below a history or gratitude heading, at most once per page. Practical listings stay plain. */
+  /** Centered botanical above a history or gratitude heading, at most once per page. Practical listings stay plain. */
   leaf?: 'sprig' | 'pair' | 'branch';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
@@ -39,9 +39,8 @@ const { title, illustration, leaf, headingId, align = 'center', width = 'content
   <div data-gap={gap} data-motion="group" class:list={['section-inner', `align-${align}`, `width-${width}`]}>
     {title && (illustration || leaf
       ? <div class:list={['illustrated-heading', { 'leaf-heading': !illustration && leaf }]}>
-          {illustration && <LibraryIllustration scene={illustration} />}
+          {illustration ? <LibraryIllustration scene={illustration} /> : leaf && <LeafAccent variant={leaf} />}
           <Heading id={headingId} relaxed={align === 'center' && !leaf}>{title}</Heading>
-          {!illustration && leaf && <LeafAccent variant={leaf} />}
         </div>
       : <Heading id={headingId} relaxed={align === 'center'}>{title}</Heading>)}
     <slot />

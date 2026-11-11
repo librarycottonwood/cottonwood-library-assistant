@@ -558,7 +558,7 @@ interface Props { image: LibraryImage; }
 
 `src/components/site/LeafAccent.astro` — A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
 
-- **Use for:** A centered divider beneath a plain history or gratitude heading. Section keeps it in the heading group: branch for the library story, flower for supporter thanks.
+- **Use for:** A centered botanical above a plain history or gratitude heading. Section keeps it in the heading group: branch for the library story, flower for supporter thanks.
 - **Don't use for:** Practical headings such as FAQs, event listings and related links; the homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
 
 ```ts
@@ -686,7 +686,7 @@ interface Props {
   title?: string;
   /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
   illustration?: 'reading' | 'computers' | 'books' | 'community';
-  /** Centered leaf divider below a history or gratitude heading, at most once per page. Practical listings stay plain. */
+  /** Centered botanical above a history or gratitude heading, at most once per page. Practical listings stay plain. */
   leaf?: 'sprig' | 'pair' | 'branch';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
