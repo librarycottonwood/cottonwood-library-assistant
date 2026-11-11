@@ -7,7 +7,6 @@ import Button from '../../components/site/Button.astro';
 import DetailList from '../../components/site/DetailList.astro';
 import Faq from '../../components/site/Faq.astro';
 import Heading from '../../components/site/Heading.astro';
-import AccentHeading from '../../components/site/AccentHeading.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
@@ -38,7 +37,7 @@ const printing = [
 
   <Split media="end" inset ratio="5 / 4" image={photos.borrowing} headingId="borrowing-heading" id="borrowing">
     <Stack gap="xs">
-      <AccentHeading id="borrowing-heading" text="Borrowing books" phrase="books" />
+      <Heading id="borrowing-heading" relaxed>Borrowing books</Heading>
       <Text tone="muted">Find your next read and make yourself at home!</Text>
     </Stack>
     <TopicList items={[

@@ -40,10 +40,10 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 ## Handwriting and leaves
 
 - Bree Serif and Mona Sans remain the main type pair. Self-hosted Caveat is an occasional indigo accent, applied through `Handwritten` or `AccentHeading`.
-- Choose one warm word or short phrase deliberately, at most once per page. The homepage uses “library.” only in the hero; “Powered by Community” stays plain. Support Us uses “time” in its photo-and-text volunteer section, About uses a handwritten thank-you sign-off, Events & News uses “News” in its latest-news heading, and Explore Services uses “books” in its borrowing heading. Never repeat handwriting in back-to-back sections.
+- Choose one warm word or short phrase deliberately, at most once per page. The homepage uses “library.” only in the hero; “Powered by Community” stays plain. Support Us uses “time” in its photo-and-text volunteer section, and About uses a handwritten thank-you sign-off. Never repeat handwriting in back-to-back sections.
 - `AccentHeading` receives the complete existing heading and an exact phrase. If that phrase is absent, it renders the complete heading plainly. Never change CMS wording to make a style work.
 - Keep navigation, buttons, form labels, hours, dates, prices, facts and paragraphs in their regular type. Handwriting stays real text, selectable and accessible, and enters with its surrounding group.
-- `LeafAccent` has three small variants: `sprig` for a quiet story or regular-events heading, `pair` with a flower for gratitude, and `branch` for related ways to help or borrowing questions. Use no more than one leaf accent per public page. `Section` places it beside a left-aligned heading, or above a centered heading with a small gap.
+- `LeafAccent` has three small variants: `sprig` for a quiet story or regular-events heading, `pair` with a flower for gratitude, and `branch` for related ways to help or borrowing questions. Use no more than one leaf accent per public page. `Section` places it above the heading with a small gap; left-aligned headings keep the same text edge as their content.
 - Use a leaf on a plain heading, separate from handwriting and crayon scenes. The volunteer invitation uses the same illustration-above-heading layout as the homepage community section, with a real activity photo on the left and copy on the right. Do not add leaves to the homepage hero, functional labels or the footer brand. No separate decorative animation.
 
 ## Mobile hours and hero contacts
