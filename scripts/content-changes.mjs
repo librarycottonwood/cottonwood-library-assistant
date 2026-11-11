@@ -81,6 +81,10 @@ export function label(doc) {
   const name = [doc.title, doc.issue, doc.message, doc.name].find(item => typeof item === 'string' && item.trim());
   return name ? clip(name.trim().replace(/\s+/g, ' '), 80) : null;
 }
+/** A newsletter's issue page is headed "<issue> newsletter" (src/pages/newsletters/[slug].astro), not its title. */
+function pageHeading(doc) {
+  return doc._type === 'newsletter' && typeof doc.issue === 'string' && doc.issue.trim() ? {pageHeading: `${doc.issue.trim().replace(/\s+/g, ' ')} newsletter`} : {};
+}
 /** Published on the website as _content/revisions.json so the next save can compare. */
 export function revisionList(snapshot) {
   return siteDocuments(snapshot).map(doc => ({id: doc._id, type: doc._type, rev: doc._rev ?? null, ...(label(doc) ? {label: label(doc)} : {})}))
@@ -105,7 +109,7 @@ export function compareContent({live, current, liveCheckedAt = null, listed = []
   for (const id of listed) for (const ref of references(byId.get(id) ?? {})) if (byId.get(ref) && isAsset(byId.get(ref))) covered.add(ref);
   const entry = (doc, change) => ({id: doc._id ?? doc.id, type: doc._type ?? doc.type, typeName: TYPE_NAMES[doc._type ?? doc.type] ?? 'Document',
     label: (doc._id ? label(doc) : doc.label) ?? (isAsset({_type: doc._type ?? doc.type}) ? doc.originalFilename ?? null : null), change, listed: covered.has(doc._id ?? doc.id),
-    ...(doc._id && pagePath(doc) ? {path: pagePath(doc)} : {})});
+    ...(doc._id && pagePath(doc) ? {path: pagePath(doc)} : {}), ...(doc._id ? pageHeading(doc) : {})});
   let basis, changes = [];
   if (live) {
     basis = 'live-revisions';
@@ -131,18 +135,20 @@ const pageText = html => html.replace(/<[^>]*>/g, ' ').replace(/&(#x[0-9a-f]+|#\
   ? String.fromCodePoint(code[1].toLowerCase() === 'x' ? parseInt(code.slice(2), 16) : Number(code.slice(1))) : ENTITIES[code.toLowerCase()] ?? whole).replace(/\s+/g, ' ');
 /**
  * Opens the page of every listed post, event, program or newsletter on the preview and confirms it shows
- * that title. The assistant gives volunteers these exact links, never addresses it builds itself.
+ * that title (for a newsletter, its title or its "<issue> newsletter" page heading). The assistant gives volunteers these exact links, never addresses it builds itself.
  */
 export async function checkPages(result, previewUrl, {fetcher = fetch, attempts = 3, wait = ms => new Promise(done => setTimeout(done, ms))} = {}) {
   const pages = [];
   for (const item of result.changes.filter(change => change.listed && change.path && change.change !== 'removed')) {
     const url = new URL(item.path, previewUrl).href;
-    const title = item.label?.replace(/…$/, '');
+    // The page shows the document's title, or for a newsletter, its "<issue> newsletter" heading.
+    const titles = [item.label?.replace(/…$/, ''), item.pageHeading].filter(Boolean);
     let problem = 'did not load';
     for (let attempt = 0; attempt < attempts; attempt++) {
       const response = await fetcher(url, {redirect: 'manual', signal: AbortSignal.timeout(30000)}).catch(() => null);
       if (response?.status === 200) {
-        problem = !title || pageText(await response.text()).includes(title) ? null : `opens but does not show "${item.label}"`;
+        const text = pageText(await response.text());
+        problem = !titles.length || titles.some(title => text.includes(title)) ? null : `opens but does not show "${item.label}"`;
         break;
       }
       problem = response ? `answers ${response.status}` : 'did not load';
