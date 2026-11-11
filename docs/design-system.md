@@ -267,6 +267,8 @@ interface Props {
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
+  /** Heading level of the title. 3 (default) under a Section heading; 2 when the cards sit right under the page title with no section heading between (headings never skip a level). */
+  level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -500,6 +502,8 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
+  headingLevel?: 2 | 3;
 }
 ```
 

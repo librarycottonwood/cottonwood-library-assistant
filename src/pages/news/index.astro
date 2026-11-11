@@ -15,6 +15,6 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
 <BaseLayout title="News | Cottonwood Community Library" description="News from the Cottonwood Community Library, and stories about the library from around the community.">
   <PageTitle title="News" trail={[eventsLink]} />
   <Section>
-    {posts.length > 0 ? <PostList posts={postsWithPhotos(posts)} initial={12} /> : <Text tone="muted">No news has been posted yet.</Text>}
+    {posts.length > 0 ? <PostList posts={postsWithPhotos(posts)} initial={12} headingLevel={2} /> : <Text tone="muted">No news has been posted yet.</Text>}
   </Section>
 </BaseLayout>

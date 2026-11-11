@@ -21,7 +21,7 @@ const eventsLink = mainNavigation.find(link => link.href === '/events/')!;
   <Section>
     {ordered.length > 0
       ? <Grid as="ul" columns={3} balance={false}>
-          {ordered.map(issue => <Card as="li" shape="page" title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
+          {ordered.map(issue => <Card as="li" shape="page" level={2} title={issue.issue} href={issue.fileUrl} image={issue.cover}>{issue.summary}</Card>)}
         </Grid>
       : <Text tone="muted">No newsletter has been published yet.</Text>}
   </Section>

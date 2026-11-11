@@ -21,9 +21,10 @@ const isCurrent = (href: string) => { const link = [...links, supportLink].find(
 const hoursParts = library.hoursSummary.split(/\s+·\s+/);
 ---
 <div class="toolbar-tint" aria-hidden="true"></div>
-<div class="hours-strip">
+<!-- A landmark of its own, so screen-reader users who move by landmarks (or read only landmarks) still get the hours. -->
+<aside class="hours-strip" aria-label="Opening hours">
   <p><Icon name="clock" class="hours-icon" /><span><span class="sr-only">Library hours: </span>{hoursParts.map((part, index) => <>{index > 0 && <span class="hours-dot"> · </span>}<span class="hours-part">{part}</span></>)}</span></p>
-</div>
+</aside>
 <header class="site-header">
   <a href="/" class="brand" aria-label="Cottonwood Community Library home">
     <Image src={logo} alt="" width={129} densities={[1, 2]} loading="eager" class="brand-logo" />
@@ -57,11 +58,13 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     if (strip) new IntersectionObserver(([entry]) => { header.toggleAttribute('data-stuck', !entry!.isIntersecting); }).observe(strip);
   }
   // Phone menu: a panel filling the screen under the header (logo, Donate and the × stay in reach). While it is open
-  // the page behind can't scroll or take focus. Opening and closing animate through menu() in src/scripts/motion.ts.
+  // the page behind can't scroll or take focus: everything on the page except the header and the menu is inert, so Tab
+  // never reaches the hidden page (the newsletter form, the footer) behind the panel. Opening and closing animate through
+  // menu() in src/scripts/motion.ts.
   const toggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
   const menu = document.querySelector<HTMLElement>('#site-mobile-nav');
   if (header && toggle && menu) {
-    const behind = () => document.querySelectorAll<HTMLElement>('body > main, body > footer');
+    const behind = () => [...document.body.children].filter((element): element is HTMLElement => element instanceof HTMLElement && element !== header && element !== menu && element.tagName !== 'SCRIPT');
     const place = () => { menu.style.top = `${Math.max(0, header.getBoundingClientRect().bottom)}px`; };
     let isOpen = false;
     const setOpen = async (open: boolean, instant = false) => {

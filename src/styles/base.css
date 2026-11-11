@@ -39,6 +39,9 @@ a { color: inherit; text-decoration-thickness: var(--underline-thickness); text-
 h1, h2, h3, p { margin: 0; }
 h1, h2 { font-family: var(--font-display); font-weight: var(--weight-regular); }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+/* Room below whatever Tab scrolls to, so its focus ring isn't cut off at the bottom edge of the screen. (The top is
+ * kept clear of the sticky header by SiteHeader, which sets scroll-padding-top to the header's height.) */
+html { scroll-padding-bottom: var(--space-md); }
 
 /* Absolute, not fixed, until focused: Safari 26 colors its toolbar from fixed elements at the top of the page,
  * and would pick up this hidden white pill. */

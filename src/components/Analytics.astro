@@ -38,6 +38,13 @@ const { privacyLinks = true } = Astro.props;
   let initialized = false;
   const blockedKey = 'ga-disable-' + measurement;
   const setBlocked = (blocked: boolean) => { (window as unknown as Record<string, unknown>)[blockedKey] = blocked; };
+  // While the choice panel shows it covers the bottom of the screen; scroll padding keeps a link or button that Tab
+  // reaches from scrolling in underneath it.
+  const showPanel = (show: boolean) => {
+    if (!panel) return;
+    panel.hidden = !show;
+    document.documentElement.style.scrollPaddingBottom = show ? `${panel.offsetHeight + 16}px` : '';
+  };
   const readChoice = () => { try { return localStorage.getItem(key); } catch { return null; } };
   const cleanReferrer = () => { try { const url = new URL(document.referrer); return url.origin + url.pathname; } catch { return ''; } };
   const start = () => {
@@ -61,7 +68,7 @@ const { privacyLinks = true } = Astro.props;
   };
   const choose = (allow: boolean) => {
     try { localStorage.setItem(key, allow ? 'allow' : 'deny'); } catch { /* This visit still honors the choice. */ }
-    if (panel) panel.hidden = true;
+    showPanel(false);
     if (allow) start();
     else {
       active = false;
@@ -78,9 +85,9 @@ const { privacyLinks = true } = Astro.props;
   if (allowed && /^G-[A-Z0-9]+$/.test(measurement)) {
     if (choices) choices.hidden = false;
     if (readChoice() === 'allow') start();
-    else if (readChoice() !== 'deny' && panel) panel.hidden = false;
+    else if (readChoice() !== 'deny') showPanel(true);
     choices?.addEventListener('click', () => {
-      if (panel) panel.hidden = false;
+      showPanel(true);
       document.querySelector<HTMLButtonElement>('#statistics-allow')?.focus();
     });
     document.querySelector('#statistics-allow')?.addEventListener('click', () => choose(true));

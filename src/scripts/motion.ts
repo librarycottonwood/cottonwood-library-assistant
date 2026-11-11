@@ -148,6 +148,12 @@ function start() {
   };
   showPassed();
   addEventListener('scroll', () => { if (!checking && waiting.size) { checking = true; requestAnimationFrame(showPassed); } }, { passive: true });
+  // Tab can bring a link or button to the very bottom edge of the screen, below the line where blocks rise in, and leave
+  // it focused but invisible. Show a block the moment anything inside it takes focus.
+  addEventListener('focusin', event => {
+    if (!(event.target instanceof Node) || !waiting.size) return;
+    for (const element of waiting) if (element.contains(event.target)) { waiting.delete(element); element.dataset.motionDone = ''; }
+  });
 }
 
 start();

@@ -6,6 +6,12 @@ import signup from '../content/newsletter-signup.json';
 const siteKey = signup.turnstileSiteKey;
 ---
 {siteKey && <>
-  <div class="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-size="flexible"></div>
+  <!-- Invisible unless Cloudflare needs the checkbox, but its frame still takes several Tab stops. It stays inert (no
+    Tab stops) until Turnstile says it is about to show the checkbox, and goes back to inert once that is done. -->
+  <div class="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-size="flexible" data-before-interactive-callback="cottonwoodTurnstileShown" data-after-interactive-callback="cottonwoodTurnstileHidden" inert></div>
+  <script is:inline>
+    window.cottonwoodTurnstileShown = function () { document.querySelectorAll('.cf-turnstile').forEach(function (field) { field.inert = false; }); };
+    window.cottonwoodTurnstileHidden = function () { document.querySelectorAll('.cf-turnstile').forEach(function (field) { field.inert = true; }); };
+  </script>
   <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </>}
