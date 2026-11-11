@@ -13,6 +13,7 @@ const { variant = 'heading' } = Astro.props;
 <span class:list={['handwritten', `handwritten-${variant}`]} data-handwritten><slot /></span>
 <style>
   .handwritten { display: inline-block; max-width: 100%; font-family: var(--font-handwritten); font-size: 1.2em; font-weight: 650; line-height: .9; color: var(--color-primary); transform: rotate(-2deg); transform-origin: 50% 70%; }
+  .handwritten-heading { padding-inline-end: var(--space-xs); }
   .handwritten-hero { font-size: 1.26em; line-height: .8; transform: rotate(-3deg); }
   .handwritten-signature { font-size: 1.5em; line-height: 1.15; transform: none; }
 </style>
