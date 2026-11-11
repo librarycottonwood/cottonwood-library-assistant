@@ -162,7 +162,6 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
 | [IllustratedCallout](#illustratedcallout) | An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones. |
-| [IllustratedHeading](#illustratedheading) | A section heading with a small decorative scene to its right, sharing the same entrance. |
 | [LeafAccent](#leafaccent) | A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch. |
 | [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
@@ -555,21 +554,6 @@ interface Props { image: LibraryImage; }
 </IllustratedCallout>
 ```
 
-### IllustratedHeading
-
-`src/components/site/IllustratedHeading.astro` — A section heading with a small decorative scene to its right, sharing the same entrance.
-
-- **Use for:** The volunteer invitation, where the small drawing accompanies a separate real activity photo.
-- **Don't use for:** Large illustrations beside a heading, or stacking another decorative accent on the same heading.
-
-```ts
-interface Props { text: string; phrase: string; id: string; }
-```
-
-```astro
-<IllustratedHeading id="volunteer-heading" text="Give your time" phrase="time" />
-```
-
 ### LeafAccent
 
 `src/components/site/LeafAccent.astro` — A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
@@ -589,7 +573,7 @@ interface Props { variant?: 'sprig' | 'pair' | 'branch'; }
 
 `src/components/site/LibraryIllustration.astro` — Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette.
 
-- **Use for:** Above a related heading: community for support, reading for events, computers for services, books for newsletters; use the compact volunteer accent beside its heading.
+- **Use for:** Above a related heading: community for support, reading for events, computers for services, books for newsletters, volunteers for the invitation to help.
 - **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
 
 ```ts
@@ -597,8 +581,8 @@ interface Props {
   scene: 'reading' | 'computers' | 'books' | 'community' | 'volunteers';
   /** Follow the left edge of a text column, or center above a section heading (default). */
   align?: 'start' | 'center';
-  /** Small: supporting text-column art. Accent: a compact drawing to the right of a heading. */
-  size?: 'standard' | 'small' | 'accent';
+  /** Smaller artwork in a supporting text column. */
+  size?: 'standard' | 'small';
 }
 ```
 

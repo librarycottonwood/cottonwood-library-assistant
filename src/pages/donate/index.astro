@@ -9,7 +9,8 @@ import FundraiserForm from '../../components/site/FundraiserForm.astro';
 import Grid from '../../components/site/Grid.astro';
 import Heading from '../../components/site/Heading.astro';
 import IconLink from '../../components/site/IconLink.astro';
-import IllustratedHeading from '../../components/site/IllustratedHeading.astro';
+import AccentHeading from '../../components/site/AccentHeading.astro';
+import LibraryIllustration from '../../components/site/LibraryIllustration.astro';
 import PageTitle from '../../components/site/PageTitle.astro';
 import Section from '../../components/site/Section.astro';
 import Split from '../../components/site/Split.astro';
@@ -50,8 +51,11 @@ const otherWays = otherWaysToHelp(support.initiatives);
     </Stack>}
     {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
   </Split>}
-  {volunteer && <Split media="start" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer">
-    <IllustratedHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
+  {volunteer && <Split media="end" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer">
+    <Stack gap="sm" align="start">
+      <LibraryIllustration scene="volunteers" size="small" align="start" />
+      <AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
+    </Stack>
     <Text tone="muted">{volunteer.summary}</Text>
     <Stack direction="row" gap="xs" wrap>
       <Button href={`/donate/${volunteer.id}/`} variant="accent" icon="user">Volunteer</Button>
