@@ -22,6 +22,7 @@ import { contentRepository } from '../../content/repository';
 import { volunteerActivityPhoto } from '../../content/photography';
 import { checkoutAttributes, dayAfter, getDonateLink } from '../../content/donate';
 import { otherWaysToHelp } from './_other-ways';
+import type { SupportUpdate } from '../../content/types';
 const [home, support, donate] = await Promise.all([contentRepository.getHome(), contentRepository.getSupport(), getDonateLink()]);
 const { library } = home;
 const photo = home.givingImage ?? home.support.image;
@@ -32,6 +33,15 @@ const after = campaign?.endsOn ? await getDonateLink(dayAfter(campaign.endsOn)) 
 const general = campaign ? after : donate;
 const volunteer = support.initiatives.find(item => item.category === 'volunteering');
 const otherWays = otherWaysToHelp(support.initiatives);
+// The old destinations were library articles. Later CMS link corrections keep their own destination.
+const supporterLinks: Record<string, { previous: string; website: string }> = {
+  'first-five': { previous: '/librarynews/story-time/', website: 'https://first5shasta.org/' },
+  'community-foundation': { previous: '/fundraising-events/library-fund/', website: 'https://cfnorthstate.org/' },
+};
+function supporterHref(item: SupportUpdate) {
+  const link = supporterLinks[item.id];
+  return link && item.href === link.previous ? link.website : item.href;
+}
 ---
 <BaseLayout title={`${supportLink.label} | Cottonwood Community Library`} description={home.support.introduction}>
   <PageTitle title={supportLink.label} illustration="community" />
@@ -70,7 +80,7 @@ const otherWays = otherWaysToHelp(support.initiatives);
   {/* Community acknowledgments from Sanity ("Giving and acknowledgments"); the old site's "Thank You!" section. */}
   {support.updates.length > 0 && <Section title="Thank you to our supporters" leaf="pair" headingId="supporters-heading" id="supporters">
     <Grid as="ul" columns={3}>
-      {support.updates.map(item => <Card as="li" title={item.title} image={item.image} logo fullText>{item.body}</Card>)}
+      {support.updates.map(item => <Card as="li" title={item.title} href={supporterHref(item)} image={item.image} logo fullText>{item.body}</Card>)}
     </Grid>
   </Section>}
 </BaseLayout>
