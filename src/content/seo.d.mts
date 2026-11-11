@@ -9,6 +9,7 @@ export function parseHours(text: string): { opens: string; closes: string } | nu
 export function openingHours(rows: { days: string; hours: string }[]): Node[] | null;
 export function libraryNode(library: Library, options?: { image?: string; description?: string }): Node;
 export function websiteNode(library: Library): Node;
+export function breadcrumbNode(crumbs: { label: string; href: string }[]): Node;
 export function eventNodes(sessions: LibraryEvent[], options: { url: string; image?: string }): Node[];
 export function parseTime(text: string): { starts: string; ends?: string } | null;
 export function libraryDateTime(day: string, time: string): string;
