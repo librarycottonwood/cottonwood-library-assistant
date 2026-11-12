@@ -1,12 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import libraryLogo from '../assets/logos/library-tree.png';
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
 import { ArrowUpRight, House, BookOpen, Printer, ChevronRight, ChevronDown, MessageSquare } from '@lucide/astro';
 import LessonIcon from '../components/academy/LessonIcon.astro';
-import { lessons } from '../pages/academy/_guide';
+import { lessons, academyGroups } from '../pages/academy/_guide';
 import '../styles/academy.css';
 interface Props { title: string; active?: string; print?: boolean; withPageIndex?: boolean; }
 const { title, active, print = false, withPageIndex = false } = Astro.props;
-const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'preview-and-save': 'Website updates', 'everyday-jobs': 'Email, posts & donations' };
+const navTitles: Record<string, string> = { 'start-here': 'Your first chat', 'preview-and-save': 'Website updates', 'everyday-jobs': 'Newsletters & donations' };
 ---
 <!doctype html>
 <html lang="en">
@@ -22,9 +24,9 @@ const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'prev
   <body class:list={[{ 'print-edition': print }]}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="academy-header">
-      <a class="academy-brand" href="/academy/">Cottonwood <span>Volunteer academy</span></a>
+      <a class="academy-brand" href="/academy/"><Image src={libraryLogo} alt="" width={48} densities={[1, 2]} loading="eager" class="academy-logo" /><span>Cottonwood <small>Volunteer academy</small></span></a>
       <nav class="academy-header-actions" aria-label="Academy tools">
-        <a class="library-link" href="/" aria-label="Library website">Library <ArrowUpRight size={16} aria-hidden="true" /></a>
+        <a class="library-link" href="/" aria-label="Library website">Library website <ArrowUpRight size={16} aria-hidden="true" /></a>
         <details class="academy-print-menu">
           <summary><Printer size={18} aria-hidden="true" /><span>Print</span><ChevronDown size={15} aria-hidden="true" /></summary>
           <div class="academy-print-options">
@@ -32,7 +34,7 @@ const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'prev
             <a href="/academy/print/"><Printer size={18} aria-hidden="true" />Full handbook</a>
           </div>
         </details>
-        <a class="academy-chatgpt" href="https://chatgpt.com/?surface=work" target="_blank" rel="noopener noreferrer"><MessageSquare size={18} aria-hidden="true" />Open ChatGPT</a>
+        <a class="academy-chatgpt" href="https://chatgpt.com/?surface=work" target="_blank" rel="noopener noreferrer"><MessageSquare size={18} aria-hidden="true" /><span><span class="chatgpt-open-label">Open </span>ChatGPT</span></a>
       </nav>
     </header>
     <div class="academy-shell">
@@ -40,8 +42,11 @@ const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'prev
         <details class="lesson-menu" open>
           <summary><ChevronRight size={18} aria-hidden="true" /><span>Browse lessons</span></summary>
           <nav aria-label="Academy lessons">
-            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}>{active === 'home' ? <ChevronRight size={18} aria-hidden="true" /> : <House size={18} aria-hidden="true" />}<span>Overview</span></a>
-            <ol>{lessons.map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}>{active === lesson.slug ? <ChevronRight size={18} aria-hidden="true" /> : <LessonIcon slug={lesson.slug} />}<span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
+            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
+            {academyGroups.map(group => <section class="lesson-nav-group" aria-labelledby={`nav-${group.id}`}>
+              <h2 id={`nav-${group.id}`}>{group.title}</h2>
+              <ol>{group.slugs.map(slug => lessons.find(lesson => lesson.slug === slug)!).map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
+            </section>)}
           </nav>
         </details>
       </aside>
@@ -71,6 +76,37 @@ const navTitles: Record<string, string> = { 'start-here': 'Using ChatGPT', 'prev
       const syncMenu = () => { if (menu) menu.open = !narrow.matches; };
       syncMenu();
       narrow.addEventListener('change', syncMenu);
+      const topics = [...document.querySelectorAll<HTMLAnchorElement>('.lesson-topics a')]
+        .map(link => ({ link, section: document.getElementById(decodeURIComponent(link.hash.slice(1))) }))
+        .filter((topic): topic is { link: HTMLAnchorElement; section: HTMLElement } => topic.section !== null);
+      if (topics.length) {
+        let frame = 0;
+        const updateCurrentSection = () => {
+          frame = 0;
+          const readingLine = (header?.offsetHeight ?? 0) + 64;
+          let current = topics[0];
+          for (const topic of topics) {
+            if (topic.section.getBoundingClientRect().top <= readingLine) current = topic;
+          }
+          // Short final sections may never reach the top of the reading area.
+          if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+            current = topics[topics.length - 1];
+          }
+          for (const topic of topics) {
+            if (topic === current) topic.link.setAttribute('aria-current', 'location');
+            else topic.link.removeAttribute('aria-current');
+          }
+        };
+        const scheduleSectionUpdate = () => {
+          if (!frame) frame = requestAnimationFrame(updateCurrentSection);
+        };
+        window.addEventListener('scroll', scheduleSectionUpdate, { passive: true });
+        window.addEventListener('resize', scheduleSectionUpdate);
+        window.addEventListener('hashchange', scheduleSectionUpdate);
+        window.addEventListener('pageshow', scheduleSectionUpdate);
+        new ResizeObserver(scheduleSectionUpdate).observe(document.body);
+        updateCurrentSection();
+      }
       for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-prompt]')) {
         button.hidden = false;
         button.addEventListener('click', async () => {

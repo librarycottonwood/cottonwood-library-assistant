@@ -1,9 +1,14 @@
 ---
-import { MessageSquare, PanelsTopLeft, PencilLine, Mail, LifeBuoy, MessagesSquare } from '@lucide/astro';
+import { MessageSquare, PanelsTopLeft, PencilLine, Mail, LifeBuoy, MessagesSquare, Network, Settings, Compass, Paperclip, Send } from '@lucide/astro';
 interface Props { slug: string; size?: number; }
 const { slug, size = 18 } = Astro.props;
 const icons: Record<string, typeof MessageSquare> = {
   'start-here': MessageSquare,
+  'chatgpt-tour': Compass,
+  'files-and-links': Paperclip,
+  'facebook-posts': Send,
+  'library-assistant': Network,
+  'website-systems': Settings,
   'accounts-and-tools': PanelsTopLeft,
   'preview-and-save': PencilLine,
   'everyday-jobs': Mail,

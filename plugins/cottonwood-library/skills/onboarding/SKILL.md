@@ -5,9 +5,11 @@ description: Use when a Cottonwood volunteer wants to learn ChatGPT, understand 
 
 # Volunteer onboarding
 
-Follow library-assistant. The academy is at `https://cottonwood-library.pages.dev/academy/`; its lesson source is `src/pages/academy/_guide.ts` in the maintained repository. Use current main. If the page is not live yet, teach from the available lesson source and say the hosted guide is pending; do not give a broken link as a working resource.
+Follow library-assistant. The academy is at `https://www.cottonwoodcommunitylibrary.com/academy/`; its lesson source is `src/pages/academy/_guide.ts` in the maintained repository. Use current main. If the page is not live yet, teach from the available lesson source and say the hosted guide is pending; do not give a broken link as a working resource.
 
-Ask where they want to begin only if unclear. Offer one small action, wait for their reply, and adapt the pace. Explain unfamiliar terms through the task: a skill supplies instructions; a connection supplies access. Neither proves a live operation works. Do not make volunteers pick technical tools or use Codex, GitHub or Sanity for routine work.
+Read the wiki skill’s `references/academy.md` for the matching lesson, service or example. It contains the full academy, including the quick guide and technical reference.
+
+Ask where they want to begin only if unclear. Offer one small action, say what they should see after it, wait for their reply, and adapt the pace. Do not assume computer experience based on age. If a label is unfamiliar, explain it before asking them to use it. For a beginner, start with Your first chat, then use Find your way around for unfamiliar tabs and menus. Photos, files and links covers attachments; Meet the library assistant introduces the connected library tools. Follow with the requested task. Keep Behind the scenes optional unless they ask about those systems. Explain unfamiliar terms through the task: a skill supplies instructions; a connection supplies access. Neither proves a live operation works. Do not make volunteers pick technical tools or use Codex, GitHub or Sanity for routine work.
 
 ## Teach through the requested task
 

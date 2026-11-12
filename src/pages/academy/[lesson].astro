@@ -2,12 +2,14 @@
 import AcademyLayout from '../../layouts/AcademyLayout.astro';
 import LessonBody from '../../components/academy/LessonBody.astro';
 import LessonPagination from '../../components/academy/LessonPagination.astro';
-import { lessons } from './_guide';
+import { lessons, serviceGroups } from './_guide';
 export function getStaticPaths() { return lessons.map((lesson, index) => ({ params: { lesson: lesson.slug }, props: { lesson, index } })); }
 const { lesson, index } = Astro.props;
 const previous = lessons[index - 1];
 const next = lessons[index + 1];
 const topics = lesson.parts.filter(part => part.id);
+if (lesson.slug === 'website-systems') topics.push(...serviceGroups.filter(group => group.id !== 'daily').map(group => ({ id: `services-${group.id}`, title: group.title, text: [] })));
+if (lesson.slug === 'accounts-and-tools') topics.unshift({ id: 'services-daily', title: 'Websites for library tasks', text: [] });
 ---
 <AcademyLayout title={lesson.title} active={lesson.slug} withPageIndex={topics.length > 0}>
   <div class="lesson-layout">

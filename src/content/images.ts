@@ -1,3 +1,12 @@
+import academyGivebutterDonation from '../assets/images/academy-givebutter-donation.png';
+import academyGivebutterSubscribers from '../assets/images/academy-givebutter-subscribers.png';
+import academyGivebutterTemplates from '../assets/images/academy-givebutter-templates.png';
+import academyGivebutterEmail from '../assets/images/academy-givebutter-email.png';
+import academyChatgptAccountMenu from '../assets/images/academy-chatgpt-account-menu.png';
+import academyChatgptPlugins from '../assets/images/academy-chatgpt-plugins.png';
+import academyChatgptScheduled from '../assets/images/academy-chatgpt-scheduled.png';
+import academyChatgptLibrary from '../assets/images/academy-chatgpt-library.png';
+import academyChatgptExplore from '../assets/images/academy-chatgpt-explore.png';
 import type { ImageMetadata } from 'astro';
 import exterior from '../assets/images/library-in-red-white-and-blue.jpeg';
 import computerLab from '../assets/images/computer-stations.jpg';
@@ -73,7 +82,17 @@ import academySquarespace from '../assets/images/academy-squarespace.png';
 import academyGmail from '../assets/images/academy-gmail.png';
 import academySquare from '../assets/images/academy-square.png';
 
-const images: Record<string, ImageMetadata> = { academyGithub, academyCloudflare, academySanity, academySquarespace, academyGmail, academySquare, academyChatgpt, academyGivebutter, academyBuffer, academyDrive, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
+
+import academyChatgptWindow from '../assets/images/academy-chatgpt-full-window.png';
+import academyChatgptMenu from '../assets/images/academy-chatgpt-full-menu.png';
+
+import academyWebsiteRequest from '../assets/images/academy-chatgpt-website-request.png';
+import academyNewsletter from '../assets/images/academy-website-newsletter.png';
+import academyBufferQueue from '../assets/images/academy-buffer-queue.png';
+import academyBufferEditor from '../assets/images/academy-buffer-editor.png';
+import academyBufferTiming from '../assets/images/academy-buffer-timing.png';
+
+const images: Record<string, ImageMetadata> = { academyGivebutterEmail, academyGivebutterTemplates, academyGivebutterSubscribers, academyGivebutterDonation, academyChatgptExplore, academyChatgptLibrary, academyChatgptScheduled, academyChatgptPlugins, academyChatgptAccountMenu, academyWebsiteRequest, academyNewsletter, academyBufferQueue, academyBufferEditor, academyBufferTiming, academyChatgptWindow, academyChatgptMenu,      academyGithub, academyCloudflare, academySanity, academySquarespace, academyGmail, academySquare, academyChatgpt, academyGivebutter, academyBuffer, academyDrive, exterior, computerLab, storytime, books, interior, newsletter, watercolor, entrance, newReads, copyRoom, bookDrop, readingNook, mainStreetReaders, bookClub, bookDonation, bookSale, childrensBookSale, holidayMarket, firstFive, communityFoundation, founders, borrowingShelves, computerRoom, cattleDrivePainting, foundersPortrait, libraryBuilding, countyCertificate, thankYouNote, muralOrchard, storyTimeCorner, muralPicnicTable, adventureMural, borrowingV2, computersV2, copyRoomV2, entranceV2, storytimeRoomV2, exteriorOriginal, exteriorPolished, roofExterior, readingTable, bookSaleV2, childrensSaleV2, readingNookV2, bookDropV2, holidayMarketV2, storytimeSession, storytimeFacebook, adventureMuralOriginal, storyTimeSession, storyTimeBeeColoring, storyTimeSnailCraft, storyTimeButterflyCraft, bookClubMeeting };
 
 export function resolveImage(key: string): ImageMetadata {
   const image = images[key];

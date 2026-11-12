@@ -1,97 +1,135 @@
 // Shared content for the academy and printable handbook.
-export const reviewed = "November 9, 2026";
+export const reviewed = "November 11, 2026";
 export const academyUrl = "https://www.cottonwoodcommunitylibrary.com/academy/";
 export interface Part {
   id?: string;
   icon?: string;
+  screenshots?: { framing?: 'full'; beforeStep?: number; afterParagraph?: number; key: string; alt: string; caption?: string; view: 'navigation' | 'message' | 'modes' | 'attachment' | 'helper' | 'website-request' | 'newsletter' | 'buffer-queue' | 'buffer-editor' | 'buffer-timing' | 'tour-sidebar' | 'tour-scheduled' | 'tour-library' | 'tour-plugins' | 'tour-explore' | 'tour-account' | 'givebutter-email' | 'givebutter-templates' | 'givebutter-subscribers' | 'givebutter-donation' }[];
   title: string;
   text: string[];
+  items?: { label: string; text: string }[];
   steps?: string[];
   prompt?: string;
   links?: { label: string; href: string }[];
 }
 export interface Lesson { slug: string; title: string; summary: string; parts: Part[]; }
+export const academyGroups = [
+  {
+    "id": "start",
+    "title": "Start here",
+    "slugs": [
+      "start-here",
+      "chatgpt-tour",
+      "files-and-links",
+      "library-assistant"
+    ]
+  },
+  {
+    "id": "tasks",
+    "title": "Library tasks",
+    "slugs": [
+      "preview-and-save",
+      "everyday-jobs",
+      "facebook-posts",
+      "when-something-goes-wrong",
+      "practice-with-a-buddy",
+      "accounts-and-tools"
+    ]
+  },
+  {
+    "id": "reference",
+    "title": "Behind the scenes",
+    "slugs": [
+      "website-systems"
+    ]
+  }
+];
 export const serviceGroups = [
   {
-    "id": "website",
-    "title": "Website and assistant"
+    "id": "daily",
+    "title": "Websites for library tasks"
   },
   {
-    "id": "communications",
-    "title": "Donations, social posts and files"
-  },
-  {
-    "id": "other",
-    "title": "Other library accounts"
+    "id": "technical",
+    "title": "Website and reporting systems"
   }
 ];
 export const services = [
   {
     "id": "chatgpt",
-    "group": "website",
+    "group": "daily",
     "name": "ChatGPT",
     "purpose": "Ask for website updates, write announcements and get help with library tasks.",
-    "signin": "Use the library’s ChatGPT account. It has the library’s tools and instructions.",
+    "signin": "Use the library’s ChatGPT account for library work.",
     "href": "https://chatgpt.com/",
     "label": "Open ChatGPT"
   },
   {
     "id": "codex",
-    "group": "website",
+    "group": "technical",
     "name": "Codex",
-    "purpose": "Changes how the website looks and works. This academy was built with Codex.",
-    "signin": "Uses the ChatGPT account. The library’s workspace is called cottonwood-library-editor.",
+    "purpose": "Changes the website’s design and how its features work.",
+    "signin": "Sign in with the library’s ChatGPT account.",
     "href": "https://chatgpt.com/codex/cloud",
     "label": "Open Codex"
   },
   {
     "id": "sanity",
-    "group": "website",
+    "group": "technical",
     "name": "Sanity",
     "purpose": "Keeps the events, hours, news, photos and newsletters that appear on the website.",
-    "signin": "The library signs in through GitHub. ChatGPT can update the content here for you.",
+    "signin": "The library signs in through GitHub. Routine content changes start in ChatGPT; you do not need to open Sanity for them.",
     "href": "https://cottonwood-community-library.sanity.studio/",
     "label": "Open Sanity"
   },
   {
     "id": "github",
-    "group": "website",
+    "group": "technical",
     "name": "GitHub",
     "purpose": "Keeps the website files and a record of changes. It also prepares the preview you check before saving.",
-    "signin": "Uses the library’s GitHub account. A proposed update is called a pull request.",
+    "signin": "Uses the library’s GitHub account. The assistant handles routine website saves here.",
     "href": "https://github.com/librarycottonwood/cottonwood-library-assistant",
     "label": "Open GitHub"
   },
   {
     "id": "cloudflare",
-    "group": "website",
+    "group": "technical",
     "name": "Cloudflare",
-    "purpose": "Keeps the library website online. Its Turnstile tool also checks for spam on the newsletter signup form.",
+    "purpose": "Hosts the library website and protects the newsletter signup form from spam.",
     "signin": "Uses its own library account. GitHub sends approved website updates here.",
     "href": "https://dash.cloudflare.com/",
     "label": "Open Cloudflare"
   },
   {
     "id": "squarespace",
-    "group": "website",
+    "group": "technical",
     "name": "Squarespace",
     "purpose": "Manages the library’s web address, cottonwoodcommunitylibrary.com, and its renewal.",
-    "signin": "Uses its own account, managed by Todd. Squarespace and Square are different services.",
+    "signin": "Managed by the library’s account contact.",
     "href": "https://account.squarespace.com/",
     "label": "Open Squarespace"
   },
   {
     "id": "analytics",
-    "group": "website",
+    "group": "technical",
     "name": "Google Analytics",
     "purpose": "Shows how many people visit the website and which pages they read.",
-    "signin": "Uses the library’s Google account. Google Cloud connects these reports to ChatGPT.",
+    "signin": "Uses the library’s Google account. You can ask ChatGPT for a visitor report when its reporting connection is available.",
     "href": "https://analytics.google.com/",
     "label": "Open Google Analytics"
   },
   {
+    "id": "google-cloud",
+    "group": "technical",
+    "name": "Google Cloud",
+    "purpose": "Connects Google Analytics reports to ChatGPT.",
+    "signin": "Sign in with the library’s Google account.",
+    "href": "https://console.cloud.google.com/",
+    "label": "Open Google Cloud"
+  },
+  {
     "id": "givebutter",
-    "group": "communications",
+    "group": "daily",
     "name": "Givebutter",
     "purpose": "Keeps donations, fundraisers and the newsletter mailing list. Its Engage section sends emails.",
     "signin": "Givebutter and Engage share one account. ChatGPT helps write the email; you send it in Engage.",
@@ -100,124 +138,399 @@ export const services = [
   },
   {
     "id": "buffer",
-    "group": "communications",
+    "group": "daily",
     "name": "Buffer",
     "purpose": "Keeps Facebook posts ready for you to check, publish or schedule.",
-    "signin": "Uses its own account, connected to the library’s social pages.",
+    "signin": "Sign in with the library’s Google account.",
     "href": "https://publish.buffer.com/",
     "label": "Open Buffer"
-  },
-  {
-    "id": "social",
-    "group": "communications",
-    "name": "Facebook & Instagram",
-    "purpose": "The library’s social pages, where people read posts and leave comments.",
-    "signin": "Facebook access comes through your own Facebook account. Instagram has a separate sign-in. Todd can help.",
-    "href": "https://www.facebook.com/",
-    "label": "Open Facebook"
-  },
-  {
-    "id": "drive",
-    "group": "communications",
-    "name": "Google Drive",
-    "purpose": "Stores shared photos, documents and newsletters. Download a file here to attach it in ChatGPT.",
-    "signin": "Use the Google account that was invited to the shared folder.",
-    "href": "https://drive.google.com/",
-    "label": "Open Google Drive"
-  },
-  {
-    "id": "gmail",
-    "group": "communications",
-    "name": "Gmail",
-    "purpose": "Email for the library’s Google account, including messages about these services.",
-    "signin": "Uses the same Google sign-in as Drive. This is separate from the library’s usual contact inbox.",
-    "href": "https://mail.google.com/",
-    "label": "Open Gmail"
-  },
-  {
-    "id": "catalog",
-    "group": "other",
-    "name": "Follett Destiny",
-    "purpose": "Look up books and handle borrowing and returns.",
-    "signin": "Uses a separate staff account. A circulation volunteer can show you how to sign in.",
-    "href": "https://cottonlib.follettdestiny.com/",
-    "label": "Open Follett Destiny"
-  },
-  {
-    "id": "square",
-    "group": "other",
-    "name": "Square",
-    "purpose": "The service behind the library’s older Square website.",
-    "signin": "Uses a separate account. Updating the current website does not change the older one.",
-    "href": "https://cottonwood-community-library.square.site/",
-    "label": "View the older Square site"
-  },
-  {
-    "id": "spaceship",
-    "group": "other",
-    "name": "Spaceship",
-    "purpose": "An account set up while considering a move of the library’s web address. The address stayed with Squarespace.",
-    "signin": "Not used for website updates. Todd has the account details.",
-    "href": "https://www.spaceship.com/",
-    "label": "Open Spaceship"
   }
 ];
 export const lessons: Lesson[] = [
   {
     "slug": "start-here",
-    "title": "Using ChatGPT",
-    "summary": "Start a conversation, attach a file and ask for changes.",
+    "title": "Your first chat",
+    "summary": "Send your first message, read the reply and ask for changes.",
     "parts": [
       {
-        "title": "Open a conversation",
+        "id": "what-is-chatgpt",
+        "title": "What can ChatGPT help with?",
         "text": [
-          "Tell ChatGPT what you need, just as you would ask someone for help."
-        ],
-        "steps": [
-          "Open chatgpt.com and sign in to the library’s account.",
-          "Click New chat. Choose Work for website changes, or Chat for writing and questions.",
-          "Type your request. Answer any questions in the same conversation."
-        ],
-        "prompt": "Help me write an announcement for the library. Ask me what it is about."
-      },
-      {
-        "title": "Ask for changes",
-        "text": [
-          "Reply with “Make it shorter” or “Use simpler words.” Keep going until it says what you mean.",
-          "Check names, dates and times before using it."
+          "ChatGPT can draft a message, explain something or help with a library task. Type what you need in the message box.",
+          "A conversation is called a chat. Your messages and ChatGPT’s replies stay together, so you can ask follow-up questions."
         ]
       },
       {
-        "title": "Add a photo, flyer or newsletter",
-        "text": [
-          "Click the + or paperclip beside the message box. Choose your file, then say what you want help with."
+        "id": "first-message",
+        "title": "Send your first message",
+        "text": [],
+        "steps": [
+          "Open chatgpt.com in your browser. Sign in to the library’s account if asked.",
+          "Choose New chat. Leave Chat selected at the top. Click in the message box and type what you need.",
+          "Click the green Send arrow beside the message box. Wait for the reply to appear.",
+          "Read the reply. If ChatGPT asks a question, type your answer in the same box and send it."
         ],
-        "prompt": "Read this flyer and list the event name, date, time and place."
-      },
-      {
-        "title": "Continue an earlier chat",
-        "text": [
-          "Choose the conversation from the list on the left. If the list is hidden, open the menu at the top left.",
-          "Use the same chat when you want to change something you were already working on."
+        "prompt": "Help me write a short thank-you note for a library volunteer. Ask me one question at a time.",
+        "screenshots": [
+          {
+            "key": "academyChatgptWindow",
+            "alt": "Full ChatGPT browser window. ChatGPT’s upper-left sidebar, with the New chat button below the search and sidebar icons.",
+            "view": "navigation",
+            "beforeStep": 2
+          },
+          {
+            "key": "academyChatgptWindow",
+            "alt": "Full ChatGPT browser window. A message typed in ChatGPT. The Send button is the green circle with an upward arrow at the bottom right of the message box.",
+            "view": "message",
+            "beforeStep": 3
+          }
         ],
         "links": [
           {
-            "label": "More about using ChatGPT",
-            "href": "https://learn.chatgpt.com/docs/use-chatgpt"
+            "label": "Find your way around ChatGPT",
+            "href": "/academy/chatgpt-tour/"
+          }
+        ]
+      },
+      {
+        "id": "follow-up",
+        "title": "Ask for a better answer",
+        "text": [
+          "You can say “Make it shorter,” “That date is wrong,” or “Explain that word.” Reply in the same chat so ChatGPT can see what you mean.",
+          "ChatGPT can make mistakes. Compare names, dates, times and library details with the information you supplied before sharing the result."
+        ],
+        "prompt": "Please explain that in plain language. Give me just the next step, then wait for me."
+      }
+    ]
+  },
+  {
+    "slug": "chatgpt-tour",
+    "title": "Find your way around",
+    "summary": "What the tabs, menus and buttons in ChatGPT are for.",
+    "parts": [
+      {
+        "id": "sidebar",
+        "title": "New chat, Search and Recents",
+        "text": [],
+        "items": [
+          {
+            "label": "New chat",
+            "text": "Start a separate conversation for a new question or job."
+          },
+          {
+            "label": "Search",
+            "text": "The magnifying glass near the ChatGPT name finds earlier conversations. Search for a word you remember, such as “newsletter.”"
+          },
+          {
+            "label": "Recents",
+            "text": "Open this list to return to a recent conversation. Continue there when you want to finish the same job."
+          },
+          {
+            "label": "Show or hide the sidebar",
+            "text": "The small panel button beside Search opens or closes this menu. On a narrow screen, open the sidebar to see these choices."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptAccountMenu",
+            "view": "tour-sidebar",
+            "alt": "ChatGPT’s full browser window, focused on the left sidebar with New chat, Search, Scheduled, Library, Plugins, Explore, Projects and Recents."
+          }
+        ]
+      },
+      {
+        "id": "chat-or-work",
+        "title": "Chat or Work?",
+        "text": [
+          "Use Chat for questions, ideas and writing. Use Work when you want help carrying out a library task, such as updating the website. You can choose between them in ChatGPT.",
+          "The Open in ChatGPT buttons in this academy start in Work. They open a new browser tab with the example message ready for you. Read it, change any details, then send it. Replace words in square brackets, such as [date], with your own details.",
+          "The ChatGPT name at the top left also opens a choice between ChatGPT and Codex. Codex is for building and changing software. The library’s everyday tasks stay in ChatGPT."
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptWindow",
+            "alt": "Full ChatGPT browser window. The Chat and Work choices at the top of a new ChatGPT conversation. Chat is selected in this screenshot.",
+            "view": "modes",
+            "afterParagraph": 1
+          }
+        ]
+      },
+      {
+        "id": "scheduled",
+        "title": "Scheduled: tasks for later",
+        "text": [
+          "Scheduled is where you find reminders and jobs you have asked ChatGPT to repeat. Open a task to see its instructions, timing and recent results."
+        ],
+        "items": [
+          {
+            "label": "Schedule a task",
+            "text": "Describe the job and when it should happen. For example, ask for a reminder before a meeting."
+          },
+          {
+            "label": "Existing tasks",
+            "text": "Review a task before changing its schedule. The date of its next run tells you when it is due, not whether its last run succeeded."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptScheduled",
+            "view": "tour-scheduled",
+            "framing": "full",
+            "alt": "ChatGPT Scheduled page with its task entry box and an existing weekly task showing the next run."
+          }
+        ]
+      },
+      {
+        "id": "library",
+        "title": "Library: files and things you create",
+        "text": [
+          "This is ChatGPT’s Library, where you find saved material from your work. It is separate from the Cottonwood library website."
+        ],
+        "items": [
+          {
+            "label": "All",
+            "text": "Browse the items in your ChatGPT Library."
+          },
+          {
+            "label": "Images",
+            "text": "Find pictures made in ChatGPT. The screenshot shows this tab before any images have been created."
+          },
+          {
+            "label": "Folders",
+            "text": "Keep related items together."
+          },
+          {
+            "label": "Favorites",
+            "text": "Find items you have marked as favorites."
+          },
+          {
+            "label": "Suggested",
+            "text": "See items ChatGPT suggests from your Library."
+          },
+          {
+            "label": "Search library",
+            "text": "Find an item by name using the search box at the top."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptLibrary",
+            "view": "tour-library",
+            "framing": "full",
+            "alt": "ChatGPT Library with Suggested, Favorites, Folders, Images and All tabs. Images is selected."
+          }
+        ]
+      },
+      {
+        "id": "plugins",
+        "title": "Plugins and Skills: connected tools",
+        "text": [
+          "Plugins let ChatGPT work with other services. For example, the library’s Buffer connection lets it prepare social posts, and its website tools help it make website updates."
+        ],
+        "items": [
+          {
+            "label": "Installed",
+            "text": "See the plugins already added to this account. Open one to learn what it does or check its connection."
+          },
+          {
+            "label": "Public and Personal",
+            "text": "Browse available plugins or your own plugins. These are directory tabs; a listing does not mean a plugin is connected."
+          },
+          {
+            "label": "Skills",
+            "text": "The Skills tab contains instructions that teach ChatGPT how to do particular jobs. The library assistant uses these to follow the library’s procedures."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptPlugins",
+            "view": "tour-plugins",
+            "framing": "full",
+            "alt": "ChatGPT Plugins page with Plugins and Skills tabs, the Installed row, and Public and Personal directory tabs."
+          }
+        ],
+        "links": [
+          {
+            "label": "Meet the library assistant",
+            "href": "/academy/library-assistant/"
+          }
+        ]
+      },
+      {
+        "id": "projects",
+        "title": "Projects: keep one ongoing job together",
+        "text": [
+          "A project groups related conversations, files and instructions. You could keep several months of newsletter planning in one project, while starting a separate chat for each issue.",
+          "Open Projects in the sidebar and choose a project to return to it. Its Chats area holds conversations; Sources holds the reference material. A quick, one-time question can stay in an ordinary chat."
+        ]
+      },
+      {
+        "id": "explore",
+        "title": "Explore: other things ChatGPT can do",
+        "text": [],
+        "items": [
+          {
+            "label": "Images",
+            "text": "Create pictures with ChatGPT."
+          },
+          {
+            "label": "GPTs",
+            "text": "Custom versions of ChatGPT. OpenAI is moving these to plugins and retiring custom GPTs. You can skip this section for library work."
+          },
+          {
+            "label": "Sites",
+            "text": "Build a separate website with ChatGPT. To update Cottonwood’s existing website, use the Website updates lesson instead."
+          },
+          {
+            "label": "Health, Finances and Maps",
+            "text": "Open ChatGPT’s areas for those subjects. They are separate from the library’s connected tools."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptExplore",
+            "view": "tour-explore",
+            "alt": "ChatGPT sidebar with Explore open, showing Health, Finances, Maps, Images, GPTs and Sites."
+          }
+        ]
+      },
+      {
+        "id": "account-menu",
+        "title": "Your account and settings",
+        "text": [
+          "Click the account name at the bottom left to open this menu."
+        ],
+        "items": [
+          {
+            "label": "Personalization",
+            "text": "Choose preferences for how ChatGPT responds."
+          },
+          {
+            "label": "Profile",
+            "text": "Manage the profile associated with the account."
+          },
+          {
+            "label": "Settings",
+            "text": "Find account and app settings."
+          },
+          {
+            "label": "Help",
+            "text": "Open ChatGPT’s help resources."
+          },
+          {
+            "label": "Log out",
+            "text": "Sign out of the current account."
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptAccountMenu",
+            "view": "tour-account",
+            "alt": "ChatGPT account menu at the bottom left, showing Personalization, Profile, Settings, Help and Log out."
           }
         ]
       }
     ]
   },
   {
-    "slug": "accounts-and-tools",
-    "title": "Accounts and websites",
-    "summary": "What each website does and how to sign in.",
+    "slug": "files-and-links",
+    "title": "Photos, files and links",
+    "summary": "Give ChatGPT a flyer, document or page to work with.",
     "parts": [
       {
-        "title": "Need help signing in?",
+        "id": "attach-file",
+        "title": "Add a photo, flyer or newsletter",
+        "text": [],
+        "steps": [
+          "Click the + button beside the message box, then choose Add photos & files.",
+          "Choose the photo or document from your computer. Wait for it to appear beside your message.",
+          "Type what you want ChatGPT to do with it, then send the message."
+        ],
+        "prompt": "Read this flyer and list the event name, date, time and place.",
+        "screenshots": [
+          {
+            "key": "academyChatgptMenu",
+            "alt": "Full ChatGPT browser window. The plus button has opened a menu. Add photos & files is the first option, marked with a paperclip.",
+            "view": "attachment",
+            "beforeStep": 1
+          }
+        ]
+      },
+      {
+        "id": "copy-link",
+        "title": "Share a website link",
+        "text": [],
+        "steps": [
+          "Open the page you want help with.",
+          "Click its address at the top of your browser. Copy the whole address.",
+          "Return to ChatGPT, paste the address into your message and say what you want changed."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "library-assistant",
+    "title": "Meet the library assistant",
+    "summary": "Use ChatGPT for website updates, newsletters and reports.",
+    "parts": [
+      {
+        "id": "library-account",
+        "title": "Use the library’s ChatGPT account",
         "text": [
-          "Ask Todd which account to use. Signing in to ChatGPT does not sign you in to the other websites."
+          "Use the library’s ChatGPT account for website updates and reports."
+        ],
+        "links": [
+          {
+            "label": "Who to ask for help",
+            "href": "/academy/accounts-and-tools/#sign-in-help"
+          }
+        ]
+      },
+      {
+        "id": "skills-connections",
+        "title": "Ask for library work",
+        "text": [
+          "Ask it to add an event, post a closure notice or check last month’s donations. It will ask for any details it needs."
+        ],
+        "screenshots": [
+          {
+            "key": "academyChatgptMenu",
+            "alt": "Full ChatGPT browser window. The Cottonwood tree icon beside Cottonwood Library in ChatGPT’s add menu.",
+            "caption": "Cottonwood Library appears in the + menu.",
+            "view": "helper"
+          }
+        ]
+      },
+      {
+        "id": "website-help",
+        "title": "Updating the website",
+        "text": [
+          "Describe the change and check the draft. Open the preview to see how it will look on the website, then say “Yes, save it” when it is ready."
+        ],
+        "links": [
+          {
+            "label": "Follow the website update steps",
+            "href": "/academy/preview-and-save/"
+          }
+        ]
+      },
+      {
+        "id": "other-services",
+        "title": "Email, Facebook and reports",
+        "text": [
+          "Ask ChatGPT to write a newsletter email, then send it from Givebutter’s Engage section.",
+          "For Facebook, ask ChatGPT to prepare a draft in Buffer. Review the post there and choose when to publish it.",
+          "For donation totals or website visits, ask for a report and give the dates."
+        ],
+        "links": [
+          {
+            "label": "Newsletters and donations",
+            "href": "/academy/everyday-jobs/"
+          },
+          {
+            "label": "Facebook posts",
+            "href": "/academy/facebook-posts/"
+          }
         ]
       }
     ]
@@ -229,6 +542,13 @@ export const lessons: Lesson[] = [
     "parts": [
       {
         "id": "add-event",
+        "screenshots": [
+          {
+            "key": "academyWebsiteRequest",
+            "view": "website-request",
+            "alt": "ChatGPT in Work mode, with an unsent request to add an event in the message box and the green Send arrow beside it."
+          }
+        ],
         "title": "Add an event",
         "text": [
           "Open a new chat, choose Work and describe the event. You can attach a flyer."
@@ -252,6 +572,14 @@ export const lessons: Lesson[] = [
       },
       {
         "id": "newsletter-pdf",
+        "screenshots": [
+          {
+            "key": "academyNewsletter",
+            "view": "newsletter",
+            "alt": "The library newsletter page with Fall and Summer 2026 issues. Each issue has a title, description, Download PDF link and accessible Word version.",
+            "beforeStep": 2
+          }
+        ],
         "title": "Add the newsletter",
         "text": [
           "Choose Work in ChatGPT and attach the newsletter PDF."
@@ -259,7 +587,7 @@ export const lessons: Lesson[] = [
         "prompt": "Add this as the latest newsletter on the website. Keep the older issues too.",
         "steps": [
           "Check the title and description.",
-          "Open the preview. Click the newsletter to check that the right file opens.",
+          "Open the preview. Choose Download PDF under the newsletter to check that the right file opens.",
           "Ask ChatGPT to save it. Keep the page link for your newsletter email."
         ]
       },
@@ -268,27 +596,31 @@ export const lessons: Lesson[] = [
         "text": [
           "A preview shows your changes before they go live. Open it and check that everything looks right.",
           "If ChatGPT says the save includes someone else’s changes, check those too before saying yes."
-        ]
+        ],
+        "id": "check-preview"
       }
     ]
   },
   {
     "slug": "everyday-jobs",
-    "title": "Email, posts and donations",
-    "summary": "Send the newsletter, share a post and record a donation.",
+    "title": "Newsletters and donations",
+    "summary": "Send the newsletter, find subscribers and work with donation records.",
     "parts": [
       {
         "id": "send-newsletter",
         "title": "Email the newsletter",
         "text": [
-          "Add the newsletter to the website first. Then ask ChatGPT to write an email with a link to it."
+          "Putting the newsletter on the website and emailing it are two separate jobs. Add it to the website first, then ask ChatGPT to write the email.",
+          "You send the email in Engage, the email section of Givebutter. Use a computer for these steps."
         ],
         "prompt": "Write a short email introducing this newsletter: [newsletter link]. Include a subject line and a link to read the issue.",
         "steps": [
-          "Open Givebutter. Choose Engage, Emails, then New Email.",
-          "Choose a template. Paste in the subject, message and newsletter link.",
-          "Click Next. Choose the Library Newsletter tag to reach subscribers.",
-          "Check the message and recipients. Click Send now, then Send, or choose Schedule for later."
+          "Open Givebutter and choose Engage, then Emails.",
+          "Click New email.",
+          "Choose a template, such as Plain Text or Monthly Newsletter.",
+          "Paste in the message and newsletter link. Add the subject line.",
+          "Click Next to choose recipients. Under Tags, choose Library Newsletter.",
+          "Check the message and the selected recipients. Choose Send now, then confirm Send. To send another day, choose Schedule."
         ],
         "links": [
           {
@@ -299,28 +631,115 @@ export const lessons: Lesson[] = [
             "label": "Givebutter’s email instructions",
             "href": "https://help.givebutter.com/en/articles/6523588-how-to-create-an-outbound-email"
           }
+        ],
+        "screenshots": [
+          {
+            "key": "academyGivebutterEmail",
+            "view": "givebutter-email",
+            "alt": "Givebutter Engage with Emails selected, New email at the upper right, and Sent, Outbox and Drafts below.",
+            "beforeStep": 1,
+            "framing": "full"
+          },
+          {
+            "key": "academyGivebutterTemplates",
+            "view": "givebutter-templates",
+            "alt": "Givebutter’s template picker with Plain Text, Monthly Newsletter and other email layouts.",
+            "beforeStep": 3,
+            "framing": "full"
+          }
         ]
       },
       {
         "id": "subscribers",
         "title": "Find newsletter subscribers",
         "text": [
-          "In Givebutter, choose Contacts, Filter, Tags, then Library Newsletter.",
-          "To find one person, search for their email address. This list contains newsletter subscribers."
+          "Website newsletter signups appear in Givebutter under the Library Newsletter tag."
+        ],
+        "steps": [
+          "Open Givebutter and choose Contacts.",
+          "Click Tag above the contact list. Select Library Newsletter, then close the filter menu to see matching contacts.",
+          "To find one subscriber, enter their email address in the Search box. Clear the search to see the whole newsletter list again."
+        ],
+        "screenshots": [
+          {
+            "key": "academyGivebutterSubscribers",
+            "view": "givebutter-subscribers",
+            "alt": "Givebutter Contacts with the Tag menu open and Library Newsletter selected. The search contains a fictional address, so no private contact details appear.",
+            "beforeStep": 2,
+            "caption": "This example search hides contact details. Clear Search to see your subscribers."
+          }
         ]
       },
       {
+        "id": "cash-check",
+        "title": "Record a cash or check donation",
+        "text": [
+          "Record cash or a check the library has received in Givebutter."
+        ],
+        "steps": [
+          "Open Givebutter. Choose Transactions, then New transaction.",
+          "Under Contact, find the donor’s name or create a new contact.",
+          "Choose the campaign, meaning the fundraiser the donation belongs to.",
+          "Enter the donation date and choose Cash or Check under Payment method. For a check, fill in the check number and deposit date when known.",
+          "Enter the donation amount. Review Send a receipt, the public name and amount options, and Send admin notifications.",
+          "Check the summary. When the details are right, click Record transaction."
+        ],
+        "links": [
+          {
+            "label": "Open Givebutter",
+            "href": "https://dashboard.givebutter.com/"
+          },
+          {
+            "label": "Givebutter’s cash and check instructions",
+            "href": "https://help.givebutter.com/en/articles/2705864-how-to-add-and-manage-offline-transactions"
+          }
+        ],
+        "screenshots": [
+          {
+            "key": "academyGivebutterDonation",
+            "view": "givebutter-donation",
+            "alt": "Givebutter’s blank Record new transaction form. Check is selected, showing Deposit date and Check number; Contact, Campaign and Amount are empty.",
+            "beforeStep": 2,
+            "framing": "full"
+          }
+        ]
+      },
+      {
+        "id": "reports",
+        "title": "Ask for a report",
+        "text": [
+          "Ask about donations or website visits. Include the dates you want to compare."
+        ],
+        "prompt": "How much did the library receive in donations last month, and how many people visited the website?"
+      }
+    ]
+  },
+  {
+    "slug": "facebook-posts",
+    "title": "Facebook posts",
+    "summary": "Write a post with ChatGPT, then check and schedule it in Buffer.",
+    "parts": [
+      {
         "id": "facebook",
+        "screenshots": [
+          {
+            "key": "academyBufferQueue",
+            "view": "buffer-queue",
+            "caption": "Under Publish, use Drafts for unfinished posts, Queue for scheduled posts and Sent for published posts.",
+            "alt": "Buffer’s library Facebook channel with Publish selected in the left menu and Queue, Drafts and Sent tabs across the top.",
+            "beforeStep": 3
+          }
+        ],
         "title": "Make a Facebook post",
         "text": [
-          "Paste the link to the event or news you want to share into ChatGPT."
+          "ChatGPT helps write the post. Buffer is where you review it and choose when it appears on Facebook."
         ],
         "prompt": "Write a Facebook post about this: [page link].",
         "steps": [
-          "Read the post ChatGPT writes. Ask for any changes.",
-          "Ask ChatGPT to put the draft in Buffer.",
-          "In Buffer, choose Publish, then Drafts. Open the post and check that it is for the library’s Facebook Page.",
-          "Publish it now or schedule it. Scheduled posts appear in Queue; published posts appear in Sent."
+          "Read the post ChatGPT writes and ask for any changes.",
+          "Ask ChatGPT to put it in Buffer as a draft. If it cannot connect, copy the text and create the post in Buffer yourself.",
+          "In Buffer, choose Publish, then Drafts.",
+          "Open the post to check the text, photo and Facebook preview."
         ],
         "links": [
           {
@@ -334,35 +753,42 @@ export const lessons: Lesson[] = [
         ]
       },
       {
-        "id": "cash-check",
-        "title": "Record a cash or check donation",
+        "id": "buffer-editor",
+        "title": "Check the post in Buffer",
         "text": [
-          "Enter cash and check donations in Givebutter. Ask Todd for access if you cannot see New Transaction."
+          "Open your draft in Buffer. If you are making the post yourself, click New Post and paste in the text from ChatGPT."
         ],
         "steps": [
-          "Choose Transactions, then New Transaction.",
-          "Choose the fundraiser. Find the donor’s name, or add it.",
-          "Enter the amount and date. Choose Cash or Check. For a check, add its number and deposit date.",
-          "Choose whether to email a receipt and show the donor’s name and amount publicly. Click Save."
+          "Check that the library’s Facebook picture is selected at the top of the editor.",
+          "Read the text and check the Facebook Preview on the right. To add a photo, choose select a file.",
+          "Choose Save Draft if you want to finish later, or continue below to choose when to publish."
         ],
-        "links": [
+        "screenshots": [
           {
-            "label": "Open Givebutter",
-            "href": "https://dashboard.givebutter.com/"
-          },
-          {
-            "label": "Givebutter’s cash and check instructions",
-            "href": "https://help.givebutter.com/en/articles/2705864-how-to-add-and-manage-offline-transactions"
+            "key": "academyBufferEditor",
+            "view": "buffer-editor",
+            "alt": "Buffer’s Create Post window with the library Facebook channel selected, a blank message area, photo upload, Facebook Preview and Save Draft controls.",
+            "beforeStep": 1
           }
         ]
       },
       {
-        "id": "reports",
-        "title": "Ask for a report",
-        "text": [
-          "Ask about donations or website visits. Include the dates you want to compare."
+        "id": "buffer-timing",
+        "title": "Choose when the post appears",
+        "text": [],
+        "steps": [
+          "Open the timing menu near the bottom right of the editor. It may say Next Available.",
+          "Choose Now to post today, or Set Date and Time to pick a particular time.",
+          "Check your choice, then use the button beside the timing menu to publish or schedule the post."
         ],
-        "prompt": "How much did the library receive in donations last month, and how many people visited the website?"
+        "screenshots": [
+          {
+            "key": "academyBufferTiming",
+            "view": "buffer-timing",
+            "alt": "Buffer’s posting-time menu open beside the publishing button, showing Next Available, Prioritize, Now, and Set Date and Time.",
+            "beforeStep": 1
+          }
+        ]
       }
     ]
   },
@@ -395,7 +821,7 @@ export const lessons: Lesson[] = [
         "id": "wrong-page",
         "title": "An update is missing",
         "text": [
-          "Reload the page. If it still looks wrong, return to the chat where you requested the change. Paste the page link and explain what is missing."
+          "Click your browser’s Reload button, usually a circular arrow near the address. If the page still looks wrong, open the chat where you requested the change. Paste the page link and explain what is missing."
         ],
         "prompt": "This page still shows the old hours: [page link]. They should be [new hours]. Can you check?"
       },
@@ -403,7 +829,7 @@ export const lessons: Lesson[] = [
         "id": "broken-link",
         "title": "A button or page is broken",
         "text": [
-          "Send ChatGPT the page link and say what happened. You can attach a screenshot."
+          "Send ChatGPT the page link and say what you clicked and what happened. Attach a screenshot if you have one."
         ],
         "prompt": "The Donate button on this page does not open: [page link]. Can you check what is wrong?"
       },
@@ -411,7 +837,13 @@ export const lessons: Lesson[] = [
         "id": "access",
         "title": "You cannot sign in",
         "text": [
-          "Ask Todd for help. Tell him which website you are opening and what happens when you try to sign in."
+          "Ask the library’s account contact for help. Tell them which website you are opening and what happens when you try to sign in."
+        ],
+        "links": [
+          {
+            "label": "Who to ask for help",
+            "href": "/academy/accounts-and-tools/#sign-in-help"
+          }
         ]
       }
     ]
@@ -419,7 +851,7 @@ export const lessons: Lesson[] = [
   {
     "slug": "practice-with-a-buddy",
     "title": "Examples",
-    "summary": "Choose a starting point. ChatGPT will ask for the details.",
+    "summary": "Choose an idea to open a ready-written message in ChatGPT. Read it, then send it.",
     "parts": [
       {
         "title": "Turn a flyer into a Facebook post",
@@ -518,8 +950,76 @@ export const lessons: Lesson[] = [
         "prompt": "Let’s practice adding a fictional book sale, without changing the website or sending anything. Ask me one question at a time, then show me the event description."
       }
     ]
+  },
+  {
+    "slug": "accounts-and-tools",
+    "title": "Accounts and websites",
+    "summary": "Links to the websites you may use for library work.",
+    "parts": [
+      {
+        "id": "sign-in-help",
+        "title": "Who to ask for help",
+        "text": [
+          "Use the library’s accounts for library work. Todd is the current contact for account access, renewals, billing and changes to the library’s web address.",
+          "For a broken page or a missing update, start with ChatGPT and share the page link."
+        ],
+        "links": [
+          {
+            "label": "Get help with a website problem",
+            "href": "/academy/when-something-goes-wrong/"
+          },
+          {
+            "label": "Website systems and technical accounts",
+            "href": "/academy/website-systems/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "website-systems",
+    "title": "Website systems",
+    "summary": "How the website works, with links for the people who maintain it.",
+    "parts": [
+      {
+        "id": "how-it-works",
+        "title": "From a request to the website",
+        "text": [
+          "For everyday updates, start in ChatGPT. These services do the work behind it:"
+        ],
+        "steps": [
+          "Sanity stores the events, hours, news, photos and newsletter files.",
+          "GitHub keeps the website files and checks proposed changes. It prepares the preview.",
+          "Cloudflare serves the finished website to visitors after the change is approved.",
+          "Codex helps change the website’s design and how its features work."
+        ]
+      },
+      {
+        "id": "technical-words",
+        "title": "Words you might come across",
+        "text": [
+          "A pull request is a proposed change waiting to be checked and saved. A repository is the collection of website files in GitHub.",
+          "Publishing or deployment means putting the finished update on the public website. Publishing content in Sanity and updating the public website are separate steps; the assistant handles the save process.",
+          "A domain is the website’s address. Squarespace manages the registration and renewal of cottonwoodcommunitylibrary.com. Cloudflare hosts the current website."
+        ]
+      },
+      {
+        "id": "technical-help",
+        "title": "Who to ask for help",
+        "text": [
+          "Account access, renewals, billing and web-address changes need the library’s account contact."
+        ],
+        "links": [
+          {
+            "label": "Who to ask for help",
+            "href": "/academy/accounts-and-tools/#sign-in-help"
+          }
+        ]
+      }
+    ]
   }
 ];
+
 export const quickReference = [
   [
     "Add an event",
@@ -547,7 +1047,7 @@ export const quickReference = [
   ],
   [
     "Post on Facebook",
-    "Ask ChatGPT to write the post and put the draft in Buffer. Open Buffer → Publish → Drafts to review and publish it."
+    "Ask ChatGPT to write the post. If Buffer is connected, ask it to save a draft there. Open Buffer → Publish → Drafts to review and publish it."
   ],
   [
     "Announce a closure",

@@ -1,24 +1,18 @@
 ---
 import { Image } from 'astro:assets';
-import { BookOpen, Bot, ChartColumn, Users, Rocket, ArrowUpRight } from '@lucide/astro';
+import { BookOpen, Bot, ChartColumn, Cloud, ArrowUpRight } from '@lucide/astro';
 import { services, serviceGroups } from '../../pages/academy/_guide';
-import { contentRepository } from '../../content/repository';
 import { resolveImage } from '../../content/images';
-interface Props { print?: boolean; }
-const { print = false } = Astro.props;
-const { library } = await contentRepository.getHome();
+interface Props { print?: boolean; technical?: boolean; }
+const { print = false, technical = false } = Astro.props;
+const groups = serviceGroups.filter(group => technical ? group.id !== 'daily' : group.id === 'daily');
 const GroupHeading = print ? 'h3' : 'h2';
 const Heading = print ? 'h4' : 'h3';
-const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', drive: 'academyDrive', buffer: 'academyBuffer', github: 'academyGithub', cloudflare: 'academyCloudflare', sanity: 'academySanity', squarespace: 'academySquarespace', gmail: 'academyGmail', square: 'academySquare' };
-const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartColumn, social: Users, catalog: BookOpen, spaceship: Rocket };
-const href = (service: typeof services[number]) => service.id === 'social' ? library.facebookUrl : service.href;
+const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', buffer: 'academyBuffer', github: 'academyGithub', cloudflare: 'academyCloudflare', sanity: 'academySanity', squarespace: 'academySquarespace' };
+const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartColumn, 'google-cloud': Cloud };
 ---
 <section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">
-  <div class="platform-overview">
-    <p>Ask <a href="#website-chatgpt">ChatGPT</a> for an update. <a href="#website-sanity">Sanity</a> keeps the content, <a href="#website-github">GitHub</a> prepares your preview, and <a href="#website-cloudflare">Cloudflare</a> puts the approved update online. <a href="#website-codex">Codex</a> changes the design.</p>
-  </div>
-  <nav class="service-group-links screen-only" aria-label="Website groups">{serviceGroups.map(group => <a href={`#services-${group.id}`}>{group.title}</a>)}</nav>
-  {serviceGroups.map(group => <section class="service-group" id={`services-${group.id}`}>
+  {groups.map(group => <section class="service-group" id={`services-${group.id}`}>
     <GroupHeading class="service-group-title">{group.title}</GroupHeading>
     <div class="service-grid">
       {services.filter(service => service.group === group.id).map(service => {
@@ -33,10 +27,8 @@ const href = (service: typeof services[number]) => service.id === 'social' ? lib
           <p class="service-purpose">{service.purpose}</p>
           <p class="service-signin">{service.signin}</p>
           <div class="service-actions">
-            <a class="service-open" href={href(service)}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></a>
-            {print && <span class="service-url">{href(service)}</span>}
-            {service.id === 'social' && library.instagramUrl && <a class="service-extra" href={library.instagramUrl}>Open Instagram <ArrowUpRight size={14} aria-hidden="true" /></a>}
-            {service.id === 'analytics' && <a class="service-extra" href="https://console.cloud.google.com/">Google Cloud <ArrowUpRight size={14} aria-hidden="true" /></a>}
+            <a class="service-open" href={service.href}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></a>
+            {print && <span class="service-url">{service.href}</span>}
           </div>
         </article>;
       })}

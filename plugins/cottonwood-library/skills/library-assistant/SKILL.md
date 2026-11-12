@@ -19,6 +19,7 @@ Ask only for missing information. Do not restart a wizard for a small correction
 
 | Request | Skill |
 | --- | --- |
+| Questions about academy lessons, service names, accounts or how the platform fits together | wiki |
 | Learning ChatGPT, the volunteer academy, safe practice | onboarding |
 | Urgent platform trouble, a suspicious message, exposed private data, website unavailable | troubleshooting |
 | News, announcements, thank-yous, event recaps | news |
