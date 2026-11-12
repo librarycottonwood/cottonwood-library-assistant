@@ -44,7 +44,7 @@ const navTitles: Record<string, string> = { 'start-here': 'Your first chat', 'pr
           <nav aria-label="Academy lessons">
             <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
             {academyGroups.map(group => <section class="lesson-nav-group" aria-labelledby={`nav-${group.id}`}>
-              <h2 id={`nav-${group.id}`}>{group.title}</h2>
+              <p class="lesson-nav-title" id={`nav-${group.id}`}>{group.title}</p>
               <ol>{group.slugs.map(slug => lessons.find(lesson => lesson.slug === slug)!).map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
             </section>)}
           </nav>

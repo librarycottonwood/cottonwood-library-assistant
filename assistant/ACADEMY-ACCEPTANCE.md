@@ -2,6 +2,14 @@
 
 Prepared November 5, 2026. Source baseline: `bfe78dd844cc97ea05d2ddda918d7e971548f586` (initial main fetched for this request). The public academy has no account data or access controls: noindex is a search preference, not privacy. Private account details stay in ACCOUNT-REGISTER.md. No new service, CMS field, billing or account change is required.
 
+## Current review, November 11, 2026
+
+This section supersedes the earlier presentation and version notes below. The academy now has eleven lessons grouped into Start here, Library tasks and Behind the scenes, ten platform-service cards and sixteen workflow starters. It uses the site's Bree Serif headings, a sticky header, selected lesson and section states, and responsive navigation. Print links appear once in the header.
+
+ChatGPT, Buffer, Givebutter and website screenshots are intact Safari captures placed before the relevant instructions. Full-window views use centered padding; focused views position the original image within a rounded gradient canvas. Image provenance and capture boundaries are recorded in docs/academy-images.md. No email was sent, social post published or donation recorded while gathering screenshots. Givebutter email composition and recipient review were not exercised.
+
+Source plugin version is 0.2.25. The new wiki bundles every lesson, example, service and quick-reference entry; pnpm academy:wiki regenerates it, and pnpm check rejects stale output. Source changes do not install the plugin in the library account. Publishing the website, installing the plugin and a volunteer's first supervised walkthrough remain separate steps.
+
 ## Presentation decision
 
 Use `/academy/` as the maintained learning resource, alongside the existing `/components/` reference but with a volunteer-focused reading layout. The academy uses a compact documentation layout: a persistent lesson sidebar on desktop, a collapsible menu on phones, sans-serif headings and one reading column. It has no hero or decorative photo. The component reference retains its compact index. The academy lists lessons in rows and shows fifteen named service cards with local product logos or icons, visible sign-in guidance and labeled links. The directory explains the whole platform, including website administration, account relationships and older services; account identities remain in the private register. Turnstile, Engage and Google Cloud are explained alongside their parent services. Zoom is excluded because it is not part of this platform. Six short lessons have worked tasks, a shared example widget with Open in ChatGPT and copy buttons, section links and previous/next navigation. `/academy/print/` renders those same lessons for paper or Save as PDF; `/academy/quick-reference/` is a one-page list of common library tasks. PDF exports are dated snapshots, not a separate source to maintain. Keep the public navigation unchanged until the board decides how to distribute the academy bookmark.

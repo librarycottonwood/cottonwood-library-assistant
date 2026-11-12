@@ -44,7 +44,7 @@ li { margin-block: .4rem; }
 .lesson-menu ol { list-style: none; margin: 0; padding: 0; }
 .lesson-menu li { margin: .15rem 0; }
 .lesson-nav-group { margin-top: 1.25rem; }
-.lesson-nav-group h2 { margin: 0 0 .35rem; padding-inline: .75rem; font: 650 .85rem/1.5 var(--font-body); color: var(--color-text-muted); }
+.lesson-nav-title { margin: 0 0 .35rem; padding-inline: .75rem; font: 650 .85rem/1.5 var(--font-body); color: var(--color-text-muted); }
 .academy-home-group + .academy-home-group { margin-top: 2rem; }
 .lesson-menu nav > a { margin-bottom: .75rem; }
 .lesson-menu a { display: flex; align-items: center; gap: .65rem; padding: .65rem .75rem; border-radius: 10px; text-decoration: none; color: var(--color-text-muted); }

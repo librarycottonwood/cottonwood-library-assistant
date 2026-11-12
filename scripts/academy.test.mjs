@@ -37,7 +37,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.goto(origin + '/academy/');
     const routes = await page.locator('a[href^="/academy/"]').evaluateAll(links => [...new Set(links.map(a => a.getAttribute('href')))]);
     assert.equal(routes.length, 14, 'home, eleven lessons, handbook and desk guide');
-    assert.deepEqual(await page.locator('.lesson-nav-group h2').allTextContents(), ['Start here', 'Library tasks', 'Behind the scenes']);
+    assert.deepEqual(await page.locator('.lesson-nav-title').allTextContents(), ['Start here', 'Library tasks', 'Behind the scenes']);
     assert.equal(await page.locator('main img').count(), 0, 'the guide index has no decorative imagery');
     for (const width of [375, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
