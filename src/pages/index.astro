@@ -7,12 +7,14 @@ import Button from '../components/site/Button.astro';
 import Card from '../components/site/Card.astro';
 import EventCards from '../components/site/EventCards.astro';
 import Grid from '../components/site/Grid.astro';
+import Handwritten from '../components/site/Handwritten.astro';
 import Heading from '../components/site/Heading.astro';
 import HeroHeading from '../components/site/HeroHeading.astro';
 import HeroContacts from '../components/site/HeroContacts.astro';
 import LibraryIllustration from '../components/site/LibraryIllustration.astro';
 import PostList from '../components/site/PostList.astro';
 import Section from '../components/site/Section.astro';
+import StepPath from '../components/site/StepPath.astro';
 import Split from '../components/site/Split.astro';
 import Stack from '../components/site/Stack.astro';
 import Text from '../components/site/Text.astro';
@@ -64,17 +66,13 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Stack>
   </Split>
 
-  <Section title="Your first visit" headingId="first-visit-heading" width="text" align="start" gap="md" id="first-visit">
-    <Grid columns={2} gap="sm">
-      <Stack gap="xs" align="start">
-        <Heading level={3} size="title">Opening an account</Heading>
-        <Text tone="muted">Adults bring photo ID and proof of residence to the front desk.</Text>
-      </Stack>
-      <Stack gap="xs" align="start">
-        <Heading level={3} size="title">Borrowing books</Heading>
-        <Text tone="muted">Tell a volunteer your account name. We don’t issue physical library cards.</Text>
-      </Stack>
-    </Grid>
+  <Section headingId="first-visit-heading" width="article" gap="lg" id="first-visit">
+    <Heading id="first-visit-heading" relaxed>Your <Handwritten>first</Handwritten> visit</Heading>
+    <StepPath items={[
+      { title: 'Bring your ID', text: 'Adults open an account at the front desk with photo ID and proof of residence.' },
+      { title: 'Say your name', text: 'There’s no library card to carry. Tell a volunteer your account name; family accounts cover your whole household.' },
+      { title: 'Take books home', text: 'Start with 3 items. After your first return, you can borrow up to 10.' },
+    ]} />
     <Button href="/visit/" variant="accent" icon="navigate">Plan your visit</Button>
   </Section>
 

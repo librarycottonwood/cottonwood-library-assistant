@@ -172,6 +172,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
 | [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
+| [StepPath](#steppath) | Two to four numbered steps joined by a wavy crayon line: across on wide screens, down the left on phones. Each number sits in a scribbled crayon circle. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
 | [WideImage](#wideimage) | One large rounded photo across the page, right under the page title (Figma Event View and About Us). |
@@ -799,6 +800,26 @@ interface Props {
   <Heading size="heading">Keep your library open.</Heading>
   <Text tone="muted">Donations help cover day-to-day operations.</Text>
 </Stack>
+```
+
+### StepPath
+
+`src/components/site/StepPath.astro` — Two to four numbered steps joined by a wavy crayon line: across on wide screens, down the left on phones. Each number sits in a scribbled crayon circle.
+
+- **Use for:** A short "how to" a visitor follows in order, such as the homepage's first visit (bring ID, say your name, take books home).
+- **Don't use for:** Steps that are not in order (use TopicList), more than four steps, long paragraphs, or links inside a step's text.
+
+```ts
+interface Props {
+  items: { title: string; text: string }[];
+}
+```
+
+```astro
+<StepPath items={[
+  { title: 'Bring your ID', text: 'Adults bring photo ID and proof of residence.' },
+  { title: 'Say your name', text: 'Tell a volunteer your account name.' },
+]} />
 ```
 
 ### Text

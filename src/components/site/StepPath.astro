@@ -1,0 +1,64 @@
+---
+/**
+ * @component StepPath
+ * Two to four numbered steps joined by a wavy crayon line: across on wide screens, down the left on phones. Each number sits in a scribbled crayon circle.
+ * @use A short "how to" a visitor follows in order, such as the homepage's first visit (bring ID, say your name, take books home).
+ * @avoid Steps that are not in order (use TopicList), more than four steps, long paragraphs, or links inside a step's text.
+ * @example
+ * <StepPath items={[
+ *   { title: 'Bring your ID', text: 'Adults bring photo ID and proof of residence.' },
+ *   { title: 'Say your name', text: 'Tell a volunteer your account name.' },
+ * ]} />
+ */
+import across from '../../assets/decorations/crayon-wave-across.svg?url';
+import down from '../../assets/decorations/crayon-wave-down.svg?url';
+interface Props {
+  items: { title: string; text: string }[];
+}
+const { items } = Astro.props;
+---
+<ol class="step-path" data-motion="group" data-steps={items.length} style={`--wave-across: url("${across}"); --wave-down: url("${down}");`}>
+  {items.map((item, index) => <li class="step">
+    <span class="step-mark" aria-hidden="true">
+      <svg viewBox="0 0 100 100" focusable="false">
+        <path class="step-fill" d="M27 30 44 19 20 48 64 18 18 63 79 25 24 77 84 41 35 86 84 59 53 88 77 76" />
+        <path class="step-ring" d="M52 8C76 7 93 25 92 50 91 76 72 93 48 92 24 91 7 73 8 49 9 26 27 10 55 10 63 11 69 13 74 17" />
+      </svg>
+      <span class="step-number">{index + 1}</span>
+    </span>
+    {index < items.length - 1 && <span class="step-line" aria-hidden="true" />}
+    <div class="step-copy">
+      <h3>{item.title}</h3>
+      <p>{item.text}</p>
+    </div>
+  </li>)}
+</ol>
+<style>
+  .step-path { --mark: 4.25rem; --col-gap: var(--space-md); display: grid; width: 100%; margin: 0; padding: 0; list-style: none; text-align: start; }
+  /* Phones: the number on the left, the crayon line running down under it to the next number. */
+  .step { display: grid; grid-template-columns: var(--mark) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: 'mark copy' 'line copy'; column-gap: var(--space-sm); }
+  .step-mark { grid-area: mark; position: relative; display: grid; place-items: center; width: var(--mark); aspect-ratio: 1; color: var(--color-primary); }
+  .step:nth-child(3n + 1) .step-mark { transform: rotate(-4deg); }
+  .step:nth-child(3n + 2) .step-mark { transform: rotate(3deg); }
+  .step:nth-child(3n) .step-mark { transform: rotate(-1deg); }
+  .step-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .step-fill { fill: none; stroke: var(--color-accent); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  .step-ring { fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; }
+  .step-number { position: relative; font-family: var(--font-handwritten); font-size: calc(var(--mark) * .62); font-weight: 700; line-height: 1; color: var(--color-primary-ink); }
+  .step-copy { grid-area: copy; display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; padding-block: var(--space-xs) var(--space-md); font-size: var(--fluid-body); line-height: var(--leading-relaxed); }
+  .step:last-child .step-copy { padding-block-end: 0; }
+  .step-copy h3 { margin: 0; font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); color: var(--color-text); }
+  .step-copy p { margin: 0; color: var(--color-text-muted); }
+  /* The crayon line: a dashed wave masked onto the indigo token, so it repeats cleanly at any length. */
+  .step-line { grid-area: line; justify-self: center; width: 1.25rem; margin-block: var(--space-xs); background: var(--color-primary); opacity: .75; -webkit-mask: var(--wave-down) center top / 1.25rem 3.333rem repeat-y; mask: var(--wave-down) center top / 1.25rem 3.333rem repeat-y; }
+  /* Wider screens: the steps sit side by side and the line runs across from each number toward the next. */
+  @media (min-width: 48rem) {
+    .step-path { --mark: 5.5rem; grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr)); column-gap: var(--col-gap); }
+    .step-path[data-steps='2'] { --columns: 2; }
+    .step-path[data-steps='4'] { --columns: 4; }
+    .step { grid-template-columns: var(--mark) minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: 'mark line' 'copy copy'; align-content: start; gap: var(--space-sm) var(--col-gap); }
+    .step-copy { padding-block: 0; }
+    .step-line { align-self: center; justify-self: stretch; width: auto; height: 1.25rem; margin-block: 0; -webkit-mask: var(--wave-across) left center / 3.333rem 1.25rem repeat-x; mask: var(--wave-across) left center / 3.333rem 1.25rem repeat-x; }
+  }
+  @media (min-width: 100rem) { .step-path { --col-gap: var(--space-lg); } }
+</style>
