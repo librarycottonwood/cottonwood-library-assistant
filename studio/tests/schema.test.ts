@@ -73,6 +73,10 @@ test('migration provenance is a known protected field and newsletter addresses a
   const addressed = await validateImportSnapshot({schemaVersion: 1, documents: [{...newsletter, slug: {_type: 'slug', current: 'fall-2026'}}]});
   assert.equal(addressed.status, 'local_builtin_rules_passed');
   assert.deepEqual(addressed.warnings, []);
+  // The optional accessible Word version is a known field, so an issue can carry it.
+  const withWord = await validateImportSnapshot({schemaVersion: 1, documents: [{...newsletter, slug: {_type: 'slug', current: 'fall-2026'}, accessibleFile: {_type: 'file', asset: {_type: 'reference', _ref: 'file-abc123-docx'}}}]});
+  assert.equal(withWord.status, 'local_builtin_rules_passed');
+  assert.deepEqual(withWord.warnings, []);
 });
 
 test('the compiled notice form accepts closed days separate from the banner dates and rejects a repeated day', async () => {

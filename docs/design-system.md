@@ -249,7 +249,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
 `src/components/site/Card.astro` — Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid.
 
 - **Use for:** A set of similar things: events, services, programs, news posts. Three per row on desktop. layout="adaptive" when a card may end up alone in a full-width row (EventCards does this). shape="page" for a printed page such as a newsletter cover: shown whole, at letter size.
-- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href).
+- **Don't use for:** A single highlighted item that is always on its own (use Split), text without a photo, a description longer than two lines (it is cut off), or links and buttons inside the card (the card is already one link; a badge must not have href). The one exception is the `links` slot: a few IconLinks under the text to other versions of the same thing (a newsletter's PDF and Word files), which sit above the card link.
 
 ```ts
 interface Props {
@@ -267,6 +267,8 @@ interface Props {
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
+  /** Heading level of the title. 3 (default) under a Section heading; 2 when the cards sit right under the page title with no section heading between (headings never skip a level). */
+  level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
@@ -500,6 +502,8 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
+  headingLevel?: 2 | 3;
 }
 ```
 

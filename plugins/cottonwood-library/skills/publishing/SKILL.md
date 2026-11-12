@@ -104,6 +104,7 @@ Save PRs with no activity for 14 days are closed automatically with a comment. N
 - **Plain dates** (notices and their closed days, end dates): `YYYY-MM-DD`. A notice's `staysOpen` is `true` or `false`, never text.
 - **Text:** one level of bullets only; no bullets inside bullets.
 - **Photos:** JPG, PNG or WebP, uploaded to Sanity, with a short description (alt text).
+- **Newsletter Word version:** a `.docx` file asset, made with the newsletter skill's "Accessible Word version" steps: Heading 1 title, no skipped heading levels, every picture described or marked decorative, no "Manual Review" section.
 - **Don't unpublish** a record that another record points to (an event used by a news post, a program used by an event, the current newsletter). Change or remove the pointer first.
 
 The reporting connector has no website-saving tools. Do not ask for website OAuth permissions, repeatedly reconnect it, or send volunteers to an external approval page for ordinary saves. The existing CMS review page remains an administrator recovery option when explicitly chosen. Do not present sample-content pictures as current content or imply a repository change repairs an external Codex browser error.
