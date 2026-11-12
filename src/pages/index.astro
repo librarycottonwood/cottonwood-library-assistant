@@ -64,20 +64,6 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Stack>
   </Split>
 
-  <Section title="Your first visit" headingId="first-visit-heading" width="text" align="start" gap="md" id="first-visit">
-    <Grid columns={2} gap="sm">
-      <Stack gap="xs" align="start">
-        <Heading level={3} size="title">Opening an account</Heading>
-        <Text tone="muted">Adults bring photo ID and proof of residence to the front desk.</Text>
-      </Stack>
-      <Stack gap="xs" align="start">
-        <Heading level={3} size="title">Borrowing books</Heading>
-        <Text tone="muted">Tell a volunteer your account name. We don’t issue physical library cards.</Text>
-      </Stack>
-    </Grid>
-    <Button href="/visit/" variant="accent" icon="navigate">Plan your visit</Button>
-  </Section>
-
   {featured && featuredImage && <Split media="end" image={featuredImage} ratio="16 / 9" headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
