@@ -552,7 +552,7 @@ interface Props { image: LibraryImage; }
 
 ```astro
 <IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
-  <Heading>Give your time</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
+  <Heading>Volunteer at the library</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
 </IllustratedCallout>
 ```
 
