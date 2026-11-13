@@ -13,6 +13,13 @@ on:
         description: 'Rehearsal only: reuse a previously verified patch instead of another AI run'
         default: ''
         type: string
+      reconnect:
+        description: 'Reconnect the repair sign-in with a one-time code'
+        default: false
+        type: boolean
+  # The library assistant opens an issue titled "Reconnect automatic repairs".
+  issues:
+    types: [opened]
   schedule:
     - cron: '17 18 * * 4'
 permissions:
@@ -22,7 +29,7 @@ jobs:
   repair:
     # Only failed main checks wake the worker; passing or branch checks skip
     # this job, so they never queue behind (and bump) a waiting repair.
-    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_branch == 'main'))
+    if: github.repository == 'librarycottonwood/cottonwood-library-assistant' && github.event_name != 'issues' && !inputs.reconnect && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_branch == 'main'))
     # Serialize all uses of this one library sign-in, including token refresh.
     concurrency:
       group: library-codex-managed-signin
@@ -175,6 +182,78 @@ jobs:
           name: library-repair-attempt-${{ steps.prepare.outputs.source }}
           path: ${{ runner.temp }}/attempt.txt
           retention-days: 90
+  reconnect:
+    # Browser-only recovery: the person in the library chat types a one-time code.
+    if: >-
+      github.repository == 'librarycottonwood/cottonwood-library-assistant' &&
+      ((github.event_name == 'issues' && github.event.issue.title == 'Reconnect automatic repairs' &&
+      github.event.issue.user.login == github.repository_owner) ||
+      (github.event_name == 'workflow_dispatch' && inputs.reconnect))
+    concurrency:
+      group: library-codex-managed-signin
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Codex
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-cryptography
+          npm install --global @openai/codex@latest
+      - name: Sign in with a one-time code
+        id: auth
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: python3 scripts/upkeep/reconnect.py "$RUNNER_TEMP/agent-auth"
+      - name: Test the new sign-in
+        env:
+          CODEX_HOME: ${{ runner.temp }}/agent-auth
+        run: |
+          codex exec --disable apps --ignore-user-config --ephemeral --skip-git-repo-check -s read-only \
+            -c model_reasoning_effort="low" 'Reply with the single word OK.' >"$RUNNER_TEMP/login-test.log" 2>&1 || {
+            python3 -c 'import os,re; from pathlib import Path; s=Path(os.environ["RUNNER_TEMP"]+"/login-test.log").read_text(); print(re.sub(r"[A-Za-z0-9_./+-]{80,}","[redacted]",s[-6000:]))'
+            exit 1
+          }
+      - name: Store the sign-in encrypted
+        env:
+          LIBRARY_AUTH_VAULT_KEY: ${{ secrets.LIBRARY_AUTH_VAULT_KEY }}
+        run: |
+          python3 scripts/upkeep/vault.py seal "$RUNNER_TEMP/agent-auth/auth.json" "$RUNNER_TEMP/sealed/auth.enc"
+          rm -rf "$RUNNER_TEMP/agent-auth"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: library-codex-auth
+          path: ${{ runner.temp }}/sealed/auth.enc
+          retention-days: 90
+          if-no-files-found: error
+      - name: Tell the library chat how it went
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          SIGNED_IN: ${{ steps.auth.outcome }}
+          RESULT: ${{ job.status }}
+        run: |
+          rm -rf "$RUNNER_TEMP/agent-auth"
+          if [ "$RESULT" = success ]; then
+            msg='Automatic repairs are back on. The new sign-in was tested and saved. <!-- library-reconnect-result -->'
+          elif [ "$SIGNED_IN" = success ]; then
+            msg='The code was approved, but the new sign-in did not pass its test, so automatic repairs are still paused. Ask the library assistant to start again. <!-- library-reconnect-result -->'
+          else
+            msg=''
+          fi
+          echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            if [ -n "$msg" ]; then gh issue comment "$ISSUE_NUMBER" -R "$GITHUB_REPOSITORY" --body "$msg"; fi
+            gh issue close "$ISSUE_NUMBER" -R "$GITHUB_REPOSITORY"
+          fi
   save:
     needs: repair
     if: needs.repair.result == 'success' && needs.repair.outputs.patch == 'true'

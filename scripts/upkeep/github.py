@@ -57,7 +57,9 @@ if mode == 'prepare':
     if not ready:
         sys.exit(0)
     # Restore only a vault produced by this exact worker on the trusted branch.
-    for a in artifacts:
+    # Ask for the vaults by name so other artifacts never push them off the page.
+    vaults = sorted(api('/actions/artifacts?name=library-codex-auth&per_page=100')['artifacts'], key=lambda a: a['created_at'], reverse=True)
+    for a in vaults:
         if a['name']!='library-codex-auth' or a['expired']:
             continue
         run = api('/actions/runs/'+str(a['workflow_run']['id']))

@@ -10,6 +10,7 @@ Through the connected GitHub tools, inspect maintenance-reports:
 - .library-checks/<current-main-SHA>.json for source checks.
 - .library-cms-checks/latest.json and its sourceChecksResult and cmsLiveResult separately.
 - .library-analytics-checks/latest.json and .library-analytics-deployments/latest.json for the report connection.
+- .library-connections/latest.json for every account connection and its expiry date.
 - Upkeep PRs merged in the past seven days, open incidents and the existing repair worker's actual outcomes.
 
 Check freshness and source versions. Wait briefly if the relevant check is running. Missing, skipped or stale results do not establish a pass. Fixture tests and configuration health do not establish live provider access.
@@ -34,7 +35,8 @@ Report only items that are actually stuck, and what you did about each. Do not m
 The library does not read GitHub or its emails, so this report is how these reach anyone. Check each one and report it in plain words, with what you did about it:
 
 - Open issues titled "Website check needs attention" or "Library visitor reports need attention": say what broke and whether it is fixed now.
-- A failed **Library automatic upkeep** run in the last 7 days: automatic repairs are paused until it is fixed. Say only that, and whether the website itself works. This is the assistant's job (assistant/MAINTENANCE.md → "Renew the repair sign-in"); never ask a board member or volunteer to do anything about it or to contact anyone.
+- A failed **Library automatic upkeep** run in the last 7 days, or the repair sign-in failing in .library-connections: automatic repairs are paused. Say so, say whether the website itself works, and offer to turn them back on right here: "Reply 'turn repairs back on' and I'll give you a link and a short code to type." When they reply, follow assistant/MAINTENANCE.md → "Renew the repair sign-in". Never send it to anyone else or name a person.
+- An open **Library connection needs renewing** issue: say which part of the website it affects and the date it stops working, in one plain sentence. Handle what you can from its fix notes. Never ask a board member or volunteer to sign in to Cloudflare, GitHub or Sanity, or to contact anyone.
 - No successful **Weekly CMS backup** run in the last 8 days: say this week's copy of the website's content and pictures did not save, that the earlier copies are still kept, and look into why (assistant/MAINTENANCE.md → CMS backups).
 - Save PRs closed by the stale-save cleanup in the last 7 days: say which change was dropped, that it never went on the website, and that it can be redone on request.
 

@@ -37,7 +37,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: node scripts/change-kind.mjs
       - run: bash scripts/cloud-setup.sh
-      - run: node --test scripts/motion.test.mjs scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/library-account.test.mjs scripts/schedule.test.mjs scripts/site-paths.test.mjs scripts/sanity-backup.test.mjs
+      - run: node --test scripts/motion.test.mjs scripts/release.test.mjs scripts/publish-live.test.mjs scripts/content-changes.test.mjs scripts/stale-saves.test.mjs scripts/images.test.mjs scripts/connections.test.mjs scripts/library-account.test.mjs scripts/schedule.test.mjs scripts/site-paths.test.mjs scripts/sanity-backup.test.mjs
       - run: python3 -m unittest discover -s scripts -p 'test_cms_artifacts.py'
       - if: steps.kind.outputs.kind == '' || steps.kind.outputs.kind == 'code'
         run: node scripts/analytics.test.mjs

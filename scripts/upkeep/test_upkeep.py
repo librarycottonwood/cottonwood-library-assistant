@@ -134,3 +134,23 @@ class RepairBoundaryTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ReconnectTests(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location('reconnect', Path(__file__).with_name('reconnect.py'))
+        self.reconnect = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.reconnect)
+    def auth(self, claims):
+        import base64, json
+        part = base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip('=')
+        return json.dumps({'auth_mode': 'chatgpt', 'tokens': {'id_token': 'h.' + part + '.s', 'refresh_token': 'x'}}).encode()
+    def test_only_the_library_account_is_recognised(self):
+        r = self.reconnect
+        self.assertEqual(r.account_email(self.auth({'email': 'LibraryCottonwood@gmail.com'})), r.LIBRARY_EMAIL)
+        self.assertEqual(r.account_email(self.auth({'https://api.openai.com/profile': {'email': 'someone@example.com'}})), 'someone@example.com')
+        self.assertIsNone(r.account_email(b'{"tokens":{}}'))
+    def test_device_code_is_read_from_colored_output(self):
+        out = 'Enter this one-time code \x1b[90m(expires in 15 minutes)\x1b[0m\n   \x1b[94mGQW2-93XTT\x1b[0m\n'
+        self.assertEqual(self.reconnect.find_code(out), 'GQW2-93XTT')
+        self.assertIsNone(self.reconnect.find_code('Welcome to Codex [v0.167.1]'))
