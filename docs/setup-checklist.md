@@ -20,7 +20,6 @@ Launch items:
 - [ ] **The assistant creating or changing Givebutter campaigns**: not wired up. The Givebutter connector in ChatGPT is read-only.
 - [x] **Spam protection for the newsletter form** (see section 6). Set up Oct 27; turns on when this PR goes live.
 - [x] **Pipeline fixes:** PR #52 and #53 merged Oct 28; Studio deployed, ChatGPT plugin updated to 0.2.15, and #45 switched to one file per save.
-- [x] **Name a board admin**: Todd Haines (toddhaines7@gmail.com), named Oct 30. In `docs/library-facts.md` and the ChatGPT plugin.
 - [x] **Google Analytics:** property renamed to "Cottonwood Community Library website" (Oct 27).
 - [x] **Launch day:** Google Analytics annotation added November 5; numbers before that day are test traffic.
 
@@ -30,7 +29,7 @@ Launch items:
 - [ ] **Ruleset on `maintenance-reports`**: block deletion and force-pushes (the workflow still writes to it).
 - [ ] Repo setting: **automatically delete head branches** after merge.
 
-## 2. Newsletter sign-up key (board admin, once)
+## 2. Newsletter sign-up key (once)
 
 The website's own newsletter form sends sign-ups to Givebutter with an API key. Until the key is added, the form shows "Sorry, sign-up isn't working right now" with a link to email the library.
 

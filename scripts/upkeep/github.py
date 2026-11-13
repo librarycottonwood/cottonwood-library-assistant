@@ -31,8 +31,6 @@ def allowed(path):
 mode = sys.argv[1] if __name__ == '__main__' else None
 if mode == 'prepare':
     event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
-    if event.get('repository', {}).get('private') is not True:
-        raise RuntimeError('Managed sign-in is restricted to the private library repository')
     main = api('/git/ref/heads/main')['object']['sha']
     failure = event.get('workflow_run')
     test_ref = event.get('inputs', {}).get('test_ref', '')
@@ -59,7 +57,9 @@ if mode == 'prepare':
     if not ready:
         sys.exit(0)
     # Restore only a vault produced by this exact worker on the trusted branch.
-    for a in artifacts:
+    # Ask for the vaults by name so other artifacts never push them off the page.
+    vaults = sorted(api('/actions/artifacts?name=library-codex-auth&per_page=100')['artifacts'], key=lambda a: a['created_at'], reverse=True)
+    for a in vaults:
         if a['name']!='library-codex-auth' or a['expired']:
             continue
         run = api('/actions/runs/'+str(a['workflow_run']['id']))

@@ -1,5 +1,5 @@
 import {isValidSignature, decodeSignatureHeader, SIGNATURE_HEADER_NAME} from '@sanity/webhook';
-import {readiness, parseEvent, operationIdPattern} from './contract.mjs';
+import {readiness, parseEvent, operationIdPattern, REPOSITORY} from './contract.mjs';
 import {authorized, limitedBody, readSession, signSession, sameSecret, cookie, setCookie, escape} from './security.mjs';
 export {CmsLedger} from './ledger.mjs';
 import {html, reviewResponse} from './review-page.mjs';
@@ -85,6 +85,20 @@ export default {
       if (url.pathname === '/monitor' && request.method === 'POST') {
         if (!(await authorized(request, env.CMS_STATUS_TOKEN))) return json({error: 'authorization_required'}, 401);
         return await ledger(env, '/monitor');
+      }
+      if (url.pathname === '/connections' && request.method === 'POST') {
+        // Lets the daily connection check see this Worker's own GitHub token
+        // and its expiry date without the token ever leaving the Worker.
+        if (!(await authorized(request, env.CMS_STATUS_TOKEN))) return json({error: 'authorization_required'}, 401);
+        let github = {ok: false, expiresOn: null};
+        try {
+          const response = await fetch(`https://api.github.com/repos/${REPOSITORY}`, {
+            headers: {Accept: 'application/vnd.github+json', Authorization: `Bearer ${env.GITHUB_DISPATCH_TOKEN}`, 'User-Agent': 'Cottonwood-Library-CMS', 'X-GitHub-Api-Version': '2022-11-28'},
+            signal: AbortSignal.timeout(5000), redirect: 'manual',
+          });
+          github = {ok: response.ok, status: response.status, expiresOn: response.headers.get('github-authentication-token-expiration')};
+        } catch { github = {ok: false, expiresOn: null}; }
+        return json({github});
       }
       if (url.pathname === '/reconcile' && request.method === 'POST') {
         if (!(await authorized(request, env.CMS_STATUS_TOKEN))) return json({error: 'authorization_required'}, 401);

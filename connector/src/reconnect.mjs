@@ -24,7 +24,7 @@ export async function handleReconnect(request,env,fetcher=fetch) {
   if(url.pathname==='/reconnect' && request.method==='GET') {
     const state=b64(crypto.getRandomValues(new Uint8Array(32)));
     await env.OAUTH_KV.put('google-recovery:'+state,JSON.stringify({phase:'begin'}),{expirationTtl:600});
-    return page('Reconnect with the library Google account. Google will ask permission to read visitor reports; this cannot change your website or report settings.',`<form method="post"><input type="hidden" name="state" value="${state}"><button>Reconnect with Google</button></form><p>Choose ${EMAIL}. If Google asks for phone approval, ask Donna once and wait. No passwords, codes or private files belong in your chat.</p>`,200,{'Set-Cookie':`${COOKIE}=${state}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=600`});
+    return page('Reconnect with the library Google account. Google will ask permission to read visitor reports; this cannot change your website or report settings.',`<form method="post"><input type="hidden" name="state" value="${state}"><button>Reconnect with Google</button></form><p>Choose ${EMAIL}. If Google asks you to confirm on a phone, use the phone set up for the library Google account. No passwords, codes or private files belong in your chat.</p>`,200,{'Set-Cookie':`${COOKIE}=${state}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=600`});
   }
   if(url.pathname==='/reconnect' && request.method==='POST') {
     if(request.headers.get('Origin')!==ORIGIN)return page('Please start reconnection from the library connection page.',null,403);

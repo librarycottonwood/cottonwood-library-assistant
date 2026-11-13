@@ -54,6 +54,7 @@ function fixture(overrides = {}) {
         return Response.json({access_token: 'fixture-identity-token-discard-after-use'});
       }
       if (url.href === 'https://api.github.com/user') return Response.json(external.identity);
+      if (url.href === 'https://api.github.com/repos/librarycottonwood/cottonwood-library-assistant') return Response.json({}, {headers: {'github-authentication-token-expiration': '2027-01-18 08:00:00 UTC'}});
       if (url.href === website + '/_review/status.json') return Response.json(external.hosted || {});
       throw new Error(`Unexpected local provider stub request: ${request.url}`);
   };
@@ -508,5 +509,14 @@ test('local runtime: trusted source callback records a verified merge without an
     assert.equal(result.status,'deployed_verified');
     assert.equal(f.external.dispatches.length,0,'no duplicate preview or save dispatch');
     assert.equal((await record({...pins,mergedSourceSha:'f'.repeat(40)})).status,409);
+  } finally {await f.mf.dispose();}
+});
+
+test('local runtime: connection check reports the GitHub token expiry only to the status credential', async () => {
+  const f = fixture();
+  try {
+    assert.equal((await f.request('/connections', {method: 'POST'})).status, 401);
+    const response = await f.request('/connections', {method: 'POST', headers: {Authorization: `Bearer ${secrets.CMS_STATUS_TOKEN}`}});
+    assert.deepEqual(await response.json(), {github: {ok: true, status: 200, expiresOn: '2027-01-18 08:00:00 UTC'}});
   } finally {await f.mf.dispose();}
 });

@@ -34,4 +34,4 @@ Use Buffer for posting. Don't suggest or install other social media tools or plu
 
 ## Setting up Buffer (one-time)
 
-If they ask how to connect: a board member signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.
+If they ask how to connect: the person in this chat signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.
