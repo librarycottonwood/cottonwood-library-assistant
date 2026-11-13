@@ -68,8 +68,9 @@ value, then remove this local copy. No token values are in source or this note.
 
 1. Prefer the new secure browser reconnect once its hosted readiness is verified.
    The administrator chooses only librarycottonwood@gmail.com and approves the
-   read-only Google connection when ready. If Google needs Donna, request phone
-   approval once and wait. Do not use the obsolete CLI/key-download setup as a
+   read-only Google connection when ready. If Google asks for phone
+   approval, it goes to the phone set up for the library Google account; the
+   assistant never asks a board member or volunteer to troubleshoot it. Do not use the obsolete CLI/key-download setup as a
    volunteer workflow. A successful fixed-property read must precede success.
 2. Complete GitHub email confirmation and generate the identity-app secret.
    Transfer it privately into Worker secret `GITHUB_CLIENT_SECRET`, without

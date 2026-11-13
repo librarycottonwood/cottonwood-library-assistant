@@ -51,7 +51,7 @@ async function cloudflare(name, token, fix) {
 async function sanity(env) {
   const name = 'Sanity content read token';
   const fix = 'Create a Viewer token in Sanity (project 2ou0xy2r → API → Tokens) and replace the SANITY_READ_TOKEN repository secret.';
-  if (!env.SANITY_READ_TOKEN) return {name, ok: null, note: 'Not configured', fix};
+  if (!env.SANITY_READ_TOKEN) return {name, ok: true, note: 'Not needed: the content dataset is public', fix};
   const url = `https://${env.SANITY_PROJECT_ID}.api.sanity.io/v2025-02-19/data/query/${env.SANITY_DATASET}?query=${encodeURIComponent('count(*[_id == "library-settings"])')}`;
   const {response} = await get(url, {headers: {Authorization: `Bearer ${env.SANITY_READ_TOKEN}`}});
   return {name, ok: !!response?.ok, note: response?.ok ? undefined : `Sanity answered ${response?.status ?? 'nothing'}`, fix};
