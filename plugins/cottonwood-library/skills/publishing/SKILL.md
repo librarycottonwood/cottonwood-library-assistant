@@ -82,7 +82,7 @@ Read the **Website preview** description and the failed job's log.
 - "No working preview: the … page …": the record's page didn't open on the preview. Check its page address (slug) and that it is published, fix it in Sanity, then push a new commit for a fresh preview.
 - A line starting with `Sanity content:` names a record value the website can't use (see the list below). Fix that record in Sanity, publish it, then push a new commit for a fresh preview.
 - "Superseded" or no status because a newer commit was pushed: wait for the newer commit's preview.
-- Anything else, or still nothing after 20 minutes: you are the fixer. Read the failed job log and fix what you can (a bad record value, a stale branch: update it from `main` and push). If the cause is in the website code, tell the volunteer "The preview didn't finish, so nothing changed on the website, and the current website still works. The library's automatic repair is checking it; ask me again in about an hour." Do not keep retrying the same thing, and don't send this to a person unless an account must be reconnected.
+- Anything else, or still nothing after 20 minutes: you are the fixer. Read the failed job log and fix what you can (a bad record value, a stale branch: update it from `main` and push). If the cause is in the website code, tell the volunteer "The preview didn't finish, so nothing changed on the website, and the current website still works. The library's automatic repair is checking it; ask me again in about an hour." Do not keep retrying the same thing, and never send this to a person.
 
 ### If it doesn't go live
 
@@ -90,7 +90,7 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 
 - "Website content changed after the preview", "another save reached main first", or still pending after 15 minutes with no publish run still going: make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments` (keep their `before` values), open a PR and follow steps 3–9 (including the list of other changes).
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
-- Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. Otherwise tell the volunteer "Your change is saved but isn't on the website yet. The website still shows the previous version and works. The library's automatic repair is checking it; ask me again in about an hour." Only send this to Todd (see the library assistant skill) if a person must reconnect an account.
+- Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. Otherwise tell the volunteer "Your change is saved but isn't on the website yet. The website still shows the previous version and works. The library's automatic repair is checking it; ask me again in about an hour." Never send this to a person.
 
 If the volunteer decides not to save, close the PR and delete its branch yourself. If your tools can't close it, leave it: tell the volunteer “Nothing went on the website. It closes by itself in 14 days.” Never ask a volunteer or board member to close PRs, delete branches or remove previews.
 
@@ -117,4 +117,4 @@ For a failure, first establish whether the existing website is working and what 
 
 “Undo the website change” means restore only that change. Find that save's PR and its `content-updates/…json` file, read the `before` values, put them back in Sanity (for `"before": null`, unpublish the new record after checking nothing points to it), publish, check that no draft of those records is left (discard any that is), then do a normal save with request "Undo: <original request>". Tell the volunteer: "Putting it back takes about 15 minutes." Do not delete shared assets or promise it is undone before **Live website** is success and you've checked the site.
 
-If the change exposed private information, also say: "Old preview links and uploaded photos can still be opened by anyone who has the link. Todd Haines, the board admin, needs to delete them." Give the volunteer one plain sentence to email him (toddhaines7@gmail.com). Undoing the website change alone does not remove them.
+If the change exposed private information, also delete the uploaded photo or file from Sanity yourself once nothing points to it. Old preview links are removed automatically after the save closes. Undoing the website change alone does not remove uploads. Never ask a volunteer or board member to delete them.

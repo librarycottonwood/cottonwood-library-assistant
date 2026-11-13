@@ -9,7 +9,7 @@ Read this before building or changing a page. `docs/design-rules.md` holds the r
 1. Wrap the page in `BaseLayout`. Build it only from the components below. Put `Split` and `Section` directly inside `BaseLayout`; use `Stack` and `Grid` inside them.
 2. Pages never set margin, padding, gap or inset. Components own their spacing. To change space between things, pass a `gap` prop: `xs`, `sm`, `md`, `lg` or `xl`.
 3. Spacing has five steps: `--space-xs`, `--space-sm`, `--space-md`, `--space-lg`, `--space-xl`. No raw px/rem/em, no clamp()/calc() sizes, no other spacing tokens.
-4. Use color, type, corner and border tokens by their role (see "Use for"). Don't invent new values; if something is missing, ask Jaden or a board admin.
+4. Use color, type, corner and border tokens by their role (see "Use for"). Don't invent new values; if something is missing, add it as a new token in the same change.
 5. If no component fits, add a small one in `src/components/site/` with a usage block (copy an existing one), then run `pnpm design:docs`. Keep it to what the page needs.
 6. Sanity (through `contentRepository`) holds only content that changes often: events, news, newsletters, notices, hours, fundraisers, site settings. Everything else (service details, prices, fees, About Us, ways to help, page photos) is written in the page file in Figma's wording; never add Sanity fields for it. See docs/design-rules.md.
 7. Pages have no `<style>`, `style=` or `class=` of their own, and no raw colors, sizes or spacing. If Figma needs something new, extend a component with a prop or variant (never copy one) or add a reusable one. A Figma value that isn't a token is snapped to the nearest token and listed in the PR.

@@ -2,7 +2,7 @@
 
 **Draft, November 5, 2026. The board should check every line before relying on it.** It lists only what this repository records. "Board to confirm" means the repository doesn't say. No passwords, keys or recovery codes belong here; keep those in the library's own password safe.
 
-Board admin for account, billing and permission questions: Todd Haines (toddhaines7@gmail.com). Library Google account: librarycottonwood@gmail.com. Library email: cottonlib@shasta.com.
+The board decides account, billing and permission questions together; no board member is a technical contact. Library Google account: librarycottonwood@gmail.com. Library email: cottonlib@shasta.com.
 
 | Service | What it's for | Login that owns it | Who has admin | Plan / billing |
 | --- | --- | --- | --- | --- |

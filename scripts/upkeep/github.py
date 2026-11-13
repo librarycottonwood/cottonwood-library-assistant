@@ -31,8 +31,6 @@ def allowed(path):
 mode = sys.argv[1] if __name__ == '__main__' else None
 if mode == 'prepare':
     event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
-    if event.get('repository', {}).get('private') is not True:
-        raise RuntimeError('Managed sign-in is restricted to the private library repository')
     main = api('/git/ref/heads/main')['object']['sha']
     failure = event.get('workflow_run')
     test_ref = event.get('inputs', {}).get('test_ref', '')

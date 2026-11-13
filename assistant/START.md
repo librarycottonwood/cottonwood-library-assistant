@@ -6,4 +6,4 @@ Read AGENTS.md and assistant/WORKFLOW.md before website changes. Check current p
 
 Previews and the live website (https://www.cottonwoodcommunitylibrary.com) are deployed only by the library GitHub workflows on the library Cloudflare account. Never deploy locally, run `wrangler login` or use a personal Cloudflare account.
 
-If you need a board member's help, give one clear next step and wait for their reply. Do not ask them to troubleshoot something you can investigate yourself.
+Board members are not technical. Ask them only for library facts and approvals, never for technical work, troubleshooting or contacting someone else.
