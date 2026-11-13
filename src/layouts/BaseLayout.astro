@@ -63,11 +63,11 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <title>{title}</title>
     <FoundationStyles />
     <script is:inline>
-      // Motion (src/scripts/motion.ts) only when the visitor allows it. If that script hasn't started within 3 seconds
-      // (blocked or failed), drop the flag so nothing stays hidden.
-      if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      // Prepare entrances before the first paint. If initialization misses this short window, reveal the content
+      // and leave entrances disabled, so a late script cannot hide an already visible page again.
+      if ('IntersectionObserver' in window && window.CSS && CSS.supports('selector(:has(*))') && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
         document.documentElement.classList.add('motion');
-        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 3000);
+        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 800);
       }
     </script>
   </head>

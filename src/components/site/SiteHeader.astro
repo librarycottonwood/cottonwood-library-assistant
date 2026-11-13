@@ -17,13 +17,23 @@ import type { HomeContent } from '../../content/types';
 interface Props { library: HomeContent['library']; }
 const { library } = Astro.props;
 const isCurrent = (href: string) => { const link = [...links, supportLink].find(item => item.href === href); return link ? isCurrentSection(link, Astro.url.pathname) : false; };
-// The hours summary in groups ("Monday–Wednesday 11 a.m.–5 p.m.", "Saturday 11 a.m.–2 p.m."), so phones can show one per line.
-const hoursParts = library.hoursSummary.split(/\s+·\s+/);
+// Keep the canonical CMS hours intact. Phones use two centered rows with short days and unchanged times.
+const openHours = library.hours.filter(row => !/^closed$/i.test(row.hours));
+const hoursParts = openHours.length ? openHours : [{ days: '', hours: library.hoursSummary }];
+const shortDays: Record<string, string> = { Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
+const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/g, day => shortDays[day]!);
 ---
 <div class="toolbar-tint" aria-hidden="true"></div>
-<!-- A landmark of its own, so screen-reader users who move by landmarks (or read only landmarks) still get the hours. -->
+<!-- Opening hours have their own landmark for screen-reader navigation. -->
 <aside class="hours-strip" aria-label="Opening hours">
-  <p><Icon name="clock" class="hours-icon" /><span data-nosnippet><span class="sr-only">Library hours: </span>{hoursParts.map((part, index) => <>{index > 0 && <span class="hours-dot"> · </span>}<span class="hours-part">{part}</span></>)}</span></p>
+  <p>
+    <Icon name="clock" class="hours-icon" />
+    <span class="sr-only" data-nosnippet>Library hours: {library.hoursSummary}</span>
+    <span class="hours-groups" aria-hidden="true" data-nosnippet>{hoursParts.map(part => <span class="hours-part">
+      {part.days && <><span class="hours-day"><span class="hours-full">{part.days}</span><span class="hours-short" aria-hidden="true">{compactDays(part.days)}</span></span>{' '}</>}
+      <span class:list={['hours-time', { 'hours-only': !part.days }]}>{part.hours}</span>
+    </span>)}</span>
+  </p>
 </aside>
 <header class="site-header">
   <a href="/" class="brand" aria-label="Cottonwood Community Library home">
@@ -106,18 +116,26 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
     display: flex; justify-content: center;
     padding: var(--space-xs) var(--page-inset);
     background: var(--color-primary); color: var(--color-surface);
-    font-family: var(--font-body); font-size: var(--fluid-label); font-weight: var(--weight-medium); line-height: var(--leading-tight);
+    font-family: var(--font-body); font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: var(--leading-relaxed);
     text-align: center;
   }
-  .hours-strip p { display: flex; align-items: center; gap: var(--space-xs); }
-  /* Phones: each group of days on its own line ("Monday–Wednesday …" / "Saturday …"), never split mid-group. */
-  .hours-part { white-space: nowrap; }
+  .hours-strip p { display: flex; align-items: center; gap: var(--space-xs); min-width: 0; }
+  .hours-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs) var(--space-sm); min-width: 0; }
+  /* Schedules stay separate; their text can reflow when enlarged or on very narrow screens. */
+  .hours-part { max-width: 100%; }
+  .hours-short { display: none; }
+  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: inherit; opacity: .8; }
   @media (max-width: 47.99rem) {
-    .hours-strip { line-height: var(--leading-snug); }
-    .hours-strip p > span { display: flex; flex-direction: column; }
-    .hours-dot { display: none; }
+    .hours-strip { line-height: var(--leading-relaxed); }
+    .hours-strip p { width: 100%; }
+    .hours-strip :global(.hours-icon) { display: none; }
+    .hours-groups { width: 100%; flex-direction: column; align-items: center; gap: 0; }
+    .hours-part { display: flex; flex: 0 0 auto; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 var(--space-xs); min-width: 0; }
+    .hours-day, .hours-time { overflow-wrap: anywhere; }
+    .hours-day { font-weight: var(--weight-semibold); }
+    .hours-full { display: none; }
+    .hours-short { display: inline; }
   }
-  .hours-strip :global(.hours-icon) { width: 1em; height: 1em; flex-shrink: 0; color: var(--color-icon-muted); }
 
   /* Above page content (z-index 1 inside cards), below the statistics panel (60), the skip link (100) and Givebutter's popup. */
   .site-header {
@@ -184,6 +202,7 @@ const hoursParts = library.hoursSummary.split(/\s+·\s+/);
   @media (scripting: none) { .menu-toggle { display: none; } }
 
   @media (min-width: 48rem) {
+    .hours-strip { font-size: var(--fluid-label); line-height: var(--leading-tight); }
     .hours-strip, .site-header { padding-block: var(--space-sm); }
     .site-header, .brand { gap: var(--space-sm); }
     .brand :global(.brand-logo) { width: clamp(3.5rem, 6.7vw, 8.0625rem); }

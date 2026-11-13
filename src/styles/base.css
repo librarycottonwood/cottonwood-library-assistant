@@ -82,12 +82,12 @@ html { scroll-padding-bottom: var(--space-md); }
 }
 #statistics-choice button:hover { background: var(--color-background); }
 
-/* Motion. Hover and press feedback is CSS (--motion-* tokens, in each component). Entrances run in
- * src/scripts/motion.ts (Motion); until it shows a block, rise/group blocks wait hidden here, but only when BaseLayout
- * set html.motion. The skipped element matches SKIP in motion.ts. */
+/* BaseLayout prepares entrances before paint only when motion is allowed, with a bounded loading fallback.
+ * Hold the start state until Motion finishes or recovers it; do not briefly paint the final state before starting. */
 @media screen and (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  html.motion :is([data-motion='rise'], [data-motion='group'] > :not(script, :has([data-motion]))):not([data-motion-done], givebutter-widget, :has(givebutter-widget)) { opacity: 0; }
+  html.motion :is([data-motion='rise'], [data-motion='group'] > :not(script, svg, [data-motion], :has([data-motion]))):not([data-motion-done], givebutter-widget, :has(givebutter-widget)) { opacity: 0; transform: translateY(24px); }
+  html.motion [data-motion='settle']:not([data-motion-done]) { transform: scale(1.05); }
 }
 
 @media (prefers-reduced-motion: reduce) {

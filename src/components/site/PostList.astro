@@ -17,10 +17,12 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Load the first two photos immediately (default). Turn off for a list far down the homepage. */
+  eager?: boolean;
   /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
   headingLevel?: 2 | 3;
 }
-const { posts, initial = 4, headingLevel = 3 } = Astro.props;
+const { posts, initial = 4, headingLevel = 3, eager = true } = Astro.props;
 // Posts with no photo get a library photo picked by id (so it stays the same between builds), never the
 // same one as the post above it.
 const libraryPhotos: LibraryImage[] = ['readingNook', 'newReads', 'entrance', 'books'].map(name => ({ key: name, alt: '' }));
@@ -38,7 +40,7 @@ const rows = newestPosts(posts).map(post => {
 <div class="post-list" data-post-list data-initial={initial}>
   <ul>
     {rows.map(({ post, image, date }, index) => <li data-post-row>
-      <Image width={600} quality={70} image={image} alt="" widths={[400, 600]} sizes="(max-width: 47.99rem) 100vw, 30vw" loading={index < 2 ? 'eager' : 'lazy'} class:list={['post-photo', image.fit === 'contain' && 'is-contained']} />
+      <Image width={600} quality={70} image={image} alt="" widths={[400, 600]} sizes="(max-width: 47.99rem) 100vw, 30vw" loading={eager && index < 2 ? 'eager' : 'lazy'} class:list={['post-photo', image.fit === 'contain' && 'is-contained']} />
       <div class="post-text">
         <div class="post-heading">
           {date && <Text tone="muted"><time datetime={post.publishedAt ?? undefined}>{date}</time></Text>}

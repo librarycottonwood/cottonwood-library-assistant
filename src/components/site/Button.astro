@@ -42,7 +42,9 @@ const Tag = href ? 'a' : 'button';
     font: inherit; font-weight: var(--weight-bold); line-height: var(--leading-relaxed);
     /* Labels stay on one line unless the screen is too narrow (large text on small phones). */
     max-width: 100%; text-align: center; text-decoration-line: none; cursor: pointer;
-    transition-property: background-color, border-color, color, transform;
+    /* Entrance motion owns transform. Press feedback uses the independent scale property so Motion's
+       finished-style cleanup cannot start a second CSS translate transition in WebKit. */
+    transition-property: background-color, border-color, color, scale;
     transition-duration: var(--motion-quick); transition-timing-function: var(--ease-out);
   }
   /* Figma's button icons are slightly larger than the text and drawn bold; match that so bold labels don't outweigh them. */
@@ -55,7 +57,7 @@ const Tag = href ? 'a' : 'button';
   .button-primary:hover { background: var(--color-primary-ink); border-color: var(--color-primary-ink); }
   /* Micro-interactions: the button presses in, an end arrow nudges the way it points, and Donate's heart beats once. */
   .button :global(svg) { transition: transform var(--motion-quick) var(--ease-out); }
-  .button:active { transform: scale(0.97); }
+  .button:active { scale: 0.97; }
   @media (hover: hover) {
     .button:hover :global(.icon-arrow) { transform: translateX(0.2em); }
     .button:hover :global(.icon-external) { transform: translate(0.15em, -0.15em); }

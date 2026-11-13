@@ -1,0 +1,23 @@
+# Handwriting and leaf accents
+
+The chosen homepage treatment uses Caveat for the final word. The temporary picker and rejected highlighter treatments have been removed.
+
+## Type
+
+[Caveat](https://fonts.google.com/specimen/Caveat), Copyright 2014 The Caveat Project Authors, comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/caveat). The locally hosted variable WOFF2 is subset to Latin and punctuation; its SIL Open Font License is retained in `src/assets/fonts/Caveat-OFL.txt`.
+
+`Handwritten` owns the font, indigo color and three restrained variants: the selected hero treatment, a slightly smaller heading accent, and a short thank-you sign-off. `AccentHeading` preserves the complete incoming text and accents only an explicitly named phrase. An absent phrase leaves the heading plain.
+
+Current public uses are the homepage hero, “time” in the Support Us volunteer invitation, and the About page’s thank-you. Each page has just one handwritten moment. The homepage’s “Powered by Community” remains plain so adjacent sections do not repeat the treatment. Usage limits are in `docs/design-rules.md`.
+
+## Leaves
+
+Original SVG geometry in `src/assets/decorations/leaves-{sprig,pair,branch}.svg` uses the existing indigo, green and pale-indigo tokens. Each variant is decorative and excluded from the accessible heading text.
+
+| Variant | Placement |
+| --- | --- |
+| Upright sprig | Above About Us, “A place of our own”; above Events & News, “Regular Events” |
+| Flower with paired leaves | Support Us, “Thank you to our supporters” |
+| Horizontal branch | Volunteer page, “Other ways to help”; Explore Services, “Frequently Asked Questions” |
+
+`LeafAccent` sizes these continuously with the viewport. `Section` keeps each leaf and its plain heading together in the existing entrance group. Leaves are separate from handwriting and crayon scenes.

@@ -1,7 +1,7 @@
 ---
 /**
  * @component Split
- * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+ * A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
  * @use The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
  * @avoid Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
  * @example
@@ -18,12 +18,16 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
+  /** Center an illustrated invitation's copy and actions on phones; desktop alignment stays unchanged. */
+  mobileAlign?: 'start' | 'center';
   /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
   ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
   /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
   panel?: boolean;
   /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
   inset?: boolean;
+  /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
+  crayon?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -35,7 +39,7 @@ interface Props {
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { image: originalImage, media = 'end', ratio: ratioProp, panel = false, inset = false, headingId, first = false, mediaId, ...attributes } = Astro.props;
+const { image: originalImage, media = 'end', mobileAlign = 'start', ratio: ratioProp, panel = false, inset = false, crayon = true, headingId, first = false, mediaId, ...attributes } = Astro.props;
 const image = refreshPhoto(originalImage);
 const ratio = ratioProp ?? (inset ? '5 / 4' : panel ? '16 / 9' : '1314 / 652');
 const hasCaption = Astro.slots.has('caption');
@@ -47,7 +51,7 @@ const bleed = ratio === '1314 / 652' && !panel && !inset;
 // photos do on hover), so the corners never change shape while it moves.
 const framed = first && bleed && media === 'end';
 ---
-<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed }]} {...attributes}>
+<section aria-labelledby={headingId} class:list={['split', `media-${media}`, { first, panel, inset, bleed, crayon, 'mobile-center': mobileAlign === 'center' }]} {...attributes}>
   <div class="split-copy" data-motion="group"><slot />{hasCaption && <p class="split-caption-inline" set:html={caption} />}</div>
   <div id={mediaId} tabindex={mediaId ? -1 : undefined} data-motion={first ? undefined : 'rise'} class:list={['split-media', { 'has-caption': hasCaption }]}>
     {framed
@@ -69,8 +73,10 @@ const framed = first && bleed && media === 'end';
     width: 100%; object-fit: cover; aspect-ratio: var(--split-ratio);
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
+  .crayon .split-media :global(.split-image) { box-shadow: var(--shadow-photo); }
+  .crayon.media-end .split-media :global(.split-image) { box-shadow: var(--shadow-photo-reverse); }
   /* Phones and tablets: the bleed photo still runs off its page edge (the site's signature look), and is 3:2 so the
-     building or room reads and the address pill doesn't cover half of it. */
+     building or room retains enough detail. */
   @media (max-width: 63.99rem) {
     .bleed .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
     /* Cropped from the side that stays on the page, as on desktop, so the inner edge (a sign, a doorway) stays in view. */
@@ -82,7 +88,7 @@ const framed = first && bleed && media === 'end';
     .bleed.media-start .split-media :global(.split-image) { border-left: 0; border-radius: 0 var(--radius-image) var(--radius-image) 0; }
   }
   /* Phones and tablets: the address and phone sit under the text, not over the photo (see `caption` above). */
-  .split-caption-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-md); color: var(--color-primary-ink); font-size: var(--fluid-label); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+  .split-caption-inline { display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 100%; color: var(--color-primary-ink); font-size: var(--text-utility); font-weight: var(--weight-medium); line-height: 1.4; }
   @media (max-width: 63.99rem) {
     .split .split-caption { display: none; }
     .has-caption { padding-block-end: 0; }
@@ -111,6 +117,16 @@ const framed = first && bleed && media === 'end';
   /* Inset: photo and text stay inside the content width; the photo keeps all four corners. */
   .inset { max-width: var(--width-content); margin-inline: auto; box-sizing: content-box; padding-inline: var(--page-inset); }
   .inset .split-copy, .inset .split-media { padding-inline: 0; }
+
+  @media (max-width: 47.99rem) {
+    .mobile-center .split-copy { align-items: center; text-align: center; }
+    .mobile-center .split-copy > :global(*) { max-width: 100%; }
+    .mobile-center .split-copy > :global(.stack) { align-self: stretch; align-items: center; justify-content: center; }
+    .mobile-center .split-copy :global(.heading) { max-width: 100%; }
+    .mobile-center .split-copy :global(.illustration) { align-self: center; }
+    .split:not(.inset) .split-media :global(.split-image) { aspect-ratio: 3 / 2; }
+    .has-caption { padding-block-end: 0; }
+  }
 
   @media (min-width: 48rem) {
     .first { padding-block-start: var(--space-md); }
@@ -161,4 +177,7 @@ const framed = first && bleed && media === 'end';
    * square-cornered and borderless (it is the same shape at every width: bleed, photo on the right). */
   .split-frame { overflow: hidden; border: var(--border-thin) solid var(--border-image); border-right: 0; border-radius: var(--radius-image) 0 0 var(--radius-image); }
   .first.bleed .split-media .split-frame :global(.split-image) { display: block; border: 0; border-radius: 0; }
+  /* The frame owns the accent as well as the clipping, so the settling image cannot crop its offset edge. */
+  .crayon .split-frame { box-shadow: var(--shadow-photo-reverse); }
+  .first.crayon.bleed .split-media .split-frame :global(.split-image) { box-shadow: none; }
 </style>

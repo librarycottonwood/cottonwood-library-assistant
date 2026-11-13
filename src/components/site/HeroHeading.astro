@@ -1,0 +1,24 @@
+---
+/**
+ * @component HeroHeading
+ * The complete homepage heading, with its final word in the chosen handwritten style.
+ * @use Once in the opening homepage Split, preserving both complete CMS heading lines.
+ * @avoid Adding a leaf or underline here, or animating the handwritten word separately from the copy.
+ * @example
+ * <HeroHeading lines={hero.heading} id="welcome-heading" />
+ */
+import Heading from './Heading.astro';
+import Handwritten from './Handwritten.astro';
+import handwriting from '../../assets/fonts/caveat-latin-variable.woff2?url';
+interface Props { lines: readonly string[]; id: string; }
+const { lines, id } = Astro.props;
+const secondLine = lines[1] ?? '';
+const words = secondLine.match(/^(.*?)(\S+)\s*$/u);
+const prefix = words?.[1] ?? '';
+const lastWord = words?.[2] ?? secondLine;
+---
+<link rel="preload" href={handwriting} as="font" type="font/woff2" crossorigin="anonymous" />
+<Heading level={1} size="display" id={id}>{lines[0]}<br /><span class="hero-line">{prefix}<Handwritten variant="hero">{lastWord}</Handwritten></span></Heading>
+<style>
+  .hero-line { display: inline-block; position: relative; max-width: 100%; line-height: 1.16; }
+</style>

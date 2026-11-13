@@ -27,6 +27,10 @@ const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptS
   {campaign.endsOn && <Text tone="muted">Ends <time datetime={campaign.endsOn}>{formatDay(campaign.endsOn)}</time></Text>}
 </div>
 {script && <script is:inline async src={script}></script>}
+<script>
+  import { stabilizeFundraiserFrames } from '../../scripts/fundraiser-layout';
+  stabilizeFundraiserFrames();
+</script>
 <script is:inline>
   // Givebutter titles its form's frame "givebutter-iframe", which is what screen readers announce. Once the form has
   // loaded (inside Givebutter's open shadow roots), give the frame a real name. Gives up after 20 seconds.
@@ -49,8 +53,9 @@ const script = await sitewideGivebutterAccount() ? undefined : givebutterScriptS
 <style>
   .fundraiser-form { display: flex; flex-direction: column; gap: var(--space-sm); width: 100%; scroll-margin-block-start: var(--space-xl); }
   /* The fallback link sits in the same spot as the form, so nothing moves when the form replaces it. */
-  .fundraiser-slot { display: grid; container-type: inline-size; }
+  .fundraiser-slot { display: grid; position: relative; container-type: inline-size; }
   .fundraiser-slot > * { grid-area: 1 / 1; align-self: start; }
+  .fundraiser-slot[data-embed-sizing] > givebutter-widget { position: absolute; inset-block-start: 0; inset-inline-start: 0; }
   givebutter-widget { display: block; width: 100%; }
   .fundraiser-slot:has(givebutter-widget:defined) .fundraiser-fallback { display: none; }
   /* Room for Givebutter's form before it loads, so the page doesn't jump down as it appears. These are the

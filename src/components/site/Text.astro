@@ -15,12 +15,15 @@ interface Props {
   as?: 'p' | 'span' | 'div';
   /** Italic, for a side note such as "Late fees: 10¢/day, up to the replacement cost." */
   note?: boolean;
+  /** Even line lengths for a short introduction, avoiding a single trailing word. */
+  balance?: boolean;
 }
-const { tone = 'default', size = 'body', as: Tag = 'p', note = false } = Astro.props;
+const { tone = 'default', size = 'body', as: Tag = 'p', note = false, balance = false } = Astro.props;
 ---
-<Tag class:list={['text', `text-${size}`, { muted: tone === 'muted', note }]}><slot /></Tag>
+<Tag class:list={['text', `text-${size}`, { muted: tone === 'muted', note, balanced: balance }]}><slot /></Tag>
 <style>
-  .text { margin: 0; }
+  .text { margin: 0; text-wrap: pretty; }
+  .balanced { text-wrap: balance; }
   .text-label { font-size: var(--fluid-label); }
   .text-lead { font-size: var(--fluid-lead); }
   .muted { color: var(--color-text-muted); }

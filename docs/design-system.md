@@ -27,7 +27,7 @@ Use the role names below. Do not add new colors or shades.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--color-primary` | `#4956a7` | Primary actions (Donate) and the opening-hours strip. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
+| `--color-primary` | `#4956a7` | Primary actions (Donate), the opening-hours strip and active accents. | Body text or large backgrounds behind long text. | `background: var(--color-primary);` |
 | `--color-primary-ink` | `#1b2040` | Outlined buttons, their labels and borders, badge labels and contact details. | Page background or headings (use --color-text). | `border-color: var(--color-primary-ink);` |
 | `--color-primary-soft` | `#e3e7ff` | Panels beside a photo: opening hours, a program or event summary (Split panel). | Buttons, text, or the page background (use --color-background). | `background: var(--color-primary-soft);` |
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
@@ -41,11 +41,12 @@ Use the role names below. Do not add new colors or shades.
 
 ### Fonts
 
-Two self-hosted families. Headings use Bree Serif; everything else uses Mona Sans.
+Bree Serif headings and Mona Sans body copy, with self-hosted Caveat reserved for a few warm words and thank-you notes.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--font-display` | `'Bree Serif', Georgia, serif` (Regular · 400) | Page titles and section headings. | Body copy, buttons, labels or card titles. | `<Heading size="display">` |
+| `--font-handwritten` | `'Caveat', 'Segoe Print', cursive` (Variable · 650) | One warm word in selected headings, or a short thank-you sign-off, through Handwritten. | Navigation, buttons, forms, dates, prices, hours, paragraphs, or every heading. | `<Handwritten>Community</Handwritten>` |
 | `--font-body` | `'Mona Sans Variable', 'Mona Sans', sans-serif` (Medium 500 / Semibold 600 / Bold 700) | Body copy, navigation, links, buttons, dates and labels. | Page and section headings (use --font-display). | `font-family: var(--font-body);` |
 | `--weight-regular` | `400` | Bree Serif headings. | Mona Sans text; it is lighter than the design. | `font-weight: var(--weight-regular);` |
 | `--weight-medium` | `500` | Body text and opening hours. | Buttons and card titles (use bold). | `font-weight: var(--weight-medium);` |
@@ -54,11 +55,13 @@ Two self-hosted families. Headings use Bree Serif; everything else uses Mona San
 
 ### Type sizes
 
-Desktop sizes from the 1920px design. base.css scales them down on phones (--fluid-*); Heading and Text pick the right one.
+Body and heading sizes come from the 1920px design and scale down on phones (--fluid-*); Heading and Text pick the right one. Utility is the compact header label size.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
-| `--text-label` | `1.25rem` (20px) | Badges, dates, notices and opening hours. | Paragraphs people need to read. | `<Text size="label">` |
+| `--text-utility` | `0.9375rem` (15px) | The compact opening-hours strip and short utility labels. | Body copy and main navigation. | `font-size: var(--text-utility);` |
+| `--text-contact-detail` | `0.875rem` (14px) | Supporting address and phone values inside the compact mobile contact tiles. | Main copy, form labels, headings, hours or buttons. | `font-size: var(--text-contact-detail);` |
+| `--text-label` | `1.25rem` (20px) | Badges, dates and notices. | Paragraphs people need to read. | `<Text size="label">` |
 | `--text-body` | `1.5rem` (24px) | Body copy, card titles, navigation and buttons. | Headings. | `<Text>` |
 | `--text-lead` | `1.875rem` (30px) | A short introduction under a heading, and the wordmark. | More than two sentences. | `<Text size="lead">` |
 | `--text-heading` | `3.125rem` (50px) | Section headings (h2). | Card titles (use <Heading size="title">). | `<Heading size="heading">` |
@@ -96,11 +99,12 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 
 ### Corners
 
-Three shapes only.
+Square edges, compact contact tiles, soft photo corners, and action pills each have a distinct role.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
 | `--radius-none` | `0px` | Sections, strips and edges where a photo bleeds off the page. | Photos inside the page (use --radius-image). | `border-radius: var(--radius-none);` |
+| `--radius-contact` | `1rem` (16px) | The two small mobile Directions and Call tiles below the hero photo. | Photos, buttons, large panels or full-width capsules. | `border-radius: var(--radius-contact);` |
 | `--radius-image` | `2.1875rem` (35px) | Photos, image containers and floating panels. | Buttons and badges (use --radius-pill). | `border-radius: var(--radius-image);` |
 | `--radius-pill` | `6.25rem` (100px) | Buttons, badges and contact strips. | Photos or large panels. | `<Button> / <Badge>` |
 
@@ -114,6 +118,15 @@ Use with a solid style and a color token. The underline tokens set how thick lin
 | `--border-strong` | `2px` | Filled buttons, so they match outlined ones in size. | Decorative frames. | `border: var(--border-strong) solid var(--color-primary);` |
 | `--underline-thickness` | `0.12em` (about 3px on body text) | Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it). | Borders, dividers or focus outlines (use --border-thin / base.css). | `text-decoration-thickness: var(--underline-thickness);` |
 | `--underline-offset` | `0.25em` | Space between a link’s text and its underline, so the thicker line clears letters like g and y. | Spacing between elements (use the spacing steps). | `text-underline-offset: var(--underline-offset);` |
+
+### Photo edges
+
+A small color inset shared by photo frames. Keep logos, printed pages and contained artwork plain. Reverse the offset on photos that bleed off the right page edge.
+
+| Token | Value | Use for | Don't use for | Example |
+| --- | --- | --- | --- | --- |
+| `--shadow-photo` | `.25rem .375rem 0 var(--color-primary-soft)` | Split photos, photo cards and gallery frames. | Logos, printed pages, text and controls. | `box-shadow: var(--shadow-photo);` |
+| `--shadow-photo-reverse` | `-.25rem .375rem 0 var(--color-accent)` | Right-bleeding photos including the hero, and alternating photo cards. | Logos, printed pages, text and controls. | `box-shadow: var(--shadow-photo-reverse);` |
 
 ### Motion
 
@@ -133,6 +146,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | Component | Purpose |
 | --- | --- |
 | [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
+| [AccentHeading](#accentheading) | A complete heading with one explicitly chosen word or short phrase in handwriting. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
@@ -142,15 +156,21 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
+| [Handwritten](#handwritten) | A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
+| [HeroContacts](#herocontacts) | Directions and phone links, shown as two plain rows after the hero actions on phones and tablets. |
+| [HeroHeading](#heroheading) | The complete homepage heading, with its final word in the chosen handwritten style. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [IllustratedCallout](#illustratedcallout) | An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones. |
+| [LeafAccent](#leafaccent) | A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch. |
+| [LibraryIllustration](#libraryillustration) | Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
-| [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
+| [PageTitle](#pagetitle) | The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
-| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
+| [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
@@ -184,6 +204,27 @@ interface Props {
 <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
   <Section title="Visit us" headingId="visit-heading">…</Section>
 </BaseLayout>
+```
+
+### AccentHeading
+
+`src/components/site/AccentHeading.astro` — A complete heading with one explicitly chosen word or short phrase in handwriting.
+
+- **Use for:** Warm community and volunteer invitations; text is the complete existing wording and phrase is an exact, deliberate selection.
+- **Don't use for:** Automatically styling the last word of every heading, or rewriting CMS text to fit the accent. An absent phrase leaves the heading plain.
+
+```ts
+interface Props {
+  text: string;
+  phrase: string;
+  id?: string;
+  level?: 1 | 2 | 3;
+  size?: 'display' | 'heading' | 'title';
+}
+```
+
+```astro
+<AccentHeading id="volunteer-heading" text={volunteer.title} phrase="time" />
 ```
 
 ### Badge
@@ -261,13 +302,15 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
-  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  /** photo (default): a 3:2 photo on mobile, fixed height on desktop. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
   /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
-  /** Heading level of the title. 3 (default) under a Section heading; 2 when the cards sit right under the page title with no section heading between (headings never skip a level). */
+  /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
+  crayon?: boolean;
+  /** Heading level of the title: 2 directly below a page title, or 3 under a section heading. */
   level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
@@ -408,6 +451,21 @@ interface Props {
 </Grid>
 ```
 
+### Handwritten
+
+`src/components/site/Handwritten.astro` — A short, indigo Caveat accent that remains real, selectable text and enters with its surrounding copy.
+
+- **Use for:** One warm word in a selected heading, or a short thank-you sign-off. Prefer AccentHeading for complete CMS headings.
+- **Don't use for:** Navigation, buttons, forms, dates, prices, hours, paragraphs, and combining it with a leaf on the same heading.
+
+```ts
+interface Props { variant?: 'heading' | 'hero' | 'signature'; }
+```
+
+```astro
+<Heading>Give your <Handwritten>time</Handwritten></Heading>
+```
+
 ### Heading
 
 `src/components/site/Heading.astro` — Page and section headings in Bree Serif, plus bold card-style titles.
@@ -428,6 +486,36 @@ interface Props {
 
 ```astro
 <Heading level={1} size="display" id="welcome-heading">Your community.<br />Your library.</Heading>
+```
+
+### HeroContacts
+
+`src/components/site/HeroContacts.astro` — Directions and phone links, shown as two plain rows after the hero actions on phones and tablets.
+
+- **Use for:** Once in the homepage Split caption, with the complete current address, phone and original destinations.
+- **Don't use for:** Other page actions, shortening contact values, or replacing the hero's main heading with contact details.
+
+```ts
+interface Props { address: string; directionsHref: string; phone: string; phoneHref: string; }
+```
+
+```astro
+<HeroContacts slot="caption" address={`${library.address}, Cottonwood`} directionsHref={library.directionsUrl} phone={library.phone} phoneHref={library.phoneHref} />
+```
+
+### HeroHeading
+
+`src/components/site/HeroHeading.astro` — The complete homepage heading, with its final word in the chosen handwritten style.
+
+- **Use for:** Once in the opening homepage Split, preserving both complete CMS heading lines.
+- **Don't use for:** Adding a leaf or underline here, or animating the handwritten word separately from the copy.
+
+```ts
+interface Props { lines: readonly string[]; id: string; }
+```
+
+```astro
+<HeroHeading lines={hero.heading} id="welcome-heading" />
 ```
 
 ### IconLink
@@ -451,6 +539,59 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
 ```
 
+### IllustratedCallout
+
+`src/components/site/IllustratedCallout.astro` — An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones.
+
+- **Use for:** Inside a Section for the volunteer invitation, where a generic room photo does not explain the activity.
+- **Don't use for:** Cropping illustrations into photo frames, adding redundant artwork above the copy, or centering paragraphs.
+
+```ts
+interface Props { image: LibraryImage; }
+```
+
+```astro
+<IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
+  <Heading>Give your time</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
+</IllustratedCallout>
+```
+
+### LeafAccent
+
+`src/components/site/LeafAccent.astro` — A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
+
+- **Use for:** A centered botanical above a plain history or gratitude heading. Section keeps it in the heading group: branch for the library story, flower for supporter thanks.
+- **Don't use for:** Practical headings such as FAQs, event listings and related links; the homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
+
+```ts
+interface Props { variant?: 'sprig' | 'pair' | 'branch'; }
+```
+
+```astro
+<Section title="A place of our own" leaf="branch" headingId="place-heading" />
+```
+
+### LibraryIllustration
+
+`src/components/site/LibraryIllustration.astro` — Transparent crayon scenes with enough presence to anchor a heading, using the library's indigo and green palette.
+
+- **Use for:** Above a related heading: community for support, reading for events, computers for services, books for newsletters, volunteers for the invitation to help.
+- **Don't use for:** Replacing real library photos, overlapping text or controls, or repeating a scene in the same section.
+
+```ts
+interface Props {
+  scene: 'reading' | 'computers' | 'books' | 'community' | 'volunteers';
+  /** Follow the left edge of a text column, or center above a section heading (default). */
+  align?: 'start' | 'center';
+  /** Smaller artwork in a supporting text column. */
+  size?: 'standard' | 'small';
+}
+```
+
+```astro
+<LibraryIllustration scene="reading" />
+```
+
 ### MapCard
 
 `src/components/site/MapCard.astro` — The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead.
@@ -468,7 +609,7 @@ interface Props { library: HomeContent['library']; }
 
 ### PageTitle
 
-`src/components/site/PageTitle.astro` — The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
+`src/components/site/PageTitle.astro` — The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones.
 
 - **Use for:** The first block of every page except the homepage. Put it directly inside BaseLayout, before the first Split or Section. Give `trail` only on pages under a top-level page (a service, an event, a news post).
 - **Don't use for:** The homepage (its h1 is in the hero), section headings (use Section's title), or more than one per page.
@@ -477,6 +618,8 @@ interface Props { library: HomeContent['library']; }
 interface Props {
   /** The page title (the page's one h1). */
   title: string;
+  /** Topic artwork for a main index page. Leave article, event-detail and legal titles plain. */
+  illustration?: 'reading' | 'computers' | 'books' | 'community';
   /** Pages above this one, after Home. Leave out on top-level pages: the header shows where you are. */
   trail?: NavLink[];
   /** id for the h1. */
@@ -502,6 +645,8 @@ interface Props {
   posts: LibraryPost[];
   /** How many show before "Load more news". */
   initial?: number;
+  /** Load the first two photos immediately (default). Turn off for a list far down the homepage. */
+  eager?: boolean;
   /** Heading level of each post title: 3 (default) under a Section heading, 2 when the list sits right under the page title. */
   headingLevel?: 2 | 3;
 }
@@ -545,6 +690,10 @@ interface Props {
 interface Props {
   /** Section heading (h2). Leave out and put your own Heading in the slot if you need markup inside it. */
   title?: string;
+  /** A centered crayon scene above the heading, kept in the layout so it cannot cover content. */
+  illustration?: 'reading' | 'computers' | 'books' | 'community';
+  /** Centered botanical above a history or gratitude heading, at most once per page. Practical listings stay plain. */
+  leaf?: 'sprig' | 'pair' | 'branch';
   /** id for the heading; the section is labelled by it. */
   headingId?: string;
   /** center: heading and items centered (default). start: left-aligned. */
@@ -573,13 +722,17 @@ interface Props {
 - **Use for:** The end of a long text such as the About Us story, inside the same Section as the Prose, before its Donate button.
 - **Don't use for:** Page headers or footers (they have their own logo), or more than one per page.
 
+```ts
+interface Props { handwritten?: boolean; }
+```
+
 ```astro
 <Signature>Thank you for your support!</Signature>
 ```
 
 ### Split
 
-`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
+`src/components/site/Split.astro` — A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. Phone contact captions form two plain link rows after the hero actions; desktop retains the compact photo overlay. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services).
 
 - **Use for:** The opening hero, a featured event, a call to give or volunteer, opening hours beside a photo (panel), one service described beside its photo (inset). At most one in a row, alternating media="end"/"start".
 - **Don't use for:** Several similar items (use Grid + Card), or photos that must not be cropped: every photo fills its frame, posters too (use Gallery to show a whole picture).
@@ -589,12 +742,16 @@ interface Props {
   image: LibraryImage;
   /** Which side the photo is on from desktop width up. */
   media?: 'start' | 'end';
+  /** Center an illustrated invitation's copy and actions on phones; desktop alignment stays unchanged. */
+  mobileAlign?: 'start' | 'center';
   /** Photo aspect ratio. With `panel` the photo also grows to the panel's height. */
   ratio?: '1314 / 652' | '16 / 9' | '5 / 4';
   /** Text on a pale-indigo panel (--color-primary-soft) that runs off the page edge opposite the photo. */
   panel?: boolean;
   /** Keep photo and text inside the content width (1520px); the photo is rounded on every corner. */
   inset?: boolean;
+  /** Soft offset photo edges, including the framed hero. Disable for an intentionally plain block. */
+  crayon?: boolean;
   /** id of the heading inside, which labels the section. */
   headingId?: string;
   /** The first block on the page: less space above, and the photo loads immediately. */
@@ -660,6 +817,8 @@ interface Props {
   as?: 'p' | 'span' | 'div';
   /** Italic, for a side note such as "Late fees: 10¢/day, up to the replacement cost." */
   note?: boolean;
+  /** Even line lengths for a short introduction, avoiding a single trailing word. */
+  balance?: boolean;
 }
 ```
 
@@ -716,6 +875,7 @@ interface Props {
 Pages never place these; they are listed so you know they exist.
 
 - **NewsletterForm** (`src/components/site/NewsletterForm.astro`): The library's own newsletter sign-up form, as in Figma: an email field with a Sign up button beside it. It posts to /api/newsletter, which adds the person to the library's Givebutter mailing list; it works with or without JavaScript and offers an email link if sign-up fails. Don't: A second sign-up form on the same page (the result messages use fixed ids), or Givebutter's signup widget.
+- **NewsletterNote** (`src/components/site/NewsletterNote.astro`): A folded-paper newsletter signup with the book-carrying child peeking over its top edge. Don't: Additional forms, decoration behind text, or clipping the form's focus outlines and result messages.
 - **SiteFooter** (`src/components/site/SiteFooter.astro`): Newsletter sign-up, then the footer with links, contact details, social icons and the Privacy links. Don't: Adding another newsletter form or contact block to a page.
 - **SiteHeader** (`src/components/site/SiteHeader.astro`): Opening-hours strip, then the header bar (logo, main navigation, Donate button, phone menu), which sticks to the top while the strip scrolls away. Don't: Adding a second header or navigation to a page.
 - **SiteNotices** (`src/components/site/SiteNotices.astro`): Green bar of current notices (closures, schedule changes) above the header, from the Sanity notice records. Don't: Hard-coding announcements into a page.

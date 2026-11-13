@@ -58,7 +58,11 @@ const returnPath = Astro.url.pathname;
   }
   .newsletter-row input::placeholder { color: var(--color-text-muted); opacity: 1; }
   .newsletter-row input:focus-visible { border-color: var(--color-primary); }
-  /* Very narrow: field above, button full width below. */
+  /* Phones: give the email field and submit button their own full-width rows. */
+  @media (max-width: 47.99rem) {
+    .newsletter-row { flex-direction: column; }
+  }
+  /* Also stack forms placed in a narrow column on a larger screen. */
   @container (max-width: 17rem) {
     .newsletter-row { flex-direction: column; }
   }
