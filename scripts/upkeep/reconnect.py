@@ -38,19 +38,27 @@ def find_code(text):
     return match.group(1) if match else None
 
 
-def comment(body):
-    issue = os.environ.get('ISSUE_NUMBER')
-    if not issue:
-        return
-    url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/{issue}/comments"
-    req = urllib.request.Request(url, method='POST', data=json.dumps({'body': body}).encode(), headers={
+def github(path, body):
+    url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}{path}"
+    req = urllib.request.Request(url, method='POST', data=json.dumps(body).encode(), headers={
         'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json'})
-    urllib.request.urlopen(req).read()
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read() or b'null')
 
 
-def summary(text):
-    with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
-        f.write(text + '\n')
+def issue_number():
+    """The issue that carries the code: the one that started this run, or a new one."""
+    if not os.environ.get('ISSUE_NUMBER'):
+        created = github('/issues', {'title': 'Reconnect automatic repairs',
+                                     'body': 'Started by a manual run. The code appears below.'})
+        os.environ['ISSUE_NUMBER'] = str(created['number'])
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            f.write(f"issue={created['number']}\n")
+    return os.environ['ISSUE_NUMBER']
+
+
+def comment(body):
+    github(f'/issues/{issue_number()}/comments', {'body': body})
 
 
 def login(codex_home):
@@ -73,8 +81,8 @@ def login(codex_home):
     message = (f'Open {DEVICE_URL} while signed in to ChatGPT as {LIBRARY_EMAIL}, '
                f'type this code and approve: **{code}**\n\nThe code works for 15 minutes. '
                'It came from the library\'s own repair system.\n\n<!-- library-reconnect-code -->')
+    print(message, flush=True)
     comment(message)
-    summary(message)
     try:
         proc.communicate(timeout=16 * 60)
     except subprocess.TimeoutExpired:
