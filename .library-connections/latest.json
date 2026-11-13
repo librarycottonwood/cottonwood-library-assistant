@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-11-13T23:46:59.921Z",
+  "status": "ok",
+  "warnDays": 45,
+  "checks": [
+    {
+      "name": "Live website hosting token",
+      "ok": true,
+      "expiresOn": null,
+      "fix": "Create a replacement Account API token in the library Cloudflare account with the same permissions and no expiry, then replace the repository secret CLOUDFLARE_TRIAL_API_TOKEN.",
+      "status": "ok"
+    },
+    {
+      "name": "Publisher deploy token",
+      "ok": true,
+      "expiresOn": null,
+      "fix": "Create a replacement Account API token in the library Cloudflare account with the same permissions and no expiry, then replace the repository secret CMS_PUBLISHER_DEPLOY_TOKEN.",
+      "status": "ok"
+    },
+    {
+      "name": "Visitor-report deploy token",
+      "ok": true,
+      "expiresOn": null,
+      "fix": "Create a replacement Account API token in the library Cloudflare account with the same permissions and no expiry, then replace the repository secret LIBRARY_ANALYTICS_DEPLOY_TOKEN.",
+      "status": "ok"
+    },
+    {
+      "name": "Sanity content read token",
+      "ok": true,
+      "note": "Not needed: the content dataset is public",
+      "fix": "Create a Viewer token in Sanity (project 2ou0xy2r \u2192 API \u2192 Tokens) and replace the SANITY_READ_TOKEN repository secret.",
+      "status": "ok"
+    },
+    {
+      "name": "Website publisher (saves)",
+      "ok": true,
+      "fix": "Check the CMS publisher Worker in the library Cloudflare account and its CMS_STATUS_TOKEN.",
+      "status": "ok"
+    },
+    {
+      "name": "Publisher GitHub token",
+      "ok": true,
+      "expiresOn": null,
+      "fix": "In the librarycottonwood GitHub account, create a replacement token (only this repository; Actions write, Contents read; no expiry) and replace the publisher Worker secret GITHUB_DISPATCH_TOKEN.",
+      "status": "ok"
+    },
+    {
+      "name": "Automatic repair sign-in (library ChatGPT)",
+      "ok": true,
+      "expiresOn": "2027-02-11T23:45:32.000Z",
+      "fix": "Reconnect it: the library assistant opens an issue titled \"Reconnect automatic repairs\" (assistant/MAINTENANCE.md \u2192 \"Renew the repair sign-in\").",
+      "daysLeft": 89,
+      "status": "ok"
+    },
+    {
+      "name": "Visitor reports (Google Analytics)",
+      "ok": true,
+      "fix": "Follow connector/README.md recovery; the library assistant uses the reconnect page.",
+      "status": "ok"
+    },
+    {
+      "name": "Web address cottonwoodcommunitylibrary.com (Squarespace)",
+      "ok": true,
+      "expiresOn": "2027-03-22T19:01:02Z",
+      "fix": "Renewal is automatic at Squarespace; the board keeps a working card on that account.",
+      "daysLeft": 128,
+      "status": "ok"
+    }
+  ],
+  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/43529635894"
+}
