@@ -31,12 +31,20 @@ const action = initiative.action;
 // The panel says it once: the first paragraph (what this is), then the steps. The summary is the card text on
 // Support Us, and later paragraphs repeat the steps, so neither is shown again here.
 const intro = initiative.paragraphs[0] ?? initiative.summary;
+// Search titles name the task directly; the page keeps the library's invitation as its heading.
+const searchTitles: Record<string, string> = {
+  'volunteer': 'Volunteer at the library',
+  'book-sale': 'Library book sales',
+  'donate-books': 'Donate books and DVDs',
+  'wow-points': 'Donate Holiday Market WOW points',
+};
+const searchTitle = searchTitles[initiative.id] ?? initiative.title;
 const others = otherWaysToHelp(initiatives, initiative.id);
 // The book-sale page names the next dated sale from the event records, if one is scheduled.
 const nextSale = initiative.id === 'book-sale' ? upcomingEvents(events).find(event => /book sale/i.test(event.title)) : undefined;
 const saleDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' });
 ---
-<BaseLayout title={`${initiative.title} | Cottonwood Community Library`} description={initiative.summary} image={image}>
+<BaseLayout title={`${searchTitle} | Cottonwood Community Library`} description={initiative.summary} image={image}>
   <PageTitle title={initiative.title} trail={[supportLink]} />
   <Split media="start" panel image={image}>
     <Text size="lead">{intro}</Text>

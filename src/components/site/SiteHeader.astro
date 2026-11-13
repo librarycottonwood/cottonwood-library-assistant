@@ -28,8 +28,8 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
 <aside class="hours-strip" aria-label="Opening hours">
   <p>
     <Icon name="clock" class="hours-icon" />
-    <span class="sr-only">Library hours: {library.hoursSummary}</span>
-    <span class="hours-groups" aria-hidden="true">{hoursParts.map(part => <span class="hours-part">
+    <span class="sr-only" data-nosnippet>Library hours: {library.hoursSummary}</span>
+    <span class="hours-groups" aria-hidden="true" data-nosnippet>{hoursParts.map(part => <span class="hours-part">
       {part.days && <><span class="hours-day"><span class="hours-full">{part.days}</span><span class="hours-short" aria-hidden="true">{compactDays(part.days)}</span></span>{' '}</>}
       <span class:list={['hours-time', { 'hours-only': !part.days }]}>{part.hours}</span>
     </span>)}</span>
@@ -38,14 +38,14 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
 <header class="site-header">
   <a href="/" class="brand" aria-label="Cottonwood Community Library home">
     <Image src={logo} alt="" width={129} densities={[1, 2]} loading="eager" class="brand-logo" />
-    <span class="brand-name" aria-hidden="true">Cottonwood<br />Community<br />Library</span>
+    <span class="brand-name" aria-hidden="true" data-nosnippet>Cottonwood<br />Community<br />Library</span>
   </a>
   <nav aria-label="Main navigation" class="site-nav">
-    {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
+    {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}><span data-nosnippet>{item.label}</span></a>)}
   </nav>
   <div class="header-actions">
     <!-- Goes to the Support Us page (its button opens Givebutter's popup). The click still counts as donate_header. -->
-    <Button href={supportLink.href} aria-current={isCurrent(supportLink.href) ? 'page' : undefined} data-analytics-event="donate_header" variant="primary" icon="heart">Donate</Button>
+    <Button href={supportLink.href} aria-current={isCurrent(supportLink.href) ? 'page' : undefined} data-analytics-event="donate_header" variant="primary" icon="heart"><span data-nosnippet>Donate</span></Button>
     <button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle">
       <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
     </button>
@@ -53,8 +53,8 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
 </header>
 <!-- Outside the header: the header is a container (for its narrow-phone rules), which would trap a fixed panel inside it. -->
 <nav id="site-mobile-nav" aria-label="Mobile navigation" class="mobile-nav">
-  {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
-  <a href={library.catalogUrl} data-analytics-event="catalog_mobile">Library catalog <Icon name="external" class="mobile-external" /></a>
+  {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}><span data-nosnippet>{item.label}</span></a>)}
+  <a href={library.catalogUrl} data-analytics-event="catalog_mobile"><span data-nosnippet>Library catalog</span> <Icon name="external" class="mobile-external" /></a>
 </nav>
 <script>
   import { menu as animateMenu } from '../../scripts/motion';

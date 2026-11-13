@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { articleNode, eventNodes, jsonLd, libraryDateTime, libraryNode, noticeClosesDay, openingHours, parseDays, parseHours, parseTime, programEventNodes, programSessions } from '../src/content/seo.mjs';
+import { articleNode, breadcrumbNode, eventNodes, jsonLd, libraryDateTime, libraryNode, noticeClosesDay, openingHours, parseDays, parseHours, parseTime, programEventNodes, programSessions } from '../src/content/seo.mjs';
 import { sessionPhrase } from '../src/content/schedule.mjs';
 import { searchTagProblems } from './seo-pages.mjs';
 
@@ -48,6 +48,21 @@ test('events and posts', () => {
 });
 test('CMS text cannot close the JSON-LD script', () => {
   assert.equal(jsonLd([{ name: '</script><script>alert(1)</script>' }]).includes('</'), false);
+});
+
+test('breadcrumbs describe real pages without treating a section anchor as another page', () => {
+  const node = breadcrumbNode([
+    { label: 'Home', href: '/' },
+    { label: 'Events & News', href: '/events/' },
+    { label: 'Regular Events', href: '/events/#regular' },
+    { label: 'Story Time', href: '/events/regular/story-time/' },
+  ]);
+  assert.equal(node['@type'], 'BreadcrumbList');
+  assert.deepEqual(node.itemListElement, [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.cottonwoodcommunitylibrary.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Events & News', item: 'https://www.cottonwoodcommunitylibrary.com/events/' },
+    { '@type': 'ListItem', position: 3, name: 'Story Time', item: 'https://www.cottonwoodcommunitylibrary.com/events/regular/story-time/' },
+  ]);
 });
 
 // Regular programs: dated sessions from the schedule text, worked out at build time.

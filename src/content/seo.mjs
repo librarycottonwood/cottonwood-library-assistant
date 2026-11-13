@@ -122,6 +122,20 @@ export function websiteNode(library) {
   return { '@type': 'WebSite', '@id': WEBSITE_ID, url: `${SITE_URL}/`, name: library.name, inLanguage: 'en-US', publisher: { '@id': LIBRARY_ID } };
 }
 
+/** The visible breadcrumb trail. Section anchors are navigation within a page, not extra levels. */
+export function breadcrumbNode(crumbs) {
+  const pages = crumbs.filter(crumb => !new URL(crumb.href, SITE_URL).hash);
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: pages.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.label,
+      item: new URL(crumb.href, SITE_URL).href,
+    })),
+  };
+}
+
 /** One event and all its sessions (each session is its own schema.org Event). */
 export function eventNodes(sessions, { url, image }) {
   return sessions.map(session => {

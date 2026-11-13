@@ -28,7 +28,7 @@ const emailParts = library.email.split('@');
   <div class="footer-identity">
     <a href="/" class="footer-brand" aria-label="Cottonwood Community Library home">
       <Image src={logo} alt="" width={163} densities={[1, 2]} loading="lazy" class="footer-logo" />
-      <span aria-hidden="true">Cottonwood<br />Community<br />Library</span>
+      <span aria-hidden="true" data-nosnippet>Cottonwood<br />Community<br />Library</span>
     </a>
     <div class="social">
       <a href={library.instagramUrl} aria-label="Cottonwood Community Library on Instagram"><InstagramIcon class="social-icon" /></a>
@@ -36,10 +36,10 @@ const emailParts = library.email.split('@');
     </div>
   </div>
   <nav aria-labelledby="footer-explore" class="footer-column footer-explore">
-    <h2 id="footer-explore">Explore</h2>
+    <h2 id="footer-explore"><span data-nosnippet>Explore</span></h2>
     <ul>
-      {footerNavigation.map(item => <li><a href={item.href}>{item.label}</a></li>)}
-      <li><a href={library.catalogUrl} data-analytics-event="catalog_footer">Library Catalog<Icon name="external" class="footer-external" /></a></li>
+      {footerNavigation.map(item => <li><a href={item.href}><span data-nosnippet>{item.label}</span></a></li>)}
+      <li><a href={library.catalogUrl} data-analytics-event="catalog_footer"><span data-nosnippet>Library Catalog</span><Icon name="external" class="footer-external" /></a></li>
     </ul>
   </nav>
   <div class="footer-column footer-contact">
