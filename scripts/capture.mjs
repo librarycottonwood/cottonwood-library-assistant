@@ -55,8 +55,17 @@ try {
     return page;
   };
   const check = async (page, name, viewport, route) => {
+    console.log(`Checking ${name}: ${route}`);
+    const html = await readFile(path.join(site, route.endsWith('/') ? `${route}index.html` : route), 'utf8');
+    const redirect = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
     const response = await page.goto(base + route, { waitUntil: 'networkidle' });
     if (!response?.ok()) throw new Error(`Failed to load ${route}`);
+    // Astro's static redirects navigate after the initial document loads.
+    // Read their target from the built file, since the browser can discard the
+    // original response during navigation. Inspect only the loaded destination.
+    if (redirect) {
+      await page.waitForURL(new URL(redirect[1], response.url()).href, { waitUntil: 'networkidle' });
+    }
     await page.evaluate(() => document.fonts.ready);
     const heading = await page.locator('h1').first().innerText();
     if (!heading.trim()) throw new Error(`Missing page heading: ${route}`);
