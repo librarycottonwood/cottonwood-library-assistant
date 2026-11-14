@@ -6,7 +6,7 @@ Verified facts the assistant and staff can rely on. Check the live record before
 
 - Cottonwood Community Library, 3427 Main Street, Cottonwood, CA. Mail: PO Box 1807, Cottonwood, CA 96022.
 - Phone (530) 347-4818. Email cottonlib@shasta.com. Library Google account: librarycottonwood@gmail.com.
-- Technical support: ChatGPT and the library assistant only. Board members (Todd Haines, Donna, Mary Ann, Rod and the rest) and volunteers are not technical; never send them technical work or tell anyone to contact them for it.
+- Technical support: ChatGPT, the library’s assistant. Board members (Todd Haines, Donna, Mary Ann, Rod and the rest) and volunteers are not technical; never send them technical work or tell anyone to contact them for it.
 - Hours, address and contact details shown on the site come from Sanity (`library-settings` → Contact and hours). Change them there, never in code.
 
 ## Website

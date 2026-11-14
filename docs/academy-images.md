@@ -44,7 +44,7 @@ Captured November 11, 2026. The Safari captures use the library account; the new
 
 The ChatGPT example was not sent; the original unsent draft, Chat mode and sidebar state were restored. Buffer’s editor was closed without saving or publishing, and the existing draft was left untouched. Task-owned browser windows were closed.
 
-Coverage review: Using ChatGPT and Meet the library assistant already show the relevant ChatGPT controls. Website updates now show the request and newsletter download; Facebook instructions show the draft navigation, editor and timing menu. Closures use the same Work message box and existing attachment instructions, so another near-identical screenshot is unnecessary. Examples and Accounts retain their cards and service icons. Behind the scenes retains service icons and explanations rather than introducing administrative dashboard steps. Givebutter captures were added after the user signed in on November 11, 2026; see below for the exact coverage.
+Coverage review: Using ChatGPT and ChatGPT for library work already show the relevant ChatGPT controls. Website updates now show the request and newsletter download; Facebook instructions show the draft navigation, editor and timing menu. Closures use the same Work message box and existing attachment instructions, so another near-identical screenshot is unnecessary. Examples and Accounts retain their cards and service icons. Behind the scenes retains service icons and explanations rather than introducing administrative dashboard steps. Givebutter captures were added after the user signed in on November 11, 2026; see below for the exact coverage.
 
 ## ChatGPT navigation tour
 
@@ -62,7 +62,7 @@ No messages were sent, tasks changed, plugins installed or files created in Chat
 
 The tour describes labels observed in this account, including Public and Personal. Background behavior was checked against OpenAI’s [ChatGPT guide](https://learn.chatgpt.com/docs/use-chatgpt), [Projects](https://learn.chatgpt.com/docs/projects), [scheduled tasks](https://learn.chatgpt.com/docs/automations), and [Plugins](https://learn.chatgpt.com/docs/plugins). These captures establish visible controls, not the health of connected services.
 
-The beginner sequence is Your first chat, Find your way around, Photos, files and links, and Meet the library assistant. Facebook steps now have their own lesson; newsletters and donations remain together. Screenshots precede the controls or steps they explain. The same descriptions, definitions and lesson order enter the printable handbook and generated wiki.
+The beginner sequence is Your first chat, Find your way around, Photos, files and links, and ChatGPT for library work. Facebook steps now have their own lesson; newsletters and donations remain together. Screenshots precede the controls or steps they explain. The same descriptions, definitions and lesson order enter the printable handbook and generated wiki.
 
 Overview captures (Library, Plugins and Scheduled) use full framing: the complete original screenshot is centered with padding on all sides. Focused controls retain their existing zoomed views. GPTs wording follows [OpenAI’s transition guide](https://learn.chatgpt.com/docs/migrate-custom-gpts); no universal retirement date is claimed because the guide notes plan-specific timelines.
 
