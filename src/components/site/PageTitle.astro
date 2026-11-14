@@ -1,7 +1,7 @@
 ---
 /**
  * @component PageTitle
- * The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date.
+ * The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones.
  * @use The first block of every page except the homepage. Put it directly inside BaseLayout, before the first Split or Section. Give `trail` only on pages under a top-level page (a service, an event, a news post).
  * @avoid The homepage (its h1 is in the hero), section headings (use Section's title), or more than one per page.
  * @example
@@ -10,31 +10,37 @@
  * </PageTitle>
  */
 import Heading from './Heading.astro';
+import LibraryIllustration from './LibraryIllustration.astro';
 import Text from './Text.astro';
 import type { NavLink } from './navigation';
 import { breadcrumbNode, jsonLd } from '../../content/seo.mjs';
 interface Props {
   /** The page title (the page's one h1). */
   title: string;
+  /** Topic artwork for a main index page. Leave article, event-detail and legal titles plain. */
+  illustration?: 'reading' | 'computers' | 'books' | 'community';
   /** Pages above this one, after Home. Leave out on top-level pages: the header shows where you are. */
   trail?: NavLink[];
   /** id for the h1. */
   headingId?: string;
 }
-const { title, trail, headingId = 'page-title' } = Astro.props;
+const { title, illustration, trail, headingId = 'page-title' } = Astro.props;
 const crumbs = trail && [{ label: 'Home', href: '/' }, ...trail];
 const breadcrumb = crumbs && breadcrumbNode([...crumbs, { label: title, href: Astro.url.pathname }]);
 ---
 {breadcrumb && <script type="application/ld+json" set:html={jsonLd([breadcrumb])} />}
-<div class="page-title" data-motion="group">
-  {crumbs && <nav aria-label="Breadcrumb" class="breadcrumb">
-    <ol>
-      {crumbs.map(crumb => <li><a href={crumb.href}>{crumb.label}</a><span aria-hidden="true">/</span></li>)}
-      <li aria-current="page">{title}</li>
-    </ol>
-  </nav>}
-  <Heading level={1} size="display" id={headingId}>{title}</Heading>
-  {Astro.slots.has('default') && <Text tone="muted" size="lead"><slot /></Text>}
+<div class:list={['page-title', { 'has-illustration': Boolean(illustration) }]}>
+  <div class="page-title-copy" data-motion="group">
+    {crumbs && <nav aria-label="Breadcrumb" class="breadcrumb">
+      <ol>
+        {crumbs.map(crumb => <li><a href={crumb.href}>{crumb.label}</a><span aria-hidden="true">/</span></li>)}
+        <li aria-current="page">{title}</li>
+      </ol>
+    </nav>}
+    <Heading level={1} size="display" id={headingId}>{title}</Heading>
+    {Astro.slots.has('default') && <Text tone="muted" size="lead"><slot /></Text>}
+  </div>
+  {illustration && <div class="page-title-art" data-motion="rise"><LibraryIllustration scene={illustration} /></div>}
 </div>
 <style>
   /* Figma: 50px under the header at 1920px, then the next block's own top space. */
@@ -43,6 +49,11 @@ const breadcrumb = crumbs && breadcrumbNode([...crumbs, { label: title, href: As
     padding: var(--space-md) var(--page-inset) 0;
     overflow-wrap: anywhere;
   }
+  .page-title-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); min-width: 0; max-width: 100%; }
+  .has-illustration { align-items: center; }
+  .has-illustration .page-title-copy { width: 100%; align-items: center; text-align: center; }
+  .has-illustration .breadcrumb ol { justify-content: center; }
+  .page-title-art { order: -1; flex-shrink: 0; max-width: 100%; }
   .breadcrumb ol {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs);
     margin: 0; padding: 0; list-style: none;
@@ -52,7 +63,13 @@ const breadcrumb = crumbs && breadcrumbNode([...crumbs, { label: title, href: As
   .breadcrumb a { text-decoration-line: none; }
   .breadcrumb a:hover { color: var(--color-text); text-decoration-line: underline; }
   @media (min-width: 48rem) {
-    .page-title { gap: var(--space-md); }
+    .page-title, .page-title-copy { gap: var(--space-md); }
+  }
+  @media (min-width: 64rem) {
+    .has-illustration { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-lg); }
+    .has-illustration .page-title-copy { flex: 1; align-items: flex-start; text-align: start; }
+    .has-illustration .breadcrumb ol { justify-content: flex-start; }
+    .page-title-art { order: 0; }
   }
   @media (min-width: 100rem) {
     .page-title { padding-top: var(--space-lg); }

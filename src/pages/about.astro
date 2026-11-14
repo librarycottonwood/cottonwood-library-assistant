@@ -33,18 +33,18 @@ const gallery: LibraryImage[] = [
 ];
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="How Cottonwood got its library back, and the neighbors and volunteers who keep it open.">
-  <PageTitle title={title} />
+  <PageTitle title={title} illustration="community" />
   <WideImage image={painting} bleed first />
   <Section width="text" align="start">
     <Prose paragraphs={[beginnings]} />
   </Section>
-  <Section title="A place of our own" headingId="place-heading" width="text" align="start">
+  <Section title="A place of our own" leaf="branch" headingId="place-heading" width="text">
     <Gallery images={founders} columns={2} />
     <Prose paragraphs={[placeOfOurOwn]} />
   </Section>
   <Section title="We are here for you!" headingId="here-heading" width="text" align="start">
     <Prose paragraphs={[hereForYou]} />
-    <Signature>Thank you for your support!</Signature>
+    <Signature handwritten>Thank you for your support!</Signature>
   </Section>
   <Section title="Gallery" headingId="gallery-heading" width="full">
     <Gallery images={gallery} />

@@ -12,7 +12,7 @@ for (const group of academyGroups) {
     lines.push(`- [${lesson.title}](${academyUrl}${slug}/): ${lesson.summary}`);
   }
 }
-lines.push('', `- Quick guide: ${academyUrl}quick-reference/`, `- Printable handbook: ${academyUrl}print/`, '', '## Academy buttons and navigation', '', 'The left menu groups lessons into Start here, Library tasks and Behind the scenes. On a phone, Browse lessons opens that menu. On this page lists sections and marks the section currently being read. Previous and Next links move between lessons.', '', 'The header has Library website, Print and Open ChatGPT. Print offers the quick guide and the full handbook. Each example has Open in ChatGPT, which opens a new tab with a prefilled Work message, and Copy. The volunteer reads or edits the message, then sends it. Square brackets in an example are placeholders for their own details. Opening an example does not publish a website change.', '');
+lines.push('', `- Quick guide: ${academyUrl}quick-reference/`, `- Printable handbook: ${academyUrl}print/`, '', '## Academy buttons and navigation', '', 'The left menu groups lessons into Start here, Library tasks and Behind the scenes. On a phone, Browse lessons opens that menu. On this page lists sections and marks the section currently being read. Previous and Next links move between lessons.', '', 'The sidebar has Search academy, Library website, Open ChatGPT, Print quick guide and Print full handbook. Search academy opens a centered search window. On a phone these are in the menu. Each example has Open in ChatGPT, which opens a new tab with a prefilled Work message, and Copy. The volunteer reads or edits the message, then sends it. Square brackets in an example are placeholders for their own details. Opening an example does not publish a website change.', '');
 for (const lesson of lessons) {
   lines.push(`## ${lesson.title}`, '', `Page: ${academyUrl}${lesson.slug}/`, '', lesson.summary, '');
   for (const part of lesson.parts) {
@@ -36,7 +36,7 @@ for (const lesson of lessons) {
     for (const group of serviceGroups.filter(group => lesson.slug === 'accounts-and-tools' ? group.id === 'daily' : group.id !== 'daily')) {
       lines.push(`### ${group.title}`, '');
       for (const service of services.filter(service => service.group === group.id)) {
-        lines.push(`#### ${service.name}`, '', service.purpose, '', service.signin, '', `[${service.label}](${service.href})`, '');
+        lines.push(`#### ${service.name}`, '', service.purpose, '', `[${service.label}](${service.href})`, '');
       }
     }
   }

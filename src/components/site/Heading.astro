@@ -20,7 +20,7 @@ const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
 ---
 <Tag id={id} class:list={['heading', `heading-${size}`, { relaxed }]}><slot /></Tag>
 <style>
-  .heading { margin: 0; line-height: var(--leading-tight); }
+  .heading { margin: 0; line-height: var(--leading-tight); text-wrap: balance; }
   .heading-display, .heading-heading { font-family: var(--font-display); font-weight: var(--weight-regular); overflow-wrap: break-word; }
   .heading-display { font-size: var(--fluid-display); }
   .heading-heading { font-size: var(--fluid-heading); }

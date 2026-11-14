@@ -1,0 +1,107 @@
+name: Library connections daily check
+# Read-only. Confirms every account connection still works and warns well
+# before any token or sign-in expires, so the assistant can renew it in time.
+on:
+  schedule:
+    - cron: '57 16 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/connections.yml
+      - scripts/connections.mjs
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      status: ${{ steps.check.outputs.status }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check every connection without changing anything
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_TRIAL_API_TOKEN: ${{ secrets.CLOUDFLARE_TRIAL_API_TOKEN }}
+          CMS_PUBLISHER_DEPLOY_TOKEN: ${{ secrets.CMS_PUBLISHER_DEPLOY_TOKEN }}
+          LIBRARY_ANALYTICS_DEPLOY_TOKEN: ${{ secrets.LIBRARY_ANALYTICS_DEPLOY_TOKEN }}
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+          CMS_STATUS_TOKEN: ${{ secrets.CMS_STATUS_TOKEN }}
+          SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+          SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+          CMS_PUBLISHER_ORIGIN: ${{ vars.CMS_PUBLISHER_ORIGIN }}
+        run: |
+          node scripts/connections.mjs "$RUNNER_TEMP/connections.json"
+          echo "status=$(node -p "require('$RUNNER_TEMP/connections.json').status")" >> "$GITHUB_OUTPUT"
+          cp "$RUNNER_TEMP/connections.json" connections.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: library-connections
+          path: connections.json
+          retention-days: 7
+  record:
+    needs: check
+    if: always() && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    concurrency:
+      group: library-check-records
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        continue-on-error: true
+        with:
+          name: library-connections
+          path: ${{ runner.temp }}/result
+      - name: Save the result and keep one issue open while anything needs renewing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, urllib.error, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; root='https://api.github.com/repos/'+repo
+          def api(path, method='GET', body=None):
+              req=urllib.request.Request(root+path, method=method, data=None if body is None else json.dumps(body).encode(),
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(req) as r:
+                  raw=r.read(); return json.loads(raw) if raw else None
+          run=f"https://github.com/{repo}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          try:
+              report=json.load(open(os.environ['RUNNER_TEMP']+'/result/connections.json'))
+          except FileNotFoundError:
+              report={'status':'fail','checks':[{'name':'Connection check itself','status':'fail','note':'The check did not finish'}]}
+          report['runUrl']=run
+          path='/contents/.library-connections/latest.json'
+          body={'branch':'maintenance-reports','message':'Record library connection status',
+              'content':base64.b64encode((json.dumps(report,indent=2)+'\n').encode()).decode()}
+          try: body['sha']=api(path+'?ref=maintenance-reports')['sha']
+          except urllib.error.HTTPError as e:
+              if e.code!=404: raise
+          api(path,'PUT',body)
+          marker='<!-- library-connections -->'
+          issues=api('/issues?state=open&per_page=100')
+          issue=next((i for i in issues if marker in (i.get('body') or '') and 'pull_request' not in i),None)
+          bad=[c for c in report['checks'] if c['status'] in ('warn','fail')]
+          if bad:
+              lines=[f"- **{c['name']}**: {'broken now' if c['status']=='fail' else 'expires in %s days' % c.get('daysLeft','?')}. {c.get('note') or ''}\n  Fix (assistant only, never a volunteer or board member): {c.get('fix','')}" for c in bad]
+              text='A library connection needs renewing. The website keeps working until the date shown.\n\n'+'\n'.join(lines)+f'\n\n[Check details]({run})\n\n'+marker
+              if issue: api('/issues/'+str(issue['number']),'PATCH',{'body':text})
+              else: api('/issues','POST',{'title':'Library connection needs renewing','body':text})
+          elif issue:
+              api('/issues/'+str(issue['number'])+'/comments','POST',{'body':'Every connection checks out again.'})
+              api('/issues/'+str(issue['number']),'PATCH',{'state':'closed'})
+          PY

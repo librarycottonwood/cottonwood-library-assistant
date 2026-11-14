@@ -26,7 +26,7 @@ const { gap = 'md', direction = 'column', align = 'stretch', wrap = false, as: T
 ---
 <Tag id={id} data-gap={gap} class:list={['stack', `stack-${direction}`, `align-${align}`, { 'stack-wrap': wrap }]}><slot /></Tag>
 <style>
-  .stack { display: flex; margin: 0; padding: 0; list-style: none; }
+  .stack { display: flex; min-width: 0; max-width: 100%; margin: 0; padding: 0; list-style: none; }
   .stack-column { flex-direction: column; }
   .stack-row { flex-direction: row; align-items: center; }
   .stack-wrap { flex-wrap: wrap; }

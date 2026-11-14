@@ -36,7 +36,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.route('**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
     await page.goto(origin + '/academy/');
     const routes = await page.locator('a[href^="/academy/"]').evaluateAll(links => [...new Set(links.map(a => a.getAttribute('href')))]);
-    assert.equal(routes.length, 14, 'home, eleven lessons, handbook and desk guide');
+    assert.equal(routes.length, 15, 'home, twelve lessons, handbook and desk guide');
     assert.deepEqual(await page.locator('.academy-sidebar .lesson-nav-title').allTextContents(), ['Start here', 'Library tasks', 'Behind the scenes']);
     assert.equal(await page.locator('main img').count(), 0, 'the guide index has no decorative imagery');
     for (const width of [375, 1440]) {
@@ -106,7 +106,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         for (const href of await page.locator('a[href^="/academy/"]').evaluateAll(links => links.map(a => a.getAttribute('href')))) {
           assert.ok((await page.request.get(origin + href)).ok(), `internal academy link ${href}`);
         }
-        if (['/academy/chatgpt-tour/', '/academy/files-and-links/', '/academy/facebook-posts/'].includes(route) || route === '/academy/' || route === '/academy/when-something-goes-wrong/' || route === '/academy/accounts-and-tools/' || route === '/academy/quick-reference/' || route === '/academy/everyday-jobs/' || route === '/academy/start-here/' || route === '/academy/library-assistant/' || route === '/academy/website-systems/' || route === '/academy/practice-with-a-buddy/') {
+        if (['/academy/chatgpt-tour/', '/academy/files-and-links/', '/academy/facebook-posts/'].includes(route) || route === '/academy/' || route === '/academy/when-something-goes-wrong/' || route === '/academy/accounts-and-tools/' || route === '/academy/quick-reference/' || route === '/academy/everyday-jobs/' || route === '/academy/start-here/' || route === '/academy/library-assistant/' || route === '/academy/website-systems/' || route === '/academy/automatic-repairs/' || route === '/academy/practice-with-a-buddy/') {
           const name = route.split('/').filter(Boolean).at(-1);
           await page.screenshot({ path: `output/academy/${width}-${name}.png`, fullPage: true });
         }
@@ -389,8 +389,10 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await page.locator('.site-header').isVisible(), false);
     assert.equal(await page.locator('.desk-guide').isVisible(), true);
     await page.goto(origin + '/academy/print/');
-    assert.equal(await page.locator('.print-lesson').count(), 11);
-    assert.equal((await page.locator('main').innerText()).match(/Todd/g)?.length, 1, 'one current contact in the handbook');
+    assert.equal(await page.locator('.print-lesson').count(), 12);
+    assert.doesNotMatch(await page.locator('main').innerText(), /\b(?:Todd|Donna|Mary Ann|Rod)\b|account contact|person who manages/i, 'technical help never goes to a person');
+    assert.match(await page.locator('main').innerText(), /auth\.openai\.com\/codex\/device/);
+    assert.match(await page.locator('main').innerText(), /Do not choose Continue with Google/);
     assert.equal(await page.locator('.prompt-actions').first().isVisible(), false, 'print hides interactive actions');
     assert.equal(await page.locator('.service-card').count(), 10);
     // Header-only regression: keep unrelated payment and CAPTCHA scripts offline.

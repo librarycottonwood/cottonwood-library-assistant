@@ -15,12 +15,14 @@ import Split from '../../components/site/Split.astro';
 import Stack from '../../components/site/Stack.astro';
 import Text from '../../components/site/Text.astro';
 import { mainNavigation, programHref } from '../../components/site/navigation';
-import { upcomingEvents } from '../../content/feeds';
+import { newestPosts, upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
 import { eventPhoto, postsWithPhotos } from '../_photos';
 const [{ library, programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
 const title = mainNavigation.find(link => link.href === '/events/')!.label;
 const events = upcomingEvents(allEvents);
+// This page previews the latest four posts; the All news link opens the complete archive.
+const latestPosts = newestPosts(posts).slice(0, 4);
 // The next event leads the page (Figma's photo-and-panel block); the browser hides it once it ends.
 const featured = events[0];
 const featuredImage = featured && eventPhoto(featured, programs);
@@ -30,11 +32,11 @@ const featuredInPerson = featured && !/online/i.test(featured.location ?? '');
 const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }).format(new Date(featured.startsAt));
 ---
 <BaseLayout title={`${title} | Cottonwood Community Library`} description="Upcoming events, regular programs and news from the Cottonwood Community Library.">
-  <PageTitle title={title} />
+  <PageTitle title={title} illustration="reading" />
   {featured && featuredImage && <Split media="start" panel image={featuredImage} headingId="featured-heading" data-event-feature-expires={featured.endsAt}>
     <Text tone="muted"><time datetime={featured.startsAt}>{featuredDate}</time></Text>
     <Heading id="featured-heading">{featured.title}</Heading>
-    <Text tone="muted" size="lead">{featured.summary}</Text>
+    <Text tone="muted">{featured.summary}</Text>
     <Stack direction="row" gap="xs" wrap>
       {featuredInPerson && <Button href={library.directionsUrl} data-analytics-event="directions_click" variant="accent" icon="navigate">Get directions</Button>}
       <Button href={featured.href} variant={featuredInPerson ? 'outline' : 'accent'} iconEnd="arrow" screenReaderText={`about ${featured.title}`}>Read more</Button>
@@ -52,7 +54,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     </Grid>
   </Section>}
   {posts.length > 0 && <Section title="Latest News" headingId="news-heading" id="news">
-    <PostList posts={postsWithPhotos(posts)} />
+    <PostList posts={postsWithPhotos(latestPosts)} />
     <Button href="/news/" iconEnd="arrow">All news</Button>
   </Section>}
 </BaseLayout>

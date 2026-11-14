@@ -52,7 +52,7 @@ export const tokenGroups: TokenGroup[] = [
     slug: 'colors', title: 'Colors', property: 'color',
     note: 'Use the role names below. Do not add new colors or shades.',
     tokens: [
-      token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate) and the opening-hours strip.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
+      token({ name: 'color-primary', label: 'Indigo', value: '#4956a7', useFor: 'Primary actions (Donate), the opening-hours strip and active accents.', avoid: 'Body text or large backgrounds behind long text.', example: 'background: var(--color-primary);' }),
       token({ name: 'color-primary-ink', label: 'Deep indigo', value: '#1b2040', useFor: 'Outlined buttons, their labels and borders, badge labels and contact details.', avoid: 'Page background or headings (use --color-text).', example: 'border-color: var(--color-primary-ink);' }),
       token({ name: 'color-primary-soft', label: 'Pale indigo', value: '#e3e7ff', useFor: 'Panels beside a photo: opening hours, a program or event summary (Split panel).', avoid: 'Buttons, text, or the page background (use --color-background).', example: 'background: var(--color-primary-soft);' }),
       token({ name: 'color-accent', label: 'Pale green', value: '#beedae', useFor: 'Supporting actions (directions, donations) and the notices bar.', avoid: 'Text color; it fails contrast on paper.', example: '<Button variant="accent">' }),
@@ -78,9 +78,10 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'fonts', title: 'Fonts', property: 'font-family',
-    note: 'Two self-hosted families. Headings use Bree Serif; everything else uses Mona Sans.',
+    note: 'Bree Serif headings and Mona Sans body copy, with self-hosted Caveat reserved for a few warm words and thank-you notes.',
     tokens: [
       token({ name: 'font-display', label: 'Bree Serif', value: "'Bree Serif', Georgia, serif", detail: 'Regular · 400', useFor: 'Page titles and section headings.', avoid: 'Body copy, buttons, labels or card titles.', example: '<Heading size="display">' }),
+      token({ name: 'font-handwritten', label: 'Caveat', value: "'Caveat', 'Segoe Print', cursive", detail: 'Variable · 650', useFor: 'One warm word in selected headings, or a short thank-you sign-off, through Handwritten.', avoid: 'Navigation, buttons, forms, dates, prices, hours, paragraphs, or every heading.', example: '<Handwritten>Community</Handwritten>' }),
       token({ name: 'font-body', label: 'Mona Sans', value: "'Mona Sans Variable', 'Mona Sans', sans-serif", detail: 'Medium 500 / Semibold 600 / Bold 700', useFor: 'Body copy, navigation, links, buttons, dates and labels.', avoid: 'Page and section headings (use --font-display).', example: 'font-family: var(--font-body);' }),
       token({ name: 'weight-regular', label: 'Regular weight', value: '400', useFor: 'Bree Serif headings and long-form reading text.', avoid: 'Navigation emphasis and action labels.', example: 'font-weight: var(--weight-regular);' }),
       token({ name: 'weight-medium', label: 'Medium weight', value: '500', useFor: 'Body text and opening hours.', avoid: 'Buttons and card titles (use bold).', example: 'font-weight: var(--weight-medium);' }),
@@ -90,7 +91,7 @@ export const tokenGroups: TokenGroup[] = [
   },
   {
     slug: 'type-sizes', title: 'Type sizes', property: 'font-size',
-    note: 'Desktop sizes from the 1920px design. base.css scales them down on phones (--fluid-*); Heading and Text pick the right one.',
+    note: 'Body and heading sizes come from the 1920px design and scale down on phones (--fluid-*); Heading and Text pick the right one. Utility is the compact header label size.',
     tokens: [
       token({ name: 'text-navigation', label: 'Reading navigation', value: '1rem', detail: '16px', useFor: 'Sidebar links and article navigation.', avoid: 'Instructions and long paragraphs.', example: '<SideNavigation />' }),
       token({ name: 'text-caption', label: 'Reading label', value: '.875rem', detail: '14px', useFor: 'Navigation group labels and supplementary labels.', avoid: 'Instructions or primary links.', example: '<PageNavigation />' }),
@@ -98,6 +99,9 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'text-reading-title', label: 'Reading title', value: '2.5rem', useFor: 'Guide page titles.', avoid: 'Marketing display titles.', example: '<Heading size="reading-title" />' }),
       token({ name: 'text-reading-heading', label: 'Reading heading', value: '1.5rem', useFor: 'Sections in long guides.', avoid: 'Marketing section headings.', example: '<Heading size="reading-heading" />' }),
       token({ name: 'text-label', label: 'Label', value: '1.25rem', detail: '20px', useFor: 'Badges, dates, notices and opening hours.', avoid: 'Paragraphs people need to read.', example: '<Text size="label">' }),
+
+      token({ name: 'text-utility', label: 'Utility', value: '0.9375rem', detail: '15px', useFor: 'The compact opening-hours strip and short utility labels.', avoid: 'Body copy and main navigation.', example: 'font-size: var(--text-utility);' }),
+      token({ name: 'text-contact-detail', label: 'Contact detail', value: '0.875rem', detail: '14px', useFor: 'Supporting address and phone values inside the compact mobile contact tiles.', avoid: 'Main copy, form labels, headings, hours or buttons.', example: 'font-size: var(--text-contact-detail);' }),
       token({ name: 'text-body', label: 'Body', value: '1.5rem', detail: '24px', useFor: 'Body copy, card titles, navigation and buttons.', avoid: 'Headings.', example: '<Text>' }),
       token({ name: 'text-lead', label: 'Lead', value: '1.875rem', detail: '30px', useFor: 'A short introduction under a heading, and the wordmark.', avoid: 'More than two sentences.', example: '<Text size="lead">' }),
       token({ name: 'text-heading', label: 'Heading', value: '3.125rem', detail: '50px', useFor: 'Section headings (h2).', avoid: 'Card titles (use <Heading size="title">).', example: '<Heading size="heading">' }),
@@ -141,6 +145,7 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'radius-control', label: 'Control corner', value: '.375rem', useFor: 'Navigation highlights and small controls.', avoid: 'Large content panels.', example: '<SideNavigation />' }),
       token({ name: 'radius-panel', label: 'Panel corner', value: '.75rem', useFor: 'Text cards, dropdowns and reference panels.', avoid: 'Buttons or photographs.', example: '<Panel />' }),
       token({ name: 'radius-none', label: 'Square', value: '0px', useFor: 'Sections, strips and edges where a photo bleeds off the page.', avoid: 'Photos inside the page (use --radius-image).', example: 'border-radius: var(--radius-none);' }),
+      token({ name: 'radius-contact', label: 'Compact contact tile', value: '1rem', detail: '16px', useFor: 'The two small mobile Directions and Call tiles below the hero photo.', avoid: 'Photos, buttons, large panels or full-width capsules.', example: 'border-radius: var(--radius-contact);' }),
       token({ name: 'radius-image', label: 'Soft', value: '2.1875rem', detail: '35px', useFor: 'Photos, image containers and floating panels.', avoid: 'Buttons and badges (use --radius-pill).', example: 'border-radius: var(--radius-image);' }),
       token({ name: 'radius-pill', label: 'Pill', value: '6.25rem', detail: '100px', useFor: 'Buttons, badges and contact strips.', avoid: 'Photos or large panels.', example: '<Button> / <Badge>' }),
     ],
@@ -153,6 +158,14 @@ export const tokenGroups: TokenGroup[] = [
       token({ name: 'border-strong', label: 'Strong', value: '2px', useFor: 'Filled buttons, so they match outlined ones in size.', avoid: 'Decorative frames.', example: 'border: var(--border-strong) solid var(--color-primary);' }),
       token({ name: 'underline-thickness', label: 'Underline', value: '0.12em', detail: 'about 3px on body text', useFor: 'Every underlined link. base.css sets it on all links; switch underlines on with text-decoration-line: underline (the text-decoration shorthand resets it).', avoid: 'Borders, dividers or focus outlines (use --border-thin / base.css).', example: 'text-decoration-thickness: var(--underline-thickness);' }),
       token({ name: 'underline-offset', label: 'Underline gap', value: '0.25em', useFor: 'Space between a link’s text and its underline, so the thicker line clears letters like g and y.', avoid: 'Spacing between elements (use the spacing steps).', example: 'text-underline-offset: var(--underline-offset);' }),
+    ],
+  },
+  {
+    slug: 'photo-edges', title: 'Photo edges', property: 'box-shadow',
+    note: 'A small color inset shared by photo frames. Keep logos, printed pages and contained artwork plain. Reverse the offset on photos that bleed off the right page edge.',
+    tokens: [
+      token({ name: 'shadow-photo', label: 'Pale indigo inset', value: '.25rem .375rem 0 var(--color-primary-soft)', useFor: 'Split photos, photo cards and gallery frames.', avoid: 'Logos, printed pages, text and controls.', example: 'box-shadow: var(--shadow-photo);' }),
+      token({ name: 'shadow-photo-reverse', label: 'Pale green inset', value: '-.25rem .375rem 0 var(--color-accent)', useFor: 'Right-bleeding photos including the hero, and alternating photo cards.', avoid: 'Logos, printed pages, text and controls.', example: 'box-shadow: var(--shadow-photo-reverse);' }),
     ],
   },
   {

@@ -25,6 +25,6 @@ During an exercise, help them write and revise a useful result. Explain a missin
 
 ## Accounts and help
 
-The public academy gives service purposes and role boundaries, not a credential list. `assistant/ACCOUNT-REGISTER.md` is a private board handoff with known identities, evidence dates and unresolved access. Use only the entries needed for an authorized person's role; never copy the whole register into public pages, PDFs, screenshots or shared drafts. Never request passwords or codes. Board access/recovery changes stay with Todd.
+The public academy gives service purposes and role boundaries, not a credential list. `assistant/ACCOUNT-REGISTER.md` is a private board handoff with known identities, evidence dates and unresolved access. Use only the entries needed for an authorized person's role; never copy the whole register into public pages, PDFs, screenshots or shared drafts. Never request passwords or codes. Technical help stays with ChatGPT and the library assistant. Follow library-assistant for supported reconnection; the board supplies library facts and approvals.
 
 Help them find the one-page task guide at `/academy/quick-reference/` and the printable handbook at `/academy/print/`. For a real platform incident, use troubleshooting rather than continuing a pretend exercise. A practice exercise does not verify the installed tools. Check those connections during an explicitly authorized real task.

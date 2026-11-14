@@ -1,0 +1,23 @@
+---
+/**
+ * @component LeafAccent
+ * A small family of outlined botanicals: an upright sprig, a flower with paired leaves, or a horizontal branch.
+ * @use A centered botanical above a plain history or gratitude heading. Section keeps it in the heading group: branch for the library story, flower for supporter thanks.
+ * @avoid Practical headings such as FAQs, event listings and related links; the homepage hero, functional labels, more than one per page, or a heading that already has handwriting or a crayon scene.
+ * @example
+ * <Section title="A place of our own" leaf="branch" headingId="place-heading" />
+ */
+import sprig from '../../assets/decorations/leaves-sprig.svg?raw';
+import pair from '../../assets/decorations/leaves-pair.svg?raw';
+import branch from '../../assets/decorations/leaves-branch.svg?raw';
+interface Props { variant?: 'sprig' | 'pair' | 'branch'; }
+const { variant = 'sprig' } = Astro.props;
+const artwork = { sprig, pair, branch };
+---
+<span class:list={['leaf-accent', `leaf-${variant}`]} data-leaf-variant={variant} aria-hidden="true" set:html={artwork[variant]} />
+<style>
+  .leaf-accent { display: block; flex-shrink: 0; width: clamp(2.5rem, 3vw, 3.5rem); max-width: 100%; color: var(--color-primary); pointer-events: none; }
+  .leaf-pair { width: clamp(4rem, 5vw, 5rem); }
+  .leaf-branch { width: clamp(4.5rem, 7vw, 7rem); }
+  .leaf-accent :global(svg) { display: block; width: 100%; height: auto; }
+</style>

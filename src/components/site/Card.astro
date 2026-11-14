@@ -23,18 +23,20 @@ interface Props {
   as?: 'article' | 'li' | 'div';
   /** stacked (default): photo above text. adaptive: photo beside text whenever the card is at least 48rem (768px) wide, e.g. alone in a row. */
   layout?: 'stacked' | 'adaptive';
-  /** photo (default): a fixed-height photo. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
+  /** photo (default): a 3:2 photo on mobile, fixed height on desktop. page: a letter-size page (8.5 × 11), e.g. a newsletter cover, shown whole. */
   shape?: 'photo' | 'page';
   /** Shows the picture as a logo: smaller, centered, with white space around it (sponsor and partner logos). */
   logo?: boolean;
   /** Shows the whole description instead of cutting it at two lines. Use when the card has no page with the full text. */
   fullText?: boolean;
-  /** Heading level of the title. 3 (default) under a Section heading; 2 when the cards sit right under the page title with no section heading between (headings never skip a level). */
+  /** Soft offset edges on photo cards. Logos and printed-page cards always retain their plain frames. */
+  crayon?: boolean;
+  /** Heading level of the title: 2 directly below a page title, or 3 under a section heading. */
   level?: 2 | 3;
   hidden?: boolean;
   [data: `data-${string}`]: string | undefined;
 }
-const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, level = 3, ...attributes } = Astro.props;
+const { title, href, image: originalImage, as: Tag = 'article', layout = 'stacked', shape = 'photo', logo = false, fullText = false, crayon = true, level = 3, ...attributes } = Astro.props;
 const TitleTag = `h${level}` as 'h2' | 'h3';
 const image = refreshPhoto(originalImage);
 const hasBadge = Astro.slots.has('badge');
@@ -44,7 +46,7 @@ const titleWords = title.trim().split(/\s+/);
 const titleEnd = titleWords.pop();
 const titleStart = titleWords.join(' ');
 ---
-<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText }]} {...attributes}>
+<Tag data-motion="rise" class:list={['card', { 'card-linked': Boolean(href), 'card-adaptive': layout === 'adaptive' && shape === 'photo', 'card-page': shape === 'page', 'card-logo': logo, 'card-full-text': fullText, 'card-crayon': crayon && shape === 'photo' && !logo }]} {...attributes}>
   <div class="card-body">
     <div class:list={['card-media', { 'has-badge': hasBadge }]}>
       <Image width={800} quality={70} image={image} alt="" widths={[400, 600, 800]} sizes="(max-width: 47.99rem) 100vw, 33vw" loading="lazy" class:list={['card-image', image.fit === 'contain' && 'is-contained']} />
@@ -67,6 +69,9 @@ const titleStart = titleWords.join(' ');
     border: var(--border-thin) solid var(--border-image); border-radius: var(--radius-image);
   }
   .card-page .card-media { height: auto; aspect-ratio: 8.5 / 11; }
+  /* Attached to the existing frame: no loose ornaments or extra clipping around the zoom. */
+  .card-crayon .card-media { box-shadow: var(--shadow-photo); }
+  .card-crayon:nth-child(even) .card-media { box-shadow: var(--shadow-photo-reverse); }
   .has-badge::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 36%); pointer-events: none; }
   .card-media :global(.card-image) { width: 100%; height: 100%; object-fit: cover; transition: transform var(--motion-smooth) var(--ease-out); }
   /* Linked cards: hovering anywhere zooms the photo slightly inside its frame and nudges the title arrow. */
@@ -75,7 +80,8 @@ const titleStart = titleWords.join(' ');
     .card-linked:hover .card-copy .card-title :global(.icon-end) { transform: translateX(0.2em); }
   }
   .card-media :global(.card-image.is-contained) { object-fit: contain; background: var(--color-surface); }
-  .card-logo .card-media { display: grid; place-items: center; background: var(--color-surface); }
+  /* Definite tracks keep percentage-sized logos from enlarging an intrinsic grid row beyond the frame. */
+  .card-logo .card-media { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; background: var(--color-surface); }
   .card-logo .card-media :global(.card-image) { width: 60%; height: 60%; object-fit: contain; }
   /* right keeps a long schedule badge inside the photo at large text sizes; it wraps instead. */
   .card-badge { position: absolute; z-index: 1; top: var(--space-sm); left: var(--space-sm); right: var(--space-sm); display: flex; }
@@ -84,8 +90,12 @@ const titleStart = titleWords.join(' ');
   .card-copy .card-title { margin: 0; font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); line-height: var(--leading-snug); }
   /* Two lines at most, ending in "…" (long Sanity event summaries), so cards side by side read evenly. The full text is
    * on the linked page and stays readable to screen readers. Page-written card texts are kept to two lines. */
-  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); }
+  .card-copy p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; color: var(--color-text-muted); text-wrap: pretty; }
   .card-full-text .card-copy p { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+  /* A stacked phone card follows its width, so wider phones don't get a shallow letterbox crop. */
+  @media (max-width: 47.99rem) {
+    .card:not(.card-page, .card-logo) .card-media { height: auto; aspect-ratio: 3 / 2; }
+  }
   /* A title that wraps keeps its arrow right after the last word instead of floating beside the whole block. */
   .card-copy .card-title :global(.icon-link) { display: inline; }
   .title-end { white-space: nowrap; }

@@ -16,6 +16,12 @@ const market = photo('holidayMarketV2', 'Holiday Market’s timber-framed entran
 const display = photo('readingTable', 'An open book and two closed books on a round library table beside burgundy chairs.', '50% 60%');
 const community = photo('storytimeFacebook', 'A library volunteer sharing a picture book with children gathered in the Story Time corner.', '50% 55%');
 
+/** The volunteer invitation and detail page share an activity photo; later CMS uploads retain priority. */
+export function volunteerActivityPhoto(image: LibraryImage): LibraryImage {
+  const oldShelves = image.key === 'interior' || image.url === 'https://cdn.sanity.io/images/2ou0xy2r/production/aeaa7bd0aeed3c1a086f90c7cae692b4dd071034-1600x629.jpg';
+  return oldShelves ? photo('volunteerCraft', 'An adult helps children with paper crafts around a library table.', '50% 35%') : image;
+}
+
 const byKey: Record<string, LibraryImage> = {
   exterior, libraryBuilding: exterior, computerLab: computers, computerRoom: computers,
   communityExterior: community,

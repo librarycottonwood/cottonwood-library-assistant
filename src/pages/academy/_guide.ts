@@ -1,5 +1,5 @@
 // Shared content for the academy and printable handbook.
-export const reviewed = "November 11, 2026";
+export const reviewed = "November 13, 2026";
 export const academyUrl = "https://www.cottonwoodcommunitylibrary.com/academy/";
 export interface Part {
   id?: string;
@@ -40,7 +40,8 @@ export const academyGroups = [
     "id": "reference",
     "title": "Behind the scenes",
     "slugs": [
-      "website-systems"
+      "website-systems",
+      "automatic-repairs"
     ]
   }
 ];
@@ -60,7 +61,6 @@ export const services = [
     "group": "daily",
     "name": "ChatGPT",
     "purpose": "Ask for website updates, write announcements and get help with library tasks.",
-    "signin": "Use the library’s ChatGPT account for library work.",
     "href": "https://chatgpt.com/",
     "label": "Open ChatGPT"
   },
@@ -69,7 +69,6 @@ export const services = [
     "group": "technical",
     "name": "Codex",
     "purpose": "Changes the website’s design and how its features work.",
-    "signin": "Sign in with the library’s ChatGPT account.",
     "href": "https://chatgpt.com/codex/cloud",
     "label": "Open Codex"
   },
@@ -78,7 +77,6 @@ export const services = [
     "group": "technical",
     "name": "Sanity",
     "purpose": "Keeps the events, hours, news, photos and newsletters that appear on the website.",
-    "signin": "The library signs in through GitHub. Routine content changes start in ChatGPT; you do not need to open Sanity for them.",
     "href": "https://cottonwood-community-library.sanity.studio/",
     "label": "Open Sanity"
   },
@@ -87,7 +85,6 @@ export const services = [
     "group": "technical",
     "name": "GitHub",
     "purpose": "Keeps the website files and a record of changes. It also prepares the preview you check before saving.",
-    "signin": "Uses the library’s GitHub account. The assistant handles routine website saves here.",
     "href": "https://github.com/librarycottonwood/cottonwood-library-assistant",
     "label": "Open GitHub"
   },
@@ -96,7 +93,6 @@ export const services = [
     "group": "technical",
     "name": "Cloudflare",
     "purpose": "Hosts the library website and protects the newsletter signup form from spam.",
-    "signin": "Uses its own library account. GitHub sends approved website updates here.",
     "href": "https://dash.cloudflare.com/",
     "label": "Open Cloudflare"
   },
@@ -105,7 +101,6 @@ export const services = [
     "group": "technical",
     "name": "Squarespace",
     "purpose": "Manages the library’s web address, cottonwoodcommunitylibrary.com, and its renewal.",
-    "signin": "Managed by the library’s account contact.",
     "href": "https://account.squarespace.com/",
     "label": "Open Squarespace"
   },
@@ -114,7 +109,6 @@ export const services = [
     "group": "technical",
     "name": "Google Analytics",
     "purpose": "Shows how many people visit the website and which pages they read.",
-    "signin": "Uses the library’s Google account. You can ask ChatGPT for a visitor report when its reporting connection is available.",
     "href": "https://analytics.google.com/",
     "label": "Open Google Analytics"
   },
@@ -123,7 +117,6 @@ export const services = [
     "group": "technical",
     "name": "Google Cloud",
     "purpose": "Connects Google Analytics reports to ChatGPT.",
-    "signin": "Sign in with the library’s Google account.",
     "href": "https://console.cloud.google.com/",
     "label": "Open Google Cloud"
   },
@@ -132,7 +125,6 @@ export const services = [
     "group": "daily",
     "name": "Givebutter",
     "purpose": "Keeps donations, fundraisers and the newsletter mailing list. Its Engage section sends emails.",
-    "signin": "Givebutter and Engage share one account. ChatGPT helps write the email; you send it in Engage.",
     "href": "https://dashboard.givebutter.com/",
     "label": "Open Givebutter"
   },
@@ -141,7 +133,6 @@ export const services = [
     "group": "daily",
     "name": "Buffer",
     "purpose": "Keeps Facebook posts ready for you to check, publish or schedule.",
-    "signin": "Sign in with the library’s Google account.",
     "href": "https://publish.buffer.com/",
     "label": "Open Buffer"
   }
@@ -481,7 +472,7 @@ export const lessons: Lesson[] = [
         ],
         "links": [
           {
-            "label": "Who to ask for help",
+            "label": "Get technical help",
             "href": "/academy/accounts-and-tools/#sign-in-help"
           }
         ]
@@ -862,11 +853,11 @@ export const lessons: Lesson[] = [
         "title": "If the account does not appear",
         "text": [
           "Check which social account you signed in with. For Facebook, that profile needs Full control of the library’s Page.",
-          "If Buffer’s connection controls are unavailable, or it asks for an upgrade, contact the person who manages the library’s accounts."
+          "If Buffer’s connection controls are unavailable, or it asks for an upgrade, tell the library assistant what you see."
         ],
         "links": [
           {
-            "label": "Who to ask for help",
+            "label": "Get technical help",
             "href": "/academy/accounts-and-tools/#sign-in-help"
           }
         ]
@@ -918,11 +909,11 @@ export const lessons: Lesson[] = [
         "id": "access",
         "title": "You cannot sign in",
         "text": [
-          "Ask the library’s account contact for help. Tell them which website you are opening and what happens when you try to sign in."
+          "Tell ChatGPT or the library assistant which website you are opening and what happens when you try to sign in. Do not share your password in the chat."
         ],
         "links": [
           {
-            "label": "Who to ask for help",
+            "label": "Get technical help",
             "href": "/academy/accounts-and-tools/#sign-in-help"
           }
         ]
@@ -1039,10 +1030,10 @@ export const lessons: Lesson[] = [
     "parts": [
       {
         "id": "sign-in-help",
-        "title": "Who to ask for help",
+        "title": "Get technical help",
         "text": [
-          "Use the library’s accounts for library work. Todd is the current contact for account access, renewals, billing and changes to the library’s web address.",
-          "For a broken page or a missing update, start with ChatGPT and share the page link."
+          "The accounts belong to the library. For technical help, use ChatGPT or the library assistant.",
+          "For a broken page or a missing update, share the page link and what went wrong. The board answers questions about library facts and approvals."
         ],
         "links": [
           {
@@ -1050,9 +1041,17 @@ export const lessons: Lesson[] = [
             "href": "/academy/when-something-goes-wrong/"
           },
           {
-            "label": "Website systems and technical accounts",
+            "label": "Website systems",
             "href": "/academy/website-systems/"
           }
+        ]
+      },
+      {
+        "id": "reconnect",
+        "title": "Reconnect a plugin",
+        "text": [
+          "If a ChatGPT plugin shows a Reconnect button, click it and sign in with the library account.",
+          "When reconnecting visitor reports, Google may ask you to confirm on the library Google account’s phone. If you get stuck, tell the library assistant what you see."
         ]
       }
     ]
@@ -1060,15 +1059,13 @@ export const lessons: Lesson[] = [
   {
     "slug": "website-systems",
     "title": "Website systems",
-    "summary": "How the website works, with links for the people who maintain it.",
+    "summary": "The services that keep the website running.",
     "parts": [
       {
         "id": "how-it-works",
         "title": "From a request to the website",
         "text": [
-          "For everyday updates, start in ChatGPT. These services do the work behind it:"
-        ],
-        "steps": [
+          "For everyday updates, start in ChatGPT. These services do the work behind it:",
           "Sanity stores the events, hours, news, photos and newsletter files.",
           "GitHub keeps the website files and checks proposed changes. It prepares the preview.",
           "Cloudflare serves the finished website to visitors after the change is approved.",
@@ -1086,15 +1083,44 @@ export const lessons: Lesson[] = [
       },
       {
         "id": "technical-help",
-        "title": "Who to ask for help",
+        "title": "Get technical help",
         "text": [
-          "Account access, renewals, billing and web-address changes need the library’s account contact."
+          "Tell ChatGPT or the library assistant what you need help with. Include the page link or the message you see."
         ],
         "links": [
           {
-            "label": "Who to ask for help",
+            "label": "Get technical help",
             "href": "/academy/accounts-and-tools/#sign-in-help"
           }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "automatic-repairs",
+    "title": "If automatic repairs are paused",
+    "summary": "Turn automatic repairs back on through the library assistant.",
+    "parts": [
+      {
+        "id": "turn-repairs-back-on",
+        "title": "Turn repairs back on",
+        "text": [
+          "The weekly report may say automatic repairs are paused even while the website still works."
+        ],
+        "prompt": "turn repairs back on",
+        "steps": [
+          "Send “turn repairs back on” to the library assistant.",
+          "Open the link it gives you: auth.openai.com/codex/device.",
+          "Sign in with the library email and ChatGPT password. Do not choose Continue with Google.",
+          "Enter the short code from the assistant and click Continue.",
+          "Wait for the assistant to say automatic repairs are back on."
+        ]
+      },
+      {
+        "id": "use-your-code",
+        "title": "Use only the assistant’s code",
+        "text": [
+          "Only type codes the library assistant gives you. If a code expires or something looks wrong, return to the chat and tell the assistant."
         ]
       }
     ]

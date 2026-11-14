@@ -29,7 +29,6 @@ const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartCol
             <Heading size="title" level={headingLevel}>{service.name}</Heading>
           </div>
           <p class="service-purpose">{service.purpose}</p>
-          <p class="service-signin">{service.signin}</p>
           <div class="service-actions">
             <Button size="small" data-service-open href={service.href}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></Button>
             {print && <span class="service-url">{service.href}</span>}
@@ -46,7 +45,6 @@ const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartCol
 .service-group-title { font: var(--weight-regular) var(--text-reading-heading)/var(--leading-snug) var(--font-display); margin-block-end: var(--space-sm); }
 .service-heading { display: flex; align-items: center; gap: var(--space-xs); }
 .service-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; color: var(--color-primary-ink); }
-.service-signin { color: var(--color-text-muted); }
 .service-actions { margin-block-start: auto; }
 .service-url { display: block; font-size: var(--fluid-label); overflow-wrap: anywhere; }
 </style>

@@ -47,7 +47,7 @@ export const supportContent: SupportContent = {
       action: { label: 'Ask about giving', href: `mailto:${library.email}?subject=Supporting%20the%20library` },
     },
     {
-      id: 'volunteer', title: 'Give your time', category: 'volunteering', label: 'Volunteering',
+      id: 'volunteer', title: 'Volunteer at the library', category: 'volunteering', label: 'Volunteering',
       summary: 'Help with the everyday work that keeps books and people connected.',
       image: { key: 'interior', alt: 'Library shelves where volunteers help shelve and catalog books.' },
       paragraphs: ['Volunteers help with shelving, cataloging, check-ins, check-outs, processing donations and Story Time.', 'Download the application or pick up a printed copy at the library. Return your application to the library for review by the director. Contact the library about screening and available roles; applying does not enroll you as a volunteer.'],

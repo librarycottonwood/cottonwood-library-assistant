@@ -1,0 +1,8 @@
+{
+  "request": "Rename the volunteer way to help from \"Give your time\" to \"Volunteer at the library\".",
+  "sanityDocuments": [
+    {"id": "library-giving", "revision": "Dm6AmrAWr3vHNKBUdQB3Hd", "fields": ["initiatives[_key==\"item1\"].title"],
+     "before": {"initiatives[_key==\"item1\"].title": "Give your time"}}
+  ],
+  "requestedInChat": "2026-11-13"
+}

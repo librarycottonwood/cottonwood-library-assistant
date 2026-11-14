@@ -1,0 +1,33 @@
+---
+/**
+ * @component IllustratedCallout
+ * An open invitation pairing left-aligned copy and an action with artwork to the right, or above on phones.
+ * @use Inside a Section for the volunteer invitation, where a generic room photo does not explain the activity.
+ * @avoid Cropping illustrations into photo frames, adding redundant artwork above the copy, or centering paragraphs.
+ * @example
+ * <IllustratedCallout image={{ key: 'crayonVolunteers', alt: '' }}>
+ *   <Heading>Volunteer at the library</Heading><Text>Help at the library.</Text><Button href="/donate/volunteer/">Volunteer</Button>
+ * </IllustratedCallout>
+ */
+import Image from '../OptimizedImage.astro';
+import type { LibraryImage } from '../../content/types';
+interface Props { image: LibraryImage; }
+const { image } = Astro.props;
+---
+<div class="illustrated-callout" data-motion="rise">
+  <div class="callout-art" aria-hidden="true">
+    <Image image={image} alt="" width={720} widths={[240, 360, 540, 720]} sizes="(max-width: 50rem) 11rem, (max-width: 90.91rem) 22vw, 20rem" loading="lazy" />
+  </div>
+  <div class="callout-copy"><slot /></div>
+</div>
+<style>
+  .illustrated-callout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-md); width: 100%; max-width: var(--width-text); margin-inline: auto; }
+  .callout-art { width: clamp(11rem, 22vw, 20rem); max-width: 100%; justify-self: start; }
+  .callout-art :global(img) { display: block; width: 100%; height: auto; }
+  .callout-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); min-width: 0; max-width: var(--width-copy); }
+  @media (min-width: 48rem) {
+    .illustrated-callout { grid-template-columns: minmax(0, 1fr) clamp(11rem, 22vw, 20rem); gap: var(--space-lg); }
+    .callout-art { grid-column: 2; grid-row: 1; justify-self: center; }
+    .callout-copy { grid-column: 1; grid-row: 1; }
+  }
+</style>

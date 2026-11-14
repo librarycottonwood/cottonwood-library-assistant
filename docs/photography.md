@@ -47,6 +47,7 @@ people, faces or artwork:
 | library-exterior-original.jpg | [Drive CCL.jpeg](https://drive.google.com/file/d/1FvsI5fI2QxC0slpyjH5r1q7k_0deKLLn/view), original building photograph with web resizing/compression only; no generative edits |
 | storytime-session.jpg | [Instagram Story Time](https://www.instagram.com/cottonwoodcommunitylibrary/p/Dd2xjaRm_Qw/), a volunteer reading to children |
 | library-roof-original.jpg | [Drive actual roof and entrance](https://drive.google.com/file/d/1KcWd87_JRDerE3cIhFNfdt1q9-kxPht_/view), used for the roof fundraiser |
+| volunteer-craft-facebook.jpg | [Facebook craft-table photo](https://www.facebook.com/photo.php?fbid=1030285800043985), posted by Cottonwood Community Library 96022; the page displays September 23. An adult helps children with paper crafts. Selected after reviewing the public Facebook photo grid and the latest 12 Instagram post thumbnails; no generative edits, only metadata removal and web compression. Used only for the old volunteer shelves placeholder, so later CMS photo replacements retain priority. |
 | storytime-facebook.jpg | [Facebook June 24 photo](https://www.facebook.com/photo.php?fbid=961347140271185), volunteer reading to children |
 | adventure-mural-original.jpg | [Drive full mural photograph](https://drive.google.com/file/d/1m6h_licjfExXICSM640FRTQdmMOD1xzu/view), replaces the tiny Figma screenshot crop |
 
