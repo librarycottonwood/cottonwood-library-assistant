@@ -1,0 +1,60 @@
+---
+/**
+ * @component SectionIndex
+ * Links that track the section currently being read.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <SectionIndex>…</SectionIndex>
+ */
+interface Props { topics: { id: string; title: string }[]; }
+const { topics } = Astro.props;
+---
+<nav class="section-index lesson-topics" aria-label="On this page"><p>On this page</p><ul>{topics.map(topic => <li><a href={`#${topic.id}`}>{topic.title}</a></li>)}</ul></nav>
+<script>
+const header = document.querySelector<HTMLElement>('.site-header');
+const index = document.querySelector<HTMLElement>('.section-index');
+if(header && index) { const place = () => { index.style.top = `${header.offsetHeight}px`; index.style.maxHeight = `calc(100dvh - ${header.offsetHeight}px)`; }; new ResizeObserver(place).observe(header); place(); }
+      const topics = [...document.querySelectorAll<HTMLAnchorElement>('.lesson-topics a')]
+        .map(link => ({ link, section: document.getElementById(decodeURIComponent(link.hash.slice(1))) }))
+        .filter((topic): topic is { link: HTMLAnchorElement; section: HTMLElement } => topic.section !== null);
+      if (topics.length) {
+        let frame = 0;
+        const updateCurrentSection = () => {
+          frame = 0;
+          const readingLine = (header?.offsetHeight ?? 0) + 64;
+          let current = topics[0];
+          for (const topic of topics) {
+            if (topic.section.getBoundingClientRect().top <= readingLine) current = topic;
+          }
+          // Short final sections may never reach the top of the reading area.
+          if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+            current = topics[topics.length - 1];
+          }
+          for (const topic of topics) {
+            if (topic === current) topic.link.setAttribute('aria-current', 'location');
+            else topic.link.removeAttribute('aria-current');
+          }
+        };
+        const scheduleSectionUpdate = () => {
+          if (!frame) frame = requestAnimationFrame(updateCurrentSection);
+        };
+        window.addEventListener('scroll', scheduleSectionUpdate, { passive: true });
+        window.addEventListener('resize', scheduleSectionUpdate);
+        window.addEventListener('hashchange', scheduleSectionUpdate);
+        window.addEventListener('pageshow', scheduleSectionUpdate);
+        new ResizeObserver(scheduleSectionUpdate).observe(document.body);
+        updateCurrentSection();
+      }
+
+</script>
+<style>
+.section-index { align-self: start; padding: var(--space-sm) 0; font-size: var(--text-caption); }
+.section-index p { margin: 0; font-weight: var(--weight-semibold); color: var(--color-text-muted); }
+.section-index ul { list-style: none; padding: 0; margin: 0; }
+.section-index a { display: block; padding-block: var(--space-xs); color: var(--color-text-muted); text-decoration-line: none; }
+.section-index a[aria-current='location'] { color: var(--color-primary); font-weight: var(--weight-bold); }
+.section-index a:hover { text-decoration-line: underline; }
+@media (min-width: 90rem) { .section-index { position: sticky; overflow-y: auto; border-inline-start: var(--border-thin) solid var(--color-border); padding-inline-start: var(--space-sm); } }
+@media print { .section-index { display: none; } }
+</style>

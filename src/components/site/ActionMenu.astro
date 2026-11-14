@@ -1,0 +1,29 @@
+---
+/**
+ * @component ActionMenu
+ * A keyboard-accessible dropdown for related actions.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <ActionMenu>…</ActionMenu>
+ */
+import { ChevronDown } from '@lucide/astro';
+interface Props { label: string; }
+const { label } = Astro.props;
+---
+<details class="action-menu"><summary><slot name="icon" />{label}<ChevronDown size={16} aria-hidden="true" /></summary><div class="action-menu-options"><slot /></div></details>
+<script>
+for(const menu of document.querySelectorAll<HTMLDetailsElement>('.action-menu')) {
+ document.addEventListener('click', event => { if(event.target instanceof Node && !menu.contains(event.target)) menu.open = false; });
+ document.addEventListener('keydown', event => { if(event.key === 'Escape' && menu.open) { menu.open = false; menu.querySelector('summary')?.focus(); } });
+}
+</script>
+<style>
+.action-menu { position: relative; }
+.action-menu > summary { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: 44px; padding: var(--space-xs) var(--space-sm); border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill); font-weight: var(--weight-bold); list-style: none; cursor: pointer; }
+.action-menu > summary::-webkit-details-marker { display: none; }
+.action-menu[open] > summary, .action-menu > summary:hover { background: var(--color-primary-soft); }
+.action-menu-options { position: absolute; right: 0; min-width: 15rem; padding: var(--space-xs); border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-panel); background: var(--color-surface); }
+.action-menu-options :global(a) { display: flex; gap: var(--space-xs); align-items: center; min-height: 44px; padding: var(--space-xs); text-decoration-line: none; }
+.action-menu-options :global(a:hover) { background: var(--color-background); }
+</style>

@@ -1,0 +1,27 @@
+---
+import Heading from '../site/Heading.astro';
+import ReadingContent from '../site/ReadingContent.astro';
+import PrintButton from './PrintButton.astro';
+import { quickReference, reviewed, academyUrl } from '../../pages/academy/_guide';
+---
+
+  <ReadingContent>
+  <article class="desk-guide">
+    <p class="eyebrow">Cottonwood Community Library</p>
+    <Heading level={1} size="reading-title">Library tasks: quick guide</Heading>
+    <p class="lead">For website changes, open ChatGPT and choose Work.</p>
+    <PrintButton />
+    <dl>{quickReference.map(([title, text], index) => <div id={`quick-${index + 1}`}><dt>{title}</dt><dd>{text}</dd></div>)}</dl>
+    <p class="tool-addresses"><a href="https://chatgpt.com/">chatgpt.com</a> · <a href="https://dashboard.givebutter.com/">dashboard.givebutter.com</a> · <a href="https://publish.buffer.com/">publish.buffer.com</a></p>
+    <p class="small">Full instructions: <a href={academyUrl}>{academyUrl}</a><br />Updated {reviewed}</p>
+  </article>
+  </ReadingContent>
+
+<style>
+.desk-guide { display: flex; flex-direction: column; gap: var(--space-sm); }
+.eyebrow, .small, .tool-addresses { font-size: var(--fluid-label); color: var(--color-text-muted); }
+.desk-guide dl { margin: 0; }
+.desk-guide dl > div { padding-block: var(--space-sm); border-block-end: var(--border-thin) solid var(--color-border); }
+.desk-guide dd { margin: 0; }
+.desk-guide dt { font-weight: var(--weight-bold); }
+</style>

@@ -1,0 +1,25 @@
+---
+/**
+ * @component ReadingPage
+ * A reading title, content and optional section index.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <ReadingPage>…</ReadingPage>
+ */
+import ReadingHeader from './ReadingHeader.astro';
+import SectionIndex from './SectionIndex.astro';
+interface Props { title: string; summary?: string; topics?: { id: string; title: string }[]; }
+const { title, summary, topics = [] } = Astro.props;
+---
+<div class:list={['reading-page', { 'with-index': topics.length }]}>
+ <div class="reading-page-header"><ReadingHeader title={title} summary={summary} /></div>
+ {topics.length > 0 && <SectionIndex topics={topics} />}
+ <div class="reading-page-body"><slot /></div>
+</div>
+<style>
+.reading-page { display: grid; gap: var(--space-md); }
+.reading-page-header, .reading-page-body { min-width: 0; }
+@media (min-width: 90rem) { .with-index { grid-template-columns: minmax(0,1fr) var(--width-index); } .reading-page-header, .reading-page-body { grid-column: 1; } .with-index > :global(.section-index) { grid-column: 2; grid-row: 1 / span 2; } }
+@media print { .reading-page { display: block; } }
+</style>

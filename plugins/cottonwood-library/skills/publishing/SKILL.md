@@ -13,7 +13,7 @@ Find out what they are trying to change, then use the relevant topic wizard. Rea
 
 If Sanity is disconnected, use its actual reconnect screen. Give one step with its link, then wait. Never ask for credentials. After reconnecting, repeat the original read or edit. Do not ask them to install an already installed plugin, buy a service, or move routine content into GitHub.
 
-If the connected tools cannot do the edit, offer the actual editor as a fallback and guide them through it using the field labels in `assistant/content/`. Ask only the next missing question. Routine editing does not need project, dataset or account changes. A broader administrator identity is not permission to change those settings.
+If the connected tools cannot do the edit, preserve the request and explain the missing capability. Volunteers do not sign in to Sanity or GitHub. An explicitly chosen administrator recovery may use Studio and the field labels in `assistant/content/`; otherwise follow library-assistant for the supported recovery and give one plain next step. Never refer technical work to a person. Routine editing does not authorize project, dataset or account changes.
 
 ## Where is my change?
 
@@ -90,7 +90,7 @@ A merged PR can't be retried. Read the PR comment "This save did not reach the l
 
 - "Website content changed after the preview", "another save reached main first", or still pending after 15 minutes with no publish run still going: make a **refresh save**. Create `content/refresh-<short-name>` from current `main`, add `content-updates/<today>-refresh-<short-name>.json` with `request` "Refresh: <original request>" and the same `sanityDocuments` (keep their `before` values), open a PR and follow steps 3–9 (including the list of other changes).
 - `Sanity content:` in the message: fix that record in Sanity, publish it, then make a refresh save.
-- Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. Otherwise tell the volunteer "Your change is saved but isn't on the website yet. The website still shows the previous version and works. The library's automatic repair is checking it; ask me again in about an hour." Never send this to a person.
+- Anything else, or the refresh save stops the same way: read the failed job log and fix what you can. If it still needs work, tell the volunteer their change is saved but is not on the website yet. Say the previous website works only after checking it. Mention automatic repair only if a repair run is actually queued or running. Never send this to a person for technical help. Follow the library assistant skill for supported reconnection steps.
 
 If the volunteer decides not to save, close the PR and delete its branch yourself. If your tools can't close it, leave it: tell the volunteer “Nothing went on the website. It closes by itself in 14 days.” Never ask a volunteer or board member to close PRs, delete branches or remove previews.
 

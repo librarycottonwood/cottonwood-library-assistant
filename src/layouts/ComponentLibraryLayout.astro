@@ -1,8 +1,11 @@
 ---
-// Plain reference layout for /components (noindex; robots.txt also disallows it).
+// The library's design reference (noindex; robots.txt also disallows it).
+import { Image } from 'astro:assets';
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
+import logo from '../assets/logos/library-tree.png';
 import { tokenGroups } from '../design-system/tokens';
 import { componentAnchor, componentDocs } from '../design-system/catalog';
+import '../styles/base.css';
 import '../styles/catalog.css';
 interface Props { active: string; title: string; }
 const { active, title } = Astro.props;
@@ -19,14 +22,33 @@ const groupHref = (slug: string) => slug === 'colors' ? '/components/' : `/compo
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <nav class="catalog-nav" aria-label="Design system">
-      <p class="catalog-title">Design system</p>
-      <h2>Tokens</h2>
-      <ul>{tokenGroups.map(group => <li><a href={groupHref(group.slug)} aria-current={active === group.slug ? 'page' : undefined}>{group.title}</a></li>)}</ul>
-      <h2>Components</h2>
-      <ul>{componentDocs.map(doc => <li><a href={`/components/ui/#${componentAnchor(doc.name)}`}>{doc.name}</a></li>)}</ul>
-      <p><a href="/components/tokens.css">tokens.css</a></p>
-    </nav>
-    <main id="main" tabindex="-1"><slot /></main>
+    <header class="catalog-header">
+      <a class="catalog-brand" href="/" aria-label="Cottonwood Community Library home">
+        <Image src={logo} alt="" width={70} densities={[1, 2]} loading="eager" />
+        <span>Cottonwood<br />Community Library</span>
+      </a>
+      <nav aria-label="Library resources">
+        <a href="/academy/">Volunteer academy</a>
+        <a href="/">Library website <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <div class="catalog-shell">
+      <details class="catalog-index">
+        <summary><span>Design system <span class="catalog-current">/ {title}</span></span><span class="catalog-browse">Browse <span aria-hidden="true">+</span></span></summary>
+        <nav class="catalog-nav" aria-label="Design system">
+          <div>
+            <h2>Foundations</h2>
+            <ul class="catalog-foundations">{tokenGroups.map(group => <li><a href={groupHref(group.slug)} aria-current={active === group.slug ? 'page' : undefined}>{group.title}</a></li>)}</ul>
+            <a class="catalog-download" href="/components/tokens.css">View the CSS tokens <span aria-hidden="true">↗</span></a>
+          </div>
+          <div>
+            <h2><a href="/components/ui/" aria-current={active === 'ui' ? 'page' : undefined}>Components</a></h2>
+            <ul class="catalog-components">{componentDocs.map(doc => <li><a href={`/components/ui/#${componentAnchor(doc.name)}`}>{doc.name}</a></li>)}</ul>
+          </div>
+        </nav>
+      </details>
+      <main id="main" tabindex="-1"><slot /></main>
+      <footer class="catalog-footer"><p>Cottonwood Community Library · Design reference</p><a href="/academy/">Looking for the volunteer guide?</a></footer>
+    </div>
   </body>
 </html>

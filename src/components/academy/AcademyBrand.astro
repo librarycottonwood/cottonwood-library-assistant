@@ -1,0 +1,14 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../assets/logos/library-tree.png';
+---
+<a class="brand academy-brand" href="/academy/" aria-label="Cottonwood Volunteer Academy home">
+ <Image src={logo} alt="" width={40} densities={[1, 2]} loading="eager" />
+ <span><strong>Cottonwood</strong><span>Volunteer academy</span></span>
+</a>
+<style>
+.academy-brand { display: flex; align-items: center; gap: var(--space-xs); text-decoration-line: none; }
+.academy-brand :global(img) { flex-shrink: 0; width: 32px; }
+.academy-brand > span { display: flex; flex-direction: column; font: var(--weight-regular) var(--text-caption)/var(--leading-snug) var(--font-body); color: var(--color-text-muted); }
+.academy-brand strong { font-size: var(--text-reading); font-weight: var(--weight-semibold); color: var(--color-text); }
+</style>

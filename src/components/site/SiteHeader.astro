@@ -11,6 +11,8 @@
 import { Image } from 'astro:assets';
 import logo from '../../assets/logos/library-tree.png';
 import Icon from '../Icon.astro';
+import HeaderMenu from './HeaderMenu.astro';
+import MenuToggle from './MenuToggle.astro';
 import Button from './Button.astro';
 import { isCurrentSection, mainNavigation as links, supportLink } from './navigation';
 import type { HomeContent } from '../../content/types';
@@ -46,57 +48,14 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
   <div class="header-actions">
     <!-- Goes to the Support Us page (its button opens Givebutter's popup). The click still counts as donate_header. -->
     <Button href={supportLink.href} aria-current={isCurrent(supportLink.href) ? 'page' : undefined} data-analytics-event="donate_header" variant="primary" icon="heart"><span data-nosnippet>Donate</span></Button>
-    <button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle">
-      <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
-    </button>
+    <MenuToggle />
   </div>
 </header>
 <!-- Outside the header: the header is a container (for its narrow-phone rules), which would trap a fixed panel inside it. -->
-<nav id="site-mobile-nav" aria-label="Mobile navigation" class="mobile-nav">
-  {links.map(item => <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}><span data-nosnippet>{item.label}</span></a>)}
-  <a href={library.catalogUrl} data-analytics-event="catalog_mobile"><span data-nosnippet>Library catalog</span> <Icon name="external" class="mobile-external" /></a>
-</nav>
-<script>
-  import { menu as animateMenu } from '../../scripts/motion';
-  // Sticky header: a line under it only once the hours strip has scrolled away, and anchor
-  // targets (#give, #visit…) land below it. The header height is measured, so it isn't a spacing value.
-  const header = document.querySelector<HTMLElement>('.site-header');
-  const strip = document.querySelector<HTMLElement>('.hours-strip');
-  if (header) {
-    const root = document.documentElement;
-    new ResizeObserver(() => { root.style.scrollPaddingTop = `${header.offsetHeight}px`; }).observe(header);
-    if (strip) new IntersectionObserver(([entry]) => { header.toggleAttribute('data-stuck', !entry!.isIntersecting); }).observe(strip);
-  }
-  // Phone menu: a panel filling the screen under the header (logo, Donate and the × stay in reach). While it is open
-  // the page behind can't scroll or take focus: everything on the page except the header and the menu is inert, so Tab
-  // never reaches the hidden page (the newsletter form, the footer) behind the panel. Opening and closing animate through
-  // menu() in src/scripts/motion.ts.
-  const toggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
-  const menu = document.querySelector<HTMLElement>('#site-mobile-nav');
-  if (header && toggle && menu) {
-    const behind = () => [...document.body.children].filter((element): element is HTMLElement => element instanceof HTMLElement && element !== header && element !== menu && element.tagName !== 'SCRIPT');
-    const place = () => { menu.style.top = `${Math.max(0, header.getBoundingClientRect().bottom)}px`; };
-    let isOpen = false;
-    const setOpen = async (open: boolean, instant = false) => {
-      if (open === isOpen) return;
-      isOpen = open;
-      toggle.setAttribute('aria-expanded', String(open));
-      document.documentElement.toggleAttribute('data-menu-open', open);
-      for (const element of behind()) element.inert = open;
-      if (open) { place(); menu.toggleAttribute('data-open', true); }
-      if (!instant) await animateMenu(menu, open);
-      if (!isOpen) menu.removeAttribute('data-open');
-    };
-    toggle.addEventListener('click', () => setOpen(!isOpen));
-    menu.addEventListener('click', event => { if (event.target instanceof Element && event.target.closest('a')) setOpen(false, true); });
-    document.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen) { setOpen(false); toggle.focus(); } });
-    window.matchMedia('(min-width: 90rem)').addEventListener('change', () => setOpen(false, true));
-    // The header can still move after opening (a scroll still gliding to a stop, a rotated phone), so follow it.
-    for (const event of ['resize', 'scroll']) window.addEventListener(event, () => { if (isOpen) place(); }, { passive: true });
-    // Coming back with the Back button can restore the page with the menu still open.
-    window.addEventListener('pageshow', event => { if (event.persisted) setOpen(false, true); });
-  }
-</script>
+<HeaderMenu links={[
+  ...links.map(item => ({ ...item, current: isCurrent(item.href) })),
+  { label: 'Library catalog', href: library.catalogUrl, external: true, analytics: 'catalog_mobile' },
+]} />
 <style>
   /* Safari 26 ignores <meta name="theme-color"> and colors its toolbar from a fixed or sticky element touching the top
    * of the page. At the top that is this strip (the hours bar's color, or the notices' green when they show);
@@ -166,41 +125,6 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
   .site-nav a, .mobile-nav a { text-decoration-line: none; }
   .site-nav a:hover, .site-nav a[aria-current='page'] { text-decoration-line: underline; }
   .header-actions { display: flex; flex: 0 0 auto; justify-content: flex-end; align-items: center; gap: var(--space-xs); }
-  .menu-toggle {
-    display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
-    border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
-    background: transparent; color: var(--color-primary-ink); cursor: pointer;
-  }
-  .menu-toggle :global(svg) { width: 1.25rem; height: 1.25rem; }
-  .menu-toggle[aria-expanded='true'] :global(.menu-open), .menu-toggle[aria-expanded='false'] :global(.menu-close) { display: none; }
-  /* Without JavaScript there is no menu button and the links are simply listed under the header. With it, the menu is a
-   * panel filling the screen below the header (the script sets its top to the header's bottom edge, which it measures)
-   * that scrolls by itself if its links don't fit (landscape, zoomed in). The page behind stays put. */
-  .mobile-nav { display: flex; flex-direction: column; padding: 0 var(--page-inset) var(--space-sm); font-weight: var(--weight-semibold); }
-  @media (scripting: enabled) {
-    .mobile-nav {
-      position: fixed; inset: 0; z-index: 49;
-      padding: var(--space-sm) var(--page-inset) var(--space-lg);
-      overflow-y: auto; overscroll-behavior: contain;
-      background: var(--color-background);
-      font-size: var(--fluid-lead); line-height: var(--leading-snug);
-    }
-    .mobile-nav:not([data-open]) { display: none; }
-  }
-  .mobile-nav a { display: flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: var(--space-xs) 0; border-bottom: var(--border-thin) solid var(--color-border); }
-  @media (scripting: enabled) { .mobile-nav a { padding-block: var(--space-sm); } }
-  .mobile-nav a[aria-current='page'] { color: var(--color-primary); }
-  .mobile-nav a:hover { text-decoration-line: underline; }
-  .mobile-nav :global(.mobile-external) { width: 0.75em; height: 0.75em; color: var(--color-text-muted); }
-  :global(html[data-menu-open]) { overflow: hidden; scrollbar-gutter: stable; }
-  :global(html[data-menu-open]) .site-header { border-bottom-color: var(--color-border); }
-  .site-nav a, .mobile-nav a { transition: text-decoration-color var(--motion-quick) var(--ease-out); }
-  @media (prefers-reduced-motion: no-preference) {
-    .menu-toggle :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
-  }
-  @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
-  @media (scripting: none) { .menu-toggle { display: none; } }
-
   @media (min-width: 48rem) {
     .hours-strip { font-size: var(--fluid-label); line-height: var(--leading-tight); }
     .hours-strip, .site-header { padding-block: var(--space-sm); }
@@ -213,7 +137,6 @@ const compactDays = (days: string) => days.replace(/\b(Monday|Tuesday|Wednesday|
     .brand { justify-self: start; container-type: normal; }
     .header-actions { justify-self: end; }
     .site-nav { display: flex; }
-    .menu-toggle, .mobile-nav, .mobile-nav[data-open] { display: none; }
   }
   @media (min-width: 100rem) {
     .hours-strip, .site-header { padding-block: var(--space-md); }

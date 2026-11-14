@@ -1,0 +1,44 @@
+---
+import MotionSetup from '../components/MotionSetup.astro';
+import '../styles/base.css';
+import AcademySearch from '../components/academy/AcademySearch.astro';
+import AcademyBrand from '../components/academy/AcademyBrand.astro';
+import SearchTrigger from '../components/academy/SearchTrigger.astro';
+import AcademyHeader from '../components/academy/AcademyHeader.astro';
+import ReadingShell from '../components/site/ReadingShell.astro';
+import SideNavigation from '../components/site/SideNavigation.astro';
+import AcademyNavigation from '../components/academy/AcademyNavigation.astro';
+import FoundationStyles from '../components/catalog/FoundationStyles.astro';
+import '../styles/academy-print.css';
+interface Props { title: string; active?: string; print?: boolean; withPageIndex?: boolean; }
+const { title, active, print = false, withPageIndex = false } = Astro.props;
+
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Practical lessons and a printable desk guide for Cottonwood Community Library volunteers." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | Cottonwood Volunteer Academy</title>
+    <FoundationStyles />
+    <MotionSetup />
+  </head>
+  <body data-surface="white" class:list={[{ 'print-edition': print }]}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <AcademyHeader active={active} />
+    <ReadingShell indexed={withPageIndex}>
+      <Fragment slot="sidebar"><div class="sidebar-brand"><AcademyBrand /></div><SearchTrigger /><SideNavigation label="Academy lessons"><AcademyNavigation active={active} idPrefix="sidebar" /></SideNavigation></Fragment>
+      <slot />
+    </ReadingShell>
+    <AcademySearch />
+
+  </body>
+</html>
+
+<style>
+.sidebar-brand { margin-block-end: var(--space-md); }
+@media (max-width: 47.99rem) { .sidebar-brand { display: none; } }
+</style>

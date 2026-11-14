@@ -1,0 +1,33 @@
+---
+/**
+ * @component PageNavigation
+ * Previous and next cards using the same surface as topic cards.
+ * @use Sequential guides and articles.
+ * @avoid Large promotional cards; keep sequential navigation easy to recognize and read.
+ * @example
+ * <PageNavigation previous={previous} next={next} />
+ */
+import Surface from './Surface.astro';
+import { ArrowLeft, ArrowRight } from '@lucide/astro';
+interface Link { title: string; href: string; }
+interface Props { previous: Link; next: Link; }
+const { previous, next } = Astro.props;
+---
+<nav class="page-navigation lesson-pagination" aria-label="Next and previous lessons">
+ <Surface as="a" href={previous.href} rel="prev" class="page-link">
+   <span class="page-direction"><ArrowLeft size={16} aria-hidden="true" />Previous</span>
+   <span class="page-title">{previous.title}</span>
+ </Surface>
+ <Surface as="a" href={next.href} rel="next" class="page-link">
+   <span class="page-direction">Next<ArrowRight size={16} aria-hidden="true" /></span>
+   <span class="page-title">{next.title}</span>
+ </Surface>
+</nav>
+<style>
+.page-navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); margin-block-start: var(--space-lg); font-size: var(--text-navigation); }
+.page-link { display: flex; flex-direction: column; gap: var(--space-xs); }
+.page-direction { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--text-caption); color: var(--color-text-muted); }
+.page-title { font-weight: var(--weight-semibold); }
+.page-link:hover .page-title { text-decoration-line: underline; }
+@media print { .page-navigation { display: none; } }
+</style>

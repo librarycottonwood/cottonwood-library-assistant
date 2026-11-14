@@ -1,0 +1,16 @@
+---
+/**
+ * @component ReadingHeader
+ * A compact page title and introduction for guides.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <ReadingHeader>…</ReadingHeader>
+ */
+import Heading from './Heading.astro';
+import Text from './Text.astro';
+import Stack from './Stack.astro';
+interface Props { title: string; summary?: string; }
+const { title, summary } = Astro.props;
+---
+<header class="reading-header"><Stack gap="sm"><Heading level={1} size="reading-title">{title}</Heading>{summary && <Text tone="muted">{summary}</Text>}</Stack></header>

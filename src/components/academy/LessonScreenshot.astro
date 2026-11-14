@@ -1,0 +1,16 @@
+---
+import ScreenshotCanvas from '../site/ScreenshotCanvas.astro';
+import '../../styles/academy-screenshot-focus.css';
+import { Image } from 'astro:assets';
+import { resolveImage } from '../../content/images';
+import type { Part } from '../../pages/academy/_guide';
+interface Props { image: NonNullable<Part['screenshots']>[number]; }
+const { image } = Astro.props;
+const source = resolveImage(image.key);
+const green = ['tour-library', 'attachment', 'buffer-queue', 'tour-account', 'givebutter-subscribers'];
+const rose = ['tour-scheduled', 'modes', 'newsletter', 'buffer-timing', 'givebutter-donation'];
+const theme = green.includes(image.view) ? 'green' : rose.includes(image.view) ? 'rose' : 'lavender';
+---
+<ScreenshotCanvas view={image.view} framing={image.framing} caption={image.caption} theme={theme}>
+ <Image src={source} alt={image.alt} format={['newsletter', 'tour-plugins'].includes(image.view) ? 'webp' : 'png'} quality={95} widths={[1200, Math.min(1800, source.width)]} sizes="(max-width: 767px) 840px, 1800px" loading="lazy" />
+</ScreenshotCanvas>
