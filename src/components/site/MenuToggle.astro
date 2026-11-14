@@ -1,0 +1,34 @@
+---
+/**
+ * @component MenuToggle
+ * Shared animated open and close control for HeaderMenu.
+ * @use Site and reading headers, with the matching viewport.
+ * @avoid A separate menu button implementation in each header.
+ * @example
+ * <MenuToggle viewport="reading" />
+ */
+import Icon from '../Icon.astro';
+interface Props { viewport?: 'site' | 'reading'; }
+const { viewport = 'site' } = Astro.props;
+---
+<button id="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-mobile-nav" class="menu-toggle" data-viewport={viewport}>
+ <Icon name="menu" class="menu-open" /><Icon name="close" class="menu-close" /><span class="sr-only">Menu</span>
+</button>
+<style>
+  .menu-toggle {
+    display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
+    border: var(--border-thin) solid var(--color-primary-ink); border-radius: var(--radius-pill);
+    background: transparent; color: var(--color-primary-ink); cursor: pointer;
+  }
+  .menu-toggle :global(svg) { width: 1.25rem; height: 1.25rem; }
+  .menu-toggle[aria-expanded='true'] :global(.menu-open), .menu-toggle[aria-expanded='false'] :global(.menu-close) { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-toggle :global(svg) { animation: icon-turn var(--motion-smooth) var(--ease-out); }
+  }
+  @keyframes icon-turn { from { transform: rotate(-90deg); opacity: 0; } }
+  @media (scripting: none) { .menu-toggle { display: none; } }
+
+
+@media (min-width: 48rem) { .menu-toggle[data-viewport='reading'] { display: none; } }
+@media (min-width: 90rem) { .menu-toggle { display: none; } }
+</style>

@@ -4,7 +4,7 @@ export const academyUrl = "https://www.cottonwoodcommunitylibrary.com/academy/";
 export interface Part {
   id?: string;
   icon?: string;
-  screenshots?: { framing?: 'full'; beforeStep?: number; afterParagraph?: number; key: string; alt: string; caption?: string; view: 'navigation' | 'message' | 'modes' | 'attachment' | 'helper' | 'website-request' | 'newsletter' | 'buffer-queue' | 'buffer-editor' | 'buffer-timing' | 'tour-sidebar' | 'tour-scheduled' | 'tour-library' | 'tour-plugins' | 'tour-explore' | 'tour-account' | 'givebutter-email' | 'givebutter-templates' | 'givebutter-subscribers' | 'givebutter-donation' }[];
+  screenshots?: { framing?: 'full'; beforeStep?: number; afterParagraph?: number; key: string; alt: string; caption?: string; view: 'navigation' | 'message' | 'modes' | 'attachment' | 'helper' | 'website-request' | 'newsletter' | 'buffer-queue' | 'buffer-editor' | 'buffer-timing' | 'buffer-channels' | 'buffer-connect' | 'tour-sidebar' | 'tour-scheduled' | 'tour-library' | 'tour-plugins' | 'tour-explore' | 'tour-account' | 'givebutter-email' | 'givebutter-templates' | 'givebutter-subscribers' | 'givebutter-donation' }[];
   title: string;
   text: string[];
   items?: { label: string; text: string }[];
@@ -716,8 +716,8 @@ export const lessons: Lesson[] = [
   },
   {
     "slug": "facebook-posts",
-    "title": "Facebook posts",
-    "summary": "Write a post with ChatGPT, then check and schedule it in Buffer.",
+    "title": "Social posts with Buffer",
+    "summary": "Prepare and schedule posts, and connect the library’s social accounts.",
     "parts": [
       {
         "id": "facebook",
@@ -787,6 +787,87 @@ export const lessons: Lesson[] = [
             "view": "buffer-timing",
             "alt": "Buffer’s posting-time menu open beside the publishing button, showing Next Available, Prioritize, Now, and Set Date and Time.",
             "beforeStep": 1
+          }
+        ]
+      },
+      {
+        "id": "buffer-connect",
+        "title": "Add another social account",
+        "text": [
+          "Buffer calls each connected social account a channel. Connecting an account requires administrator access in Buffer and permission to manage that social account."
+        ],
+        "steps": [
+          "Open Buffer. Choose Settings, then Channels.",
+          "Click Connect Channel.",
+          "Choose the social network you want to add, such as Instagram or Facebook.",
+          "Sign in to the account you want to connect. For a Facebook Page, sign in with the Facebook profile that manages it, then choose the library’s Page.",
+          "Review the account and permissions shown, then finish the connection.",
+          "Back in Channels, check that the library’s account name and picture appear in the list."
+        ],
+        "screenshots": [
+          {
+            "key": "academyBufferChannels",
+            "view": "buffer-channels",
+            "framing": "full",
+            "beforeStep": 1,
+            "alt": "Buffer’s Channels settings in a separate Safari window, with Channels selected on the left and the green Connect Channel button above the library’s Facebook Page."
+          },
+          {
+            "key": "academyBufferConnect",
+            "view": "buffer-connect",
+            "framing": "full",
+            "beforeStep": 3,
+            "alt": "Buffer’s Connect a New Channel window showing choices including Instagram, Threads, LinkedIn, Facebook, Bluesky, YouTube and TikTok."
+          }
+        ],
+        "links": [
+          {
+            "label": "Open Buffer’s channel settings",
+            "href": "https://publish.buffer.com/settings/channels"
+          },
+          {
+            "label": "Buffer’s guide to connecting accounts",
+            "href": "https://support.buffer.com/articles/connecting-your-channels-to-buffer-HvWLgAJvL9"
+          }
+        ]
+      },
+      {
+        "id": "buffer-select-account",
+        "title": "Choose where a post goes",
+        "text": [
+          "In Publish, choose an account to see its Queue, Drafts and Sent posts. In the post editor, check the account pictures at the top before saving or scheduling. Select only the accounts that should receive that post."
+        ]
+      },
+      {
+        "id": "buffer-reconnect",
+        "title": "Reconnect an expired account",
+        "text": [
+          "If Buffer says a channel needs refreshing, reconnect the existing channel. Refreshing keeps its scheduled posts."
+        ],
+        "steps": [
+          "Open Settings, then Channels.",
+          "Find the affected account and choose Refresh.",
+          "Sign in with the account that manages the library’s Page or profile and complete the prompts.",
+          "Return to Buffer and check the connection. Review any failed posts separately: Re-add to Queue schedules them again; Retry Now publishes immediately."
+        ],
+        "links": [
+          {
+            "label": "Buffer’s guide to refreshing a connection",
+            "href": "https://support.buffer.com/articles/refreshing-a-channel-in-buffer-7oDS4jk7l1"
+          }
+        ]
+      },
+      {
+        "id": "buffer-account-help",
+        "title": "If the account does not appear",
+        "text": [
+          "Check which social account you signed in with. For Facebook, that profile needs Full control of the library’s Page.",
+          "If Buffer’s connection controls are unavailable, or it asks for an upgrade, contact the person who manages the library’s accounts."
+        ],
+        "links": [
+          {
+            "label": "Who to ask for help",
+            "href": "/academy/accounts-and-tools/#sign-in-help"
           }
         ]
       }

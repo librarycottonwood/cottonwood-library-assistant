@@ -1,0 +1,22 @@
+---
+import Heading from '../site/Heading.astro';
+import ReadingContent from '../site/ReadingContent.astro';
+import PrintButton from './PrintButton.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/logos/library-tree.png';
+import LessonBody from './LessonBody.astro';
+import { lessons, reviewed, academyUrl } from '../../pages/academy/_guide';
+---
+
+  <ReadingContent>
+  <header class="handbook-cover"><Image src={logo} alt="Cottonwood Community Library tree emblem" width={72} class="handbook-mark" /><p class="eyebrow">Cottonwood Community Library</p><Heading level={1} size="reading-title">Volunteer handbook</Heading><p class="lead">ChatGPT, website updates, newsletters and donations.</p><p>Reviewed {reviewed}. Latest guide: <a href={academyUrl}>{academyUrl}</a></p><PrintButton /><p class="screen-only small">Print on Letter or A4 paper. Turn browser headers/footers off. The website lessons and tool directory are included.</p><ol>{lessons.map(lesson => <li><a href={`#${lesson.slug}`}>{lesson.title}</a></li>)}</ol></header>
+  {lessons.map((lesson, index) => <article class="print-lesson" id={lesson.slug}><p class="eyebrow">Lesson {index + 1}</p><h2 class="print-title">{lesson.title}</h2><LessonBody lesson={lesson} print /></article>)}
+  </ReadingContent>
+
+<style>
+.handbook-cover { display: flex; flex-direction: column; gap: var(--space-sm); }
+.handbook-mark { width: 48px; height: auto; }
+.print-lesson { margin-block-start: var(--space-lg); padding-block-start: var(--space-md); border-block-start: var(--border-thin) solid var(--color-border); }
+.print-title { font: var(--weight-regular) var(--text-reading-title)/var(--leading-snug) var(--font-display); margin-block-end: var(--space-md); }
+.eyebrow, .small { font-size: var(--fluid-label); color: var(--color-text-muted); }
+</style>

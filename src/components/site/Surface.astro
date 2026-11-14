@@ -1,0 +1,19 @@
+---
+/**
+ * @component Surface
+ * Shared quiet surface for cards and examples, with consistent padding and corners.
+ * @use Compose topic cards, reading panels and sequential navigation.
+ * @avoid Adding separate borders or backgrounds to individual card types.
+ * @example
+ * <Surface as="a" href="/academy/">Explore the academy</Surface>
+ */
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'a'> { as?: 'a' | 'article' | 'aside' | 'div'; }
+const { as: Tag = 'div', class: className, ...attributes } = Astro.props;
+---
+<Tag class:list={['surface', className]} {...attributes}><slot /></Tag>
+<style>
+.surface { min-width: 0; padding: var(--space-sm); border-radius: var(--radius-panel); background: var(--color-surface-muted); color: var(--color-text); }
+a.surface { text-decoration-line: none; transition: background-color var(--motion-quick) var(--ease-out); }
+a.surface:hover { background: color-mix(in srgb, var(--color-surface-muted), var(--color-border) 30%); }
+</style>

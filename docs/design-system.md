@@ -33,10 +33,21 @@ Use the role names below. Do not add new colors or shades.
 | `--color-accent` | `#beedae` | Supporting actions (directions, donations) and the notices bar. | Text color; it fails contrast on paper. | `<Button variant="accent">` |
 | `--color-accent-ink` | `#3b5c30` | Text and icons on pale-green backgrounds. | Text on paper or white (use --color-text). | `color: var(--color-accent-ink);` |
 | `--color-background` | `#f7f8ff` | The page background. | Cards that must stand out from the page (use --color-surface). | `background: var(--color-background);` |
+| `--color-surface-muted` | `#f6f5f3` | Topic cards and quiet navigation highlights on white reading pages. | Text or primary actions. | `<LinkCard />` |
 | `--color-surface` | `#ffffff` | Raised surfaces, badges on photos, and text on indigo. | The page background. | `background: var(--color-surface);` |
 | `--color-text` | `#000000` | Headings and primary text. | Secondary or supporting copy (use --color-text-muted). | `<Text>` |
 | `--color-text-muted` | `#525252` | Supporting text, dates and secondary icons. | Headings, or text under 16px on colored backgrounds. | `<Text tone="muted">` |
 | `--color-border` | `#d9d9d9` | Subtle outlines around badges and dividers. | Text or icons; it is too light to read. | `border: var(--border-thin) solid var(--color-border);` |
+| `--canvas-glow` | `#f7e9df` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-base` | `#dcdcf5` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-edge` | `#d2d3ed` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-start` | `#f2effb` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-green-glow` | `#edf7e8` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-green-base` | `#cce6e4` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-green-edge` | `#c8dedb` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-rose-glow` | `#fff0d9` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-rose-base` | `#efd9df` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
+| `--canvas-rose-edge` | `#ead3d8` | Screenshot canvas backgrounds. | Text or interactive controls. | `<ScreenshotCanvas />` |
 | `--color-icon-muted` | `#c1c1c1` | Muted icons on the indigo strip. | Anything on a light background. | `color: var(--color-icon-muted);` |
 
 ### Fonts
@@ -47,7 +58,7 @@ Two self-hosted families. Headings use Bree Serif; everything else uses Mona San
 | --- | --- | --- | --- | --- |
 | `--font-display` | `'Bree Serif', Georgia, serif` (Regular · 400) | Page titles and section headings. | Body copy, buttons, labels or card titles. | `<Heading size="display">` |
 | `--font-body` | `'Mona Sans Variable', 'Mona Sans', sans-serif` (Medium 500 / Semibold 600 / Bold 700) | Body copy, navigation, links, buttons, dates and labels. | Page and section headings (use --font-display). | `font-family: var(--font-body);` |
-| `--weight-regular` | `400` | Bree Serif headings. | Mona Sans text; it is lighter than the design. | `font-weight: var(--weight-regular);` |
+| `--weight-regular` | `400` | Bree Serif headings and long-form reading text. | Navigation emphasis and action labels. | `font-weight: var(--weight-regular);` |
 | `--weight-medium` | `500` | Body text and opening hours. | Buttons and card titles (use bold). | `font-weight: var(--weight-medium);` |
 | `--weight-semibold` | `600` | Navigation and footer links. | Paragraphs. | `font-weight: var(--weight-semibold);` |
 | `--weight-bold` | `700` | Buttons, card titles and badges. | Whole paragraphs or Bree Serif headings. | `font-weight: var(--weight-bold);` |
@@ -58,6 +69,11 @@ Desktop sizes from the 1920px design. base.css scales them down on phones (--flu
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
+| `--text-navigation` | `1rem` (16px) | Sidebar links and article navigation. | Instructions and long paragraphs. | `<SideNavigation />` |
+| `--text-caption` | `.875rem` (14px) | Navigation group labels and supplementary labels. | Instructions or primary links. | `<PageNavigation />` |
+| `--text-reading` | `1.125rem` (18px) | Instructions and reference layouts. | Marketing page leads. | `<ReadingContent />` |
+| `--text-reading-title` | `2.5rem` | Guide page titles. | Marketing display titles. | `<Heading size="reading-title" />` |
+| `--text-reading-heading` | `1.5rem` | Sections in long guides. | Marketing section headings. | `<Heading size="reading-heading" />` |
 | `--text-label` | `1.25rem` (20px) | Badges, dates, notices and opening hours. | Paragraphs people need to read. | `<Text size="label">` |
 | `--text-body` | `1.5rem` (24px) | Body copy, card titles, navigation and buttons. | Headings. | `<Text>` |
 | `--text-lead` | `1.875rem` (30px) | A short introduction under a heading, and the wordmark. | More than two sentences. | `<Text size="lead">` |
@@ -85,6 +101,8 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
+| `--width-sidebar` | `16rem` | Reading-layout navigation. | Text columns. | `<ReadingShell />` |
+| `--width-index` | `12rem` | Reading-page section index. | Primary navigation. | `<SectionIndex />` |
 | `--width-content` | `95rem` (1520px) | Max width of section content (card grids). At 1920px this leaves the design’s 200px margins. | Text columns (use --width-copy). | `<Section width="content">` |
 | `--width-wide` | `82.5rem` (1320px) | The Find us map (MapCard caps itself at this width). | Text or card grids. | `max-width: var(--width-wide);` |
 | `--width-article` | `70rem` (1120px) | A news list or an event’s text and buttons (Figma Events & News, Event View): PostList, Section width="article". | Long text on its own (use --width-text) or card grids. | `<Section width="article">` |
@@ -96,10 +114,12 @@ Widths cap content. The three responsive spacing aliases step between the 5 spac
 
 ### Corners
 
-Three shapes only.
+Use the named shape for the component role.
 
 | Token | Value | Use for | Don't use for | Example |
 | --- | --- | --- | --- | --- |
+| `--radius-control` | `.375rem` | Navigation highlights and small controls. | Large content panels. | `<SideNavigation />` |
+| `--radius-panel` | `.75rem` | Text cards, dropdowns and reference panels. | Buttons or photographs. | `<Panel />` |
 | `--radius-none` | `0px` | Sections, strips and edges where a photo bleeds off the page. | Photos inside the page (use --radius-image). | `border-radius: var(--radius-none);` |
 | `--radius-image` | `2.1875rem` (35px) | Photos, image containers and floating panels. | Buttons and badges (use --radius-pill). | `border-radius: var(--radius-image);` |
 | `--radius-pill` | `6.25rem` (100px) | Buttons, badges and contact strips. | Photos or large panels. | `<Button> / <Badge>` |
@@ -133,6 +153,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | Component | Purpose |
 | --- | --- |
 | [BaseLayout](#baselayout) | The page shell for every page: fonts, tokens, notices, header, footer, analytics and the skip link. |
+| [ActionMenu](#actionmenu) | A keyboard-accessible dropdown for related actions. |
 | [Badge](#badge) | Small pill label: a date, a status, or a short link to a campaign. |
 | [Button](#button) | Pill-shaped call to action. A link when given `href`, otherwise a button element. |
 | [Card](#card) | Photo card with a title and a short description. With `href` the whole card is one link: click anywhere on it, only the title underlines, and the focus ring goes around the whole card. Use inside a Grid. |
@@ -142,16 +163,30 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [FundraiserForm](#fundraiserform) | The active fundraiser's Givebutter Form widget: live goal bar and the donation form, right on the page (at #give). Without JavaScript, or until Givebutter's script loads, a link to the fundraiser's Givebutter page shows instead. |
 | [Gallery](#gallery) | A grid of rounded photos with their captions (if any): the About gallery, the founders' pair, photos from an event. |
 | [Grid](#grid) | Equal-width columns that collapse to one column on phones. |
+| [HeaderMenu](#headermenu) | Shared responsive navigation, scroll offsets and animated menu behavior for site and reading headers. |
 | [Heading](#heading) | Page and section headings in Bree Serif, plus bold card-style titles. |
 | [IconLink](#iconlink) | A text link with an icon before or after it, underlined on hover. |
+| [LinkCard](#linkcard) | A quiet topic card with a title, short description and optional icon. |
 | [MapCard](#mapcard) | The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead. |
+| [MenuToggle](#menutoggle) | Shared animated open and close control for HeaderMenu. |
+| [PageNavigation](#pagenavigation) | Previous and next cards using the same surface as topic cards. |
 | [PageTitle](#pagetitle) | The page's opening title (h1) at the top left, as on every Figma page except the homepage. On pages inside a section it shows a breadcrumb above the title ("Home / Events & News / Quarterly book sale"), and it can show one muted line under it, such as an event's date. |
+| [Panel](#panel) | A quiet surface for text, examples and service information. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
+| [ReadingContent](#readingcontent) | Long-form instructions with shared typography and spacing. |
+| [ReadingHeader](#readingheader) | A compact page title and introduction for guides. |
+| [ReadingPage](#readingpage) | A reading title, content and optional section index. |
+| [ReadingShell](#readingshell) | Responsive sidebar and reading area using the shared content widths. |
+| [ScreenshotCanvas](#screenshotcanvas) | An intact screenshot on a pastel canvas, with optional focused framing. |
+| [SearchDialog](#searchdialog) | Accessible local search across a supplied collection of pages and sections. |
 | [Section](#section) | One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below. |
+| [SectionIndex](#sectionindex) | Links that track the section currently being read. |
+| [SideNavigation](#sidenavigation) | Grouped navigation with one shared selected state. |
 | [Signature](#signature) | A sign-off: a muted thank-you line, then the small tree logo beside the two-line library name (Figma About Us "Thank you for your support!"). |
 | [Split](#split) | A large photo beside a text column. The photo bleeds off one page edge at every width; on phones and tablets it sits above the text, a little taller (3:2) so it isn't a thin strip. With `panel` the text sits on a pale-indigo panel that runs off the other edge (Visit Us hours). With `inset` both stay inside the content width and the photo is rounded on every corner (Explore Services). |
 | [Stack](#stack) | Puts children in a column (or a row) with one of the 5 gaps between them. |
+| [Surface](#surface) | Shared quiet surface for cards and examples, with consistent padding and corners. |
 | [Text](#text) | A paragraph (or inline text) in one of the body sizes and tones. |
 | [TopicList](#topiclist) | Short topics, each a bold sub-heading over a muted paragraph (Figma Explore Services "Getting started" / "Renewals & returns"). |
 | [WideImage](#wideimage) | One large rounded photo across the page, right under the page title (Figma Event View and About Us). |
@@ -184,6 +219,21 @@ interface Props {
 <BaseLayout title="Visit | Cottonwood Community Library" description="Hours, directions and services.">
   <Section title="Visit us" headingId="visit-heading">…</Section>
 </BaseLayout>
+```
+
+### ActionMenu
+
+`src/components/site/ActionMenu.astro` — A keyboard-accessible dropdown for related actions.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { label: string; }
+```
+
+```astro
+<ActionMenu>…</ActionMenu>
 ```
 
 ### Badge
@@ -224,6 +274,7 @@ interface Props {
 ```ts
 interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   href?: string;
+  size?: 'default' | 'small';
   /** outline (default): quiet. accent: pale green, supporting. primary: indigo, one per view. */
   variant?: 'outline' | 'accent' | 'primary';
   /** Icon before the label. */
@@ -408,6 +459,21 @@ interface Props {
 </Grid>
 ```
 
+### HeaderMenu
+
+`src/components/site/HeaderMenu.astro` — Shared responsive navigation, scroll offsets and animated menu behavior for site and reading headers.
+
+- **Use for:** Beside a header containing MenuToggle.
+- **Don't use for:** Reimplementing menu state, inert backgrounds or header measurements.
+
+```ts
+interface Props { links: Link[]; viewport?: 'site' | 'reading'; }
+```
+
+```astro
+<HeaderMenu links={links} viewport="reading" />
+```
+
 ### Heading
 
 `src/components/site/Heading.astro` — Page and section headings in Bree Serif, plus bold card-style titles.
@@ -417,9 +483,9 @@ interface Props {
 
 ```ts
 interface Props {
-  level?: 1 | 2 | 3;
+  level?: 1 | 2 | 3 | 4;
   /** display: 70px h1. heading: 50px section heading. title: bold body-size title. */
-  size?: 'display' | 'heading' | 'title';
+  size?: 'display' | 'heading' | 'title' | 'reading-title' | 'reading-heading';
   id?: string;
   /** Relaxed line height, for headings centered above a grid. */
   relaxed?: boolean;
@@ -451,6 +517,21 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style'> {
 <IconLink href={library.phoneHref} icon="phone">{library.phone}</IconLink>
 ```
 
+### LinkCard
+
+`src/components/site/LinkCard.astro` — A quiet topic card with a title, short description and optional icon.
+
+- **Use for:** Topic indexes and collections of related guides.
+- **Don't use for:** Previous/next links (use PageNavigation) or long instructions (use Panel).
+
+```ts
+interface Props { title: string; href: string; level?: 2 | 3; }
+```
+
+```astro
+<LinkCard href="/academy/start-here/" title="Your first chat">Send your first message.</LinkCard>
+```
+
 ### MapCard
 
 `src/components/site/MapCard.astro` — The library on a map, with the address and phone number as pills on its top edge (Figma "Find us"). The map loads when it scrolls into view; without it (no network, no WebGL) the address and a directions link show instead.
@@ -464,6 +545,36 @@ interface Props { library: HomeContent['library']; }
 
 ```astro
 <Section title="Find us" headingId="map-heading"><MapCard library={library} /></Section>
+```
+
+### MenuToggle
+
+`src/components/site/MenuToggle.astro` — Shared animated open and close control for HeaderMenu.
+
+- **Use for:** Site and reading headers, with the matching viewport.
+- **Don't use for:** A separate menu button implementation in each header.
+
+```ts
+interface Props { viewport?: 'site' | 'reading'; }
+```
+
+```astro
+<MenuToggle viewport="reading" />
+```
+
+### PageNavigation
+
+`src/components/site/PageNavigation.astro` — Previous and next cards using the same surface as topic cards.
+
+- **Use for:** Sequential guides and articles.
+- **Don't use for:** Large promotional cards; keep sequential navigation easy to recognize and read.
+
+```ts
+interface Props { previous: Link; next: Link; }
+```
+
+```astro
+<PageNavigation previous={previous} next={next} />
 ```
 
 ### PageTitle
@@ -488,6 +599,21 @@ interface Props {
 <PageTitle title={event.title} trail={[{ label: 'Events & News', href: '/events/' }]}>
   <time datetime={event.startsAt}>{date}</time>
 </PageTitle>
+```
+
+### Panel
+
+`src/components/site/Panel.astro` — A quiet surface for text, examples and service information.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props extends HTMLAttributes<'article'> { as?: 'article' | 'aside' | 'div'; }
+```
+
+```astro
+<Panel>…</Panel>
 ```
 
 ### PostList
@@ -534,6 +660,92 @@ interface Props {
 <Section width="text" align="start"><Prose paragraphs={story.paragraphs} /></Section>
 ```
 
+### ReadingContent
+
+`src/components/site/ReadingContent.astro` — Long-form instructions with shared typography and spacing.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```astro
+<ReadingContent>…</ReadingContent>
+```
+
+### ReadingHeader
+
+`src/components/site/ReadingHeader.astro` — A compact page title and introduction for guides.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { title: string; summary?: string; }
+```
+
+```astro
+<ReadingHeader>…</ReadingHeader>
+```
+
+### ReadingPage
+
+`src/components/site/ReadingPage.astro` — A reading title, content and optional section index.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { title: string; summary?: string; topics?: { id: string; title: string }[]; }
+```
+
+```astro
+<ReadingPage>…</ReadingPage>
+```
+
+### ReadingShell
+
+`src/components/site/ReadingShell.astro` — Responsive sidebar and reading area using the shared content widths.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { indexed?: boolean; }
+```
+
+```astro
+<ReadingShell>…</ReadingShell>
+```
+
+### ScreenshotCanvas
+
+`src/components/site/ScreenshotCanvas.astro` — An intact screenshot on a pastel canvas, with optional focused framing.
+
+- **Use for:** Interface illustrations in guides. Full framing centers the complete window.
+- **Don't use for:** Cropping source images or duplicating canvas colors and corners.
+
+```ts
+interface Props { framing?: string; view?: string; caption?: string; theme?: 'lavender' | 'green' | 'rose'; }
+```
+
+```astro
+<ScreenshotCanvas framing="full"><Image src={screen} alt="…" /></figure>
+```
+
+### SearchDialog
+
+`src/components/site/SearchDialog.astro` — Accessible local search across a supplied collection of pages and sections.
+
+- **Use for:** A centered popup opened by navigation search controls for searchable guides and documentation.
+- **Don't use for:** Remote services or a separate copy of the searchable content.
+
+```ts
+interface Props { label: string; entries: SearchEntry[]; }
+```
+
+```astro
+<SearchDialog label="Search academy" entries={entries} />
+```
+
 ### Section
 
 `src/components/site/Section.astro` — One full-width band of the page: page-edge inset, vertical rhythm, an optional heading, and its content stacked below.
@@ -564,6 +776,36 @@ interface Props {
   <Grid as="ul" columns={3}>…</Grid>
   <Button href="/visit/" iconEnd="arrow">Read more</Button>
 </Section>
+```
+
+### SectionIndex
+
+`src/components/site/SectionIndex.astro` — Links that track the section currently being read.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { topics: { id: string; title: string }[]; }
+```
+
+```astro
+<SectionIndex>…</SectionIndex>
+```
+
+### SideNavigation
+
+`src/components/site/SideNavigation.astro` — Grouped navigation with one shared selected state.
+
+- **Use for:** Reading pages and reusable content layouts.
+- **Don't use for:** Page-specific colors, spacing or duplicate control styles.
+
+```ts
+interface Props { label: string; }
+```
+
+```astro
+<SideNavigation>…</SideNavigation>
 ```
 
 ### Signature
@@ -642,6 +884,21 @@ interface Props {
   <Heading size="heading">Keep your library open.</Heading>
   <Text tone="muted">Donations help cover day-to-day operations.</Text>
 </Stack>
+```
+
+### Surface
+
+`src/components/site/Surface.astro` — Shared quiet surface for cards and examples, with consistent padding and corners.
+
+- **Use for:** Compose topic cards, reading panels and sequential navigation.
+- **Don't use for:** Adding separate borders or backgrounds to individual card types.
+
+```ts
+interface Props extends HTMLAttributes<'a'> { as?: 'a' | 'article' | 'aside' | 'div'; }
+```
+
+```astro
+<Surface as="a" href="/academy/">Explore the academy</Surface>
 ```
 
 ### Text

@@ -1,0 +1,83 @@
+---
+/**
+ * @component HeaderMenu
+ * Shared responsive navigation, scroll offsets and animated menu behavior for site and reading headers.
+ * @use Beside a header containing MenuToggle.
+ * @avoid Reimplementing menu state, inert backgrounds or header measurements.
+ * @example
+ * <HeaderMenu links={links} viewport="reading" />
+ */
+import Icon from '../Icon.astro';
+interface Link { label: string; href: string; current?: boolean; external?: boolean; analytics?: string; newTab?: boolean; }
+interface Props { links: Link[]; viewport?: 'site' | 'reading'; }
+const { links, viewport = 'site' } = Astro.props;
+---
+<nav id="site-mobile-nav" aria-label="Mobile navigation" class="mobile-nav" data-viewport={viewport}>
+ <slot />
+ {links.map(item => <a href={item.href} target={item.newTab ? "_blank" : undefined} rel={item.newTab ? "noopener noreferrer" : undefined} aria-current={item.current ? 'page' : undefined} data-analytics-event={item.analytics}><span data-nosnippet>{item.label}</span>{item.external && <Icon name="external" class="mobile-external" />}</a>)}
+</nav>
+<script>
+  import { menu as animateMenu } from '../../scripts/motion';
+  // Sticky header: a line under it only once the hours strip has scrolled away, and anchor
+  // targets (#give, #visit…) land below it. The header height is measured, so it isn't a spacing value.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const strip = document.querySelector<HTMLElement>('.hours-strip');
+  if (header) {
+    const root = document.documentElement;
+    new ResizeObserver(() => { root.style.scrollPaddingTop = `${header.offsetHeight}px`; }).observe(header);
+    if (strip) new IntersectionObserver(([entry]) => { header.toggleAttribute('data-stuck', !entry!.isIntersecting); }).observe(strip);
+  }
+  // Phone menu: a panel filling the screen under the header (logo, Donate and the × stay in reach). While it is open
+  // the page behind can't scroll or take focus: everything on the page except the header and the menu is inert, so Tab
+  // never reaches the hidden page (the newsletter form, the footer) behind the panel. Opening and closing animate through
+  // menu() in src/scripts/motion.ts.
+  const toggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
+  const menu = document.querySelector<HTMLElement>('#site-mobile-nav');
+  if (header && toggle && menu) {
+    const behind = () => [...document.body.children].filter((element): element is HTMLElement => element instanceof HTMLElement && element !== header && element !== menu && element.tagName !== 'SCRIPT');
+    const place = () => { menu.style.top = `${Math.max(0, header.getBoundingClientRect().bottom)}px`; };
+    let isOpen = false;
+    const setOpen = async (open: boolean, instant = false) => {
+      if (open === isOpen) return;
+      isOpen = open;
+      toggle.setAttribute('aria-expanded', String(open));
+      document.documentElement.toggleAttribute('data-menu-open', open);
+      for (const element of behind()) element.inert = open;
+      if (open) { place(); menu.toggleAttribute('data-open', true); }
+      if (!instant) await animateMenu(menu, open);
+      if (!isOpen) menu.removeAttribute('data-open');
+    };
+    toggle.addEventListener('click', () => setOpen(!isOpen));
+    menu.addEventListener('click', event => { if (event.target instanceof Element && event.target.closest('a')) setOpen(false, true); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen) { setOpen(false); toggle.focus(); } });
+    window.matchMedia(menu.dataset.viewport === 'reading' ? '(min-width: 48rem)' : '(min-width: 90rem)').addEventListener('change', () => setOpen(false, true));
+    // The header can still move after opening (a scroll still gliding to a stop, a rotated phone), so follow it.
+    for (const event of ['resize', 'scroll']) window.addEventListener(event, () => { if (isOpen) place(); }, { passive: true });
+    // Coming back with the Back button can restore the page with the menu still open.
+    window.addEventListener('pageshow', event => { if (event.persisted) setOpen(false, true); });
+  }
+</script>
+<style>
+  .mobile-nav { display: flex; flex-direction: column; padding: 0 var(--page-inset) var(--space-sm); font-weight: var(--weight-semibold); }
+  @media (scripting: enabled) {
+    .mobile-nav {
+      position: fixed; inset: 0; z-index: 49;
+      padding: var(--space-sm) var(--page-inset) var(--space-lg);
+      overflow-y: auto; overscroll-behavior: contain;
+      background: var(--page-background, var(--color-background));
+      font-size: var(--fluid-lead); line-height: var(--leading-snug);
+    }
+    .mobile-nav:not([data-open]) { display: none; }
+  }
+  .mobile-nav a { text-decoration-line: none; display: flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: var(--space-xs) 0; border-bottom: var(--border-thin) solid var(--color-border); }
+  @media (scripting: enabled) { .mobile-nav a { padding-block: var(--space-sm); } }
+  .mobile-nav a[aria-current='page'] { color: var(--color-primary); }
+  .mobile-nav a:hover { text-decoration-line: underline; }
+  .mobile-nav :global(.mobile-external) { width: 0.75em; height: 0.75em; color: var(--color-text-muted); }
+  :global(html[data-menu-open]) { overflow: hidden; scrollbar-gutter: stable; }
+
+  .mobile-nav a { transition: text-decoration-color var(--motion-quick) var(--ease-out); }
+
+@media (min-width: 48rem) { .mobile-nav[data-viewport='reading'] { display: none; } }
+@media (min-width: 90rem) { .mobile-nav { display: none; } }
+</style>

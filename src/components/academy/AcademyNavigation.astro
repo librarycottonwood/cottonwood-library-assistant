@@ -1,0 +1,23 @@
+---
+import { House, ArrowUpRight, BookOpen, Printer, MessageSquare } from '@lucide/astro';
+import LessonIcon from './LessonIcon.astro';
+import { lessons, academyGroups } from '../../pages/academy/_guide';
+interface Props { active?: string; idPrefix: string; }
+const { active, idPrefix } = Astro.props;
+const navTitles: Record<string, string> = { 'facebook-posts': 'Social posts (Buffer)', 'start-here': 'Your first chat', 'preview-and-save': 'Website updates', 'everyday-jobs': 'Newsletters & donations' };
+---
+            <a href="/academy/" aria-current={active === 'home' ? 'page' : undefined}><House size={18} aria-hidden="true" /><span>Overview</span></a>
+            {academyGroups.map(group => <section class="lesson-nav-group" aria-labelledby={`${idPrefix}-${group.id}`}>
+              <p class="lesson-nav-title" id={`${idPrefix}-${group.id}`}>{group.title}</p>
+              <ol>{group.slugs.map(slug => lessons.find(lesson => lesson.slug === slug)!).map(lesson => <li><a href={`/academy/${lesson.slug}/`} aria-current={active === lesson.slug ? 'page' : undefined}><LessonIcon slug={lesson.slug} /><span>{navTitles[lesson.slug] ?? lesson.title}</span></a></li>)}</ol>
+            </section>)}
+
+<div class="academy-utilities">
+ <a href="https://chatgpt.com/?surface=work" target="_blank" rel="noopener noreferrer"><MessageSquare size={18} aria-hidden="true" /><span>Open ChatGPT</span></a>
+ <a href="/"><ArrowUpRight size={18} aria-hidden="true" /><span>Library website</span></a>
+ <a href="/academy/quick-reference/"><BookOpen size={18} aria-hidden="true" /><span>Print quick guide</span></a>
+ <a href="/academy/print/"><Printer size={18} aria-hidden="true" /><span>Print full handbook</span></a>
+</div>
+<style>
+.academy-utilities { margin-block-start: var(--space-md); padding-block-start: var(--space-sm); border-block-start: var(--border-thin) solid var(--color-border); }
+</style>

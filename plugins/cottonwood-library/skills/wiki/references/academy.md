@@ -19,7 +19,7 @@ Content reviewed: November 11, 2026. These are lesson instructions, not proof of
 
 - [Update the website](https://www.cottonwoodcommunitylibrary.com/academy/preview-and-save/): Add an event, correct a page or upload the newsletter.
 - [Newsletters and donations](https://www.cottonwoodcommunitylibrary.com/academy/everyday-jobs/): Send the newsletter, find subscribers and work with donation records.
-- [Facebook posts](https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/): Write a post with ChatGPT, then check and schedule it in Buffer.
+- [Social posts with Buffer](https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/): Prepare and schedule posts, and connect the library’s social accounts.
 - [Closures and problems](https://www.cottonwoodcommunitylibrary.com/academy/when-something-goes-wrong/): Post a closure, cancel an event or ask for help with the website.
 - [Examples](https://www.cottonwoodcommunitylibrary.com/academy/practice-with-a-buddy/): Choose an idea to open a ready-written message in ChatGPT. Read it, then send it.
 - [Accounts and websites](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/): Links to the websites you may use for library work.
@@ -432,11 +432,11 @@ Example message:
 
 > How much did the library receive in donations last month, and how many people visited the website?
 
-## Facebook posts
+## Social posts with Buffer
 
 Page: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/
 
-Write a post with ChatGPT, then check and schedule it in Buffer.
+Prepare and schedule posts, and connect the library’s social accounts.
 
 ### Make a Facebook post
 
@@ -488,6 +488,63 @@ Screenshot: Buffer’s posting-time menu open beside the publishing button, show
 2. Choose Now to post today, or Set Date and Time to pick a particular time.
 
 3. Check your choice, then use the button beside the timing menu to publish or schedule the post.
+
+### Add another social account
+
+Section: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/#buffer-connect
+
+Buffer calls each connected social account a channel. Connecting an account requires administrator access in Buffer and permission to manage that social account.
+
+Screenshot: Buffer’s Channels settings in a separate Safari window, with Channels selected on the left and the green Connect Channel button above the library’s Facebook Page.
+
+1. Open Buffer. Choose Settings, then Channels.
+
+2. Click Connect Channel.
+
+Screenshot: Buffer’s Connect a New Channel window showing choices including Instagram, Threads, LinkedIn, Facebook, Bluesky, YouTube and TikTok.
+
+3. Choose the social network you want to add, such as Instagram or Facebook.
+
+4. Sign in to the account you want to connect. For a Facebook Page, sign in with the Facebook profile that manages it, then choose the library’s Page.
+
+5. Review the account and permissions shown, then finish the connection.
+
+6. Back in Channels, check that the library’s account name and picture appear in the list.
+
+- [Open Buffer’s channel settings](https://publish.buffer.com/settings/channels)
+- [Buffer’s guide to connecting accounts](https://support.buffer.com/articles/connecting-your-channels-to-buffer-HvWLgAJvL9)
+
+### Choose where a post goes
+
+Section: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/#buffer-select-account
+
+In Publish, choose an account to see its Queue, Drafts and Sent posts. In the post editor, check the account pictures at the top before saving or scheduling. Select only the accounts that should receive that post.
+
+### Reconnect an expired account
+
+Section: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/#buffer-reconnect
+
+If Buffer says a channel needs refreshing, reconnect the existing channel. Refreshing keeps its scheduled posts.
+
+1. Open Settings, then Channels.
+
+2. Find the affected account and choose Refresh.
+
+3. Sign in with the account that manages the library’s Page or profile and complete the prompts.
+
+4. Return to Buffer and check the connection. Review any failed posts separately: Re-add to Queue schedules them again; Retry Now publishes immediately.
+
+- [Buffer’s guide to refreshing a connection](https://support.buffer.com/articles/refreshing-a-channel-in-buffer-7oDS4jk7l1)
+
+### If the account does not appear
+
+Section: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/#buffer-account-help
+
+Check which social account you signed in with. For Facebook, that profile needs Full control of the library’s Page.
+
+If Buffer’s connection controls are unavailable, or it asks for an upgrade, contact the person who manages the library’s accounts.
+
+- [Who to ask for help](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help)
 
 ## Closures and problems
 

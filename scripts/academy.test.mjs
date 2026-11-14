@@ -37,7 +37,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.goto(origin + '/academy/');
     const routes = await page.locator('a[href^="/academy/"]').evaluateAll(links => [...new Set(links.map(a => a.getAttribute('href')))]);
     assert.equal(routes.length, 14, 'home, eleven lessons, handbook and desk guide');
-    assert.deepEqual(await page.locator('.lesson-nav-title').allTextContents(), ['Start here', 'Library tasks', 'Behind the scenes']);
+    assert.deepEqual(await page.locator('.academy-sidebar .lesson-nav-title').allTextContents(), ['Start here', 'Library tasks', 'Behind the scenes']);
     assert.equal(await page.locator('main img').count(), 0, 'the guide index has no decorative imagery');
     for (const width of [375, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
@@ -59,10 +59,17 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
           assert.match(await open.getAttribute('rel'), /noopener/);
         }
 
-        assert.equal(await page.locator('.lesson-menu').getAttribute('open') !== null, width >= 768, 'sidebar is open on desktop and collapsed on phone');
+        assert.equal(await page.locator('.reading-sidebar').isVisible(), width >= 768, 'sidebar is shown on desktop; the shared menu handles phones');
+        const pagination = page.getByRole('navigation', { name: 'Next and previous lessons' });
+        if (await pagination.count()) {
+          assert.equal(await pagination.locator('a[rel="prev"]').count(), 1);
+          assert.equal(await pagination.locator('a[rel="next"]').count(), 1);
+          if (route === '/academy/facebook-posts/') await pagination.screenshot({ path: `output/academy/${width}-navigation-cards.png` });
+          assert.ok((await pagination.boundingBox()).height <= (width < 768 ? 200 : 140), 'sequential navigation cards stay compact');
+        }
         if (route !== '/academy/print/' && route !== '/academy/quick-reference/') {
           const title = await page.locator('h1').boundingBox();
-          const header = await page.locator('.academy-header').boundingBox();
+          const header = await page.locator('.site-header').evaluate(node => { const box = node.getBoundingClientRect(); return { y: box.y, height: box.height }; });
           assert.ok(title.y < header.height + 120, 'content starts just below the header and mobile menu');
           assert.equal(await page.locator('.academy-sidebar a[aria-current="page"]').count(), 1, 'current guide is identified in navigation');
         }
@@ -118,24 +125,64 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: expanded catalog`);
       }
     }
+    // The shared menu needs the same motion bootstrap as the public layout.
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto(origin + '/academy/');
+    const animatedMenu = await page.evaluate(async () => {
+      document.querySelector('#site-menu-toggle').click();
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+      const panel = document.querySelector('#site-mobile-nav');
+      return {
+        enabled: document.documentElement.classList.contains('motion'),
+        panelAnimations: panel.getAnimations().length,
+        animatedLinks: [...panel.querySelectorAll('a')].filter(link => link.getAnimations().length > 0).length,
+        links: panel.querySelectorAll('a').length,
+      };
+    });
+    assert.equal(animatedMenu.enabled, true);
+    assert.ok(animatedMenu.panelAnimations > 0, 'shared menu panel animates');
+    assert.equal(animatedMenu.animatedLinks, animatedMenu.links, 'every menu link gets the shared entrance animation');
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('#site-mobile-nav').hasAttribute('data-open'));
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(origin + '/academy/');
+    assert.equal(await page.evaluate(() => {
+      document.querySelector('#site-menu-toggle').click();
+      return document.querySelector('#site-mobile-nav').getAnimations({ subtree: true }).length;
+    }), 0, 'reduced-motion menu opens without animation');
+    await page.keyboard.press('Escape');
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     for (const width of [320, 390, 768, 1024, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(origin + '/academy/when-something-goes-wrong/');
       await page.evaluate(() => document.fonts.ready);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `header fits ${width}px`);
-      assert.equal(await page.locator('.academy-sidebar a[href$="/print/"], .academy-sidebar a[href$="/quick-reference/"]').count(), 0, 'print links have one home');
-      const printToggle = page.locator('.academy-print-menu summary');
-      await printToggle.focus();
-      await page.keyboard.press('Enter');
-      assert.equal(await page.getByRole('link', { name: 'Full handbook', exact: true }).isVisible(), true);
-      await page.keyboard.press('Escape');
-      assert.equal(await page.locator('.academy-print-menu').getAttribute('open'), null);
-      assert.equal(await printToggle.evaluate(node => node === document.activeElement), true, 'Escape returns focus to Print');
-      await printToggle.click();
-      await page.locator('.academy-header').click({ position: { x: 2, y: 2 } });
-      assert.equal(await page.locator('.academy-print-menu').getAttribute('open'), null, 'outside click dismisses Print');
+      assert.equal(await page.locator('.academy-sidebar a[href$="/print/"], .academy-sidebar a[href$="/quick-reference/"]').count(), 2, 'print links live in the academy sidebar');
+      const menuToggle = page.locator('#site-menu-toggle');
+      if (width < 768) {
+        assert.ok((await page.locator('.site-header').boundingBox()).height <= 80, 'mobile header is one compact row');
+        await menuToggle.focus();
+        await page.keyboard.press('Enter');
+        assert.equal(await menuToggle.getAttribute('aria-expanded'), 'true');
+        assert.equal(await page.locator('#site-mobile-nav').getByRole('link', { name: 'Open ChatGPT', exact: true }).isVisible(), true, 'ChatGPT stays available in the phone menu');
+        assert.equal(await page.locator('.academy-shell').evaluate(node => node.inert), true, 'shared site menu makes background inert');
+        assert.equal(await page.getByRole('link', { name: 'Print full handbook', exact: true }).isVisible(), true);
+        assert.equal(await page.locator('#site-mobile-nav a[href="/academy/start-here/"]').isVisible(), true);
+        await page.keyboard.press('Escape');
+        assert.equal(await menuToggle.getAttribute('aria-expanded'), 'false');
+        assert.equal(await menuToggle.evaluate(node => node === document.activeElement), true);
+        assert.equal(await page.locator('.academy-shell').evaluate(node => node.inert), false);
+      } else {
+        assert.equal(await page.locator('.site-header').isVisible(), false, 'desktop has no header bar');
+        const search = await page.locator('.reading-sidebar [data-open-academy-search]').boundingBox();
+        const overview = await page.locator('.reading-sidebar a[href="/academy/"]').last().boundingBox();
+        assert.ok(search.y + search.height <= overview.y, 'search is above the lesson navigation');
+        assert.equal(await page.locator('.reading-sidebar').getByRole('link', { name: 'Open ChatGPT', exact: true }).count(), 1);
+      }
       await page.locator('.lesson-topics a').first().click();
-      const header = await page.locator('.academy-header').boundingBox();
+      const header = await page.locator('.site-header').evaluate(node => { const box = node.getBoundingClientRect(); return { y: box.y, height: box.height }; });
       const anchor = await page.locator('.lesson-part').first().boundingBox();
       assert.ok(Math.abs(header.y) < 1, 'header stays at the top after scrolling');
       assert.ok(anchor.y >= header.height, 'section links land below the sticky header');
@@ -188,6 +235,8 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
       'buffer-queue': [0.22, 0.145, 0.045, 0.025],
       'buffer-editor': [0.28, 0.89, 0.05, 0.025],
       'buffer-timing': [0.64, 0.74, 0.15, 0.10],
+      'buffer-channels': [0, 0, 1, 1],
+      'buffer-connect': [0, 0, 1, 1],
       'tour-sidebar': [0.008, 0.10, 0.14, 0.27],
       'tour-explore': [0.165, 0.23, 0.098, 0.215],
       'tour-library': [0.20, 0.135, 0.235, 0.023],
@@ -237,12 +286,59 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
       'accounts-and-tools': ['ChatGPT', 'Givebutter', 'Buffer'],
       'website-systems': ['Codex', 'Sanity', 'GitHub', 'Cloudflare', 'Squarespace', 'Google Analytics', 'Google Cloud'],
     };
+    for (const width of [375, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(origin + '/academy/');
+      const openSearch = async () => {
+        if (width < 768) await page.locator('#site-menu-toggle').click();
+        const scope = page.locator(width < 768 ? '#site-mobile-nav' : '.reading-sidebar');
+        await scope.getByRole('button', { name: 'Search academy', exact: true }).click();
+      };
+      await page.screenshot({ path: `output/academy/${width}-search-header.png` });
+      const titleBefore = await page.locator('h1').boundingBox();
+      await openSearch();
+      const dialog = page.getByRole('dialog', { name: 'Search academy' });
+      const input = dialog.getByRole('searchbox');
+      assert.equal(await input.evaluate(node => document.activeElement === node), true);
+      await input.fill('social account');
+      const firstResult = dialog.locator('.search-results a').first();
+      assert.equal(await firstResult.getAttribute('href'), '/academy/facebook-posts/#buffer-connect');
+      const box = await dialog.boundingBox();
+      assert.ok(Math.abs(box.x + box.width / 2 - width / 2) < 2, 'search popup is horizontally centered');
+      assert.ok(Math.abs(box.y + box.height / 2 - 450) < 2, 'search popup is vertically centered');
+      assert.equal((await page.locator('h1').boundingBox()).y, titleBefore.y, 'search does not shift content');
+      await page.screenshot({ path: `output/academy/${width}-academy-search.png` });
+      await input.fill('xyzzynothing');
+      assert.match(await dialog.getByRole('status').innerText(), /No matches/);
+      assert.equal(await dialog.locator('.search-results a').count(), 0);
+      await input.fill('<img src=x onerror=alert(1)>');
+      assert.equal(await dialog.locator('img').count(), 0);
+      await page.keyboard.press('Escape');
+      assert.equal(await dialog.isVisible(), false);
+      const returnTarget = page.locator(width < 768 ? '#site-menu-toggle' : '.reading-sidebar [data-open-academy-search]');
+      await page.waitForFunction(selector => document.activeElement === document.querySelector(selector), width < 768 ? '#site-menu-toggle' : '.reading-sidebar [data-open-academy-search]');
+      assert.equal(await returnTarget.isVisible(), true, 'focus returns to a visible control');
+      await openSearch();
+      await input.fill('social account');
+      await input.press('ArrowDown');
+      assert.equal(await firstResult.evaluate(node => document.activeElement === node), true);
+      await page.keyboard.press('Enter');
+      await page.waitForURL('**/academy/facebook-posts/#buffer-connect');
+      assert.equal(await page.locator('#buffer-connect').isVisible(), true);
+      await openSearch();
+      await page.getByRole('searchbox').fill('reconnect');
+      await page.locator('.search-results a').first().click();
+      await page.waitForURL('**/academy/facebook-posts/#buffer-reconnect');
+      assert.equal(await page.locator('site-search dialog').isVisible(), false);
+      assert.equal(await page.locator('#buffer-reconnect').evaluate(node => document.activeElement === node), true);
+
+    }
     let logoCount = 0;
     for (const [slug, names] of Object.entries(directory)) {
       await page.goto(origin + `/academy/${slug}/`);
       assert.equal(await page.locator('article.service-card').count(), names.length);
       assert.equal(await page.locator('main details').count(), 0, 'service information is visible without opening anything');
-      for (const link of await page.locator('.service-open').all()) assert.equal(await link.isVisible(), true);
+      for (const link of await page.locator('[data-service-open]').all()) assert.equal(await link.isVisible(), true);
       logoCount += await page.locator('.service-icon img').count();
       assert.equal(await page.locator('.service-icon img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, 'service logos load locally');
       for (const name of names) assert.equal(await page.getByRole('heading', { name, exact: true }).count(), 1, `explains ${name}`);
@@ -255,16 +351,33 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     assert.equal(await page.locator('.academy-sidebar').evaluate(node => getComputedStyle(node).backgroundColor), 'rgb(255, 255, 255)');
     await page.setViewportSize({ width: 375, height: 844 });
     await page.goto(origin + '/academy/practice-with-a-buddy/');
-    await page.getByText('Browse lessons', { exact: true }).click();
-    assert.equal(await page.locator('.lesson-menu a').last().isVisible(), true);
-    await page.getByText('Browse lessons', { exact: true }).click();
-    await page.getByRole('button', { name: 'Copy message' }).first().click();
+    await page.locator('#site-menu-toggle').click();
+    await page.locator('#site-mobile-nav a[href="/academy/website-systems/"]').scrollIntoViewIfNeeded();
+    assert.equal(await page.locator('#site-mobile-nav a[href="/academy/website-systems/"]').isVisible(), true);
+    await page.locator('#site-menu-toggle').click();
+    const copyButton = page.locator('[data-copy-prompt]').first();
+    const copyCard = page.locator('[data-prompt]').first();
+    await copyButton.scrollIntoViewIfNeeded();
+    const beforeCopy = await copyCard.boundingBox();
+    const beforeButtonWidth = await copyButton.evaluate(button => button.offsetWidth);
+    await copyButton.click();
+    await page.waitForFunction(() => document.querySelector('[data-copy-label]')?.textContent === 'Copied!');
+    assert.equal((await copyCard.boundingBox()).height, beforeCopy.height, 'copy confirmation does not change card height');
+    assert.equal(await copyButton.evaluate(button => button.offsetWidth), beforeButtonWidth, 'copy confirmation does not resize its button');
+    await copyCard.screenshot({ path: 'output/academy/375-copied-button.png' });
     const copied = await page.evaluate(() => navigator.clipboard.readText());
     assert.equal(copied, await page.locator('[data-prompt-text]').first().innerText());
     assert.equal(await page.getByRole('heading', { name: 'Examples', exact: true }).count(), 1);
     assert.equal(await page.locator('.example-card').count(), 16);
     assert.match(await page.locator('[data-prompt-text]').last().innerText(), /Let’s practice.*without changing the website or sending anything/);
-    assert.match(await page.getByRole('status').first().innerText(), /Copied/);
+    assert.match(await page.getByRole('status').first().innerText(), /copied/);
+    await page.waitForFunction(() => document.querySelector('[data-copy-label]')?.textContent === 'Copy');
+    assert.equal(await copyButton.getAttribute('aria-label'), 'Copy message');
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await copyButton.click();
+    await page.waitForFunction(() => document.querySelector('[data-copy-label]')?.textContent === 'Copied!');
+    await copyCard.screenshot({ path: 'output/academy/1440-copied-button.png' });
+    await page.waitForFunction(() => document.querySelector('[data-copy-label]')?.textContent === 'Copy');
     await page.evaluate(() => { Object.defineProperty(navigator.clipboard, 'writeText', { value: async () => { throw new Error('Denied'); } }); });
     await page.getByRole('button', { name: 'Copy message' }).first().click();
     assert.match(await page.getByRole('status').first().innerText(), /Select and copy the message/);
@@ -273,22 +386,43 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
     await page.getByRole('button', { name: 'Print or save a PDF' }).click();
     assert.equal(await page.locator('body').getAttribute('data-print-called'), 'yes');
     await page.emulateMedia({ media: 'print' });
-    assert.equal(await page.locator('.academy-header').isVisible(), false);
+    assert.equal(await page.locator('.site-header').isVisible(), false);
     assert.equal(await page.locator('.desk-guide').isVisible(), true);
     await page.goto(origin + '/academy/print/');
     assert.equal(await page.locator('.print-lesson').count(), 11);
     assert.equal((await page.locator('main').innerText()).match(/Todd/g)?.length, 1, 'one current contact in the handbook');
     assert.equal(await page.locator('.prompt-actions').first().isVisible(), false, 'print hides interactive actions');
     assert.equal(await page.locator('.service-card').count(), 10);
+    // Header-only regression: keep unrelated payment and CAPTCHA scripts offline.
+    await page.route('https://challenges.cloudflare.com/turnstile/v0/api.js', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
+    await page.route('https://widgets.givebutter.com/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
+    await page.emulateMedia({ media: 'screen' });
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(origin + '/about/');
+      await page.evaluate(() => document.fonts.ready);
+      assert.equal(await page.locator('.academy-header').count(), 0, 'public pages keep their own header');
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+      if (width < 1440) {
+        await page.locator('#site-menu-toggle').click();
+        assert.equal(await page.locator('#site-mobile-nav').isVisible(), true);
+        assert.equal(await page.locator('#site-mobile-nav a[data-analytics-event="catalog_mobile"]').count(), 1);
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(() => !document.querySelector('#site-mobile-nav').hasAttribute('data-open'));
+        assert.equal(await page.locator('#site-menu-toggle').getAttribute('aria-expanded'), 'false');
+      } else assert.equal(await page.locator('#site-menu-toggle').isVisible(), false);
+      await page.screenshot({ path: `output/academy/${width}-public-header-regression.png` });
+    }
     const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 844 } });
     const plain = await noJS.newPage();
     await plain.goto(origin + '/academy/practice-with-a-buddy/');
-    assert.equal(await plain.locator('.lesson-menu a').last().isVisible(), true, 'navigation works without JavaScript');
+    assert.equal(await plain.locator('.side-navigation a').last().isVisible(), true, 'navigation works without JavaScript');
     assert.ok(await plain.locator('[data-prompt-text]').first().isVisible());
     assert.equal(await plain.locator('[data-copy-prompt]').first().isVisible(), false);
+    assert.equal(await plain.locator('[data-open-academy-search]').first().isVisible(), false, 'no dead search control without JavaScript');
     assert.equal(await plain.locator('[data-open-prompt]').first().isVisible(), true, 'prefill links work without JavaScript');
     await plain.goto(origin + '/academy/accounts-and-tools/');
-    assert.equal(await plain.locator('.service-open').first().isVisible(), true);
+    assert.equal(await plain.locator('[data-service-open]').first().isVisible(), true);
     assert.equal(await plain.locator('main details').count(), 0);
     assert.deepEqual(errors, []);
   } finally { await browser?.close(); await new Promise(resolve => server.close(resolve)); }

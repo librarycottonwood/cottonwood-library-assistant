@@ -31,7 +31,7 @@ export const usesNewSystem = source => /from\s+['"][^'"]*(layouts\/BaseLayout\.a
 /** Files the spacing rules apply to, relative to the repo root. */
 export async function scopedFiles(root = ROOT) {
   const rel = file => path.relative(root, file).split(path.sep).join('/');
-  const components = (await walk(path.join(root, 'src/components/site'))).filter(file => file.endsWith('.astro'));
+  const components = [...await walk(path.join(root, 'src/components/site')), ...await walk(path.join(root, 'src/components/academy'))].filter(file => file.endsWith('.astro'));
   const pages = [];
   for (const file of await walk(path.join(root, 'src/pages'))) {
     if (file.endsWith('.astro') && usesNewSystem(await readFile(file, 'utf8'))) pages.push(file);

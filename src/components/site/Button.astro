@@ -16,6 +16,7 @@ import Icon from '../Icon.astro';
 type IconName = ComponentProps<typeof Icon>['name'];
 interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   href?: string;
+  size?: 'default' | 'small';
   /** outline (default): quiet. accent: pale green, supporting. primary: indigo, one per view. */
   variant?: 'outline' | 'accent' | 'primary';
   /** Icon before the label. */
@@ -27,10 +28,10 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'style' | 'type'> {
   /** Extra words only screen readers and search engines hear, so a short label like "Read more" says where it goes. */
   screenReaderText?: string;
 }
-const { href, variant = 'outline', icon, iconEnd, type = 'button', screenReaderText, ...attributes } = Astro.props;
+const { href, size = 'default', variant = 'outline', icon, iconEnd, type = 'button', screenReaderText, ...attributes } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
-<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`]} {...attributes}>{icon && <Icon name={icon} class={`button-icon icon-${icon}`} />}<slot />{screenReaderText && <span class="sr-only"> {screenReaderText}</span>}{iconEnd && <Icon name={iconEnd} class={`button-icon-end icon-${iconEnd}`} />}</Tag>
+<Tag href={href} type={href ? undefined : type} class:list={['button', `button-${variant}`, `button-${size}`]} {...attributes}>{icon && <Icon name={icon} class={`button-icon icon-${icon}`} />}<slot />{screenReaderText && <span class="sr-only"> {screenReaderText}</span>}{iconEnd && <Icon name={iconEnd} class={`button-icon-end icon-${iconEnd}`} />}</Tag>
 <style>
   .button {
     display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
@@ -64,4 +65,5 @@ const Tag = href ? 'a' : 'button';
     .button:hover :global(.icon-heart) { animation: heartbeat var(--motion-entrance) var(--ease-out); }
   }
   @keyframes heartbeat { 30% { transform: scale(1.25); } 60% { transform: scale(0.95); } }
+.button-small { font-size: var(--fluid-label); min-height: 44px; }
 </style>

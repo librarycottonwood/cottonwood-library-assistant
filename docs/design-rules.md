@@ -36,3 +36,7 @@ Motion makes the site feel calm and responsive; it never decorates, loops or mak
 
 ## Keep
 - Colours, Bree Serif + Mona Sans, the hero, focus outlines, skip link, real alt text, heading order (one h1 per page). Check every change at 375px wide.
+
+## Reading layouts
+
+The shared reading components use Mona Sans for headings and regular-weight 18px body text. Layouts may choose the white page surface (`data-surface="white"`); headers and menus inherit it. The academy places branding and search at the top of its desktop sidebar, with a centered SearchDialog. Its compact phone header uses the shared HeaderMenu and MenuToggle; phone search lives at the top of that menu. Secondary library and print links belong in academy navigation. Topic cards, examples, service panels and Previous/Next cards share the quiet neutral Surface component, including its padding, corners and link hover. Previous/Next places the direction above a left-aligned lesson title. Keep these choices in shared components and tokens, not an academy-only stylesheet. Bree Serif remains the public site's display face.

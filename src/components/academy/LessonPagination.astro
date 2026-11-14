@@ -1,16 +1,6 @@
 ---
-import { ArrowLeft, ArrowRight } from '@lucide/astro';
+import PageNavigation from '../site/PageNavigation.astro';
 interface Link { title: string; href: string; }
 interface Props { previous: Link; next: Link; }
-const { previous, next } = Astro.props;
 ---
-<nav class="lesson-pagination" aria-label="Next and previous lessons">
-  <a class="lesson-page-link" href={previous.href} rel="prev">
-    <ArrowLeft size={20} aria-hidden="true" />
-    <span><span class="lesson-direction">Previous</span><span class="lesson-destination">{previous.title}</span></span>
-  </a>
-  <a class="lesson-page-link lesson-page-next" href={next.href} rel="next">
-    <span><span class="lesson-direction">Next</span><span class="lesson-destination">{next.title}</span></span>
-    <ArrowRight size={20} aria-hidden="true" />
-  </a>
-</nav>
+<PageNavigation {...Astro.props} />

@@ -1,0 +1,8 @@
+<script is:inline>
+      // Motion (src/scripts/motion.ts) only when the visitor allows it. If that script hasn't started within 3 seconds
+      // (blocked or failed), drop the flag so nothing stays hidden.
+      if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion');
+        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 3000);
+      }
+    </script>

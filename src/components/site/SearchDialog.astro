@@ -1,0 +1,103 @@
+---
+/**
+ * @component SearchDialog
+ * Accessible local search across a supplied collection of pages and sections.
+ * @use A centered popup opened by navigation search controls for searchable guides and documentation.
+ * @avoid Remote services or a separate copy of the searchable content.
+ * @example
+ * <SearchDialog label="Search academy" entries={entries} />
+ */
+import { Search, X } from '@lucide/astro';
+import type { SearchEntry } from '../../scripts/search';
+interface Props { label: string; entries: SearchEntry[]; }
+const { label, entries } = Astro.props;
+---
+<site-search>
+  <dialog id="academy-search-dialog" aria-label={label}>
+    <form role="search" aria-label={label}>
+      <label class="search-field">
+        <Search size={20} aria-hidden="true" />
+        <span class="sr-only">{label}</span>
+        <input type="search" placeholder="Search the academy…" autocomplete="off" maxlength="150" />
+      </label>
+      <button type="button" class="search-close" aria-label="Close search"><X size={20} aria-hidden="true" /></button>
+    </form>
+    <p class="search-status" role="status" aria-live="polite"></p>
+    <ol class="search-results"></ol>
+  </dialog>
+  <script type="application/json" data-search-index set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
+</site-search>
+<script>
+import { searchEntries, searchExcerpt, type SearchEntry } from '../../scripts/search';
+class SiteSearch extends HTMLElement {
+  connectedCallback() {
+    const dialog = this.querySelector<HTMLDialogElement>('dialog')!;
+    let returnFocus: HTMLElement | null = null;
+    let destination: HTMLElement | null = null;
+    const input = this.querySelector<HTMLInputElement>('input')!;
+    const list = this.querySelector<HTMLOListElement>('.search-results')!;
+    const status = this.querySelector<HTMLElement>('[role="status"]')!;
+    const entries: SearchEntry[] = JSON.parse(this.querySelector('[data-search-index]')!.textContent!);
+    const close = () => dialog.close();
+    const render = () => {
+      const query = input.value.trim();
+      const matches = query ? searchEntries(entries, query) : entries.filter(entry => !entry.href.includes('#')).slice(0, 5);
+      const shown = matches.slice(0, 12);
+      status.textContent = !query ? 'Browse lessons or type to search.' : !matches.length ? 'No matches. Try a different word, such as “photos” or “Buffer”.' : `${matches.length} ${matches.length === 1 ? 'result' : 'results'}${matches.length > 12 ? '. Showing the first 12; add another word to narrow your search' : ''}.`;
+      list.replaceChildren(...shown.map(entry => {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = entry.href;
+        const section = document.createElement('span'); section.className = 'search-section'; section.textContent = entry.section;
+        const title = document.createElement('strong'); title.textContent = entry.title;
+        const excerpt = document.createElement('span'); excerpt.className = 'search-excerpt'; excerpt.textContent = searchExcerpt(entry.text, query);
+        link.append(section, title, excerpt); item.append(link); return item;
+      }));
+    };
+    for (const trigger of document.querySelectorAll<HTMLButtonElement>('[data-open-academy-search]')) {
+      trigger.hidden = false;
+      trigger.addEventListener('click', () => {
+        const menuToggle = document.querySelector<HTMLButtonElement>('#site-menu-toggle');
+        const inMenu = !!trigger.closest('#site-mobile-nav');
+        returnFocus = inMenu ? menuToggle : trigger;
+        destination = null;
+        if (menuToggle?.getAttribute('aria-expanded') === 'true') menuToggle.click();
+        render(); dialog.showModal(); input.focus();
+      });
+    }
+    dialog.addEventListener('close', () => (destination ?? returnFocus)?.focus());
+    dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); } });
+    this.querySelector('.search-close')!.addEventListener('click', close);
+    dialog.addEventListener('click', event => { if (event.target === dialog) { const box = dialog.getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) close(); } });
+    input.addEventListener('input', render);
+    this.querySelector('form')!.addEventListener('submit', event => { event.preventDefault(); list.querySelector('a')?.click(); });
+    list.addEventListener('click', event => { const link = (event.target as Element).closest('a'); if (link) { close(); const url = new URL(link.href); if (url.pathname === location.pathname && url.hash) { const target = document.getElementById(decodeURIComponent(url.hash.slice(1))); if (target) { target.tabIndex = -1; destination = target; target.focus(); } } } });
+    input.addEventListener('keydown', event => { if (event.key === 'ArrowDown') { event.preventDefault(); render(); list.querySelector('a')?.focus(); } });
+    list.addEventListener('keydown', event => { const links = [...list.querySelectorAll('a')]; const index = links.indexOf(document.activeElement as HTMLAnchorElement); if (event.key === 'ArrowDown') { event.preventDefault(); links[Math.min(index + 1, links.length - 1)]?.focus(); } if (event.key === 'ArrowUp') { event.preventDefault(); if (index <= 0) input.focus(); else links[index - 1]?.focus(); } });
+  }
+}
+if (!customElements.get('site-search')) customElements.define('site-search', SiteSearch);
+</script>
+<style>
+site-search { display: contents; }
+dialog { width: calc(100% - 2 * var(--space-sm)); max-width: var(--width-copy); height: 36rem; max-height: 80dvh; padding: var(--space-sm); border: var(--border-thin) solid var(--color-border); border-radius: var(--radius-panel); background: var(--color-surface); color: var(--color-text); font: var(--weight-regular) var(--text-navigation)/var(--leading-relaxed) var(--font-body); overflow: hidden; }
+dialog[open] { display: flex; flex-direction: column; }
+dialog::backdrop { background: rgb(0 0 0 / 30%); }
+:global(html:has(site-search dialog[open])) { overflow: hidden; }
+form { display: flex; align-items: center; gap: var(--space-xs); flex-shrink: 0; }
+.search-field { display: flex; flex: 1; min-width: 0; align-items: center; gap: var(--space-xs); min-height: 48px; padding-inline: var(--space-sm); border-radius: var(--radius-control); background: var(--color-surface-muted); color: var(--color-text-muted); }
+.search-field:focus-within { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.search-field :global(svg) { flex-shrink: 0; }
+input { width: 100%; min-width: 0; min-height: 48px; padding: var(--space-xs) 0; border: 0; outline: none; background: transparent; color: var(--color-text); font: inherit; }
+input::placeholder { color: var(--color-text-muted); opacity: 1; }
+.search-close { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--color-text); cursor: pointer; }
+.search-close:hover { background: var(--color-surface-muted); }
+.search-status { padding-block: var(--space-sm); color: var(--color-text-muted); flex-shrink: 0; }
+.search-results { list-style: none; margin: 0; padding: 0; overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+.search-results :global(a) { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm); border-radius: var(--radius-panel); color: var(--color-text); text-decoration-line: none; }
+.search-results :global(a:hover), .search-results :global(a:focus-visible) { background: var(--color-surface-muted); }
+.search-results :global(strong) { font-size: var(--text-reading); font-weight: var(--weight-semibold); }
+.search-results :global(.search-section), .search-results :global(.search-excerpt) { color: var(--color-text-muted); }
+.search-results :global(.search-section) { font-size: var(--text-caption); }
+@media print { site-search { display: none; } }
+</style>

@@ -1,5 +1,6 @@
 ---
 import { Image, BookOpen, Palette, MessagesSquare, Mail, ListChecks, FileText, Users, Heart, Languages, Reply, CalendarDays, PencilLine, ChartColumn, ClipboardList, MessageSquare } from '@lucide/astro';
+import Grid from '../site/Grid.astro';
 import Prompt from './Prompt.astro';
 import type { Part } from '../../pages/academy/_guide';
 interface Props { examples: Part[]; }
@@ -11,11 +12,11 @@ const icons: Record<string, typeof BookOpen> = {
   pencil: PencilLine, chart: ChartColumn, clipboard: ClipboardList, practice: MessageSquare,
 };
 ---
-<div class="example-grid">
-  {examples.map(example => {
+<Grid columns={2} gap="sm">
+  {examples.map((example, index) => {
     const Icon = icons[example.icon ?? ''] ?? MessageSquare;
-    return <Prompt heading={example.title} text={example.prompt!} card>
+    return <Prompt id={example.id ?? `example-${index + 1}`} heading={example.title} text={example.prompt!} card>
       <Icon slot="icon" size={22} stroke-width={1.75} aria-hidden="true" />
     </Prompt>;
   })}
-</div>
+</Grid>

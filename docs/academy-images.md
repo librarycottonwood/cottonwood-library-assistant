@@ -80,3 +80,14 @@ Captured November 11, 2026 in a separate Safari window after the user signed in.
 Sent was selected for the email overview so the existing draft and its recipient stayed out of the image. Contacts used the fictional search academy-example@example.invalid to show the filter without exposing private contacts. The caption explains the empty result. No donor, amount or campaign was entered; no transaction was recorded. The template picker was closed without selecting or creating an email. Temporary searches and filters were cleared, and the capture window was closed.
 
 The current Contacts interface uses Tag directly above the list, and the offline form ends with Record transaction rather than Save. The instructions now match these observed labels. Email composition, recipient selection and sending were not exercised; those instructions retain their linked Givebutter reference. No email was sent and no settings, financial accounts or existing drafts were changed.
+
+## Buffer channel setup
+
+Captured November 13, 2026 in a new, single-tab Safari window using the library’s signed-in Buffer session and the light browser theme. Both images preserve the full window and use lossless PNG preparation. No account was connected, refreshed, removed or granted permissions.
+
+| Image | What it shows |
+| --- | --- |
+| academy-buffer-channels.png | Settings → Channels, the existing library Facebook Page and Connect Channel button. |
+| academy-buffer-connect.png | The Connect a New Channel chooser before selecting a network or starting authorization. |
+
+These use the shared full-window canvas, centered with padding on every side, immediately before the steps that use them.
