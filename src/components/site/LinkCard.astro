@@ -1,0 +1,30 @@
+---
+/**
+ * @component LinkCard
+ * A quiet topic card with a title, short description and optional icon.
+ * @use Topic indexes and collections of related guides.
+ * @avoid Previous/next links (use PageNavigation) or long instructions (use Panel).
+ * @example
+ * <LinkCard href="/academy/start-here/" title="Your first chat">Send your first message.</LinkCard>
+ */
+import { ArrowUpRight } from '@lucide/astro';
+import Surface from './Surface.astro';
+import Heading from './Heading.astro';
+import Text from './Text.astro';
+interface Props { title: string; href: string; level?: 2 | 3; }
+const { title, href, level = 3 } = Astro.props;
+---
+<Surface as="a" class="link-card" href={href}>
+  <Heading level={level} size="title">{title}</Heading>
+  {Astro.slots.has('default') && <Text tone="muted"><slot /></Text>}
+  <div class="link-card-footer"><slot name="icon" /><ArrowUpRight size={20} aria-hidden="true" /></div>
+</Surface>
+<style>
+.link-card { display: flex; flex-direction: column; gap: var(--space-xs); height: 100%; min-width: 0; font-size: var(--text-navigation); font-weight: var(--weight-regular); }
+.link-card :global(.heading) { font-size: var(--text-reading); font-weight: var(--weight-semibold); }
+.link-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding-block-start: var(--space-sm); margin-block-start: auto; color: var(--color-text-muted); }
+.link-card-footer > :global(svg:first-child:not(:last-child)) { width: 28px; height: 28px; stroke-width: 1.5; }
+.link-card-footer > :global(svg:last-child) { margin-inline-start: auto; }
+.link-card:hover :global(.heading) { text-decoration-line: underline; }
+
+</style>

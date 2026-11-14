@@ -28,14 +28,14 @@ export const slug = name => path.parse(name).name.normalize('NFKD').replace(/[̀
 // Re-encode one picture: upright, at most 2400px, no hidden metadata (camera, GPS).
 // Photos become JPEG; screenshots, logos and graphics become PNG.
 // With inPlace, the file keeps its name and format so existing references still work.
-export async function prepare(input, { outDir = 'src/assets/images', name, inPlace = false } = {}) {
+export async function prepare(input, { outDir = 'src/assets/images', name, inPlace = false, lossless = false } = {}) {
   const meta = await sharp(input, { failOn: 'error' }).metadata();
   // Screenshots and flat graphics have few colors (low entropy); photos have many.
-  const graphic = inPlace ? /\.png$/i.test(input) : meta.hasAlpha || (await sharp(input).stats()).entropy < 6.5;
+  const graphic = lossless || (inPlace ? /\.png$/i.test(input) : meta.hasAlpha || (await sharp(input).stats()).entropy < 6.5);
   const image = sharp(input, { failOn: 'error' }).rotate().resize({ width: LIMITS.maxEdge, height: LIMITS.maxEdge, fit: 'inside', withoutEnlargement: true });
   const output = inPlace ? input : path.join(outDir, `${slug(name || input)}.${graphic ? 'png' : 'jpg'}`);
   const bytes = graphic
-    ? await image.png({ compressionLevel: 9, palette: true, quality: 90, effort: 10 }).toBuffer()
+    ? await image.png(lossless ? { compressionLevel: 9, palette: false } : { compressionLevel: 9, palette: true, quality: 90, effort: 10 }).toBuffer()
     : await image.flatten({ background: '#ffffff' }).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
   await writeFile(output, bytes);
   if (path.resolve(output) !== path.resolve(input) && path.resolve(path.dirname(input)) === path.resolve(outDir)) await rm(input);
@@ -104,13 +104,14 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const outAt = rest.indexOf('--out');
     const outDir = outAt >= 0 ? rest.splice(outAt, 2)[1] : undefined;
     const inPlace = rest.includes('--in-place');
-    for (const input of rest.filter(arg => arg !== '--in-place')) console.log(await prepare(input, { name, inPlace, ...(outDir ? { outDir } : {}) }));
+    const lossless = rest.includes('--lossless');
+    for (const input of rest.filter(arg => !['--in-place', '--lossless'].includes(arg))) console.log(await prepare(input, { name, inPlace, lossless, ...(outDir ? { outDir } : {}) }));
   } else if (action === 'check') {
     const problems = await check({ dist: rest.includes('--dist') ? 'dist' : undefined });
     if (problems.length) { console.error(`Picture check failed:\n- ${problems.join('\n- ')}\nFix: pnpm image:prepare -- <file> [--name new-name]`); process.exit(1); }
     console.log('Picture check passed.');
   } else {
-    console.error('Usage: node scripts/images.mjs prepare <file...> [--name name] [--out folder] | check [--dist]');
+    console.error('Usage: node scripts/images.mjs prepare <file...> [--name name] [--out folder] [--lossless] | check [--dist]');
     process.exit(2);
   }
 }

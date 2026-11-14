@@ -40,6 +40,26 @@ test('check blocks raw pictures, oversized files and unused uploads', async () =
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
+test('lossless screenshots preserve pixels and transparency while removing metadata', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'library-screenshot-'));
+  try {
+    const pixels = Buffer.alloc(96 * 64 * 4);
+    for (let i = 0; i < pixels.length; i += 4) {
+      pixels[i] = (i / 4) % 256;
+      pixels[i + 1] = (i / 16) % 256;
+      pixels[i + 2] = 245;
+      pixels[i + 3] = i < 384 ? 0 : 255;
+    }
+    const input = path.join(dir, 'original.png');
+    await sharp(pixels, { raw: { width: 96, height: 64, channels: 4 } }).png().withExif({ IFD0: { Make: 'Screenshot' } }).toFile(input);
+    const originalPixels = await sharp(input).raw().toBuffer();
+    const out = await prepare(input, { outDir: dir, name: 'prepared', lossless: true });
+    assert.deepEqual(await sharp(out).raw().toBuffer(), originalPixels);
+    assert.equal((await sharp(out).metadata()).exif, undefined);
+    assert.equal((await sharp(out).metadata()).isPalette, false);
+  } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
 test('CMS replacement removes only unused emitted originals and still blocks oversized referenced pictures', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'library-cms-images-'));
   try {

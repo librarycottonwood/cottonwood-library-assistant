@@ -1,0 +1,33 @@
+---
+/**
+ * @component ReadingShell
+ * Responsive sidebar and reading area using the shared content widths.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <ReadingShell>…</ReadingShell>
+ */
+interface Props { indexed?: boolean; }
+const { indexed = false } = Astro.props;
+---
+<div class="reading-shell academy-shell">
+ <aside class="reading-sidebar academy-sidebar"><slot name="sidebar" /></aside>
+ <main id="main" tabindex="-1" class:list={['reading-main', { indexed }]}><slot /></main>
+</div>
+<script>
+const header = document.querySelector<HTMLElement>('.site-header');
+const sidebar = document.querySelector<HTMLElement>('.reading-sidebar');
+if (header && sidebar) {
+ const place = () => { sidebar.style.top = `${header.offsetHeight}px`; sidebar.style.maxHeight = `calc(100dvh - ${header.offsetHeight}px)`; };
+ new ResizeObserver(place).observe(header); place();
+}
+</script>
+<style>
+.reading-shell { display: grid; grid-template-columns: var(--width-sidebar) minmax(0, 1fr); max-width: var(--width-wide); margin-inline: auto; font-size: var(--text-reading); font-weight: var(--weight-regular); line-height: var(--leading-relaxed); }
+.reading-sidebar { position: sticky; align-self: start; top: 0; overflow-y: auto; padding: var(--space-md) var(--space-sm); border-inline-end: var(--border-thin) solid var(--color-border); background: var(--page-background, var(--color-background)); }
+.reading-main { min-width: 0; width: 100%; max-width: var(--width-article); padding: var(--space-lg); }
+@media (min-width: 48rem) and (max-width: 63.99rem) { .reading-main { padding: var(--space-md); } }
+@media (max-width: 47.99rem) { .reading-shell { display: block; } .reading-main { padding: var(--space-md) var(--space-sm); } .reading-sidebar { position: static; } }
+@media (max-width: 47.99rem) and (scripting: enabled) { .reading-sidebar { display: none; } }
+@media print { .reading-shell { display: block; max-width: none; } .reading-sidebar { display: none; } .reading-main { padding: 0; max-width: none; } }
+</style>

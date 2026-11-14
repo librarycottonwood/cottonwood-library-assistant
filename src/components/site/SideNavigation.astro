@@ -1,0 +1,24 @@
+---
+/**
+ * @component SideNavigation
+ * Grouped navigation with one shared selected state.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <SideNavigation>…</SideNavigation>
+ */
+interface Props { label: string; }
+const { label } = Astro.props;
+---
+<nav class="side-navigation" aria-label={label}><slot /></nav>
+<style>
+.side-navigation { font-size: var(--text-navigation); line-height: var(--leading-snug); }
+.side-navigation :global(ol) { list-style: none; padding: 0; margin: 0; }
+.side-navigation :global(li) { margin: 0; }
+.side-navigation :global(section) { margin-block-start: var(--space-md); }
+.side-navigation :global(p) { font-size: var(--text-caption); font-weight: var(--weight-semibold); color: var(--color-text-muted); margin: 0; padding: var(--space-xs); }
+.side-navigation :global(a) { display: flex; align-items: center; gap: var(--space-xs); min-height: 44px; padding: var(--space-xs); text-decoration-line: none; color: var(--color-text-muted); border-radius: var(--radius-control); }
+.side-navigation :global(svg) { flex-shrink: 0; }
+.side-navigation :global(a:hover) { color: var(--color-text); text-decoration-line: underline; }
+.side-navigation :global(a[aria-current='page']) { color: var(--color-text); background: var(--color-surface-muted); font-weight: var(--weight-semibold); }
+</style>

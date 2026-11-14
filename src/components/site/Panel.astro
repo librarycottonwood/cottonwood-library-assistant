@@ -1,0 +1,19 @@
+---
+/**
+ * @component Panel
+ * A quiet surface for text, examples and service information.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <Panel>…</Panel>
+ */
+import Surface from './Surface.astro';
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'article'> { as?: 'article' | 'aside' | 'div'; }
+const { as: Tag = 'article', class: className, ...attributes } = Astro.props;
+---
+<Surface as={Tag} class:list={['panel', className]} {...attributes}><slot /></Surface>
+<style>
+.panel { display: flex; flex-direction: column; gap: var(--space-sm); min-width: 0; height: 100%; }
+.panel > :global(p) { margin: 0; }
+</style>

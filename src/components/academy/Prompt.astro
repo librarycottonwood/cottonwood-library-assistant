@@ -1,0 +1,67 @@
+---
+import Panel from '../site/Panel.astro';
+import Button from '../site/Button.astro';
+import { ArrowUpRight, Copy } from '@lucide/astro';
+interface Props { id?: string; text: string; heading?: string; card?: boolean; }
+const { id, text, heading = 'Try this in ChatGPT', card = false } = Astro.props;
+const Heading = card ? 'h2' : 'strong';
+// Use the same prefilled Work link as OpenAI's training examples:
+// https://developers.openai.com/training/walkthroughs/plugins-and-skills
+const chatgptUrl = new URL('https://chatgpt.com/');
+chatgptUrl.searchParams.set('surface', 'work');
+chatgptUrl.searchParams.set('prompt', text);
+---
+<Panel id={id} as="aside" class:list={['prompt', { 'example-card': card }]} data-prompt aria-label={card ? heading : 'Example message for ChatGPT'}>
+  {card && <div class="prompt-heading"><slot name="icon" /><Heading>{heading}</Heading></div>}
+  <p class="print-prompt-label">Example message</p>
+  <p data-prompt-text>{text}</p>
+  <div class="prompt-actions">
+    <Button size="small" variant="primary" href={chatgptUrl.href} target="_blank" rel="noopener noreferrer" data-open-prompt aria-label="Open in ChatGPT (opens in a new tab)">Open in ChatGPT <ArrowUpRight size={15} aria-hidden="true" /></Button>
+    <Button size="small" type="button" data-copy-prompt aria-label="Copy message" hidden><Copy size={15} aria-hidden="true" /><span class="copy-label"><span data-copy-label>Copy</span><span class="copy-label-size" aria-hidden="true">Copied!</span></span></Button>
+  </div>
+  <p class="copy-status sr-only" role="status" aria-live="polite"></p>
+</Panel>
+
+<script>
+      for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-prompt]')) {
+        button.hidden = false;
+        let resetTimer: ReturnType<typeof setTimeout>;
+        const label = button.querySelector<HTMLElement>('[data-copy-label]');
+        button.addEventListener('click', async () => {
+          const box = button.closest('[data-prompt]');
+          const prompt = box?.querySelector<HTMLElement>('[data-prompt-text]');
+          const status = box?.querySelector<HTMLElement>('[role="status"]');
+          if (!prompt || !status || !label) return;
+          clearTimeout(resetTimer);
+          label.textContent = 'Copy';
+          button.setAttribute('aria-label', 'Copy message');
+          status.textContent = '';
+          status.classList.add('sr-only');
+          try {
+            await navigator.clipboard.writeText(prompt.innerText);
+            label.textContent = 'Copied!';
+            button.setAttribute('aria-label', 'Copied!');
+            status.textContent = 'Message copied.';
+            resetTimer = setTimeout(() => {
+              label.textContent = 'Copy';
+              button.setAttribute('aria-label', 'Copy message');
+              status.textContent = '';
+            }, 3000);
+          } catch {
+            status.classList.remove('sr-only');
+            status.textContent = 'Select and copy the message, then paste it into ChatGPT.';
+          }
+        });
+      }
+</script>
+<style>
+.prompt-heading { display: flex; align-items: start; gap: var(--space-xs); }
+.prompt-heading :global(svg) { flex-shrink: 0; color: var(--color-text-muted); }
+.prompt-heading h2 { font: var(--weight-bold) var(--text-reading)/var(--leading-snug) var(--font-body); }
+.prompt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); margin-block-start: auto; }
+.copy-label { display: grid; }
+.copy-label > span { grid-area: 1 / 1; }
+.copy-label-size { visibility: hidden; }
+.copy-status { font-size: var(--fluid-label); color: var(--color-text-muted); }
+.copy-status:empty, .print-prompt-label { display: none; }
+</style>

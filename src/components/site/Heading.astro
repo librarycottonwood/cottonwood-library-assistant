@@ -8,15 +8,15 @@
  * <Heading level={1} size="display" id="welcome-heading">Your community.<br />Your library.</Heading>
  */
 interface Props {
-  level?: 1 | 2 | 3;
+  level?: 1 | 2 | 3 | 4;
   /** display: 70px h1. heading: 50px section heading. title: bold body-size title. */
-  size?: 'display' | 'heading' | 'title';
+  size?: 'display' | 'heading' | 'title' | 'reading-title' | 'reading-heading';
   id?: string;
   /** Relaxed line height, for headings centered above a grid. */
   relaxed?: boolean;
 }
 const { level = 2, size = 'heading', id, relaxed = false } = Astro.props;
-const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
 ---
 <Tag id={id} class:list={['heading', `heading-${size}`, { relaxed }]}><slot /></Tag>
 <style>
@@ -26,4 +26,8 @@ const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
   .heading-heading { font-size: var(--fluid-heading); }
   .heading-title { font-family: var(--font-body); font-size: inherit; font-weight: var(--weight-bold); }
   .relaxed { line-height: var(--leading-relaxed); }
+.heading-reading-title { font-size: var(--text-reading-title); }
+.heading-reading-heading { font-size: var(--text-reading-heading); }
+.heading-reading-title, .heading-reading-heading { font-family: var(--font-body); font-weight: var(--weight-semibold); letter-spacing: -.025em; line-height: var(--leading-snug); }
+@media (max-width: 47.99rem) { .heading-reading-title { font-size: 2rem; } }
 </style>

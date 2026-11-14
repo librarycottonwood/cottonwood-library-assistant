@@ -1,0 +1,8 @@
+<script is:inline>
+      // Prepare entrances before the first paint. If initialization misses this short window, reveal the content
+      // and leave entrances disabled, so a late script cannot hide an already visible page again.
+      if ('IntersectionObserver' in window && window.CSS && CSS.supports('selector(:has(*))') && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion');
+        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 800);
+      }
+    </script>

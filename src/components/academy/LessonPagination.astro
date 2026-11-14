@@ -1,0 +1,6 @@
+---
+import PageNavigation from '../site/PageNavigation.astro';
+interface Link { title: string; href: string; }
+interface Props { previous: Link; next: Link; }
+---
+<PageNavigation {...Astro.props} />

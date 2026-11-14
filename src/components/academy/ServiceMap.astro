@@ -1,0 +1,50 @@
+---
+import Grid from '../site/Grid.astro';
+import Panel from '../site/Panel.astro';
+import Button from '../site/Button.astro';
+import Heading from '../site/Heading.astro';
+import { Image } from 'astro:assets';
+import { BookOpen, Bot, ChartColumn, Cloud, ArrowUpRight } from '@lucide/astro';
+import { services, serviceGroups } from '../../pages/academy/_guide';
+import { resolveImage } from '../../content/images';
+interface Props { print?: boolean; technical?: boolean; }
+const { print = false, technical = false } = Astro.props;
+const groups = serviceGroups.filter(group => technical ? group.id !== 'daily' : group.id === 'daily');
+const GroupHeading = print ? 'h3' : 'h2';
+const headingLevel = print ? 4 : 3;
+const logos: Record<string, string> = { chatgpt: 'academyChatgpt', givebutter: 'academyGivebutter', buffer: 'academyBuffer', github: 'academyGithub', cloudflare: 'academyCloudflare', sanity: 'academySanity', squarespace: 'academySquarespace' };
+const icons: Record<string, typeof BookOpen> = { codex: Bot, analytics: ChartColumn, 'google-cloud': Cloud };
+---
+<section class:list={['service-map', { 'service-map-print': print }]} aria-label="Library websites">
+  {groups.map(group => <section class="service-group" id={`services-${group.id}`}>
+    <GroupHeading class="service-group-title">{group.title}</GroupHeading>
+    <Grid columns={2} gap="sm">
+      {services.filter(service => service.group === group.id).map(service => {
+        const Icon = icons[service.id] ?? BookOpen;
+        return <Panel class="service-card" id={`website-${service.id}`}>
+          <div class="service-heading">
+            <span class="service-icon" aria-hidden="true">
+              {logos[service.id] ? <Image src={resolveImage(logos[service.id])} alt="" width={28} height={28} /> : <Icon size={26} stroke-width={1.6} />}
+            </span>
+            <Heading size="title" level={headingLevel}>{service.name}</Heading>
+          </div>
+          <p class="service-purpose">{service.purpose}</p>
+          <div class="service-actions">
+            <Button size="small" data-service-open href={service.href}>{service.label}<ArrowUpRight size={16} aria-hidden="true" /></Button>
+            {print && <span class="service-url">{service.href}</span>}
+          </div>
+        </Panel>;
+      })}
+    </Grid>
+  </section>)}
+</section>
+
+<style>
+.service-map { display: flex; flex-direction: column; gap: var(--space-lg); }
+.service-group { scroll-margin-top: var(--space-md); }
+.service-group-title { font: var(--weight-regular) var(--text-reading-heading)/var(--leading-snug) var(--font-display); margin-block-end: var(--space-sm); }
+.service-heading { display: flex; align-items: center; gap: var(--space-xs); }
+.service-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; color: var(--color-primary-ink); }
+.service-actions { margin-block-start: auto; }
+.service-url { display: block; font-size: var(--fluid-label); overflow-wrap: anywhere; }
+</style>

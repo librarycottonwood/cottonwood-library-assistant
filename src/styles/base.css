@@ -23,7 +23,7 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  background: var(--color-background);
+  background: var(--page-background, var(--color-background));
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--fluid-body);
@@ -31,6 +31,9 @@ body {
   line-height: var(--leading-relaxed);
   overflow-x: clip;
 }
+/* A reusable white surface for documentation and other reading-heavy layouts. */
+body[data-surface="white"] { --page-background: var(--color-surface); }
+
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 /* Every link underline (always-on or on hover) uses the same weight and gap. Components turn underlines

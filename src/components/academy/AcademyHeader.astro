@@ -1,0 +1,27 @@
+---
+import AcademyBrand from './AcademyBrand.astro';
+import SearchTrigger from './SearchTrigger.astro';
+import HeaderMenu from '../site/HeaderMenu.astro';
+import MenuToggle from '../site/MenuToggle.astro';
+import { lessons, academyGroups } from '../../pages/academy/_guide';
+interface Props { active?: string; }
+const { active } = Astro.props;
+const links = [
+  { label: 'Overview', href: '/academy/', current: active === 'home' },
+  ...academyGroups.flatMap(group => group.slugs.map(slug => ({ label: lessons.find(lesson => lesson.slug === slug)!.title, href: `/academy/${slug}/`, current: active === slug }))),
+  { label: 'Open ChatGPT', href: 'https://chatgpt.com/?surface=work', external: true, newTab: true },
+  { label: 'Library website', href: '/' },
+  { label: 'Print quick guide', href: '/academy/quick-reference/' },
+  { label: 'Print full handbook', href: '/academy/print/' },
+];
+---
+<header class="site-header academy-header">
+ <AcademyBrand />
+ <MenuToggle viewport="reading" />
+</header>
+<HeaderMenu links={links} viewport="reading"><SearchTrigger /></HeaderMenu>
+<style>
+.academy-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); position: sticky; top: 0; z-index: 50; padding: var(--space-xs) var(--space-sm); background: var(--color-surface); border-bottom: var(--border-thin) solid var(--color-border); }
+@media (min-width: 48rem) { .academy-header { display: none; } }
+@media print { .academy-header { display: none; } }
+</style>

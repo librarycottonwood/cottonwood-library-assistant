@@ -12,6 +12,7 @@
  *   <Section title="Visit us" headingId="visit-heading">…</Section>
  * </BaseLayout>
  */
+import MotionSetup from '../components/MotionSetup.astro';
 import FoundationStyles from '../components/catalog/FoundationStyles.astro';
 import Analytics from '../components/Analytics.astro';
 import SiteNotices from '../components/site/SiteNotices.astro';
@@ -62,14 +63,7 @@ const givebutterAccount = await sitewideGivebutterAccount();
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <FoundationStyles />
-    <script is:inline>
-      // Prepare entrances before the first paint. If initialization misses this short window, reveal the content
-      // and leave entrances disabled, so a late script cannot hide an already visible page again.
-      if ('IntersectionObserver' in window && window.CSS && CSS.supports('selector(:has(*))') && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-        document.documentElement.classList.add('motion');
-        setTimeout(function () { if (!('motionReady' in document.documentElement.dataset)) document.documentElement.classList.remove('motion'); }, 800);
-      }
-    </script>
+    <MotionSetup />
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>

@@ -1,0 +1,28 @@
+---
+/**
+ * @component ReadingContent
+ * Long-form instructions with shared typography and spacing.
+ * @use Reading pages and reusable content layouts.
+ * @avoid Page-specific colors, spacing or duplicate control styles.
+ * @example
+ * <ReadingContent>…</ReadingContent>
+ */
+---
+<div class="reading-content"><slot /></div>
+<style>
+.reading-content { overflow-wrap: anywhere; font-size: var(--text-reading); font-weight: var(--weight-regular); line-height: var(--leading-relaxed); }
+.reading-content :global(.lesson-part) { margin-block: var(--space-lg); scroll-margin-top: var(--space-md); }
+.reading-content :global(.lesson-part:first-child) { margin-block-start: 0; }
+.reading-content :global(.lesson-part > * + *) { margin-block-start: var(--space-sm); }
+.reading-content :global(.lesson-part > p), .reading-content :global(.steps li) { max-width: var(--width-text); }
+.reading-content :global(.part-heading) { font: var(--weight-semibold) var(--text-reading-heading)/var(--leading-snug) var(--font-body); letter-spacing: -.02em; }
+.reading-content :global(.steps) { padding-inline-start: var(--space-md); }
+.reading-content :global(.steps li) { padding-inline-start: var(--space-xs); margin-block: var(--space-sm); }
+.reading-content :global(.lesson-terms > div + div) { margin-block-start: var(--space-sm); }
+.reading-content :global(dt) { font-weight: var(--weight-bold); }
+.reading-content :global(dd) { margin: 0; }
+.reading-content :global(.reference-links) { list-style: none; padding: 0; }
+.reading-content :global(.reference-links li) { margin-block: var(--space-xs); }
+.reading-content :global(.reference-links svg) { display: inline-block; vertical-align: middle; }
+@media print { .reading-content { overflow-wrap: anywhere; font-size: inherit; } }
+</style>

@@ -1,0 +1,12 @@
+/* Scale and translate the intact screenshot; only the outer canvas clips it. */
+.screenshot-figure { --shot-inset: 24px; --shot-min-width: 760px; --focus-x: 41.3%; --focus-y: 60.5%; --screenshot-zoom: 1.5; container-type: inline-size; margin: var(--space-sm) 0; max-width: 100%; break-inside: avoid; }
+.screenshot-canvas { position: relative; display: block; width: 100%; min-width: 0; box-sizing: border-box; aspect-ratio: 16 / 9; min-height: 360px; padding: 0; border: 1px solid var(--canvas-edge); border-radius: var(--radius-image); overflow: hidden; background: radial-gradient(ellipse at 12% 5%, var(--canvas-glow), transparent 72%), linear-gradient(135deg, var(--canvas-start), var(--canvas-base)); }
+.screenshot-window { position: absolute; display: block; inset: 0; }
+.screenshot-figure img { position: absolute; display: block; width: max(var(--shot-min-width), calc(100% * var(--screenshot-zoom))); max-width: none; height: auto; left: 50%; top: 50%; transform: translate(calc(-1 * var(--focus-x)), calc(-1 * var(--focus-y))); border-radius: var(--radius-panel); filter: drop-shadow(0 6px 14px rgb(28 31 66 / 14%)); }
+/* Overview screens show the complete window with room on every side. */
+.screenshot-figure[data-framing="full"] .screenshot-canvas { display: grid; align-items: center; aspect-ratio: auto; padding: var(--shot-inset); }
+.screenshot-figure[data-framing="full"] .screenshot-window { position: relative; inset: auto; width: 100%; }
+.screenshot-figure[data-framing="full"] img { position: static; width: 100%; max-width: 100%; height: auto; transform: none; }
+.screenshot-figure figcaption { margin-top: var(--space-xs); font-size: var(--fluid-label); line-height: var(--leading-relaxed); color: var(--color-text-muted); }
+.screenshot-figure[data-theme="green"] { --canvas-glow: var(--canvas-green-glow); --canvas-base: var(--canvas-green-base); --canvas-edge: var(--canvas-green-edge); }
+.screenshot-figure[data-theme="rose"] { --canvas-glow: var(--canvas-rose-glow); --canvas-base: var(--canvas-rose-base); --canvas-edge: var(--canvas-rose-edge); }

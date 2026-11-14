@@ -1,0 +1,17 @@
+---
+/**
+ * @component ScreenshotCanvas
+ * An intact screenshot on a pastel canvas, with optional focused framing.
+ * @use Interface illustrations in guides. Full framing centers the complete window.
+ * @avoid Cropping source images or duplicating canvas colors and corners.
+ * @example
+ * <ScreenshotCanvas framing="full"><Image src={screen} alt="…" /></figure>
+ */
+import '../../styles/screenshot-canvas.css';
+interface Props { framing?: string; view?: string; caption?: string; theme?: 'lavender' | 'green' | 'rose'; }
+const { framing, view, caption, theme = 'lavender' } = Astro.props;
+---
+<figure class="screenshot-figure lesson-screenshot" data-view={view} data-framing={framing} data-theme={theme}>
+ <div class="screenshot-canvas"><span class="screenshot-window"><slot /></span></div>
+ {caption && <figcaption>{caption}</figcaption>}
+</figure>

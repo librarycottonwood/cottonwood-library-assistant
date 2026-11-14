@@ -1,0 +1,45 @@
+---
+import ReadingContent from '../site/ReadingContent.astro';
+import { ArrowUpRight } from '@lucide/astro';
+import Prompt from './Prompt.astro';
+import LessonScreenshot from './LessonScreenshot.astro';
+import ServiceMap from './ServiceMap.astro';
+import WorkflowExamples from './WorkflowExamples.astro';
+import type { Lesson, Part } from '../../pages/academy/_guide';
+interface Props { lesson: Lesson; print?: boolean; }
+const { lesson, print = false } = Astro.props;
+const PartHeading = print ? 'h3' : 'h2';
+// Keep each illustration immediately before the instructions that use it.
+// Continue the numbering when an illustration separates two groups of steps.
+function stepGroups(part: Part) {
+  const groups: { start: number; steps: string[]; images: NonNullable<Part['screenshots']> }[] = [];
+  for (const [index, step] of (part.steps ?? []).entries()) {
+    const images = part.screenshots?.filter(image => image.beforeStep === index + 1) ?? [];
+    if (!groups.length || images.length) groups.push({ start: index + 1, steps: [], images });
+    groups[groups.length - 1].steps.push(step);
+  }
+  return groups;
+}
+---
+
+<ReadingContent>
+{lesson.slug === 'accounts-and-tools' && <ServiceMap print={print} />}
+{lesson.slug === 'practice-with-a-buddy' && !print ? <WorkflowExamples examples={lesson.parts} /> : lesson.parts.map(part => <section class="lesson-part" id={part.id}>
+  <PartHeading class="part-heading">{part.title}</PartHeading>
+  {part.text.map((text, index) => <>
+    <p>{text}</p>
+    {part.screenshots?.filter(image => image.afterParagraph === index + 1).map(image => <LessonScreenshot image={image} />)}
+  </>)}
+  {part.screenshots?.filter(image => !image.beforeStep && !image.afterParagraph).map(image => <LessonScreenshot image={image} />)}
+  {part.items && <dl class="lesson-terms">{part.items.map(item => <div><dt>{item.label}</dt><dd>{item.text}</dd></div>)}</dl>}
+  {part.prompt && <Prompt text={part.prompt} />}
+  {stepGroups(part).map(group => <>
+    {group.images.map(image => <LessonScreenshot image={image} />)}
+    <ol class="steps" start={group.start}>{group.steps.map(step => <li>{step}</li>)}</ol>
+  </>)}
+  {part.links && <ul class="reference-links">{part.links.map(link => <li><a href={link.href}>{link.label} <ArrowUpRight size={16} aria-hidden="true" /></a></li>)}</ul>}
+</section>)}
+
+{lesson.slug === 'website-systems' && <ServiceMap print={print} technical />}
+
+</ReadingContent>

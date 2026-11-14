@@ -1,0 +1,20 @@
+---
+import { MessageSquare, PanelsTopLeft, PencilLine, Mail, LifeBuoy, MessagesSquare, Network, Settings, Compass, Paperclip, Send } from '@lucide/astro';
+interface Props { slug: string; size?: number; }
+const { slug, size = 18 } = Astro.props;
+const icons: Record<string, typeof MessageSquare> = {
+  'start-here': MessageSquare,
+  'chatgpt-tour': Compass,
+  'files-and-links': Paperclip,
+  'facebook-posts': Send,
+  'library-assistant': Network,
+  'website-systems': Settings, 'automatic-repairs': Settings,
+  'accounts-and-tools': PanelsTopLeft,
+  'preview-and-save': PencilLine,
+  'everyday-jobs': Mail,
+  'when-something-goes-wrong': LifeBuoy,
+  'practice-with-a-buddy': MessagesSquare,
+};
+const Icon = icons[slug] ?? MessageSquare;
+---
+<Icon size={size} stroke-width={1.75} aria-hidden="true" />
