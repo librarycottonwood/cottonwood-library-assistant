@@ -13,7 +13,7 @@ Content reviewed: November 13, 2026. These are lesson instructions, not proof of
 - [Your first chat](https://www.cottonwoodcommunitylibrary.com/academy/start-here/): Send your first message, read the reply and ask for changes.
 - [Find your way around](https://www.cottonwoodcommunitylibrary.com/academy/chatgpt-tour/): What the tabs, menus and buttons in ChatGPT are for.
 - [Photos, files and links](https://www.cottonwoodcommunitylibrary.com/academy/files-and-links/): Give ChatGPT a flyer, document or page to work with.
-- [Meet the library assistant](https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/): Use ChatGPT for website updates, newsletters and reports.
+- [ChatGPT for library work](https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/): Use ChatGPT for website updates, newsletters and reports.
 
 ### Library tasks
 
@@ -27,7 +27,7 @@ Content reviewed: November 13, 2026. These are lesson instructions, not proof of
 ### Behind the scenes
 
 - [Website systems](https://www.cottonwoodcommunitylibrary.com/academy/website-systems/): The services that keep the website running.
-- [If automatic repairs are paused](https://www.cottonwoodcommunitylibrary.com/academy/automatic-repairs/): Turn automatic repairs back on through the library assistant.
+- [If automatic repairs are paused](https://www.cottonwoodcommunitylibrary.com/academy/automatic-repairs/): Turn automatic repairs back on through ChatGPT.
 
 - Quick guide: https://www.cottonwoodcommunitylibrary.com/academy/quick-reference/
 - Printable handbook: https://www.cottonwoodcommunitylibrary.com/academy/print/
@@ -162,9 +162,9 @@ Screenshot: ChatGPT Plugins page with Plugins and Skills tabs, the Installed row
 
 **Public and Personal:** Browse available plugins or your own plugins. These are directory tabs; a listing does not mean a plugin is connected.
 
-**Skills:** The Skills tab contains instructions that teach ChatGPT how to do particular jobs. The library assistant uses these to follow the library’s procedures.
+**Skills:** The Skills tab contains instructions that teach ChatGPT how to do particular jobs. ChatGPT uses these to follow the library’s procedures.
 
-- [Meet the library assistant](https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/)
+- [ChatGPT for library work](https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/)
 
 ### Projects: keep one ongoing job together
 
@@ -238,7 +238,7 @@ Section: https://www.cottonwoodcommunitylibrary.com/academy/files-and-links/#cop
 
 3. Return to ChatGPT, paste the address into your message and say what you want changed.
 
-## Meet the library assistant
+## ChatGPT for library work
 
 Page: https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/
 
@@ -248,7 +248,7 @@ Use ChatGPT for website updates, newsletters and reports.
 
 Section: https://www.cottonwoodcommunitylibrary.com/academy/library-assistant/#library-account
 
-Use the library’s ChatGPT account for website updates and reports.
+ChatGPT is the library’s assistant. Use the library’s account for website updates and reports.
 
 - [Get technical help](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help)
 
@@ -543,7 +543,7 @@ Section: https://www.cottonwoodcommunitylibrary.com/academy/facebook-posts/#buff
 
 Check which social account you signed in with. For Facebook, that profile needs Full control of the library’s Page.
 
-If Buffer’s connection controls are unavailable, or it asks for an upgrade, tell the library assistant what you see.
+If Buffer’s connection controls are unavailable, or it asks for an upgrade, tell ChatGPT what you see.
 
 - [Get technical help](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help)
 
@@ -601,7 +601,7 @@ Example message:
 
 Section: https://www.cottonwoodcommunitylibrary.com/academy/when-something-goes-wrong/#access
 
-Tell ChatGPT or the library assistant which website you are opening and what happens when you try to sign in. Do not share your password in the chat.
+Tell ChatGPT which website you are opening and what happens when you try to sign in. Do not share your password in the chat.
 
 - [Get technical help](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help)
 
@@ -717,7 +717,7 @@ Links to the websites you may use for library work.
 
 Section: https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help
 
-The accounts belong to the library. For technical help, use ChatGPT or the library assistant.
+The accounts belong to the library. For technical help, use ChatGPT.
 
 For a broken page or a missing update, share the page link and what went wrong. The board answers questions about library facts and approvals.
 
@@ -730,7 +730,7 @@ Section: https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#
 
 If a ChatGPT plugin shows a Reconnect button, click it and sign in with the library account.
 
-When reconnecting visitor reports, Google may ask you to confirm on the library Google account’s phone. If you get stuck, tell the library assistant what you see.
+When reconnecting visitor reports, Google may ask you to confirm on the library Google account’s phone. If you get stuck, tell ChatGPT what you see.
 
 ### Websites for library tasks
 
@@ -786,7 +786,7 @@ A domain is the website’s address. Squarespace manages the registration and re
 
 Section: https://www.cottonwoodcommunitylibrary.com/academy/website-systems/#technical-help
 
-Tell ChatGPT or the library assistant what you need help with. Include the page link or the message you see.
+Tell ChatGPT what you need help with. Include the page link or the message you see.
 
 - [Get technical help](https://www.cottonwoodcommunitylibrary.com/academy/accounts-and-tools/#sign-in-help)
 
@@ -838,7 +838,7 @@ Connects Google Analytics reports to ChatGPT.
 
 Page: https://www.cottonwoodcommunitylibrary.com/academy/automatic-repairs/
 
-Turn automatic repairs back on through the library assistant.
+Turn automatic repairs back on through ChatGPT.
 
 ### Turn repairs back on
 
@@ -850,7 +850,7 @@ Example message:
 
 > turn repairs back on
 
-1. Send “turn repairs back on” to the library assistant.
+1. Send “turn repairs back on” to ChatGPT.
 
 2. Open the link it gives you: auth.openai.com/codex/device.
 
@@ -864,7 +864,7 @@ Example message:
 
 Section: https://www.cottonwoodcommunitylibrary.com/academy/automatic-repairs/#use-your-code
 
-Only type codes the library assistant gives you. If a code expires or something looks wrong, return to the chat and tell the assistant.
+Only type codes ChatGPT gives you. If a code expires or something looks wrong, return to the chat and tell the assistant.
 
 ## Quick guide
 

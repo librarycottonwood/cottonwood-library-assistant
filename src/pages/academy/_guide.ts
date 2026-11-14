@@ -329,7 +329,7 @@ export const lessons: Lesson[] = [
           },
           {
             "label": "Skills",
-            "text": "The Skills tab contains instructions that teach ChatGPT how to do particular jobs. The library assistant uses these to follow the library’s procedures."
+            "text": "The Skills tab contains instructions that teach ChatGPT how to do particular jobs. ChatGPT uses these to follow the library’s procedures."
           }
         ],
         "screenshots": [
@@ -342,7 +342,7 @@ export const lessons: Lesson[] = [
         ],
         "links": [
           {
-            "label": "Meet the library assistant",
+            "label": "ChatGPT for library work",
             "href": "/academy/library-assistant/"
           }
         ]
@@ -461,14 +461,14 @@ export const lessons: Lesson[] = [
   },
   {
     "slug": "library-assistant",
-    "title": "Meet the library assistant",
+    "title": "ChatGPT for library work",
     "summary": "Use ChatGPT for website updates, newsletters and reports.",
     "parts": [
       {
         "id": "library-account",
         "title": "Use the library’s ChatGPT account",
         "text": [
-          "Use the library’s ChatGPT account for website updates and reports."
+          "ChatGPT is the library’s assistant. Use the library’s account for website updates and reports."
         ],
         "links": [
           {
@@ -853,7 +853,7 @@ export const lessons: Lesson[] = [
         "title": "If the account does not appear",
         "text": [
           "Check which social account you signed in with. For Facebook, that profile needs Full control of the library’s Page.",
-          "If Buffer’s connection controls are unavailable, or it asks for an upgrade, tell the library assistant what you see."
+          "If Buffer’s connection controls are unavailable, or it asks for an upgrade, tell ChatGPT what you see."
         ],
         "links": [
           {
@@ -909,7 +909,7 @@ export const lessons: Lesson[] = [
         "id": "access",
         "title": "You cannot sign in",
         "text": [
-          "Tell ChatGPT or the library assistant which website you are opening and what happens when you try to sign in. Do not share your password in the chat."
+          "Tell ChatGPT which website you are opening and what happens when you try to sign in. Do not share your password in the chat."
         ],
         "links": [
           {
@@ -1032,7 +1032,7 @@ export const lessons: Lesson[] = [
         "id": "sign-in-help",
         "title": "Get technical help",
         "text": [
-          "The accounts belong to the library. For technical help, use ChatGPT or the library assistant.",
+          "The accounts belong to the library. For technical help, use ChatGPT.",
           "For a broken page or a missing update, share the page link and what went wrong. The board answers questions about library facts and approvals."
         ],
         "links": [
@@ -1051,7 +1051,7 @@ export const lessons: Lesson[] = [
         "title": "Reconnect a plugin",
         "text": [
           "If a ChatGPT plugin shows a Reconnect button, click it and sign in with the library account.",
-          "When reconnecting visitor reports, Google may ask you to confirm on the library Google account’s phone. If you get stuck, tell the library assistant what you see."
+          "When reconnecting visitor reports, Google may ask you to confirm on the library Google account’s phone. If you get stuck, tell ChatGPT what you see."
         ]
       }
     ]
@@ -1085,7 +1085,7 @@ export const lessons: Lesson[] = [
         "id": "technical-help",
         "title": "Get technical help",
         "text": [
-          "Tell ChatGPT or the library assistant what you need help with. Include the page link or the message you see."
+          "Tell ChatGPT what you need help with. Include the page link or the message you see."
         ],
         "links": [
           {
@@ -1099,7 +1099,7 @@ export const lessons: Lesson[] = [
   {
     "slug": "automatic-repairs",
     "title": "If automatic repairs are paused",
-    "summary": "Turn automatic repairs back on through the library assistant.",
+    "summary": "Turn automatic repairs back on through ChatGPT.",
     "parts": [
       {
         "id": "turn-repairs-back-on",
@@ -1109,7 +1109,7 @@ export const lessons: Lesson[] = [
         ],
         "prompt": "turn repairs back on",
         "steps": [
-          "Send “turn repairs back on” to the library assistant.",
+          "Send “turn repairs back on” to ChatGPT.",
           "Open the link it gives you: auth.openai.com/codex/device.",
           "Sign in with the library email and ChatGPT password. Do not choose Continue with Google.",
           "Enter the short code from the assistant and click Continue.",
@@ -1120,7 +1120,7 @@ export const lessons: Lesson[] = [
         "id": "use-your-code",
         "title": "Use only the assistant’s code",
         "text": [
-          "Only type codes the library assistant gives you. If a code expires or something looks wrong, return to the chat and tell the assistant."
+          "Only type codes ChatGPT gives you. If a code expires or something looks wrong, return to the chat and tell the assistant."
         ]
       }
     ]
