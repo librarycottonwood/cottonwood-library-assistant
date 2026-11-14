@@ -53,7 +53,8 @@ const breadcrumb = crumbs && breadcrumbNode([...crumbs, { label: title, href: As
   .has-illustration { align-items: center; }
   .has-illustration .page-title-copy { width: 100%; align-items: center; text-align: center; }
   .has-illustration .breadcrumb ol { justify-content: center; }
-  .page-title-art { order: -1; flex-shrink: 0; max-width: 100%; }
+  /* One art height for every scene (wide scenes are 2:1, books is nearly square), so titles and the block below line up page to page. */
+  .page-title-art { order: -1; flex-shrink: 0; max-width: 100%; height: clamp(5.5rem, 10vw, 10rem); display: flex; align-items: center; justify-content: center; }
   .breadcrumb ol {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs);
     margin: 0; padding: 0; list-style: none;
