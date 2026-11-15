@@ -6,7 +6,7 @@
   "keylessReconnectReady": false,
   "hostedSourceSha": "a9797217bc11862c3f4ffab0b0e302d2936e4ded",
   "humanAction": null,
-  "checkedAt": "2026-11-14T20:57:38.156902+00:00",
-  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/43640196978",
+  "checkedAt": "2026-11-15T21:20:52.160873+00:00",
+  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/43763155790",
   "scope": "Hosted connection, OAuth challenge, and live read-only library report access; no visitor figures stored."
 }
