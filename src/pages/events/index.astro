@@ -58,3 +58,7 @@ const featuredDate = featured && new Intl.DateTimeFormat('en-US', { month: 'long
     <Button href="/news/" iconEnd="arrow">All news</Button>
   </Section>}
 </BaseLayout>
+<script>
+  // Hides the featured event once it ends, even when no event cards are on the page.
+  import '../../scripts/event-refresh';
+</script>
