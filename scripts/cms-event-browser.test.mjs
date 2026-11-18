@@ -135,11 +135,18 @@ test('a lone featured event stops being promoted once it ends', {timeout:180000}
       assert.equal((await page.goto(base+route,{waitUntil:'networkidle'})).status(),200);
       const feature=page.locator('[data-event-feature-expires]');
       await feature.waitFor({state:'visible',timeout:10000});
-      if(route==='/events/')assert.equal(await page.locator('[data-event-list]').count(),0,'the events page has no event cards to carry the script');
+      // Events & News leads with the latest news post when no event is featured.
+      const fallback=page.locator('[data-event-feature-fallback]');
+      if(route==='/events/'){
+        assert.equal(await page.locator('[data-event-list]').count(),0,'the events page has no event cards to carry the script');
+        assert.equal(await fallback.isVisible(),false,'the news stand-in waits while the event is featured');
+      }
       await page.clock.fastForward(30000);
       assert.equal(await feature.isVisible(),false,`${route} ended lone event is no longer featured`);
+      if(route==='/events/')assert.equal(await fallback.isVisible(),true,'the latest news post leads once the event ends');
       await page.reload({waitUntil:'networkidle'});
       assert.equal(await feature.isVisible(),false,`${route} stays hidden on a fresh load`);
+      if(route==='/events/')assert.equal(await fallback.isVisible(),true,'the latest news post still leads on a fresh load');
       await page.close();
     }
     assert.deepEqual(errors,[]);

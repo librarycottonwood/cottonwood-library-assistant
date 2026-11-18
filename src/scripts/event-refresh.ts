@@ -1,5 +1,6 @@
 // Pages are built ahead of time, so the visitor's browser keeps event listings current:
-// it hides events (EventCards) and featured event blocks ([data-event-feature-expires]) once they end,
+// it hides events (EventCards) and featured event blocks ([data-event-feature-expires]) once they end, showing a
+// page's stand-in block ([data-event-feature-fallback]) instead,
 // moves regular-program badges to their next session, and swaps dates for "Today", "Tomorrow" and "This Friday".
 // Imported by EventCards and by every page with a featured event, so it runs even when a page has no event cards.
 import { nextScheduledDay } from '../content/schedule.mjs';
@@ -48,6 +49,9 @@ const refreshEvents = () => {
   for (const feature of document.querySelectorAll<HTMLElement>('[data-event-feature-expires]')) {
     feature.hidden = Date.parse(feature.dataset.eventFeatureExpires!) < now;
   }
+  // A page can offer a stand-in (Events & News: the latest post) for when no featured event is showing.
+  const featureShowing = [...document.querySelectorAll<HTMLElement>('[data-event-feature-expires]')].some(feature => !feature.hidden);
+  for (const fallback of document.querySelectorAll<HTMLElement>('[data-event-feature-fallback]')) fallback.hidden = featureShowing;
 };
 refreshEvents();
 window.setInterval(refreshEvents, 30000);
