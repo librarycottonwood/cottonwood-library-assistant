@@ -17,7 +17,9 @@ import Text from '../../components/site/Text.astro';
 import { mainNavigation, programHref } from '../../components/site/navigation';
 import { newestPosts, postDate, upcomingEvents } from '../../content/feeds';
 import { contentRepository } from '../../content/repository';
-import { eventPhoto, postsWithPhotos } from '../_photos';
+import { eventPhoto, fallbackPhoto, postsWithPhotos } from '../_photos';
+import { refreshPhoto } from '../../content/photography';
+import type { LibraryImage } from '../../content/types';
 const [{ library, programs }, allEvents, posts] = await Promise.all([contentRepository.getHome(), contentRepository.getEvents(), contentRepository.getPosts()]);
 const title = mainNavigation.find(link => link.href === '/events/')!.label;
 const events = upcomingEvents(allEvents);
@@ -26,7 +28,13 @@ const featured = events[0];
 // With no upcoming event the newest post leads instead, so the page never opens without a focus. When the event ends
 // in the visitor's browser, that same post block shows in its place (src/scripts/event-refresh.ts).
 const newsWithPhotos = postsWithPhotos(newestPosts(posts));
-const leadPost = newsWithPhotos[0];
+// A post with no photo of its own borrows a library photo; if that's a program photo shown just below, use another.
+const pictureId = (picture: LibraryImage) => { const shown = refreshPhoto(picture); return shown.url ?? shown.key; };
+const programPictures = new Set(programs.flatMap(program => program.image ? [pictureId(program.image)] : []));
+const newestPost = newsWithPhotos[0];
+const leadPost = newestPost && !posts.find(post => post.id === newestPost.id)?.image && programPictures.has(pictureId(newestPost.image!))
+  ? { ...newestPost, image: fallbackPhoto() }
+  : newestPost;
 // This page previews the latest four posts (not repeating one that leads the page); All news opens the complete archive.
 const latestPosts = newsWithPhotos.slice(featured ? 0 : 1).slice(0, 4);
 const featuredImage = featured && eventPhoto(featured, programs);
