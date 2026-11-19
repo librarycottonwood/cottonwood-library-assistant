@@ -115,7 +115,7 @@
     "checks": "Hero photo and action tile left edges match at 1024, 1280 and 1440px; all desktop/phone page checks passed"
   },
   "libraryAccountHandover": {
-    "chatgptProject": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3/project",
+    "chatgptProject": "https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project",
     "plan": "Library-owned Plus account verified in Safari",
     "projectInstructions": "Friendly library instructions saved and reopened to verify persistence",
     "accountInstructions": "ChatGPT and Codex custom instructions rewritten around the board's role, short non-technical replies, one-step guidance, current project lookup and verified outcomes; both saved and reopened in the library account October 20. Stale service claims removed from More about you.",
@@ -142,7 +142,7 @@
     "analytics": "librarycottonwood@gmail.com added as account Administrator; access table verified alongside Jaden. Email notification disabled. Live demo report showed page views and directions_click; authenticated assistant reporting still unconnected.",
     "pilot": "Board accepted custom-site pivot per Jaden after Oct 6 meeting. Six-week preview trial requested; public launch remains separate.",
     "projectReportRehearsal": {
-      "chat": "https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3-cottonwood-library-assistant/c/6ac58b86-539c-83e8-bdeb-38fb2f75a1d1",
+      "chat": "Historical: the earlier Library assistant project and this chat no longer exist",
       "result": "Fresh project chat returned: The Summer Superhero Save the Library event raised $7,311. It’s marked completed in Givebutter. 🎉",
       "verification": "Amount and completed status match Givebutter admin campaign list; brief friendly voice verified."
     },
