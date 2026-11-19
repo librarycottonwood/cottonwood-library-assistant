@@ -102,7 +102,7 @@ test('academy navigation, copy/fallback, tool directory, privacy and print views
         assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, nofollow');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${width}: ${route}`);
         const text = await page.locator('body').innerText();
-        assert.doesNotMatch(text, /librarycottonwood@gmail\.com|toddhaines7@gmail\.com|170378|ACCOUNT-REGISTER|pluginrel_/, 'private handoff data must not enter public HTML');
+        assert.doesNotMatch(text, /@gmail\.com|givebutter\.com\/accounts\/\d|ACCOUNT-REGISTER|pluginrel_/, 'private handoff data must not enter public HTML');
         for (const href of await page.locator('a[href^="/academy/"]').evaluateAll(links => links.map(a => a.getAttribute('href')))) {
           assert.ok((await page.request.get(origin + href)).ok(), `internal academy link ${href}`);
         }

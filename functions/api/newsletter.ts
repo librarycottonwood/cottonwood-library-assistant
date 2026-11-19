@@ -3,7 +3,7 @@
 // The site's own form posts here; this adds the person to the library's Givebutter
 // contacts with email subscription on and the newsletter tag. The Givebutter API key
 // is the GIVEBUTTER_API_KEY secret in the Cloudflare Pages project settings, never in
-// this repository (see docs/setup-checklist.md).
+// this repository (see docs/library-facts.md, "Website secrets").
 //
 // `wrangler pages deploy` compiles this folder from the trusted main checkout when the
 // GitHub workflows publish the site. PR artifacts stay static-only, so a PR preview

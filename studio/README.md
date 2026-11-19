@@ -32,16 +32,14 @@ The tests exercise the form validation rules for invalid event times and duplica
 
 To check a migration snapshot against the actual Studio schema without an account, run `pnpm --dir studio validate:import -- ../output/cms/migration.json`. This catches incompatible fields, missing required values, and wrong array/object types. Warnings are reported; unknown-field warnings fail the migration check because imported records must fit the volunteer editor. Hidden, read-only `migrationSource` preserves provenance. It reports its limits explicitly; it does not prove uploaded asset existence or permissions.
 
-## Connect at the meeting
+## Setup and recovery
 
-1. The library created its organization/project using its permanent GitHub identity `librarycottonwood`. Keep recovery and another administrator with the library; invite Jaden separately. Do not use a developer-owned project as the permanent home. Google sign-in is not yet linked/verified.
-2. The nonprofit application for that project was submitted from the library Google account on October 20. Await the decision and verify free quotas; do not add a card or enable paid tools as part of this setup.
-3. Choose the dataset name and visibility. A public published dataset must contain only public website material. Keep donor/private information outside it. Draft access, write access, and exports require appropriate authorization.
-4. Copy `.env.example` to `.env.local` inside `studio/`, and fill in `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`. These are public identifiers. Never place an API token in any `SANITY_STUDIO_*` variable: those variables are embedded in the browser bundle.
-5. Import the reviewed content snapshot with the repository’s migration process. Check both singleton documents and all imported assets before enabling publication. No content is imported by `pnpm install` or `pnpm build`.
-6. Run `pnpm --dir studio dev`. Configure the approved Studio origin in Sanity’s CORS settings after its final hosting address is selected. Hosting and role setup are separate human-owned operations.
-7. Connect the signed publishing webhook and its separate approval/status service. Add draft preview access only through an authenticated server; never put a draft-read or publishing token in the public website or Studio environment.
-8. Test one new event, a time correction, a photo post, a newsletter replacement, a closure, unpublishing, concurrent changes, and a deliberately failed update in the actual library account. Confirm the live website and the library-facing status agree. Test backup restore and recovery without Jaden or the Pi before handoff.
+The library owns the Sanity organization and project; account owners and recovery are in the private account directory in the library ChatGPT Maintenance project (Sources). Do not use a developer-owned project as the permanent home, add a card or enable paid tools.
+
+1. Copy the example environment file inside `studio/` to its local name and fill in `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`. These are public identifiers. Never place an API token in any `SANITY_STUDIO_*` variable: those variables are embedded in the browser bundle.
+2. A public published dataset must contain only public website material. Keep donor/private information outside it. Draft access, write access, and exports require appropriate authorization.
+3. Run `pnpm --dir studio dev`. Configure Studio origins in Sanity's CORS settings. Hosting and role setup are separate human-owned operations.
+4. Add draft preview access only through an authenticated server; never put a draft-read or publishing token in the public website or Studio environment.
 
 Use the current connection evidence before repeating setup. Native Studio publishing through the checked website route has been rehearsed; assistant content editing through the Sanity connector and full recovery acceptance require their own observed results. Normal `dev` and `build` fail with setup instructions when identifiers are missing, instead of silently using a personal or example project. Keep literal `process.env.SANITY_STUDIO_*` references in `sanity.config.ts`: Sanity replaces these at production build time; passing the entire `process.env` object only works in development.
 

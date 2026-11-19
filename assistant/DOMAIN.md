@@ -4,7 +4,7 @@ The website has been live on **https://www.cottonwoodcommunitylibrary.com** sinc
 
 ## How it is set up
 
-- Registration and DNS stay at Squarespace (registrant on file: Mary Ann Hasbrook, cottonlib@shasta.com; renews March 7, 2027, auto-renew on). Nameservers, DNSSEC, domain lock and registration were not changed.
+- Registration and DNS stay at Squarespace (auto-renew on; owner and renewal details are in the private account directory in the library ChatGPT Maintenance project). Nameservers, DNSSEC, domain lock and registration were not changed.
 - `www` is a CNAME to `cottonwood-library.pages.dev`, the library-account Cloudflare Pages project. Cloudflare issues its HTTPS certificate.
 - The bare domain `cottonwoodcommunitylibrary.com` forwards (Squarespace forwarding, path kept) to `https://www.cottonwoodcommunitylibrary.com`.
 - `https://cottonwood-library.pages.dev` is the same deployment and keeps working. Workflows and the CMS publisher check it; people should be sent to the www address.

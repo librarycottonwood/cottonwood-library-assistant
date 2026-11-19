@@ -46,9 +46,9 @@ The maintained repository is `librarycottonwood/cottonwood-library-assistant`. R
 - Website/code work, previews, approval and saving: `AGENTS.md` and `assistant/WORKFLOW.md`.
 - Account/setup evidence: `assistant/setup-status.json`. Treat dated entries as evidence to verify, not a promise that access still works.
 - General donations, newsletter signup/email and social coordination: `assistant/COMMUNICATIONS.md`. Read current CMS/account records before claiming those connections work.
-- Semester milestones: `assistant/ROADMAP.md`. Domain setup and rollback: `assistant/DOMAIN.md`.
+- Open items: `assistant/ROADMAP.md`. Domain setup and rollback: `assistant/DOMAIN.md`.
 - Repairs and website health: `assistant/MAINTENANCE.md`.
-- Accounts the website uses and who owns them: The account directory is a private file in the library ChatGPT Maintenance project (Sources). It is not in this public repository. If you can't see a file named “Library accounts (private).md” in this chat, say so and tell the person to open the [Maintenance project](https://chatgpt.com/g/g-p-6ac6e1431dcc8191acdc023d8b049571/project) or ask the board; never guess. Entries marked “Board to confirm” are unknown; say that plainly and never guess an owner, admin or plan. Never copy its contents into GitHub, public pages, PDFs or screenshots.
+- Accounts the website uses and who owns them: The account directory is a private file in the library ChatGPT Maintenance project (Sources). It is not in this public repository. If you can't see a file named “Library accounts (private).md” in this chat, say so and tell the person to open the **Maintenance** project in the library ChatGPT sidebar or ask the board; never guess. Entries marked “Board to confirm” are unknown; say that plainly and never guess an owner, admin or plan. Never copy its contents into GitHub, public pages, PDFs or screenshots.
 - Content backups: `assistant/MAINTENANCE.md`, section “CMS backups”.
 
 Use the tools actually available in this chat. Instructions do not establish a working connection. Verify the current record or website when facts matter; old drafts and chats may have been tests. If access fails, investigate first, then give the volunteer one practical next step.
