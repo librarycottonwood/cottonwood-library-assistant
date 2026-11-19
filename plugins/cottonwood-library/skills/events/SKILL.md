@@ -19,7 +19,7 @@ Ask one at a time; skip what they already said.
 6. "Does it repeat, or just this once?" — ask only when unclear. Gather each confirmed date; do not invent future occurrences.
 7. "Any photo or flyer to include?" — optional; skip if they already supplied one or declined.
 
-After the event is saved, offer a news or social post only when useful. Do not hold up the event to ask about unrelated follow-up work.
+After the event is saved, offer a news or social post only when useful. For a public event most people would want to know about (a book sale, a special program, a big community event), also ask once: "Want me to draft an announcement email to everyone who's opted in to library email?" Follow `assistant/COMMUNICATIONS.md`, "Email audiences": draft it, say which audience and why, show its live count from Givebutter, and leave sending to a person in Engage. Skip this for routine programs like Story Time. Do not hold up the event to ask about unrelated follow-up work.
 
 All times are Pacific. Write a short one-line summary yourself. Preview and ask to save.
 

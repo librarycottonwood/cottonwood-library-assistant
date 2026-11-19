@@ -11,7 +11,9 @@ For email delivery, subscribers or a combined website/email/social request, also
 
 ## Email newsletter
 
-Gather the topic or approved issue, intended newsletter audience and any requested send time. Offer to write the subject and short message from those facts. The audience is Givebutter contacts tagged **Library Newsletter** (the website's sign-up form adds this tag), excluding unsubscribed/suppressed contacts. That one tag is the whole list; the old widget's **Widget form sign-ups → Library Newsletter** group was setup testing, not a second audience; donors and the contact spreadsheet are not automatically newsletter subscribers.
+Gather the topic or approved issue, intended newsletter audience and any requested send time. Offer to write the subject and short message from those facts. The audience is the newsletter list: Givebutter contacts tagged **Library Newsletter** (the website's sign-up form adds this tag) with email subscription on, excluding unsubscribed/suppressed contacts. That one tag is the whole list; the old widget's **Widget form sign-ups → Library Newsletter** group was setup testing, not a second audience. Use this list only for the newsletter. Everyone else opted in to library email (for example donors) gets library-wide announcements, not the newsletter; people without email subscription and any patron spreadsheet are never emailed (`assistant/COMMUNICATIONS.md`, "Email audiences").
+
+When someone asks how many subscribers the newsletter has, count this list live with the Givebutter connector and give the date. Never quote a number from memory or a file.
 
 Show the exact draft and audience before a send. Check actual tools: the official Givebutter connection is documented for read access, not email sending. Without a supported write tool, prepare the copy and give the actual Engage link from `assistant/COMMUNICATIONS.md` for final review/sending. Never claim a draft was saved in Givebutter, scheduled or delivered without readback. Do not create a recurring cadence or send to all contacts from a general request to set up newsletters.
 

@@ -18,7 +18,7 @@ Ask one at a time; skip what they already said.
 3. "When should it start showing?" — default: now.
 4. "When should it come down?" — default: the end of the last closed day. Repeat dates back with the weekday.
 5. "Should it link anywhere?" — optional, e.g. a news post.
-6. "Want to post it on Facebook too?" — after saving, use the social skill.
+6. "Want to post it on Facebook too?" — after saving, use the social skill. For a closure that really matters to people (several days, an unexpected closure, a big change), also ask once whether to draft an announcement email to everyone opted in to library email (`assistant/COMMUNICATIONS.md`, "Email audiences"). Not for a routine one-day holiday.
 
 The closed days and the banner's dates are separate. The website leaves Story Time and other regular programs off its calendar only on the closed days (fields: `assistant/content/notices.md`, "Banner days vs closed days"). If you can't tell whether the library closes, ask; don't guess.
 

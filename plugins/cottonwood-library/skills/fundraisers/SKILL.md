@@ -54,6 +54,10 @@ The website shows one fundraiser at a time. If one is already running, ask: "The
 
 A fundraiser is always a content change, finished in this chat. Never send it to Codex or a developer, and never offer a website code change to show two at once.
 
+## Announcement emails
+
+When a fundraiser launches, reaches a milestone (for example halfway or its goal) or starts its final push, ask once: "Want me to draft an announcement email to everyone who's opted in to library email?" Follow `assistant/COMMUNICATIONS.md`, "Email audiences": that is everyone with email subscription on in Givebutter (donors who opted in as well as newsletter sign-ups), never contacts without email subscription or a patron list. Draft the subject and message with the live total from Givebutter and the website link, say which audience and why, show its live count from the Givebutter connector, and give the Engage link for a person to review and send. Keep these to about one or two a month beyond the newsletter.
+
 ## How much have we raised?
 
 Read Givebutter and answer with the amount, goal and date. The goal bar on the website is live, so there's nothing to update.
