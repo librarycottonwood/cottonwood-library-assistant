@@ -21,7 +21,7 @@ Use the `library_website_report` tool directly.
 
 ## Givebutter
 
-Use the Givebutter tools for totals, goals and counts (for example number of donors). Give amounts with the date. When someone asks for donor details, such as top donors or a thank-you list, share them in the chat. Donor names, emails and gift amounts never go on the website, in social posts or in newsletters.
+Use the Givebutter tools for totals, goals and counts (for example number of donors). **Newsletter subscribers** means contacts tagged **Library Newsletter** with email subscription on; everyone with email subscription on (any tag) is a larger, different group ("opted in to library email"). Name which one you counted, check it live each time and give the date (`assistant/COMMUNICATIONS.md`, "Email audiences"). Give amounts with the date. When someone asks for donor details, such as top donors or a thank-you list, share them in the chat. Donor names, emails and gift amounts never go on the website, in social posts or in newsletters.
 
 ## When reports stop working — one step at a time
 
