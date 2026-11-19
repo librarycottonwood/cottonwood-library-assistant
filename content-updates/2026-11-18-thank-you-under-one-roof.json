@@ -1,0 +1,19 @@
+{
+  "request": "Publish a thank-you to everyone who supported the Under One Roof fundraiser.",
+  "sanityDocuments": [
+    {
+      "id": "665877e2-0b1d-4620-9560-b7c2d7186d1e",
+      "revision": "ohUOyB93Df4YPAxi7n5kZz",
+      "fields": [
+        "title",
+        "slug",
+        "summary",
+        "category",
+        "publishedAt",
+        "body"
+      ],
+      "before": null
+    }
+  ],
+  "requestedInChat": "2026-11-18"
+}
