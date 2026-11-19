@@ -33,7 +33,7 @@ Updated November 5, 2026. Done so far: the redesigned website (with motion and t
 
 ## Week of December 7: handoff and closeout
 
-- [ ] Deliver an account directory (owners and recovery, no passwords; draft in [ACCOUNTS.md](ACCOUNTS.md)), a short board guide, final content and photo exports, and tested backup/restore and rollback steps.
+- [ ] Deliver an account directory (owners and recovery, no passwords; draft: a private file in the library ChatGPT Maintenance project (Sources), not in this public repository), a short board guide, final content and photo exports, and tested backup/restore and rollback steps.
 - [ ] A primary and a backup volunteer complete the workflow without Jaden. Confirm who handles expired sign-ins, quotas and billing after the semester.
 - [ ] Retire the old Square website and cancel its subscription only with board approval and its owner. Keep the domain registration (Squarespace) and email.
 - [ ] The library accepts the final scope and knows the remaining limitations and support arrangement.

@@ -129,6 +129,6 @@ elif mode == 'alert':
         url = 'https://github.com/' + REPO + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
         issue = api('/issues', 'POST', {
             'title': 'Website check needs attention',
-            'body': "The website check found a problem I couldn't safely repair. [Open your library assistant](https://chatgpt.com/g/g-p-6ac589c205f48191b9442d139323e4f3/project) and say: Please check the website alert.\n\n[Details for the assistant](" + url + ")\n\n" + marker,
+            'body': "The website check found a problem I couldn't safely repair. [Open your library assistant](https://chatgpt.com/) and say: Please check the website alert.\n\n[Details for the assistant](" + url + ")\n\n" + marker,
             'assignees': ['librarycottonwood']})
         print(issue['html_url'])

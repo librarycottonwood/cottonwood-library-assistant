@@ -1,6 +1,6 @@
 # Volunteer academy: evidence and rehearsal
 
-Prepared November 5, 2026. Source baseline: `bfe78dd844cc97ea05d2ddda918d7e971548f586` (initial main fetched for this request). The public academy has no account data or access controls: noindex is a search preference, not privacy. Private account details stay in ACCOUNT-REGISTER.md. No new service, CMS field, billing or account change is required.
+Prepared November 5, 2026. Source baseline: `bfe78dd844cc97ea05d2ddda918d7e971548f586` (initial main fetched for this request). The public academy has no account data or access controls: noindex is a search preference, not privacy. Private account details stay out of the repository. The account directory is a private file in the library ChatGPT Maintenance project (Sources). It is not in this public repository. No new service, CMS field, billing or account change is required.
 
 ## Current review, November 11, 2026
 
@@ -14,11 +14,11 @@ Source plugin version is 0.2.25. The new wiki bundles every lesson, example, ser
 
 Use `/academy/` as the maintained learning resource. The academy uses a desktop sidebar with branding and search, a compact phone header and shared animated menu, sans-serif headings, and a white reading surface. Search opens a centered dialog and searches lessons, examples, services and the quick guide. Shared cards cover lesson links, examples and previous/next navigation. Twelve lessons span Start here, Library tasks and Behind the scenes, including plugin reconnection and restarting paused automatic repairs. Screenshots retain the source image, with rounded corners and padded canvases. Ten service cards provide descriptions and links without account identities or sign-in relationships. The printable handbook and quick guide use the same lesson source; the assistant wiki is generated from it. Technical help stays with ChatGPT. The board supplies library facts and approvals. Keep the public navigation unchanged until the board decides how to distribute the academy bookmark.
 
-A board-controlled account register complements the public guide. It lists known identities, links, sign-in methods, roles, relationships and unverified gaps; it never contains credentials. Do not add a password table or private recovery instructions to a public route. No learning-management service or volunteer tracking is needed for this version.
+A board-controlled account register complements the public guide. The account directory is a private file in the library ChatGPT Maintenance project (Sources). It is not in this public repository. It lists known identities, links, sign-in methods, roles, relationships and unverified gaps; it never contains credentials. Do not add a password table or private recovery instructions to a public route. No learning-management service or volunteer tracking is needed for this version.
 
 ## Context used
 
-All ten existing topic skills; current AGENTS/WORKFLOW/CMS/design rules; handoff, communications, maintenance, account evidence and domain plan; exact-main GitHub read; current published Sanity snapshot; hosted live release status; targeted Apple Mail correspondence described in ACCOUNT-REGISTER. Official ChatGPT quickstart/use documentation, Givebutter offline transaction and outbound email instructions, and Buffer’s All Channels instructions were read for current product behavior. The public lessons link to those source instructions.
+All ten existing topic skills; current AGENTS/WORKFLOW/CMS/design rules; handoff, communications, maintenance, account evidence and domain plan; exact-main GitHub read; current published Sanity snapshot; hosted live release status; targeted Apple Mail correspondence described in the private account directory. Official ChatGPT quickstart/use documentation, Givebutter offline transaction and outbound email instructions, and Buffer’s All Channels instructions were read for current product behavior. The public lessons link to those source instructions.
 
 The November 4 email identifies cash/check gifts and subscriber filtering as immediate needs; September correspondence establishes shared Drive and interest in website/donation reporting. No private patron spreadsheet was opened. Catalog staff credentials, device procedure, password manager and current Zoom host ownership were not established by the inspected evidence.
 
