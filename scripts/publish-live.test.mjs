@@ -36,10 +36,10 @@ const openPr={number:5,state:'open',head:{sha:head,repo:{full_name:repo}},base:{
 const fakeGet=({pulls=[openPr],jobs=[{name:'verify',conclusion:'success'},{name:'pr-preview',conclusion:'success'},{name:'cms-live',conclusion:'skipped'}],files=[{filename:'content-updates/2026-10-27-a.json'}]}={})=>async route=>
   route.startsWith('commits/')?pulls:route.startsWith('actions/runs/')?{jobs}:route.startsWith('pulls/5/files')?files:assert.fail(`unexpected ${route}`);
 test('only instructions-only PRs skip the website build; anything unclear is a website change',async()=>{
-  assert.equal(changeKind(['AGENTS.md','assistant/HANDOVER.md','plugins/cottonwood-library/skills/news/SKILL.md','docs/staff-guide.md','.claude/skills/x/SKILL.md']),'docs');
-  assert.equal(changeKind(['content-updates/2026-10-27-a.json','assistant/HANDOVER.md']),'content');
+  assert.equal(changeKind(['AGENTS.md','assistant/CONTEXT.md','plugins/cottonwood-library/skills/news/SKILL.md','docs/staff-guide.md','.claude/skills/x/SKILL.md']),'docs');
+  assert.equal(changeKind(['content-updates/2026-10-27-a.json','assistant/CONTEXT.md']),'content');
   assert.equal(changeKind(['assistant/website-update.json']),'content');
-  for(const files of [[],['src/pages/index.astro'],['assistant/HANDOVER.md','scripts/build.mjs'],['src/design-system/README.md'],['.github/workflows/check.yml'],['content-updates/latest.json'],['test/check.txt']])
+  for(const files of [[],['src/pages/index.astro'],['assistant/CONTEXT.md','scripts/build.mjs'],['src/design-system/README.md'],['.github/workflows/check.yml'],['content-updates/latest.json'],['test/check.txt']])
     assert.equal(changeKind(files),'code',files.join());
   // A file moved out of src/ still changes the website.
   assert.equal(await kindOf(5,{},fakeGet({files:[{filename:'docs/old.md',previous_filename:'src/pages/old.md'}]})),'code');
@@ -52,7 +52,7 @@ test('only instructions-only PRs skip the website build; anything unclear is a w
   assert.equal(await prKind({repository:repo,base:'',head,token:'t'},{fetcher:async()=>assert.fail('no request')}),'code');
 });
 test('routing: an instructions-only PR gets a "no website change" status instead of a preview or a save',async()=>{
-  const files=[{filename:'assistant/HANDOVER.md'}];
+  const files=[{filename:'assistant/CONTEXT.md'}];
   assert.deepEqual(await route(trigger,{},{get:fakeGet({files,jobs:[{name:'verify',conclusion:'success'},{name:'pr-preview',conclusion:'success'}]})}),
     {action:'docs',pr:5,sha:head,context:'Website preview',description:NO_WEBSITE_CHANGE.preview});
   const failed=await route({...trigger,conclusion:'failure'},{},{get:fakeGet({files,jobs:[{name:'verify',conclusion:'failure'}]})});
