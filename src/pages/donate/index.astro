@@ -61,6 +61,15 @@ function supporterHref(item: SupportUpdate) {
     </Stack>}
     {general.source !== 'fallback' && <Button href={general.href} {...checkoutAttributes(general)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
   </Split>}
+  {/* Community funding, written here (docs/design-rules.md, "Where content lives"). Sources: About Us "We are here for you!"
+      and Sanity's "Powered by Community" giving text. Shown beside a fundraiser; without one, the general giving block
+      above already says this, so it hides with the fundraiser after its end date. */}
+  {campaign && <div data-campaign-only={campaign.endsOn ? '' : undefined} data-campaign-ends={campaign.endsOn}>
+    <Section title="Funded by our community" headingId="community-funded-heading" id="community-funded" width="copy">
+      <Text tone="muted" size="lead">Cottonwood Community Library receives no government funding of any kind. Your donations, fundraisers and book sale purchases keep our doors open, and every dollar counts.</Text>
+      {donate.source !== 'fallback' && <Button href={donate.href} {...checkoutAttributes(donate)} data-analytics-event="donate_page" variant="primary" icon="heart">Donate</Button>}
+    </Section>
+  </div>}
   {volunteer && <Split media="start" image={volunteerActivityPhoto(volunteer.image)} headingId="volunteer-heading" id="volunteer" mobileAlign="center">
     <Stack gap="sm" align="start">
       <LibraryIllustration scene="volunteers" size="small" align="start" />
