@@ -2,7 +2,7 @@
 
 ## One request, one PR, one save decision
 
-Use `librarycottonwood/cottonwood-library-assistant` and the prepared library Codex environment. Fetch current main and create a new isolated worktree and branch for each website request. Preserve other worktrees and open PRs. The separate `oobagi/cottonwood-community-library` redesign checkout is not this implementation repository.
+Use `librarycottonwood/cottonwood-library-assistant` and the prepared library Codex environment. Fetch current main and create a new isolated worktree and branch for each website request. Preserve other worktrees and open PRs.
 
 1. Read the request, `AGENTS.md`, `assistant/CMS.md` and current setup evidence. Inspect the existing website and content before editing. Resolve routine implementation choices yourself.
 2. Make the requested change on the request's branch. Current library content lives in Sanity. Use permitted Sanity tools for drafts, corrections and supported publication; do not copy content into old seed files. For a CMS-only release, add a new `content-updates/<YYYY-MM-DD>-<short-name>.json` with a one-sentence `request`, the changed `sanityDocuments` (`id`, `revision`, `fields`, and `before` holding each changed field's previous value, or `null` for a new record) and `requestedInChat`, so that the website release still has its own reviewable PR without duplicating CMS records. Each save has its own file, so open saves do not conflict. `assistant/website-update.json` is still accepted for saves opened before this change; do not use it for new ones.
@@ -40,4 +40,4 @@ Prepare every new photo, screenshot, poster or logo with `pnpm image:prepare -- 
 
 ## Existing coding environment
 
-Keep the prepared `cottonwood-library-editor` and tested writable `/workspace` package/cache wrapper. Setup uses `bash scripts/cloud-setup.sh` and `assistant/START.md`. Do not replace the environment because of an old browser failure. Check dated evidence in `setup-status.json`: Safari follow-up submission failed with `DisposableStack`; environment Edit failure is separate; the actual library computer/browser is unverified. Repository edits cannot repair OpenAI's hosted client. Verify a fresh request, follow-up and hosted preview on the actual device before claiming handoff readiness.
+Keep the prepared `cottonwood-library-editor` and tested writable `/workspace` package/cache wrapper. Setup uses `bash scripts/cloud-setup.sh` and `assistant/START.md`. Do not replace the environment because of a browser failure; repository edits cannot repair OpenAI's hosted client.

@@ -1,0 +1,92 @@
+{
+  "request": "Remove the expired October book sale announcement and quarterly book sale event from the library website.",
+  "sanityDocuments": [
+    {
+      "id": "post-october-book-sale",
+      "revision": "ohUOyB93Df4YPAxi7n7Gsn",
+      "fields": [
+        "title",
+        "slug",
+        "summary",
+        "body",
+        "category",
+        "publishedAt",
+        "href",
+        "migrationSource"
+      ],
+      "before": {
+        "title": "Our next book sale: October 16–17",
+        "slug": {
+          "_type": "slug",
+          "current": "october-book-sale"
+        },
+        "summary": "Friday and Saturday, 10 a.m.–2 p.m. Back-door entry; cash sales only.",
+        "body": [
+          {
+            "_key": "paragraph0",
+            "_type": "block",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_key": "span0",
+                "_type": "span",
+                "marks": [],
+                "text": "Our next quarterly book sale is Friday and Saturday, October 16–17, from 10 a.m. to 2 p.m. at Cottonwood Community Library."
+              }
+            ]
+          },
+          {
+            "_key": "paragraph1",
+            "_type": "block",
+            "style": "normal",
+            "markDefs": [],
+            "children": [
+              {
+                "_key": "span1",
+                "_type": "span",
+                "marks": [],
+                "text": "Please enter through the back door. Sales are cash only. Your purchases support our independent community library."
+              }
+            ]
+          }
+        ],
+        "category": "Library news",
+        "publishedAt": "2026-10-05",
+        "href": "/librarynews/october-book-sale/",
+        "migrationSource": "existing website prototype; review before publishing"
+      }
+    },
+    {
+      "id": "event-quarterly-book-sale",
+      "revision": "ohUOyB93Df4YPAxi7n7Gsn",
+      "fields": [
+        "title",
+        "slug",
+        "summary",
+        "sessions",
+        "href",
+        "migrationSource"
+      ],
+      "before": {
+        "title": "Quarterly book sale",
+        "slug": {
+          "_type": "slug",
+          "current": "quarterly-book-sale"
+        },
+        "summary": "Hardcovers, paperbacks, children’s books and DVDs, from 25¢ to $1, with deals on bundles. Enter through the back door. Cash only. Every sale supports the library.",
+        "sessions": [
+          {
+            "_key": "s1",
+            "_type": "eventSession",
+            "startsAt": "2026-10-16T10:00:00-07:00",
+            "endsAt": "2026-10-21T17:00:00-07:00"
+          }
+        ],
+        "href": "/fundraising-events/book-sale/",
+        "migrationSource": "existing website prototype; review before publishing"
+      }
+    }
+  ],
+  "requestedInChat": "2026-11-18"
+}

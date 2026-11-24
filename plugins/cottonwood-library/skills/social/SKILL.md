@@ -36,4 +36,4 @@ Use Buffer for posting. Don't suggest or install other social media tools or plu
 
 Read current `assistant/COMMUNICATIONS.md` and check the available channels. If an existing connection expired, give its actual reconnect step and verify a read afterward. When disconnected, provide the copy-ready draft without claiming it is in Buffer.
 
-If they ask how to connect: the person in this chat signs in at buffer.com with **librarycottonwood@gmail.com**, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.
+If they ask how to connect: the person in this chat signs in at buffer.com with the library account listed in the private account directory, connects the Facebook page and Instagram account, then adds the Buffer connector in ChatGPT. Walk them through one step at a time. Check current plan limits before promising a feature. Stay within the library's existing budget and never ask for passwords.

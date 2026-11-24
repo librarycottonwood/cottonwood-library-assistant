@@ -1,11 +1,11 @@
-# Library facts and accounts
+# Library facts
 
-Verified facts the assistant and staff can rely on. Check the live record before acting on anything that may have changed. Last reviewed November 5, 2026. No passwords or keys belong here.
+Verified facts the assistant and staff can rely on. Check the live record before acting on anything that may have changed. Last reviewed November 19, 2026. No passwords, keys or account sign-in details belong here; those are in the private account directory in the library ChatGPT Maintenance project (Sources).
 
 ## The library
 
 - Cottonwood Community Library, 3427 Main Street, Cottonwood, CA. Mail: PO Box 1807, Cottonwood, CA 96022.
-- Phone (530) 347-4818. Email cottonlib@shasta.com. Library Google account: librarycottonwood@gmail.com.
+- Phone (530) 347-4818. Email cottonlib@shasta.com.
 - Technical support: ChatGPT, the library’s assistant. Board members (Todd Haines, Donna, Mary Ann, Rod and the rest) and volunteers are not technical; never send them technical work or tell anyone to contact them for it.
 - Hours, address and contact details shown on the site come from Sanity (`library-settings` → Contact and hours). Change them there, never in code.
 
@@ -29,16 +29,16 @@ Verified facts the assistant and staff can rely on. Check the live record before
 ## Newsletter
 
 - Website issues: Sanity **Newsletters** records plus `library-settings.currentNewsletter`.
-- Email: Givebutter Engage. Drafts and sending: https://dashboard.givebutter.com/accounts/170378/engage/email
+- Email: Givebutter **Engage → Email** (drafts and sending).
 - Sender: Cottonwood Community Library <newsletter@cottonwoodlibrary.givebutter-mail.com>, replies to cottonlib@shasta.com.
-- Sign-ups: the website's own form (footer of every page and `/newsletter/`) posts to `/api/newsletter` (`functions/api/newsletter.ts`), which adds a Givebutter contact with email subscription on and the tag **Library Newsletter**. Needs the `GIVEBUTTER_API_KEY` secret in Cloudflare Pages (see `docs/setup-checklist.md`).
-- Audience: Contacts tagged **Library Newsletter**, excluding unsubscribed. That one tag is the whole list (the old signup widget `L4EVDm` was only used for setup testing and is not a second audience). Donors are not automatically subscribers.
+- Sign-ups: the website's own form (footer of every page and `/newsletter/`) posts to `/api/newsletter` (`functions/api/newsletter.ts`), which adds a Givebutter contact with email subscription on and the tag **Library Newsletter**. Needs the `GIVEBUTTER_API_KEY` and `TURNSTILE_SECRET_KEY` secrets (see "Website secrets" below).
+- Audience: Contacts tagged **Library Newsletter**, excluding unsubscribed. That one tag is the whole list (the old signup widget `L4EVDm` was only used for setup testing and is not a second audience). Donors are not automatically subscribers. Other email audiences (everyone opted in to library email, no-email contacts, patron lists): `assistant/COMMUNICATIONS.md`, "Email audiences".
 - Tested: website sign-up end to end (October 30, 2026) and Givebutter email delivery (October 21, 2026). Unsubscribe: handled by Givebutter's built-in link; not tested by us (accepted November 5).
-- Still open before the first bulk send: the unsubscribe result, and board approval of the first issue and audience.
+- Each send needs board approval of the issue and audience.
 
 ## Social
 
-- Buffer (signed in with the library Google account) has the library Facebook page. Instagram is not connected yet.
+- Buffer has the library Facebook page. Instagram is not connected yet.
 - Posts are created as Buffer drafts for a person to approve. Nothing is published straight from the assistant.
 
 ## Visitor statistics
@@ -49,3 +49,12 @@ Verified facts the assistant and staff can rely on. Check the live record before
 ## Events
 
 - Under One Roof auction: Saturday, November 14, 2026. Settled: follow the library's public posts; don't raise the date again.
+
+## Website secrets
+
+Set in Cloudflare (library account) → Workers & Pages → `cottonwood-library` → Settings → Variables and Secrets, type **Secret**, environment **Production** only. Never paste a value into chat, GitHub or any file.
+
+- `GIVEBUTTER_API_KEY`: Givebutter API key (Settings → Integrations → API Keys, named `Library website newsletter`) used by the newsletter form. Without it the form shows "Sorry, sign-up isn't working right now". To replace a leaked or old key: create a new one, replace the secret, then delete the old key in Givebutter.
+- `TURNSTILE_SECRET_KEY`: Cloudflare Turnstile widget "Cottonwood newsletter form". Its public site key is in `src/content/newsletter-signup.json`; allowed hostnames are `cottonwood-library.pages.dev`, `cottonwoodcommunitylibrary.com` and `www.cottonwoodcommunitylibrary.com`.
+
+A changed secret applies from the next website save.
