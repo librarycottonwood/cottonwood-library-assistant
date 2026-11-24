@@ -19,6 +19,18 @@ folder. The Facebook photo grid was reviewed through roughly 120 loaded photos;
 many were dated flyers. Instagram's first 12 posts were reviewed for suitable
 subjects, with the Main Street Readers carousel inspected separately.
 
+Original photographs (not reconstructions) for Support Us "Funded by our community" (November 2026), prepared with
+`pnpm image:prepare`. Chosen for people and events; wide shots with children mostly seen from behind.
+
+| Prepared asset | Source |
+| --- | --- |
+| story-time-pig-book.jpg | [Unused Library Pics / Pig Book 1.jpeg](https://drive.google.com/file/d/1-TfI6UTRA2MeT2-H83rJnezACfxpXKMm/view) |
+| llama-visit-story-time.jpg | [Photos and Logo / IMG_6356.JPG](https://drive.google.com/file/d/1xvsG6MXGvAA0WqU0dDYKe8fAYGQWaOyD/view) |
+| shingle-donation-birdhouse.jpg | [Photos and Logo / AF0A6105….jpeg](https://drive.google.com/file/d/1xA_kSChpPIExpAnU7HfjIFJXkcMoeP6F/view) |
+| library-flag-exterior.jpg | [Unused Library Pics / 250 flag.jpeg](https://drive.google.com/file/d/1KcWd87_JRDerE3cIhFNfdt1q9-kxPht_/view) |
+| earth-day-song.jpg | [Unused Library Pics / Earth Day Song 1.jpg](https://drive.google.com/file/d/11p2psjZ6IeIuP8QY3GpOFwS3OYNfPRQZ/view) |
+| bee-story-time.jpg | [Unused Library Pics / Bee Story 1.jpeg](https://drive.google.com/file/d/1En4Iz9ZimOuJWV3LRzRjspq8nYdi4dB_/view) |
+
 The following are **AI reconstructions of the real place**, made with the built-in
 image generation tool, not new documentary photographs. The prompts requested the
 existing room/building, better camera alignment and soft daylight. Small lettering

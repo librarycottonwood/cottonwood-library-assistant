@@ -192,6 +192,7 @@ Import from `src/components/site/` (BaseLayout from `src/layouts/`). Each compon
 | [PageNavigation](#pagenavigation) | Previous and next cards using the same surface as topic cards. |
 | [PageTitle](#pagetitle) | The page's opening title (h1), optional topic artwork, breadcrumbs, and one muted supporting line such as an event's date. Illustrated index titles put the artwork on the right on desktop and above the title on phones. |
 | [Panel](#panel) | A quiet surface for text, examples and service information. |
+| [PhotoScatter](#photoscatter) | Centered copy among six tilted, overlapping photos of different sizes, placed unevenly: a wide cluster on one side and a looser, taller drift on the other on desktop, and two different clusters above and below the copy on phones and tablets. |
 | [PostList](#postlist) | News posts as rows: photo on the left; date, title, summary and "Read more" on the right (Figma "Latest News"). Shows the newest few; "Load more news" reveals the rest (all show without JavaScript). |
 | [Prose](#prose) | Longer reading text: paragraphs, subheadings (h2/h3), lists and links, from Sanity rich text, plain paragraphs, or (for site policies kept in code, like Privacy) the slot. Large muted text as on the About and event pages. |
 | [ReadingContent](#readingcontent) | Long-form instructions with shared typography and spacing. |
@@ -757,6 +758,28 @@ interface Props extends HTMLAttributes<'article'> { as?: 'article' | 'aside' | '
 
 ```astro
 <Panel>…</Panel>
+```
+
+### PhotoScatter
+
+`src/components/site/PhotoScatter.astro` — Centered copy among six tilted, overlapping photos of different sizes, placed unevenly: a wide cluster on one side and a looser, taller drift on the other on desktop, and two different clusters above and below the copy on phones and tablets.
+
+- **Use for:** One short invitation inside a Section (Support Us "Funded by our community") that should feel full of people. Pass three landscape (4:3) photos per side; each is cropped to its frame. Every photo needs real alt text.
+- **Don't use for:** Photos that must not be cropped, more than one per page, long text (keep it to a heading, a sentence or two and one button), or a Section that already has a title.
+
+```ts
+interface Props {
+  /** Left of the copy on desktop (a tight cluster, sitting high), above it on phones. The second photo is the largest. */
+  start: [LibraryImage, LibraryImage, LibraryImage];
+  /** Right of the copy on desktop (one big photo first, two drifting below), below it on phones. */
+  end: [LibraryImage, LibraryImage, LibraryImage];
+}
+```
+
+```astro
+<Section headingId="funded-heading" id="funded"><PhotoScatter start={[a, b, c]} end={[d, e, f]}>
+  <Heading id="funded-heading">Funded by our community</Heading><Text tone="muted">…</Text><Button href="/donate/">Donate</Button>
+</PhotoScatter></Section>
 ```
 
 ### PostList
