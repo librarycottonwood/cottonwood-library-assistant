@@ -97,3 +97,62 @@ test('expired CMS events stop being promoted in actual browser pages without a n
   }
 });
 async function pageRequest(url){return fetch(url);}
+
+// With only one upcoming event the events page has no event cards, so the featured block must still hide on its own.
+test('a lone featured event stops being promoted once it ends', {timeout:180000}, async()=>{
+  await mkdir('output/cms',{recursive:true});
+  const folder=await mkdtemp(path.resolve('output/cms/event-browser-lone-'));
+  let server,browser;
+  try {
+    const config={projectId:'cmsrehearsal',dataset:'offline'};
+    const snapshot=await seedSnapshot(config);
+    const settings=snapshot.documents.find(doc=>doc._type==='siteSettings');
+    const event=snapshot.documents.find(doc=>doc._type==='event');
+    snapshot.documents=snapshot.documents.filter(doc=>doc._type!=='event'||doc===event);
+    event.title='Lone rehearsal event';event.slug.current='lone-rehearsal';event.image=structuredClone(settings.hero.image);
+    event.sessions=[{_key:'only',startsAt:'2099-04-17T10:00:00-07:00',endsAt:'2099-04-17T14:00:00-07:00'}];
+    const snapshotFile=path.join(folder,'snapshot.json');await saveSnapshot(snapshot,snapshotFile);
+    const output=path.join(folder,'site');
+    const build=spawnSync(process.execPath,['scripts/build.mjs'],{encoding:'utf8',timeout:120000,maxBuffer:5*1024*1024,env:{...process.env,LIBRARY_CONTENT_SOURCE:'sanity',SANITY_PROJECT_ID:config.projectId,SANITY_DATASET:config.dataset,SANITY_SNAPSHOT_PATH:snapshotFile,CMS_BUILD_OUT_DIR:output}});
+    assert.equal(build.status,0,`${build.stdout}\n${build.stderr}`);
+    server=createServer(async(req,res)=>{
+      try {
+        let filename=path.resolve(output,'.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));
+        if(filename!==output&&!filename.startsWith(output+path.sep)){res.writeHead(403).end();return;}
+        if(!path.extname(filename))filename=path.join(filename,'index.html');
+        res.writeHead(200,{'Content-Type':mime[path.extname(filename)]??'application/octet-stream'}).end(await readFile(filename));
+      }catch{res.writeHead(404).end('Not found');}
+    });
+    await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+    const base=`http://127.0.0.1:${server.address().port}`;
+    browser=await launchBrowser();
+    const errors=[];
+    for(const route of ['/','/events/']){
+      const page=await browser.newPage({viewport:{width:1440,height:1000}});
+      page.on('pageerror',error=>errors.push(`${route}: ${error.message}`));
+      await page.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
+      await page.clock.install({time:new Date('2099-04-17T20:59:45Z')});
+      assert.equal((await page.goto(base+route,{waitUntil:'networkidle'})).status(),200);
+      const feature=page.locator('[data-event-feature-expires]');
+      await feature.waitFor({state:'visible',timeout:10000});
+      // Events & News leads with the latest news post when no event is featured.
+      const fallback=page.locator('[data-event-feature-fallback]');
+      if(route==='/events/'){
+        assert.equal(await page.locator('[data-event-list]').count(),0,'the events page has no event cards to carry the script');
+        assert.equal(await fallback.isVisible(),false,'the news stand-in waits while the event is featured');
+      }
+      await page.clock.fastForward(30000);
+      assert.equal(await feature.isVisible(),false,`${route} ended lone event is no longer featured`);
+      if(route==='/events/')assert.equal(await fallback.isVisible(),true,'the latest news post leads once the event ends');
+      await page.reload({waitUntil:'networkidle'});
+      assert.equal(await feature.isVisible(),false,`${route} stays hidden on a fresh load`);
+      if(route==='/events/')assert.equal(await fallback.isVisible(),true,'the latest news post still leads on a fresh load');
+      await page.close();
+    }
+    assert.deepEqual(errors,[]);
+  } finally {
+    await browser?.close();
+    if(server)await new Promise(resolve=>server.close(resolve));
+    await rm(folder,{recursive:true,force:true});
+  }
+});
