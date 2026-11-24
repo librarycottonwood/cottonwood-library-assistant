@@ -20,7 +20,7 @@ interface Props {
 }
 const { start, end } = Astro.props;
 const sides = [['start', start.map(refreshPhoto)], ['end', end.map(refreshPhoto)]] as const;
-const sizes = '(max-width: 63.99rem) 60vw, 25vw';
+const sizes = '(max-width: 63.99rem) 60vw, 30vw';
 ---
 <div class="photo-scatter">
   {sides.map(([side, images], index) => <>
@@ -40,7 +40,10 @@ const sizes = '(max-width: 63.99rem) 60vw, 25vw';
   .scatter-copy > :global(*) { text-align: center; text-wrap: balance; }
   .scatter-side :global(.scatter-photo) {
     width: 100%; height: 100%; min-height: 0; object-fit: cover;
-    border: var(--border-thin) solid var(--border-image); border-radius: calc(var(--radius-image) / 2); /* one corner for every photo, scaled down from the site photo corner to suit the small ones */
+    /* No border: on a tilted photo its translucent line shows the page through as a light sliver between the photo
+       and its shadow. The offset shadow outlines the photo instead. One corner for every photo, scaled down from the
+       site photo corner to suit the small ones. */
+    border-radius: calc(var(--radius-image) / 2);
     box-shadow: var(--shadow-photo);
   }
   .scatter-side :global(.scatter-photo:nth-child(2)) { box-shadow: var(--shadow-photo-reverse); }
@@ -56,19 +59,19 @@ const sizes = '(max-width: 63.99rem) 60vw, 25vw';
     /* Desktop: uneven on purpose. The left side is wider, a tight overlapping cluster that sits high; the right side is
        narrower and taller, one big photo with the other two drifting below it. Each tilts its own way, and a clear
        gutter keeps every photo off the text. */
-    .photo-scatter { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 28rem) minmax(0, 1fr); align-items: center; gap: var(--space-xl); }
-    .scatter-side { grid-template-columns: repeat(12, minmax(0, 1fr)); max-width: 32rem; }
-    .side-start { grid-column: 1; grid-row: 1; justify-self: end; align-self: start; grid-template-rows: repeat(15, minmax(0, 1fr)); aspect-ratio: 12 / 15; }
+    .photo-scatter { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 26rem) minmax(0, 1fr); align-items: center; gap: var(--space-xl); }
+    .scatter-side { grid-template-columns: repeat(12, minmax(0, 1fr)); max-width: 36rem; }
+    .side-start { grid-column: 1; grid-row: 1; justify-self: end; align-self: start; grid-template-rows: repeat(18, minmax(0, 1fr)); aspect-ratio: 12 / 18; }
     .scatter-copy { grid-column: 2; grid-row: 1; }
-    .side-end { grid-column: 3; grid-row: 1; justify-self: start; align-self: end; grid-template-rows: repeat(20, minmax(0, 1fr)); aspect-ratio: 12 / 20; }
-    .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 5 / 7 / 13; transform: rotate(-6deg); }
-    .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 5 / 1 / 12 / 10; transform: rotate(2deg); }
-    .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 11 / 7 / 16 / 13; transform: rotate(9deg); }
-    .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 2 / 2 / 10 / 12; transform: rotate(-3deg); }
-    .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 9 / 6 / 14 / 13; transform: rotate(6deg); z-index: 1; }
-    .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 15 / 1 / 20 / 8; transform: rotate(-7deg); }
+    .side-end { grid-column: 3; grid-row: 1; justify-self: start; align-self: end; grid-template-rows: repeat(21, minmax(0, 1fr)); aspect-ratio: 12 / 21; }
+    .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 4 / 8 / 13; transform: rotate(-6deg); }
+    .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 6 / 1 / 14 / 11; transform: rotate(2deg); }
+    .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 13 / 6 / 19 / 13; transform: rotate(9deg); }
+    .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 1 / 10 / 13; transform: rotate(-3deg); }
+    .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 9 / 5 / 15 / 13; transform: rotate(6deg); z-index: 1; }
+    .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 15 / 1 / 21 / 9; transform: rotate(-7deg); }
   }
   @media (min-width: 90rem) {
-    .photo-scatter { grid-template-columns: minmax(0, 1.3fr) minmax(0, 32rem) minmax(0, 1fr); }
+    .photo-scatter { grid-template-columns: minmax(0, 1.3fr) minmax(0, 30rem) minmax(0, 1fr); }
   }
 </style>
