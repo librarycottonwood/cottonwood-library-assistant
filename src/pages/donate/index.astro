@@ -32,19 +32,20 @@ const campaign = activeCampaign(support.campaigns);
 // general giving block instead (CampaignExpiry in BaseLayout).
 const after = campaign?.endsOn ? await getDonateLink(dayAfter(campaign.endsOn)) : undefined;
 const general = campaign ? after : donate;
-// Library photos around "Funded by our community", people first (page photos live here, docs/design-rules.md).
-// None repeats the fundraiser or volunteer photo next to it. Shapes follow PhotoScatter's start/end notes.
+// Library photos around "Funded by our community": Story Time, events and the building, from the library's own
+// Drive photo folders (docs/photography.md). Wide shots with children seen mostly from behind; none repeats the
+// fundraiser or volunteer photo beside this section. All 4:3, which PhotoScatter crops to each frame.
 const fundedPhoto = (key: string, alt: string, position?: string): LibraryImage => ({ key, alt, fit: 'cover', ...(position ? { position } : {}) });
 const fundedPhotos = {
   start: [
-    fundedPhoto('storyTimeSession', 'Children and parents listen as a volunteer reads aloud in the Story Time corner.'),
-    fundedPhoto('storytimeSession', 'A volunteer holds up a picture book for children sitting on the Story Time rug.', '50% 40%'),
-    fundedPhoto('storyTimeButterflyCraft', 'Hands coloring a paper butterfly with colored pencils at a library table.'),
+    fundedPhoto('storyTimePigBook', 'A volunteer reads a picture book to children gathered on the Story Time cushions.'),
+    fundedPhoto('llamaVisitStoryTime', 'A visitor brings a llama to Story Time while children and parents watch from the rug.', '50% 35%'),
+    fundedPhoto('shingleDonationBirdhouse', 'The library’s birdhouse collecting “Donate a single shingle” gifts for the new roof, on the front desk.', '50% 60%'),
   ],
   end: [
-    fundedPhoto('exteriorPolished', 'Cottonwood Community Library, with its wooden sign, three narrow windows and covered entrance.'),
-    fundedPhoto('bookClubMeeting', 'Two book club members smiling around a round table by the library windows.', '50% 40%'),
-    fundedPhoto('storyTimeSnailCraft', 'A paper snail made at Story Time beside a critter box of leaves.'),
+    fundedPhoto('earthDaySong', 'A volunteer leads children in a song in the Story Time corner on Earth Day.'),
+    fundedPhoto('libraryFlagExterior', 'Cottonwood Community Library on Main Street, with the American flag flying out front.', '50% 60%'),
+    fundedPhoto('beeStoryTime', 'A volunteer reads a bee story to children sitting on the Story Time cushions.'),
   ],
 } satisfies Record<'start' | 'end', [LibraryImage, LibraryImage, LibraryImage]>;
 const volunteer = support.initiatives.find(item => item.category === 'volunteering');

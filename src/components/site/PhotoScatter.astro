@@ -1,8 +1,8 @@
 ---
 /**
  * @component PhotoScatter
- * Centered copy ringed by six tilted, overlapping photos of different sizes: three curving down each side on desktop, a strip of three above and below the copy on phones and tablets.
- * @use One short invitation inside a Section (Support Us "Funded by our community") that should feel full of people. Pass three photos per side, in the shapes noted on `start` and `end`; every photo needs real alt text.
+ * Centered copy among six tilted, overlapping photos of different sizes, placed unevenly: a wide cluster on one side and a looser, taller drift on the other on desktop, and two different clusters above and below the copy on phones and tablets.
+ * @use One short invitation inside a Section (Support Us "Funded by our community") that should feel full of people. Pass three landscape (4:3) photos per side; each is cropped to its frame. Every photo needs real alt text.
  * @avoid Photos that must not be cropped, more than one per page, long text (keep it to a heading, a sentence or two and one button), or a Section that already has a title.
  * @example
  * <Section headingId="funded-heading" id="funded"><PhotoScatter start={[a, b, c]} end={[d, e, f]}>
@@ -13,58 +13,62 @@ import Image from '../OptimizedImage.astro';
 import type { LibraryImage } from '../../content/types';
 import { refreshPhoto } from '../../content/photography';
 interface Props {
-  /** Left of the copy on desktop, above it on phones: a 4:3 landscape, a square (the largest) and a small square. */
+  /** Left of the copy on desktop (a tight cluster, sitting high), above it on phones. The second photo is the largest. */
   start: [LibraryImage, LibraryImage, LibraryImage];
-  /** Right of the copy on desktop, below it on phones: a small 3:2 landscape, a wide 5:3 landscape (the largest) and a 3:4 portrait. */
+  /** Right of the copy on desktop (one big photo first, two drifting below), below it on phones. */
   end: [LibraryImage, LibraryImage, LibraryImage];
 }
 const { start, end } = Astro.props;
 const sides = [['start', start.map(refreshPhoto)], ['end', end.map(refreshPhoto)]] as const;
-const sizes = '(max-width: 63.99rem) 45vw, 22vw';
+const sizes = '(max-width: 63.99rem) 60vw, 25vw';
 ---
 <div class="photo-scatter">
   {sides.map(([side, images], index) => <>
     {index === 1 && <div class="scatter-copy"><slot /></div>}
     <div class:list={['scatter-side', `side-${side}`]}>
-      {images.map(image => <Image width={720} quality={70} image={image} alt={image.alt} widths={[360, 540, 720]} sizes={sizes} loading="lazy" class="scatter-photo" />)}
+      {images.map(image => <Image width={960} quality={72} image={image} alt={image.alt} widths={[480, 720, 960]} sizes={sizes} loading="lazy" class="scatter-photo" />)}
     </div>
   </>)}
 </div>
 <style>
   /* Each side is a grid of square cells; photos span cells (overlapping is intended) and tilt with transform only,
-     so nothing here sets spacing. Phones and tablets: a 12 x 5 strip above and below the copy. */
+     so nothing here sets spacing. */
   .photo-scatter { display: flex; flex-direction: column; align-items: center; gap: var(--space-lg); width: 100%; }
-  .scatter-side { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(5, minmax(0, 1fr)); aspect-ratio: 12 / 5; width: 100%; max-width: var(--width-copy); }
-  .scatter-copy { display: flex; flex-direction: column; align-items: center; gap: var(--space-md); max-width: var(--width-copy); text-align: center; }
-  .scatter-copy > :global(*) { text-align: center; }
+  .scatter-side { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(7, minmax(0, 1fr)); aspect-ratio: 12 / 7; width: 100%; max-width: var(--width-copy); }
+  .scatter-copy { display: flex; flex-direction: column; align-items: center; gap: var(--space-md); width: 100%; max-width: var(--width-copy); text-align: center; }
+  /* Even line lengths: no short last line or narrow ragged column. */
+  .scatter-copy > :global(*) { text-align: center; text-wrap: balance; }
   .scatter-side :global(.scatter-photo) {
     width: 100%; height: 100%; min-height: 0; object-fit: cover;
-    border: var(--border-thin) solid var(--border-image); border-radius: calc(var(--radius-image) / 2);
+    border: var(--border-thin) solid var(--border-image); border-radius: calc(var(--radius-image) / 2); /* one corner for every photo, scaled down from the site photo corner to suit the small ones */
     box-shadow: var(--shadow-photo);
   }
-  .scatter-side :global(.scatter-photo:nth-child(2)) { box-shadow: var(--shadow-photo-reverse); z-index: 1; }
-  .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 2 / 2 / 5 / 6; transform: rotate(-4deg); }
-  .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 1 / 5 / 6 / 10; transform: rotate(2deg); }
-  .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 2 / 9 / 5 / 12; transform: rotate(5deg); z-index: 2; }
-  .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 2 / 1 / 4 / 4; transform: rotate(4deg); z-index: 2; }
-  .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 1 / 3 / 4 / 8; transform: rotate(-2deg); }
-  .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 2 / 8 / 6 / 11; transform: rotate(3deg); z-index: 2; }
+  .scatter-side :global(.scatter-photo:nth-child(2)) { box-shadow: var(--shadow-photo-reverse); }
+  /* Phones: a loose cluster above the copy, a diagonal cascade below it. The two are deliberately not mirror images. */
+  .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 1 / 5 / 6; transform: rotate(-5deg); }
+  .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 2 / 5 / 8 / 13; transform: rotate(2deg); z-index: 1; }
+  .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 5 / 2 / 8 / 6; transform: rotate(7deg); z-index: 2; }
+  .side-end { grid-template-rows: repeat(9, minmax(0, 1fr)); aspect-ratio: 12 / 9; }
+  .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 3 / 5 / 9 / 13; transform: rotate(4deg); z-index: 1; }
+  .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 1 / 2 / 5 / 7; transform: rotate(-3deg); }
+  .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 6 / 1 / 10 / 6; transform: rotate(-8deg); z-index: 2; }
   @media (min-width: 64rem) {
-    /* Desktop: the photos curve around the copy, the middle one of each side reaching furthest out. */
-    .photo-scatter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 28rem) minmax(0, 1fr); align-items: center; gap: var(--space-md); }
-    .scatter-side { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(10, minmax(0, 1fr)); aspect-ratio: 3 / 5; max-width: 30rem; }
-    .scatter-side :global(.scatter-photo:nth-child(2)) { border-radius: var(--radius-image); }
-    .side-start { grid-column: 1; grid-row: 1; justify-self: end; }
+    /* Desktop: uneven on purpose. The left side is wider, a tight overlapping cluster that sits high; the right side is
+       narrower and taller, one big photo with the other two drifting below it. Each tilts its own way, and a clear
+       gutter keeps every photo off the text. */
+    .photo-scatter { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 28rem) minmax(0, 1fr); align-items: center; gap: var(--space-xl); }
+    .scatter-side { grid-template-columns: repeat(12, minmax(0, 1fr)); max-width: 32rem; }
+    .side-start { grid-column: 1; grid-row: 1; justify-self: end; align-self: start; grid-template-rows: repeat(15, minmax(0, 1fr)); aspect-ratio: 12 / 15; }
     .scatter-copy { grid-column: 2; grid-row: 1; }
-    .side-end { grid-column: 3; grid-row: 1; justify-self: start; }
-    .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 3 / 4 / 7; transform: rotate(-4deg); }
-    .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 3 / 1 / 8 / 6; transform: rotate(3deg); }
-    .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 7 / 3 / 10 / 6; transform: rotate(-3deg); }
-    .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 2 / 2 / 4 / 5; transform: rotate(5deg); }
-    .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 4 / 2 / 7 / 7; transform: rotate(-3deg); }
-    .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 6 / 1 / 10 / 4; transform: rotate(4deg); }
+    .side-end { grid-column: 3; grid-row: 1; justify-self: start; align-self: end; grid-template-rows: repeat(20, minmax(0, 1fr)); aspect-ratio: 12 / 20; }
+    .side-start :global(.scatter-photo:nth-child(1)) { grid-area: 1 / 5 / 7 / 13; transform: rotate(-6deg); }
+    .side-start :global(.scatter-photo:nth-child(2)) { grid-area: 5 / 1 / 12 / 10; transform: rotate(2deg); }
+    .side-start :global(.scatter-photo:nth-child(3)) { grid-area: 11 / 7 / 16 / 13; transform: rotate(9deg); }
+    .side-end :global(.scatter-photo:nth-child(1)) { grid-area: 2 / 2 / 10 / 12; transform: rotate(-3deg); }
+    .side-end :global(.scatter-photo:nth-child(2)) { grid-area: 9 / 6 / 14 / 13; transform: rotate(6deg); z-index: 1; }
+    .side-end :global(.scatter-photo:nth-child(3)) { grid-area: 15 / 1 / 20 / 8; transform: rotate(-7deg); }
   }
   @media (min-width: 90rem) {
-    .photo-scatter { grid-template-columns: minmax(0, 1fr) minmax(0, 34rem) minmax(0, 1fr); }
+    .photo-scatter { grid-template-columns: minmax(0, 1.3fr) minmax(0, 32rem) minmax(0, 1fr); }
   }
 </style>
