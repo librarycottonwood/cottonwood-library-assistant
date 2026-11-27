@@ -3,7 +3,7 @@
   "result": "success",
   "sourceChecksResult": "success",
   "cmsLiveResult": "success",
-  "checkedAt": "2026-11-26T00:42:11.703102+00:00",
-  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/45730193548",
+  "checkedAt": "2026-11-27T00:50:47.707894+00:00",
+  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/45918717050",
   "scope": "Website build/release/privacy/browser checks; CMS migration tests; Studio fixture compilation/schema checks; local publisher runtime tests/dry build. cmsLiveResult records the separately gated published-content read/build, or skipped until configured. No account approval, hosted uptime, or public publishing verification."
 }
