@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-27T00:54:16.310Z",
+  "checkedAt": "2026-11-28T00:18:43.983Z",
   "status": "ok",
   "warnDays": 45,
   "checks": [
@@ -47,9 +47,9 @@
     {
       "name": "Automatic repair sign-in (library ChatGPT)",
       "ok": true,
-      "expiresOn": "2027-02-18T00:38:10.000Z",
+      "expiresOn": "2027-02-25T01:45:38.000Z",
       "fix": "Reconnect it: the library assistant opens an issue titled \"Reconnect automatic repairs\" (assistant/MAINTENANCE.md \u2192 \"Renew the repair sign-in\").",
-      "daysLeft": 82,
+      "daysLeft": 89,
       "status": "ok"
     },
     {
@@ -63,9 +63,9 @@
       "ok": true,
       "expiresOn": "2027-03-22T19:01:02Z",
       "fix": "Renewal is automatic at Squarespace; the board keeps a working card on that account.",
-      "daysLeft": 115,
+      "daysLeft": 114,
       "status": "ok"
     }
   ],
-  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/45919449066"
+  "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/46087191469"
 }
