@@ -1,22 +1,22 @@
 {
   "sourceSha": "1ab3af93bab0ca3e6efa6b90028efbb0acf11cf5",
-  "checkedAt": "2026-11-27T00:50:47.707894+00:00",
+  "checkedAt": "2026-11-28T00:18:07.210724+00:00",
   "result": "success",
   "scope": "Separate CMS content/publisher check; skipped until library account setup. No private token or CMS document export.",
   "report": {
     "sourceSha": "1ab3af93bab0ca3e6efa6b90028efbb0acf11cf5",
-    "checkedAt": "2026-11-27T00:50:33.747Z",
+    "checkedAt": "2026-11-28T00:17:55.540Z",
     "result": "published_content_and_publisher_checked",
     "contentRead": true,
     "render": true,
     "publisher": true,
     "livePublishingVerified": false,
     "scope": "Read actual published content, build its frozen snapshot, check publisher status, and reconcile missed deliveries into pending previews. No content mutation, approval, deployment, or ChatGPT tool check; publication evidence remains per operation.",
-    "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/45918717050"
+    "runUrl": "https://github.com/librarycottonwood/cottonwood-library-assistant/actions/runs/46086768865"
   },
   "publisher": {
     "sourceSha": "1ab3af93bab0ca3e6efa6b90028efbb0acf11cf5",
-    "checkedAt": "2026-11-27T00:50:33.677Z",
+    "checkedAt": "2026-11-28T00:17:55.477Z",
     "result": "checked",
     "hostedVerified": true,
     "lastVerified": {
